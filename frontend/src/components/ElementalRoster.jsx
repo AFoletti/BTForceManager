@@ -275,11 +275,11 @@ export default function ElementalRoster({ force, onUpdate }) {
         </table>
       </div>
 
-      {/* Add Elemental Dialog */}
+      {/* Add/Edit Elemental Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Add New Elemental Point</DialogTitle>
+            <DialogTitle>{editingElemental ? 'Edit Elemental Point' : 'Add New Elemental Point'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
