@@ -6,9 +6,9 @@ node_modules/
 # Testing
 coverage/
 
-# Production
-build/
-dist/
+# Production build (only in frontend folder)
+frontend/build/
+frontend/dist/
 
 # Misc
 .DS_Store
@@ -35,6 +35,11 @@ logs/
 # Temporary files
 *.tmp
 .cache/
+
+# Keep root static files for GitHub Pages
+!index.html
+!static/
+!.nojekyll
 -e 
 # Environment files
 *.env
