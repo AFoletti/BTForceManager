@@ -8,7 +8,7 @@ import MechRoster from './components/MechRoster';
 import ElementalRoster from './components/ElementalRoster';
 import PilotRoster from './components/PilotRoster';
 import MissionManager from './components/MissionManager';
-import RepairBay from './components/RepairBay';
+import DowntimeOperations from './components/DowntimeOperations';
 import DataEditor from './components/DataEditor';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
