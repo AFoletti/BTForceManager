@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select } from './ui/select';
@@ -15,6 +15,25 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [otherActionData, setOtherActionData] = useState({ description: '', cost: 0 });
   const [wpMultiplier, setWpMultiplier] = useState(force.wpMultiplier || 5);
   const [editingMultiplier, setEditingMultiplier] = useState(false);
+  
+  // Load downtime actions from JSON
+  const [mechActions, setMechActions] = useState([]);
+  const [elementalActions, setElementalActions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('./data/downtime-actions.json')
+      .then(response => response.json())
+      .then(data => {
+        setMechActions(data.mechActions || []);
+        setElementalActions(data.elementalActions || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load downtime actions:', err);
+        setLoading(false);
+      });
+  }, []);
 
   const selectedUnit = selectedUnitType === 'mech'
     ? force.mechs.find(m => m.id === selectedUnitId)
