@@ -256,7 +256,7 @@ export default function MissionManager({ force, onUpdate }) {
                               <div className="flex flex-wrap gap-2">
                                 {getAssignedElementals(mission.assignedElementals).map(elemental => (
                                   <Badge key={elemental.id} variant="secondary" className="text-xs">
-                                    {elemental.name} ({elemental.bv.toLocaleString()} BV)
+                                    {elemental.name} ({formatNumber(elemental.bv)} BV)
                                   </Badge>
                                 ))}
                               </div>
