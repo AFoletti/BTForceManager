@@ -96,16 +96,14 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Pilot Injury Management"
-    - "Mission Creation and Management"
     - "Repair System"
-    - "Data Editor"
-    - "Export/Import Functionality"
-    - "Navigation and UI"
-  stuck_tasks: []
-  test_all: true
-  test_priority: "high_first"
+  stuck_tasks:
+    - "Repair System"
+  test_all: false
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "testing"
     message: "Starting comprehensive testing of BattleTech Forces Manager application. Will test all core features including pilot injury management, mission system, repair bay, data editor, and export/import functionality."
+  - agent: "testing"
+    message: "TESTING COMPLETE - Most features working excellently. CRITICAL ISSUE FOUND: Repair System has UI interaction problems where dropdown selections don't properly enable the 'Perform Repair' button. The data and calculations work correctly, but the component state management for enabling the repair action appears broken. This prevents users from actually performing repairs despite having all the necessary data and calculations working."
