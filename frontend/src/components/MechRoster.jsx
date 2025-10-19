@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from './ui/badge';
 import { Shield } from 'lucide-react';
+import { formatNumber } from '../lib/utils';
 
 export default function MechRoster({ force }) {
   const getStatusColor = (status) => {
