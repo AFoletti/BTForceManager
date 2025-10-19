@@ -10,6 +10,7 @@ import { formatNumber } from '../lib/utils';
 
 export default function ElementalRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
+  const [editingElemental, setEditingElemental] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     commander: '',
@@ -23,43 +24,86 @@ export default function ElementalRoster({ force, onUpdate }) {
     history: ''
   });
 
+  const openDialog = (elemental = null) => {
+    if (elemental) {
+      setEditingElemental(elemental);
+      setFormData({
+        name: elemental.name,
+        commander: elemental.commander || '',
+        gunnery: elemental.gunnery,
+        antimech: elemental.antimech,
+        suitsDestroyed: elemental.suitsDestroyed,
+        suitsDamaged: elemental.suitsDamaged,
+        bv: elemental.bv,
+        status: elemental.status,
+        image: elemental.image || '',
+        history: elemental.history || ''
+      });
+    } else {
+      setEditingElemental(null);
+      setFormData({
+        name: '',
+        commander: '',
+        gunnery: 3,
+        antimech: 4,
+        suitsDestroyed: 0,
+        suitsDamaged: 0,
+        bv: 0,
+        status: 'Operational',
+        image: '',
+        history: ''
+      });
+    }
+    setShowDialog(true);
+  };
+
   const handleSave = () => {
     if (!formData.name || !formData.bv) {
       alert('Name and BV are required');
       return;
     }
 
-    const newElemental = {
-      id: `elemental-${Date.now()}`,
-      name: formData.name,
-      commander: formData.commander,
-      gunnery: parseInt(formData.gunnery) || 3,
-      antimech: parseInt(formData.antimech) || 4,
-      suitsDestroyed: 0,
-      suitsDamaged: 0,
-      bv: parseInt(formData.bv) || 0,
-      status: formData.status,
-      image: formData.image,
-      history: formData.history,
-      activityLog: []
-    };
+    if (editingElemental) {
+      // Update existing elemental
+      const updatedElementals = (force.elementals || []).map(e => 
+        e.id === editingElemental.id 
+          ? {
+              ...e,
+              name: formData.name,
+              commander: formData.commander,
+              gunnery: parseInt(formData.gunnery) || 3,
+              antimech: parseInt(formData.antimech) || 4,
+              suitsDestroyed: parseInt(formData.suitsDestroyed) || 0,
+              suitsDamaged: parseInt(formData.suitsDamaged) || 0,
+              bv: parseInt(formData.bv) || 0,
+              status: formData.status,
+              image: formData.image,
+              history: formData.history
+            }
+          : e
+      );
+      onUpdate({ elementals: updatedElementals });
+    } else {
+      // Add new elemental
+      const newElemental = {
+        id: `elemental-${Date.now()}`,
+        name: formData.name,
+        commander: formData.commander,
+        gunnery: parseInt(formData.gunnery) || 3,
+        antimech: parseInt(formData.antimech) || 4,
+        suitsDestroyed: 0,
+        suitsDamaged: 0,
+        bv: parseInt(formData.bv) || 0,
+        status: formData.status,
+        image: formData.image,
+        history: formData.history,
+        activityLog: []
+      };
 
-    const updatedElementals = [...(force.elementals || []), newElemental];
-    onUpdate({ elementals: updatedElementals });
+      const updatedElementals = [...(force.elementals || []), newElemental];
+      onUpdate({ elementals: updatedElementals });
+    }
 
-    // Reset form
-    setFormData({
-      name: '',
-      commander: '',
-      gunnery: 3,
-      antimech: 4,
-      suitsDestroyed: 0,
-      suitsDamaged: 0,
-      bv: 0,
-      status: 'Operational',
-      image: '',
-      history: ''
-    });
     setShowDialog(false);
   };
   const updateCounter = (elementalId, field, delta) => {
