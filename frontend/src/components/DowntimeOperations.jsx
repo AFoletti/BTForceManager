@@ -5,7 +5,6 @@ import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Textarea } from './ui/textarea';
 import { Wrench, AlertTriangle, Settings } from 'lucide-react';
-import { Badge } from './ui/badge';
 
 export default function DowntimeOperations({ force, onUpdate }) {
   const [selectedUnitType, setSelectedUnitType] = useState('mech');
