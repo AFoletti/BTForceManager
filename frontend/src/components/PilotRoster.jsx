@@ -67,7 +67,7 @@ export default function PilotRoster({ force, onUpdate }) {
                   <td className="text-center font-mono">{pilot.piloting}</td>
                   <td className="text-center">
                     <Badge variant={getInjuryColor(pilot.injuries)}>
-                      {pilot.injuries}/5
+                      {getInjuryDisplay(pilot.injuries)}
                     </Badge>
                   </td>
                   <td>
@@ -84,7 +84,7 @@ export default function PilotRoster({ force, onUpdate }) {
                         variant="outline"
                         size="icon"
                         onClick={() => updateInjuries(pilot.id, 1)}
-                        disabled={pilot.injuries === 5}
+                        disabled={pilot.injuries === 6}
                       >
                         <Plus className="w-4 h-4" />
                       </Button>
