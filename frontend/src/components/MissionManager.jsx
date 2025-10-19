@@ -350,7 +350,7 @@ export default function MissionManager({ force, onUpdate }) {
                 <div className="flex items-center justify-between">
                   <span>Assign Mechs to Mission</span>
                   <span className="text-xs text-primary font-mono">
-                    Total BV: {calculateTotalBV(formData.assignedMechs).toLocaleString()}
+                    BV: {calculateTotalBV(formData.assignedMechs, []).toLocaleString()}
                   </span>
                 </div>
               </label>
@@ -397,6 +397,72 @@ export default function MissionManager({ force, onUpdate }) {
                 </div>
               )}
             </div>
+            
+            {/* Elemental Assignment */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                <div className="flex items-center justify-between">
+                  <span>Assign Elementals to Mission</span>
+                  <span className="text-xs text-primary font-mono">
+                    BV: {calculateTotalBV([], formData.assignedElementals).toLocaleString()}
+                  </span>
+                </div>
+              </label>
+              <div className="border border-border rounded p-3 bg-muted/20 max-h-48 overflow-y-auto">
+                {(!force.elementals || force.elementals.length === 0) ? (
+                  <p className="text-sm text-muted-foreground text-center py-2">No elementals available</p>
+                ) : (
+                  <div className="space-y-2">
+                    {force.elementals.map(elemental => (
+                      <label
+                        key={elemental.id}
+                        className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.assignedElementals.includes(elemental.id)}
+                          onChange={() => toggleElementalAssignment(elemental.id)}
+                          className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                        />
+                        <div className="flex-1 flex items-center justify-between">
+                          <div>
+                            <span className="text-sm font-medium">{elemental.name}</span>
+                            <span className="text-xs text-muted-foreground ml-2">
+                              ({elemental.commander || 'Unassigned'})
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={elemental.status === 'Operational' ? 'operational' : 'outline'} className="text-xs">
+                              {elemental.status}
+                            </Badge>
+                            <span className="text-xs font-mono text-muted-foreground">
+                              {elemental.bv.toLocaleString()} BV
+                            </span>
+                          </div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {formData.assignedElementals.length > 0 && (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {formData.assignedElementals.length} elemental point{formData.assignedElementals.length !== 1 ? 's' : ''} assigned
+                </div>
+              )}
+            </div>
+            
+            {/* Total BV Display */}
+            {(formData.assignedMechs.length > 0 || formData.assignedElementals.length > 0) && (
+              <div className="p-3 bg-primary/10 border border-primary/20 rounded">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">Combined Force Total BV:</span>
+                  <span className="text-2xl font-bold font-mono text-primary">
+                    {calculateTotalBV(formData.assignedMechs, formData.assignedElementals).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            )}
             
             <div>
               <label className="block text-sm font-medium mb-2">Description</label>
