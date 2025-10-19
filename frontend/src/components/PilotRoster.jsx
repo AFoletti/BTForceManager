@@ -152,6 +152,73 @@ export default function PilotRoster({ force, onUpdate }) {
           </tbody>
         </table>
       </div>
+
+      {/* Add Pilot Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent onClose={() => setShowDialog(false)} className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Add New Pilot</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Pilot Name *</label>
+              <Input
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., Natasha Kerensky"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Gunnery</label>
+                <Input
+                  type="number"
+                  value={formData.gunnery}
+                  onChange={(e) => setFormData({ ...formData, gunnery: e.target.value })}
+                  placeholder="4"
+                  min="0"
+                  max="8"
+                />
+                <p className="text-xs text-muted-foreground mt-1">0-8 (lower is better)</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Piloting</label>
+                <Input
+                  type="number"
+                  value={formData.piloting}
+                  onChange={(e) => setFormData({ ...formData, piloting: e.target.value })}
+                  placeholder="5"
+                  min="0"
+                  max="8"
+                />
+                <p className="text-xs text-muted-foreground mt-1">0-8 (lower is better)</p>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">History</label>
+              <Textarea
+                value={formData.history}
+                onChange={(e) => setFormData({ ...formData, history: e.target.value })}
+                placeholder="Pilot background, service record, notable achievements..."
+                rows={4}
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={() => setShowDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave} disabled={!formData.name}>
+                Add Pilot
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
