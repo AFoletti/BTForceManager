@@ -39,23 +39,22 @@ export default function DowntimeOperations({ force, onUpdate }) {
     ? force.mechs.find(m => m.id === selectedUnitId)
     : force.elementals?.find(e => e.id === selectedUnitId);
 
-  const mechActions = [
-    { id: 'repair-armor', name: 'Repair Mech Armor', formula: 'weight/wpMultiplier', makesUnavailable: false },
-    { id: 'repair-structure', name: 'Repair Mech Internal Structure', formula: '(weight*2)/wpMultiplier', makesUnavailable: true },
-    { id: 'reconfigure', name: 'Reconfigure Mech', formula: '(weight/4)/wpMultiplier', makesUnavailable: false }
-  ];
-
-  const elementalActions = [
-    { id: 'repair-elemental', name: 'Repair Elemental', formula: '(suitsDamaged*2.5)/wpMultiplier', makesUnavailable: false },
-    { id: 'purchase-elemental', name: 'Purchase Elemental', formula: '(suitsDestroyed*50)/wpMultiplier', makesUnavailable: false }
-  ];
-
   const otherAction = { id: 'other', name: 'Other Action', formula: 'custom', makesUnavailable: false };
 
   const availableActions = [
     ...(selectedUnitType === 'mech' ? mechActions : elementalActions),
     otherAction
   ];
+
+  if (loading) {
+    return (
+      <div className="tactical-panel">
+        <div className="p-6 text-center text-muted-foreground">
+          Loading downtime actions...
+        </div>
+      </div>
+    );
+  }
 
   const calculateCost = () => {
     if (!selectedUnit || !selectedAction) return 0;
