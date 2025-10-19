@@ -5,7 +5,7 @@ import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, Target, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
 import { Badge } from './ui/badge';
-import { formatDate } from '../lib/utils';
+import { formatDate, formatNumber } from '../lib/utils';
 
 export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
