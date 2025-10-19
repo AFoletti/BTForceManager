@@ -350,7 +350,7 @@ export default function MissionManager({ force, onUpdate }) {
                 <div className="flex items-center justify-between">
                   <span>Assign Mechs to Mission</span>
                   <span className="text-xs text-primary font-mono">
-                    BV: {calculateTotalBV(formData.assignedMechs, []).toLocaleString()}
+                    BV: {formatNumber(calculateTotalBV(formData.assignedMechs, []))}
                   </span>
                 </div>
               </label>
