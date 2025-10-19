@@ -36,7 +36,8 @@ export default function MissionManager({ force, onUpdate }) {
         recap: '',
         warchestGained: 0,
         completed: false,
-        assignedMechs: []
+        assignedMechs: [],
+        assignedElementals: []
       });
     }
     setShowDialog(true);
