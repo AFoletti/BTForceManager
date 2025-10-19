@@ -112,6 +112,20 @@ export default function MissionManager({ force, onUpdate }) {
         return mech;
       });
       
+      // Log mission assignment for elementals
+      const updatedElementals = (force.elementals || []).map(elemental => {
+        if (formData.assignedElementals?.includes(elemental.id)) {
+          const activityLog = [...(elemental.activityLog || [])];
+          activityLog.push({
+            timestamp,
+            action: `Assigned to mission: ${formData.name}`,
+            mission: formData.name
+          });
+          return { ...elemental, activityLog };
+        }
+        return elemental;
+      });
+      
       // Log mission assignment for pilots of assigned mechs
       const assignedMechs = force.mechs.filter(m => formData.assignedMechs.includes(m.id));
       const updatedPilots = force.pilots.map(pilot => {
@@ -133,6 +147,7 @@ export default function MissionManager({ force, onUpdate }) {
       onUpdate({ 
         missions, 
         mechs: updatedMechs,
+        elementals: updatedElementals,
         pilots: updatedPilots,
         currentWarchest: newWarchest 
       });
