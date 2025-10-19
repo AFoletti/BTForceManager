@@ -96,6 +96,16 @@ export default function App() {
                 ))}
               </Select>
               
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => setShowAddForceDialog(true)}
+                title="Create new force"
+              >
+                <Plus className="w-4 h-4" />
+                Add Force
+              </Button>
+              
               <Button variant="outline" size="sm" onClick={handleExport}>
                 <Download className="w-4 h-4" />
                 Export
