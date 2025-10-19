@@ -76,7 +76,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
         return context[match] !== undefined ? context[match] : match;
       }));
 
-      return Math.round(result * 10) / 10;
+      return Math.ceil(result); // Always round up to upper integer
     } catch (error) {
       console.error('Formula evaluation error:', error);
       return 0;
