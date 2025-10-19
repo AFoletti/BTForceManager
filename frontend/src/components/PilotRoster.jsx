@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 
 export default function PilotRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
+  const [editingPilot, setEditingPilot] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     gunnery: 4,
@@ -16,33 +17,66 @@ export default function PilotRoster({ force, onUpdate }) {
     history: ''
   });
 
+  const openDialog = (pilot = null) => {
+    if (pilot) {
+      setEditingPilot(pilot);
+      setFormData({
+        name: pilot.name,
+        gunnery: pilot.gunnery,
+        piloting: pilot.piloting,
+        injuries: pilot.injuries,
+        history: pilot.history || ''
+      });
+    } else {
+      setEditingPilot(null);
+      setFormData({
+        name: '',
+        gunnery: 4,
+        piloting: 5,
+        injuries: 0,
+        history: ''
+      });
+    }
+    setShowDialog(true);
+  };
+
   const handleSave = () => {
     if (!formData.name) {
       alert('Name is required');
       return;
     }
 
-    const newPilot = {
-      id: `pilot-${Date.now()}`,
-      name: formData.name,
-      gunnery: parseInt(formData.gunnery) || 4,
-      piloting: parseInt(formData.piloting) || 5,
-      injuries: 0,
-      history: formData.history,
-      activityLog: []
-    };
+    if (editingPilot) {
+      // Update existing pilot
+      const updatedPilots = force.pilots.map(p => 
+        p.id === editingPilot.id 
+          ? {
+              ...p,
+              name: formData.name,
+              gunnery: parseInt(formData.gunnery) || 4,
+              piloting: parseInt(formData.piloting) || 5,
+              injuries: parseInt(formData.injuries) || 0,
+              history: formData.history
+            }
+          : p
+      );
+      onUpdate({ pilots: updatedPilots });
+    } else {
+      // Add new pilot
+      const newPilot = {
+        id: `pilot-${Date.now()}`,
+        name: formData.name,
+        gunnery: parseInt(formData.gunnery) || 4,
+        piloting: parseInt(formData.piloting) || 5,
+        injuries: 0,
+        history: formData.history,
+        activityLog: []
+      };
 
-    const updatedPilots = [...force.pilots, newPilot];
-    onUpdate({ pilots: updatedPilots });
+      const updatedPilots = [...force.pilots, newPilot];
+      onUpdate({ pilots: updatedPilots });
+    }
 
-    // Reset form
-    setFormData({
-      name: '',
-      gunnery: 4,
-      piloting: 5,
-      injuries: 0,
-      history: ''
-    });
     setShowDialog(false);
   };
   const updateInjuries = (pilotId, delta) => {
