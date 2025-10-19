@@ -102,9 +102,15 @@ export default function ElementalRoster({ force, onUpdate }) {
             <Users className="w-4 h-4" />
             Elemental Roster
           </h3>
-          <span className="text-xs text-muted-foreground">
-            {force.elementals?.length || 0} Points
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">
+              {force.elementals?.length || 0} Points
+            </span>
+            <Button size="sm" onClick={() => setShowDialog(true)}>
+              <Plus className="w-4 h-4" />
+              Add Elemental
+            </Button>
+          </div>
         </div>
       </div>
       
