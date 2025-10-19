@@ -4,6 +4,8 @@
 
 A comprehensive static web application for managing BattleTech Classic forces, mechs, pilots, missions, and repairs using the Warchest system.
 
+**🚀 Live Demo:** [View on GitHub Pages](https://your-username.github.io/your-repo-name/)
+
 ## ✨ Features
 
 ### 🤖 Mech Management
