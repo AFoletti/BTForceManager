@@ -382,7 +382,7 @@ export default function MissionManager({ force, onUpdate }) {
                               {mech.status}
                             </Badge>
                             <span className="text-xs font-mono text-muted-foreground">
-                              {mech.bv.toLocaleString()} BV
+                              {formatNumber(mech.bv)} BV
                             </span>
                           </div>
                         </div>
@@ -404,7 +404,7 @@ export default function MissionManager({ force, onUpdate }) {
                 <div className="flex items-center justify-between">
                   <span>Assign Elementals to Mission</span>
                   <span className="text-xs text-primary font-mono">
-                    BV: {calculateTotalBV([], formData.assignedElementals).toLocaleString()}
+                    BV: {formatNumber(calculateTotalBV([], formData.assignedElementals))}
                   </span>
                 </div>
               </label>
@@ -436,7 +436,7 @@ export default function MissionManager({ force, onUpdate }) {
                               {elemental.status}
                             </Badge>
                             <span className="text-xs font-mono text-muted-foreground">
-                              {elemental.bv.toLocaleString()} BV
+                              {formatNumber(elemental.bv)} BV
                             </span>
                           </div>
                         </div>
@@ -458,7 +458,7 @@ export default function MissionManager({ force, onUpdate }) {
                 <div className="flex items-center justify-between">
                   <span className="font-semibold">Combined Force Total BV:</span>
                   <span className="text-2xl font-bold font-mono text-primary">
-                    {calculateTotalBV(formData.assignedMechs, formData.assignedElementals).toLocaleString()}
+                    {formatNumber(calculateTotalBV(formData.assignedMechs, formData.assignedElementals))}
                   </span>
                 </div>
               </div>
