@@ -218,16 +218,35 @@ export default function MissionManager({ force, onUpdate }) {
                           <div className="text-sm">
                             <span className="text-muted-foreground">Total BV:</span>
                             <span className="ml-2 font-mono font-bold text-primary">
-                              {calculateTotalBV(mission.assignedMechs).toLocaleString()}
+                              {calculateTotalBV(mission.assignedMechs, mission.assignedElementals || []).toLocaleString()}
                             </span>
                           </div>
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                          {getAssignedMechs(mission.assignedMechs).map(mech => (
-                            <Badge key={mech.id} variant="secondary" className="text-xs">
-                              {mech.name} ({mech.bv.toLocaleString()} BV)
-                            </Badge>
-                          ))}
+                        <div className="space-y-2">
+                          {mission.assignedMechs.length > 0 && (
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Mechs:</div>
+                              <div className="flex flex-wrap gap-2">
+                                {getAssignedMechs(mission.assignedMechs).map(mech => (
+                                  <Badge key={mech.id} variant="secondary" className="text-xs">
+                                    {mech.name} ({mech.bv.toLocaleString()} BV)
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {mission.assignedElementals && mission.assignedElementals.length > 0 && (
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Elementals:</div>
+                              <div className="flex flex-wrap gap-2">
+                                {getAssignedElementals(mission.assignedElementals).map(elemental => (
+                                  <Badge key={elemental.id} variant="secondary" className="text-xs">
+                                    {elemental.name} ({elemental.bv.toLocaleString()} BV)
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
