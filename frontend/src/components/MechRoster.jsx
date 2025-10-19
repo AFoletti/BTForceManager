@@ -10,6 +10,7 @@ import { formatNumber } from '../lib/utils';
 
 export default function MechRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
+  const [editingMech, setEditingMech] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     status: 'Operational',
@@ -20,37 +21,74 @@ export default function MechRoster({ force, onUpdate }) {
     history: ''
   });
 
+  const openDialog = (mech = null) => {
+    if (mech) {
+      setEditingMech(mech);
+      setFormData({
+        name: mech.name,
+        status: mech.status,
+        pilot: mech.pilot || '',
+        bv: mech.bv,
+        weight: mech.weight,
+        image: mech.image || '',
+        history: mech.history || ''
+      });
+    } else {
+      setEditingMech(null);
+      setFormData({
+        name: '',
+        status: 'Operational',
+        pilot: '',
+        bv: 0,
+        weight: 0,
+        image: '',
+        history: ''
+      });
+    }
+    setShowDialog(true);
+  };
+
   const handleSave = () => {
     if (!formData.name || !formData.bv || !formData.weight) {
       alert('Name, BV, and Weight are required');
       return;
     }
 
-    const newMech = {
-      id: `mech-${Date.now()}`,
-      name: formData.name,
-      status: formData.status,
-      pilot: formData.pilot,
-      bv: parseInt(formData.bv) || 0,
-      weight: parseInt(formData.weight) || 0,
-      image: formData.image,
-      history: formData.history,
-      activityLog: []
-    };
+    if (editingMech) {
+      // Update existing mech
+      const updatedMechs = force.mechs.map(m => 
+        m.id === editingMech.id 
+          ? {
+              ...m,
+              name: formData.name,
+              status: formData.status,
+              pilot: formData.pilot,
+              bv: parseInt(formData.bv) || 0,
+              weight: parseInt(formData.weight) || 0,
+              image: formData.image,
+              history: formData.history
+            }
+          : m
+      );
+      onUpdate({ mechs: updatedMechs });
+    } else {
+      // Add new mech
+      const newMech = {
+        id: `mech-${Date.now()}`,
+        name: formData.name,
+        status: formData.status,
+        pilot: formData.pilot,
+        bv: parseInt(formData.bv) || 0,
+        weight: parseInt(formData.weight) || 0,
+        image: formData.image,
+        history: formData.history,
+        activityLog: []
+      };
 
-    const updatedMechs = [...force.mechs, newMech];
-    onUpdate({ mechs: updatedMechs });
+      const updatedMechs = [...force.mechs, newMech];
+      onUpdate({ mechs: updatedMechs });
+    }
 
-    // Reset form
-    setFormData({
-      name: '',
-      status: 'Operational',
-      pilot: '',
-      bv: 0,
-      weight: 0,
-      image: '',
-      history: ''
-    });
     setShowDialog(false);
   };
   const getStatusColor = (status) => {
