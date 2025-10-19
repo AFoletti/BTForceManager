@@ -1,5 +1,6 @@
-import React from 'react';
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
+import React, { useState } from 'react';
+import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
+import { Button } from './ui/button';
 
 // Safe number formatter for PDF
 const formatNumber = (num) => {
