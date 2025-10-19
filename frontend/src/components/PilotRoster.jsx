@@ -256,7 +256,7 @@ export default function PilotRoster({ force, onUpdate }) {
                 Cancel
               </Button>
               <Button onClick={handleSave} disabled={!formData.name}>
-                Add Pilot
+                {editingPilot ? 'Update Pilot' : 'Add Pilot'}
               </Button>
             </div>
           </div>
