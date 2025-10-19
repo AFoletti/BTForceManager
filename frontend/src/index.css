@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Military tactical dark theme - Battletech inspired */
+    --background: 220 13% 9%;        /* Deep dark gray-blue #14161a */
+    --foreground: 210 15% 90%;       /* Light gray for text */
+    
+    --card: 220 13% 12%;             /* Slightly lighter than background */
+    --card-foreground: 210 15% 90%;
+    
+    --popover: 220 13% 12%;
+    --popover-foreground: 210 15% 90%;
+    
+    --primary: 25 95% 53%;           /* Aerospace Orange #FF4F00 */
+    --primary-foreground: 220 13% 9%;
+    
+    --secondary: 58 31% 21%;         /* Army Green #454B1B */
+    --secondary-foreground: 210 15% 90%;
+    
+    --muted: 220 10% 18%;            /* Muted dark gray */
+    --muted-foreground: 210 10% 60%;
+    
+    --accent: 30 100% 45%;           /* Dark Orange accent #C76E00 */
+    --accent-foreground: 210 15% 95%;
+    
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 15% 95%;
+    
+    --border: 220 13% 20%;           /* Subtle border */
+    --input: 220 13% 18%;
+    --ring: 25 95% 53%;              /* Orange ring for focus */
+    
+    --radius: 0.25rem;
+    
+    /* Custom tactical tokens */
+    --tactical-panel: 220 13% 11%;
+    --tactical-highlight: 25 95% 53%;
+    --status-operational: 142 76% 36%;
+    --status-damaged: 38 92% 50%;
+    --status-disabled: 0 72% 51%;
+    --status-repairing: 217 91% 60%;
+    
+    /* Shadows */
+    --shadow-tactical: 0 4px 12px -2px rgba(255, 79, 0, 0.15);
+    --shadow-panel: 0 2px 8px rgba(0, 0, 0, 0.4);
+    
+    /* Transitions */
+    --transition-smooth: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+}
+
+@layer components {
+  .tactical-panel {
+    @apply bg-card border border-border rounded-md shadow-lg;
+    box-shadow: var(--shadow-panel);
+  }
+  
+  .tactical-header {
+    @apply border-b border-border bg-muted/30 px-4 py-3;
+  }
+  
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium uppercase tracking-wider;
+  }
+  
+  .data-table {
+    @apply w-full border-collapse;
+  }
+  
+  .data-table th {
+    @apply bg-muted/50 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border;
+  }
+  
+  .data-table td {
+    @apply px-4 py-3 text-sm border-b border-border/50;
+  }
+  
+  .data-table tbody tr {
+    @apply transition-colors duration-150;
+  }
+  
+  .data-table tbody tr:hover {
+    @apply bg-muted/20;
+  }
+  
+  .tactical-input {
+    @apply w-full bg-input border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow;
+  }
+  
+  .tactical-button {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded font-medium text-sm transition-all;
+    transition: var(--transition-smooth);
+  }
+  
+  .tactical-button-primary {
+    @apply tactical-button bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+  
+  .tactical-button-secondary {
+    @apply tactical-button bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+  
+  .tactical-button-ghost {
+    @apply tactical-button hover:bg-muted/50;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
