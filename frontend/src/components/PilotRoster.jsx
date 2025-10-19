@@ -196,11 +196,11 @@ export default function PilotRoster({ force, onUpdate }) {
         </table>
       </div>
 
-      {/* Add Pilot Dialog */}
+      {/* Add/Edit Pilot Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent onClose={() => setShowDialog(false)} className="max-w-xl">
           <DialogHeader>
-            <DialogTitle>Add New Pilot</DialogTitle>
+            <DialogTitle>{editingPilot ? 'Edit Pilot' : 'Add New Pilot'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
