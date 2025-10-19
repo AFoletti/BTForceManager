@@ -221,6 +221,115 @@ export default function ElementalRoster({ force, onUpdate }) {
           </tbody>
         </table>
       </div>
+
+      {/* Add Elemental Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Elemental Point</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Point Name *</label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g., Elemental Point Alpha"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Commander</label>
+                <Input
+                  value={formData.commander}
+                  onChange={(e) => setFormData({ ...formData, commander: e.target.value })}
+                  placeholder="e.g., Star Captain Elena"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Gunnery</label>
+                <Input
+                  type="number"
+                  value={formData.gunnery}
+                  onChange={(e) => setFormData({ ...formData, gunnery: e.target.value })}
+                  placeholder="3"
+                  min="0"
+                  max="8"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Antimech</label>
+                <Input
+                  type="number"
+                  value={formData.antimech}
+                  onChange={(e) => setFormData({ ...formData, antimech: e.target.value })}
+                  placeholder="4"
+                  min="0"
+                  max="8"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">BV (Battle Value) *</label>
+                <Input
+                  type="number"
+                  value={formData.bv}
+                  onChange={(e) => setFormData({ ...formData, bv: e.target.value })}
+                  placeholder="485"
+                  min="0"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Status</label>
+                <Select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
+                  <option value="Operational">Operational</option>
+                  <option value="Damaged">Damaged</option>
+                  <option value="Disabled">Disabled</option>
+                  <option value="Repairing">Repairing</option>
+                  <option value="Unavailable">Unavailable</option>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Image URL (optional)</label>
+                <Input
+                  value={formData.image}
+                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">History</label>
+              <Textarea
+                value={formData.history}
+                onChange={(e) => setFormData({ ...formData, history: e.target.value })}
+                placeholder="Point history, notable engagements, bloodnames..."
+                rows={4}
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={() => setShowDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave} disabled={!formData.name || !formData.bv}>
+                Add Elemental Point
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
