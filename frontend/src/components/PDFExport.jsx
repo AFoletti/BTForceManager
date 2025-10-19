@@ -208,11 +208,11 @@ const ForcePDF = ({ force }) => {
           <View style={styles.forceStatsRow}>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Warchest</Text>
-              <Text style={styles.forceStatValue}>{formatNumber(force.warchest)} WP</Text>
+              <Text style={styles.forceStatValue}>{formatNumber(force.warchest || force.currentWarchest || 0)} WP</Text>
             </View>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Starting Warchest</Text>
-              <Text style={styles.forceStatValue}>{formatNumber(force.startingWarchest)} WP</Text>
+              <Text style={styles.forceStatValue}>{formatNumber(force.startingWarchest || 0)} WP</Text>
             </View>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Mechs</Text>
