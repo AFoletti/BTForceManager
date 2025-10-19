@@ -443,6 +443,60 @@ export default function DowntimeOperations({ force, onUpdate }) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Actions Reference */}
+      <div className="tactical-panel bg-muted/20">
+        <div className="tactical-header">
+          <h3 className="text-sm font-semibold uppercase tracking-wider">Available Actions Reference</h3>
+        </div>
+        <div className="p-4 space-y-3 text-sm">
+          <div className="text-muted-foreground mb-2">
+            Actions are loaded from <code className="bg-muted px-1.5 py-0.5 rounded text-xs">data/downtime-actions.json</code>
+          </div>
+          
+          <div>
+            <div className="font-medium mb-2 text-primary">Mech Actions:</div>
+            {mechActions.map(action => (
+              <div key={action.id} className="mb-2 pl-3 border-l-2 border-muted">
+                <div className="font-medium">{action.name}</div>
+                <div className="text-xs text-muted-foreground">
+                  Formula: <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
+                  {action.makesUnavailable && <span className="ml-2 text-amber-400">(Makes Unavailable)</span>}
+                </div>
+                {action.description && (
+                  <div className="text-xs text-muted-foreground mt-0.5">{action.description}</div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <div className="font-medium mb-2 text-primary">Elemental Actions:</div>
+            {elementalActions.map(action => (
+              <div key={action.id} className="mb-2 pl-3 border-l-2 border-muted">
+                <div className="font-medium">{action.name}</div>
+                <div className="text-xs text-muted-foreground">
+                  Formula: <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
+                </div>
+                {action.description && (
+                  <div className="text-xs text-muted-foreground mt-0.5">{action.description}</div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-2 border-t border-border">
+            <div className="text-xs text-muted-foreground">
+              <p className="mb-1">💡 <strong>To modify actions:</strong></p>
+              <ol className="list-decimal list-inside ml-2 space-y-0.5">
+                <li>Edit <code className="bg-muted px-1 py-0.5 rounded">data/downtime-actions.json</code></li>
+                <li>Formulas use: <code className="bg-muted px-1 py-0.5 rounded">weight</code>, <code className="bg-muted px-1 py-0.5 rounded">wpMultiplier</code>, <code className="bg-muted px-1 py-0.5 rounded">suitsDamaged</code>, <code className="bg-muted px-1 py-0.5 rounded">suitsDestroyed</code></li>
+                <li>Commit and push to GitHub</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
