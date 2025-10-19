@@ -253,11 +253,11 @@ const ForcePDF = ({ force }) => {
               <View style={styles.unitStatsGrid}>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                  <Text style={styles.unitStatValue}>{pilot.gunnery}</Text>
+                  <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Piloting:</Text>
-                  <Text style={styles.unitStatValue}>{pilot.piloting}</Text>
+                  <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
                 </View>
               </View>
               {pilot.history && (
