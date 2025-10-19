@@ -63,7 +63,7 @@ export default function MechRoster({ force }) {
                     </Badge>
                   </td>
                   <td className="text-muted-foreground">{mech.pilot || 'Unassigned'}</td>
-                  <td className="text-right font-mono">{mech.bv.toLocaleString()}</td>
+                  <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
                   <td className="text-right font-mono">{mech.weight}t</td>
                   <td className="text-xs text-muted-foreground">
                     {mech.activityLog && mech.activityLog.length > 0 ? (
