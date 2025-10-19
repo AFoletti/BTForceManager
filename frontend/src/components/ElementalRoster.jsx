@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from './ui/button';
 import { Plus, Minus, Users } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { formatNumber } from '../lib/utils';
 
 export default function ElementalRoster({ force, onUpdate }) {
   const updateCounter = (elementalId, field, delta) => {
