@@ -178,11 +178,11 @@ export default function MechRoster({ force, onUpdate }) {
         </table>
       </div>
 
-      {/* Add Mech Dialog */}
+      {/* Add/Edit Mech Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Add New Mech</DialogTitle>
+            <DialogTitle>{editingMech ? 'Edit Mech' : 'Add New Mech'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
