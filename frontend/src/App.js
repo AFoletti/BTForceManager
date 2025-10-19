@@ -158,9 +158,9 @@ export default function App() {
                 <FileText className="w-4 h-4" />
                 Missions
               </TabsTrigger>
-              <TabsTrigger value="repair">
+              <TabsTrigger value="downtime">
                 <Wrench className="w-4 h-4" />
-                Repair Bay
+                Downtime
               </TabsTrigger>
               <TabsTrigger value="data">
                 <Database className="w-4 h-4" />
