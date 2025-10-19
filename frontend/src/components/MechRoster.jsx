@@ -135,6 +135,101 @@ export default function MechRoster({ force, onUpdate }) {
           </tbody>
         </table>
       </div>
+
+      {/* Add Mech Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Mech</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Mech Name *</label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g., Atlas AS7-D"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Status</label>
+                <Select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
+                  <option value="Operational">Operational</option>
+                  <option value="Damaged">Damaged</option>
+                  <option value="Disabled">Disabled</option>
+                  <option value="Repairing">Repairing</option>
+                  <option value="Unavailable">Unavailable</option>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Pilot</label>
+                <Input
+                  value={formData.pilot}
+                  onChange={(e) => setFormData({ ...formData, pilot: e.target.value })}
+                  placeholder="Pilot name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">BV (Battle Value) *</label>
+                <Input
+                  type="number"
+                  value={formData.bv}
+                  onChange={(e) => setFormData({ ...formData, bv: e.target.value })}
+                  placeholder="0"
+                  min="0"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Weight (tons) *</label>
+                <Input
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                  placeholder="0"
+                  min="0"
+                  max="100"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Image URL (optional)</label>
+              <Input
+                value={formData.image}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                placeholder="https://example.com/mech-image.jpg"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">History</label>
+              <Textarea
+                value={formData.history}
+                onChange={(e) => setFormData({ ...formData, history: e.target.value })}
+                placeholder="Mech history, notable battles, previous pilots..."
+                rows={4}
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={() => setShowDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave} disabled={!formData.name || !formData.bv || !formData.weight}>
+                Add Mech
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
