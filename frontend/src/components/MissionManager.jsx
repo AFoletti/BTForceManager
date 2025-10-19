@@ -233,7 +233,7 @@ export default function MissionManager({ force, onUpdate }) {
                           <div className="text-sm">
                             <span className="text-muted-foreground">Total BV:</span>
                             <span className="ml-2 font-mono font-bold text-primary">
-                              {calculateTotalBV(mission.assignedMechs, mission.assignedElementals || []).toLocaleString()}
+                              {formatNumber(calculateTotalBV(mission.assignedMechs, mission.assignedElementals || []))}
                             </span>
                           </div>
                         </div>
