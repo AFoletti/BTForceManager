@@ -142,7 +142,16 @@ export default function PilotRoster({ force, onUpdate }) {
               </tr>
             ) : (
               force.pilots.map(pilot => (
-                <tr key={pilot.id}>
+                <tr 
+                  key={pilot.id}
+                  onClick={(e) => {
+                    // Don't open dialog if clicking on injury buttons
+                    if (!e.target.closest('button')) {
+                      openDialog(pilot);
+                    }
+                  }}
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                >
                   <td className="font-medium">{pilot.name}</td>
                   <td className="text-center font-mono">{pilot.gunnery}</td>
                   <td className="text-center font-mono">{pilot.piloting}</td>
