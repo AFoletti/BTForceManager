@@ -245,8 +245,10 @@ Examples:
 
 - **React** 18.2 - UI framework
 - **Tailwind CSS** 3.3 - Styling
+- **Shadcn/ui** - UI component library
+- **@react-pdf/renderer** 4.3 - PDF generation
 - **Lucide React** - Icons
-- **LocalStorage** - Data persistence
+- **Static JSON Files** - Data storage
 - **Create React App** - Build tooling
 
 ## 📁 Repository Structure
