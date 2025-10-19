@@ -266,7 +266,7 @@ export default function MechRoster({ force, onUpdate }) {
                 Cancel
               </Button>
               <Button onClick={handleSave} disabled={!formData.name || !formData.bv || !formData.weight}>
-                Add Mech
+                {editingMech ? 'Update Mech' : 'Add Mech'}
               </Button>
             </div>
           </div>
