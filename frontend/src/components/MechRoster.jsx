@@ -72,7 +72,13 @@ export default function MechRoster({ force, onUpdate }) {
             <Shield className="w-4 h-4" />
             Mech Roster
           </h3>
-          <span className="text-xs text-muted-foreground">{force.mechs.length} Units</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">{force.mechs.length} Units</span>
+            <Button size="sm" onClick={() => setShowDialog(true)}>
+              <Plus className="w-4 h-4" />
+              Add Mech
+            </Button>
+          </div>
         </div>
       </div>
       
