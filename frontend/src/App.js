@@ -141,10 +141,14 @@ export default function App() {
       <main className="container mx-auto px-4 py-8">
         {selectedForce ? (
           <Tabs defaultValue="mechs" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5 lg:w-auto">
+            <TabsList className="grid w-full grid-cols-6 lg:w-auto">
               <TabsTrigger value="mechs">
                 <Shield className="w-4 h-4" />
                 Mechs
+              </TabsTrigger>
+              <TabsTrigger value="elementals">
+                <Users className="w-4 h-4" />
+                Elementals
               </TabsTrigger>
               <TabsTrigger value="pilots">
                 <FileText className="w-4 h-4" />
@@ -166,6 +170,10 @@ export default function App() {
 
             <TabsContent value="mechs">
               <MechRoster force={selectedForce} onUpdate={updateForceData} />
+            </TabsContent>
+
+            <TabsContent value="elementals">
+              <ElementalRoster force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
             <TabsContent value="pilots">
