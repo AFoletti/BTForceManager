@@ -93,8 +93,8 @@ export default function RepairBay({ force, onUpdate }) {
           </div>
 
           {selectedMech && selectedAction && (
-            <div className="border border-border rounded-lg p-4 bg-muted/20">
-              <div className="grid md:grid-cols-2 gap-4 mb-4">
+            <div className="border border-border rounded-lg p-4 bg-muted/20 space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Mech</div>
                   <div className="font-semibold">{selectedMech.name}</div>
@@ -122,23 +122,24 @@ export default function RepairBay({ force, onUpdate }) {
                   </div>
                 )}
               </div>
-            </div>
-          )}
-
-          <div className="flex justify-end">
-            <Button 
-              onClick={performRepair}
-              disabled={!selectedMech || !selectedAction || !canAffordRepair}
-              size="lg"
-            >
-              Perform Repair ({repairCost} WP)
-            </Button>
-          </div>
-          
-          {!canAffordRepair && selectedAction && (
-            <div className="text-sm text-destructive flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4" />
-              Insufficient warchest points
+              
+              <div className="flex flex-col gap-3 pt-4">
+                <Button 
+                  onClick={performRepair}
+                  disabled={!canAffordRepair}
+                  size="lg"
+                  className="w-full"
+                >
+                  Perform Repair ({repairCost} WP)
+                </Button>
+                
+                {!canAffordRepair && (
+                  <div className="text-sm text-destructive flex items-center gap-2 justify-center">
+                    <AlertTriangle className="w-4 h-4" />
+                    Insufficient warchest points
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
