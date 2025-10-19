@@ -51,7 +51,18 @@ A comprehensive static web application for managing BattleTech Classic forces, m
 
 ## 🚀 Quick Start
 
-### Local Development
+### Using the Live App
+
+The app is ready to use immediately:
+1. Open `index.html` in your browser, or
+2. Visit the GitHub Pages deployment
+3. Start managing your BattleTech forces!
+
+All data is stored locally in your browser's localStorage.
+
+### Development Setup
+
+If you want to modify the source code:
 
 ```bash
 # Navigate to frontend directory
@@ -72,8 +83,40 @@ yarn start
 cd frontend
 yarn build
 
-# Build output in frontend/build/
+# Then copy build contents to root
+cp -r build/* ../
 ```
+
+## 📦 GitHub Pages Deployment
+
+This repository is already configured for GitHub Pages:
+
+1. **Push to GitHub:**
+```bash
+git add .
+git commit -m "Deploy BattleTech Forces Manager"
+git push origin main
+```
+
+2. **Enable GitHub Pages:**
+   - Go to repository **Settings** → **Pages**
+   - Under "Source", select **Deploy from a branch**
+   - Choose branch: **main**
+   - Choose folder: **/ (root)**
+   - Click **Save**
+
+3. **Access your app:**
+```
+https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/
+```
+
+That's it! The `index.html` and `static/` folder are already in the root, so GitHub Pages will serve them automatically.
+
+### Alternative: Use docs/ folder
+
+If you prefer to keep build files in a subfolder:
+1. Move `index.html` and `static/` to a `docs/` folder
+2. In GitHub Pages settings, select folder: **docs**
 
 ## 📁 Data Structure
 
