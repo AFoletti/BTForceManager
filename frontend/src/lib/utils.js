@@ -5,6 +5,11 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+export function formatNumber(num) {
+  // Use apostrophe as thousand separator
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+}
+
 export function evaluateFormula(formula, weight) {
   try {
     // Replace 'weight' with actual value and evaluate
