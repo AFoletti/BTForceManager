@@ -11,16 +11,7 @@ export default function ElementalRoster({ force, onUpdate }) {
         const currentValue = elemental[field];
         const newValue = Math.max(0, Math.min(maxValue, currentValue + delta));
         
-        const activityLog = [...(elemental.activityLog || [])];
-        if (newValue !== currentValue) {
-          const fieldName = field === 'suitsDestroyed' ? 'Suits Destroyed' : 'Suits Damaged';
-          activityLog.push({
-            timestamp: new Date().toISOString(),
-            action: `${fieldName} ${delta > 0 ? 'increased' : 'decreased'} to ${newValue}`,
-            mission: null
-          });
-        }
-        return { ...elemental, [field]: newValue, activityLog };
+        return { ...elemental, [field]: newValue };
       }
       return elemental;
     });
