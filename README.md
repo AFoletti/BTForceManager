@@ -244,14 +244,35 @@ Examples:
 
 ## 🚢 Deployment
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed GitHub Pages deployment instructions.
+**The app is ready to deploy as-is!**
 
-Quick deploy:
-```bash
-cd frontend
-yarn build
-# Upload build/ folder to your web host or GitHub Pages
-```
+The root of this repository contains:
+- `index.html` - Main entry point
+- `static/` - All bundled assets
+- `.nojekyll` - GitHub Pages configuration
+
+### Deploy to GitHub Pages
+
+1. Push this repository to GitHub
+2. Go to Settings → Pages
+3. Select source: **Deploy from a branch**
+4. Select branch: **main**, folder: **/ (root)**
+5. Save and wait 1-2 minutes
+
+Your app will be live at: `https://username.github.io/repo-name/`
+
+### Deploy to Other Platforms
+
+**Netlify/Vercel:**
+- Connect your GitHub repository
+- Build command: `cd frontend && yarn build && cp -r build/* ../`
+- Publish directory: `/`
+
+**Traditional Web Hosting:**
+- Upload `index.html`, `static/`, and `.nojekyll` to your web root
+- Ensure web server supports single-page applications
+
+For detailed deployment instructions, see [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
 
 ## 📝 Usage Tips
 
