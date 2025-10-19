@@ -150,7 +150,7 @@ export default function ElementalRoster({ force, onUpdate }) {
             <span className="text-xs text-muted-foreground">
               {force.elementals?.length || 0} Points
             </span>
-            <Button size="sm" onClick={() => setShowDialog(true)}>
+            <Button size="sm" onClick={() => openDialog()}>
               <Plus className="w-4 h-4" />
               Add Elemental
             </Button>
