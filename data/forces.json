@@ -47,6 +47,21 @@
           "activityLog": []
         }
       ],
+      "elementals": [
+        {
+          "id": "elemental-1",
+          "name": "Elemental Point Alpha",
+          "commander": "Star Captain Elena",
+          "gunnery": 3,
+          "antimech": 4,
+          "suitsDestroyed": 0,
+          "suitsDamaged": 0,
+          "bv": 485,
+          "status": "Operational",
+          "image": "",
+          "activityLog": []
+        }
+      ],
       "missions": [],
       "repairActions": [
         {
