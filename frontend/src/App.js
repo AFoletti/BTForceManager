@@ -123,6 +123,10 @@ export default function App() {
                     <span className="ml-2 font-mono">{selectedForce.mechs.length}</span>
                   </div>
                   <div>
+                    <span className="text-muted-foreground">Elementals:</span>
+                    <span className="ml-2 font-mono">{selectedForce.elementals?.length || 0}</span>
+                  </div>
+                  <div>
                     <span className="text-muted-foreground">Pilots:</span>
                     <span className="ml-2 font-mono">{selectedForce.pilots.length}</span>
                   </div>
