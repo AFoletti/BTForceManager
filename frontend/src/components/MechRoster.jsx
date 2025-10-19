@@ -141,7 +141,11 @@ export default function MechRoster({ force, onUpdate }) {
               </tr>
             ) : (
               force.mechs.map(mech => (
-                <tr key={mech.id}>
+                <tr 
+                  key={mech.id}
+                  onClick={() => openDialog(mech)}
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                >
                   <td>
                     <div className="flex items-center gap-3">
                       {mech.image && (
