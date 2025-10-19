@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Wrench, FileText, Download, Upload, Database } from 'lucide-react';
+import { Shield, Wrench, FileText, Download, Database } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -20,7 +20,8 @@ export default function App() {
     setSelectedForceId,
     updateForceData,
     exportData,
-    importData
+    loading,
+    error
   } = useForceManager();
 
   const handleExport = () => {
@@ -28,22 +29,31 @@ export default function App() {
     downloadJSON(data, `battletech-forces-${Date.now()}.json`);
   };
 
-  const handleImport = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Shield className="w-16 h-16 mx-auto mb-4 text-primary animate-pulse" />
+          <p className="text-foreground">Loading forces data...</p>
+        </div>
+      </div>
+    );
+  }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        importData(data);
-        alert('Data imported successfully!');
-      } catch (error) {
-        alert('Error importing data: ' + error.message);
-      }
-    };
-    reader.readAsText(file);
-  };
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <Shield className="w-16 h-16 mx-auto mb-4 text-destructive" />
+          <h2 className="text-xl font-bold text-foreground mb-2">Error Loading Data</h2>
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <p className="text-sm text-muted-foreground">
+            Make sure <code className="bg-muted px-2 py-1 rounded">data/forces.json</code> exists in the repository.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,19 +88,6 @@ export default function App() {
                 <Download className="w-4 h-4" />
                 Export
               </Button>
-              
-              <label>
-                <input
-                  type="file"
-                  accept=".json"
-                  onChange={handleImport}
-                  className="hidden"
-                />
-                <Button variant="outline" size="sm" as="span" onClick={(e) => e.currentTarget.previousElementSibling.click()}>
-                  <Upload className="w-4 h-4" />
-                  Import
-                </Button>
-              </label>
             </div>
           </div>
         </div>
@@ -185,7 +182,7 @@ export default function App() {
         ) : (
           <div className="text-center py-12 text-muted-foreground">
             <Shield className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p>No forces available. Import data to get started.</p>
+            <p>No forces available. Check your data/forces.json file.</p>
           </div>
         )}
       </main>
