@@ -438,17 +438,45 @@ const ForcePDF = ({ force }) => {
 };
 
 export default function PDFExport({ force }) {
+  const [isGenerating, setIsGenerating] = useState(false);
+
   if (!force) return null;
 
-  const fileName = `${force.name.replace(/\s+/g, '_')}_Force_Report.pdf`;
+  const handleGeneratePDF = async () => {
+    try {
+      setIsGenerating(true);
+      const fileName = `${force.name.replace(/\s+/g, '_')}_Force_Report.pdf`;
+      
+      // Generate PDF
+      const blob = await pdf(<ForcePDF force={force} />).toBlob();
+      
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      setIsGenerating(false);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+      setIsGenerating(false);
+    }
+  };
 
   return (
-    <PDFDownloadLink
-      document={<ForcePDF force={force} />}
-      fileName={fileName}
-      className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 rounded-md text-sm font-medium transition-colors"
+    <Button 
+      variant="default"
+      size="sm" 
+      onClick={handleGeneratePDF}
+      disabled={isGenerating}
+      className="bg-accent text-accent-foreground hover:bg-accent/90"
     >
-      {({ loading }) => (loading ? 'Generating PDF...' : 'Export PDF')}
-    </PDFDownloadLink>
+      {isGenerating ? 'Generating PDF...' : 'Export PDF'}
+    </Button>
   );
 }
