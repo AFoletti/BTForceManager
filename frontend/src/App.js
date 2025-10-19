@@ -1,10 +1,11 @@
 import React from 'react';
-import { Shield, Wrench, FileText, Download, Database } from 'lucide-react';
+import { Shield, Wrench, FileText, Download, Database, Users } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
 import { downloadJSON } from './lib/utils';
 import MechRoster from './components/MechRoster';
+import ElementalRoster from './components/ElementalRoster';
 import PilotRoster from './components/PilotRoster';
 import MissionManager from './components/MissionManager';
 import RepairBay from './components/RepairBay';
