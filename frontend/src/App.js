@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Wrench, FileText, Download, Database, Users, Plus } from 'lucide-react';
+import { Shield, Wrench, FileText, Download, Database, Users, Plus, FileDown } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -11,6 +11,7 @@ import MissionManager from './components/MissionManager';
 import DowntimeOperations from './components/DowntimeOperations';
 import DataEditor from './components/DataEditor';
 import AddForceDialog from './components/AddForceDialog';
+import PDFExport from './components/PDFExport';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
