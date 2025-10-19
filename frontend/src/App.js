@@ -184,8 +184,8 @@ export default function App() {
               <MissionManager force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="repair">
-              <RepairBay force={selectedForce} onUpdate={updateForceData} />
+            <TabsContent value="downtime">
+              <DowntimeOperations force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
             <TabsContent value="data">
