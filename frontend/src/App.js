@@ -1,5 +1,5 @@
-import React from 'react';
-import { Shield, Wrench, FileText, Download, Database, Users } from 'lucide-react';
+import React, { useState } from 'react';
+import { Shield, Wrench, FileText, Download, Database, Users, Plus } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -10,6 +10,7 @@ import PilotRoster from './components/PilotRoster';
 import MissionManager from './components/MissionManager';
 import DowntimeOperations from './components/DowntimeOperations';
 import DataEditor from './components/DataEditor';
+import AddForceDialog from './components/AddForceDialog';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
@@ -20,14 +21,24 @@ export default function App() {
     selectedForce,
     setSelectedForceId,
     updateForceData,
-    exportData,
+    addNewForce,
+    exportForce,
     loading,
     error
   } = useForceManager();
 
+  const [showAddForceDialog, setShowAddForceDialog] = useState(false);
+
   const handleExport = () => {
-    const data = exportData();
-    downloadJSON(data, `battletech-forces-${Date.now()}.json`);
+    if (!selectedForce) return;
+    const forceData = exportForce(selectedForceId);
+    const filename = `${selectedForce.id}.json`;
+    downloadJSON(forceData, filename);
+  };
+
+  const handleAddForce = (newForce) => {
+    addNewForce(newForce);
+    alert(`✅ Force "${newForce.name}" created!\n\n⚠️ IMPORTANT: This is a session-only force.\nTo persist:\n1. Go to Data Editor tab\n2. Click "Export Force"\n3. Save as data/forces/${newForce.id}.json\n4. Add "${newForce.id}.json" to manifest.json\n5. Commit and push to GitHub`);
   };
 
   if (loading) {
