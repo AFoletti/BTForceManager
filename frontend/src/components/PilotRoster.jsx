@@ -113,7 +113,7 @@ export default function PilotRoster({ force, onUpdate }) {
           </h3>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground">{force.pilots.length} Pilots</span>
-            <Button size="sm" onClick={() => setShowDialog(true)}>
+            <Button size="sm" onClick={() => openDialog()}>
               <Plus className="w-4 h-4" />
               Add Pilot
             </Button>
