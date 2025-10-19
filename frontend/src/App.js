@@ -107,6 +107,8 @@ export default function App() {
                 Add Force
               </Button>
               
+              <PDFExport force={selectedForce} />
+              
               <Button variant="outline" size="sm" onClick={handleExport}>
                 <Download className="w-4 h-4" />
                 Export
