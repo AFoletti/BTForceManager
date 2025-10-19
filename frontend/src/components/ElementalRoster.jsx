@@ -1,10 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Select } from './ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, Minus, Users } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { formatNumber } from '../lib/utils';
 
 export default function ElementalRoster({ force, onUpdate }) {
+  const [showDialog, setShowDialog] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    commander: '',
+    gunnery: 3,
+    antimech: 4,
+    suitsDestroyed: 0,
+    suitsDamaged: 0,
+    bv: 0,
+    status: 'Operational',
+    image: '',
+    history: ''
+  });
+
+  const handleSave = () => {
+    if (!formData.name || !formData.bv) {
+      alert('Name and BV are required');
+      return;
+    }
+
+    const newElemental = {
+      id: `elemental-${Date.now()}`,
+      name: formData.name,
+      commander: formData.commander,
+      gunnery: parseInt(formData.gunnery) || 3,
+      antimech: parseInt(formData.antimech) || 4,
+      suitsDestroyed: 0,
+      suitsDamaged: 0,
+      bv: parseInt(formData.bv) || 0,
+      status: formData.status,
+      image: formData.image,
+      history: formData.history,
+      activityLog: []
+    };
+
+    const updatedElementals = [...(force.elementals || []), newElemental];
+    onUpdate({ elementals: updatedElementals });
+
+    // Reset form
+    setFormData({
+      name: '',
+      commander: '',
+      gunnery: 3,
+      antimech: 4,
+      suitsDestroyed: 0,
+      suitsDamaged: 0,
+      bv: 0,
+      status: 'Operational',
+      image: '',
+      history: ''
+    });
+    setShowDialog(false);
+  };
   const updateCounter = (elementalId, field, delta) => {
     const updatedElementals = force.elementals.map(elemental => {
       if (elemental.id === elementalId) {
