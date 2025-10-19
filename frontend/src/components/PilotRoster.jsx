@@ -1,9 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, Minus, User } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 export default function PilotRoster({ force, onUpdate }) {
+  const [showDialog, setShowDialog] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    gunnery: 4,
+    piloting: 5,
+    injuries: 0,
+    history: ''
+  });
+
+  const handleSave = () => {
+    if (!formData.name) {
+      alert('Name is required');
+      return;
+    }
+
+    const newPilot = {
+      id: `pilot-${Date.now()}`,
+      name: formData.name,
+      gunnery: parseInt(formData.gunnery) || 4,
+      piloting: parseInt(formData.piloting) || 5,
+      injuries: 0,
+      history: formData.history,
+      activityLog: []
+    };
+
+    const updatedPilots = [...force.pilots, newPilot];
+    onUpdate({ pilots: updatedPilots });
+
+    // Reset form
+    setFormData({
+      name: '',
+      gunnery: 4,
+      piloting: 5,
+      injuries: 0,
+      history: ''
+    });
+    setShowDialog(false);
+  };
   const updateInjuries = (pilotId, delta) => {
     const updatedPilots = force.pilots.map(pilot => {
       if (pilot.id === pilotId) {
