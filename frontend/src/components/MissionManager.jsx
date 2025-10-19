@@ -3,7 +3,8 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Target, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Plus, Target, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
+import { Badge } from './ui/badge';
 import { formatDate } from '../lib/utils';
 
 export default function MissionManager({ force, onUpdate }) {
@@ -16,7 +17,8 @@ export default function MissionManager({ force, onUpdate }) {
     objectives: '',
     recap: '',
     warchestGained: 0,
-    completed: false
+    completed: false,
+    assignedMechs: []
   });
 
   const openDialog = (mission = null) => {
