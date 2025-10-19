@@ -377,7 +377,7 @@ export default function ElementalRoster({ force, onUpdate }) {
                 Cancel
               </Button>
               <Button onClick={handleSave} disabled={!formData.name || !formData.bv}>
-                Add Elemental Point
+                {editingElemental ? 'Update Elemental Point' : 'Add Elemental Point'}
               </Button>
             </div>
           </div>
