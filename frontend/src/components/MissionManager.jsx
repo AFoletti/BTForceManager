@@ -52,15 +52,35 @@ export default function MissionManager({ force, onUpdate }) {
     }));
   };
 
-  const calculateTotalBV = (mechIds) => {
-    return mechIds.reduce((total, mechId) => {
+  const toggleElementalAssignment = (elementalId) => {
+    setFormData(prev => ({
+      ...prev,
+      assignedElementals: prev.assignedElementals.includes(elementalId)
+        ? prev.assignedElementals.filter(id => id !== elementalId)
+        : [...prev.assignedElementals, elementalId]
+    }));
+  };
+
+  const calculateTotalBV = (mechIds, elementalIds = []) => {
+    const mechBV = mechIds.reduce((total, mechId) => {
       const mech = force.mechs.find(m => m.id === mechId);
       return total + (mech?.bv || 0);
     }, 0);
+    
+    const elementalBV = elementalIds.reduce((total, elementalId) => {
+      const elemental = force.elementals?.find(e => e.id === elementalId);
+      return total + (elemental?.bv || 0);
+    }, 0);
+    
+    return mechBV + elementalBV;
   };
 
   const getAssignedMechs = (mechIds) => {
     return mechIds.map(id => force.mechs.find(m => m.id === id)).filter(Boolean);
+  };
+
+  const getAssignedElementals = (elementalIds) => {
+    return elementalIds.map(id => force.elementals?.find(e => e.id === id)).filter(Boolean);
   };
 
   const saveMission = () => {
