@@ -76,9 +76,44 @@ export default function MissionManager({ force, onUpdate }) {
       };
       missions.push(newMission);
       
-      // Deduct mission cost
+      // Log mission assignment for assigned mechs and their pilots
+      const updatedMechs = force.mechs.map(mech => {
+        if (formData.assignedMechs.includes(mech.id)) {
+          const activityLog = [...(mech.activityLog || [])];
+          activityLog.push({
+            timestamp,
+            action: `Assigned to mission: ${formData.name}`,
+            mission: formData.name
+          });
+          return { ...mech, activityLog };
+        }
+        return mech;
+      });
+      
+      // Log mission assignment for pilots of assigned mechs
+      const assignedMechs = force.mechs.filter(m => formData.assignedMechs.includes(m.id));
+      const updatedPilots = force.pilots.map(pilot => {
+        const pilotMech = assignedMechs.find(m => m.pilot === pilot.name);
+        if (pilotMech) {
+          const activityLog = [...(pilot.activityLog || [])];
+          activityLog.push({
+            timestamp,
+            action: `Assigned to mission: ${formData.name} (piloting ${pilotMech.name})`,
+            mission: formData.name
+          });
+          return { ...pilot, activityLog };
+        }
+        return pilot;
+      });
+      
+      // Deduct mission cost and update data
       const newWarchest = force.currentWarchest - formData.cost;
-      onUpdate({ missions, currentWarchest: newWarchest });
+      onUpdate({ 
+        missions, 
+        mechs: updatedMechs,
+        pilots: updatedPilots,
+        currentWarchest: newWarchest 
+      });
       setShowDialog(false);
       return;
     }
