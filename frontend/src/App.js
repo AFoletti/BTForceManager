@@ -216,10 +216,17 @@ export default function App() {
         ) : (
           <div className="text-center py-12 text-muted-foreground">
             <Shield className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p>No forces available. Check your data/forces.json file.</p>
+            <p>No forces available. Check your data/forces/ folder.</p>
           </div>
         )}
       </main>
+
+      {/* Add Force Dialog */}
+      <AddForceDialog
+        open={showAddForceDialog}
+        onOpenChange={setShowAddForceDialog}
+        onAdd={handleAddForce}
+      />
     </div>
   );
 }
