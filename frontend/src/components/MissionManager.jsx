@@ -34,10 +34,31 @@ export default function MissionManager({ force, onUpdate }) {
         objectives: '',
         recap: '',
         warchestGained: 0,
-        completed: false
+        completed: false,
+        assignedMechs: []
       });
     }
     setShowDialog(true);
+  };
+
+  const toggleMechAssignment = (mechId) => {
+    setFormData(prev => ({
+      ...prev,
+      assignedMechs: prev.assignedMechs.includes(mechId)
+        ? prev.assignedMechs.filter(id => id !== mechId)
+        : [...prev.assignedMechs, mechId]
+    }));
+  };
+
+  const calculateTotalBV = (mechIds) => {
+    return mechIds.reduce((total, mechId) => {
+      const mech = force.mechs.find(m => m.id === mechId);
+      return total + (mech?.bv || 0);
+    }, 0);
+  };
+
+  const getAssignedMechs = (mechIds) => {
+    return mechIds.map(id => force.mechs.find(m => m.id === id)).filter(Boolean);
   };
 
   const saveMission = () => {
