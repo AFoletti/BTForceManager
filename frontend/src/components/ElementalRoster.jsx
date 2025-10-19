@@ -182,7 +182,16 @@ export default function ElementalRoster({ force, onUpdate }) {
               </tr>
             ) : (
               force.elementals.map(elemental => (
-                <tr key={elemental.id}>
+                <tr 
+                  key={elemental.id}
+                  onClick={(e) => {
+                    // Don't open dialog if clicking on suit counter buttons
+                    if (!e.target.closest('button')) {
+                      openDialog(elemental);
+                    }
+                  }}
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                >
                   <td>
                     <div className="flex items-center gap-3">
                       {elemental.image && (
