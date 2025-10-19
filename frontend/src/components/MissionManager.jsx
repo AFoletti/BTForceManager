@@ -149,6 +149,32 @@ export default function MissionManager({ force, onUpdate }) {
                         <p className="text-muted-foreground">{mission.objectives}</p>
                       </div>
                     )}
+                    
+                    {/* Assigned Mechs */}
+                    {mission.assignedMechs && mission.assignedMechs.length > 0 && (
+                      <div className="mt-3 p-3 bg-background/50 rounded border border-border">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Shield className="w-4 h-4 text-primary" />
+                            <span className="font-medium text-sm">Assigned Force</span>
+                          </div>
+                          <div className="text-sm">
+                            <span className="text-muted-foreground">Total BV:</span>
+                            <span className="ml-2 font-mono font-bold text-primary">
+                              {calculateTotalBV(mission.assignedMechs).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {getAssignedMechs(mission.assignedMechs).map(mech => (
+                            <Badge key={mech.id} variant="secondary" className="text-xs">
+                              {mech.name} ({mech.bv.toLocaleString()} BV)
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
                     {mission.recap && (
                       <div className="text-sm mt-2 p-3 bg-background/50 rounded">
                         <span className="font-medium">Mission Recap:</span>
