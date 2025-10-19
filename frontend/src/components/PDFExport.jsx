@@ -1,6 +1,11 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
-import { formatNumber } from '../lib/utils';
+
+// Safe number formatter for PDF
+const formatNumber = (num) => {
+  if (num === null || num === undefined || isNaN(num)) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+};
 
 // Military-themed styles for PDF
 const styles = StyleSheet.create({
