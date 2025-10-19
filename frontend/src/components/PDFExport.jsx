@@ -381,9 +381,9 @@ const ForcePDF = ({ force }) => {
           force.missions.map((mission, index) => (
             <View key={mission.id} style={styles.missionCard} wrap={false}>
               <View style={styles.missionHeader}>
-                <Text style={styles.missionName}>{mission.name}</Text>
+                <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
                 <Text style={styles.missionMeta}>
-                  Cost: {formatNumber(mission.cost)} WP | Gained: {formatNumber(mission.gained)} WP | Total BV: {formatNumber(mission.totalBV || 0)}
+                  Cost: {formatNumber(mission.cost || 0)} WP | Gained: {formatNumber(mission.gained || 0)} WP | Total BV: {formatNumber(mission.totalBV || 0)}
                 </Text>
               </View>
               
