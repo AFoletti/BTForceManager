@@ -33,7 +33,7 @@ export default function DataEditor({ force, onUpdate }) {
   const handleExportForce = () => {
     try {
       const parsedForce = JSON.parse(forceJSON);
-      downloadJSON({ forces: [parsedForce] }, `${parsedForce.name.toLowerCase().replace(/\s+/g, '-')}-force.json`);
+      downloadJSON(parsedForce, `${parsedForce.id}.json`);
     } catch (err) {
       alert('Invalid JSON: ' + err.message);
     }
