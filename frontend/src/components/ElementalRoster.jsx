@@ -142,7 +142,7 @@ export default function ElementalRoster({ force, onUpdate }) {
                       </Button>
                     </div>
                   </td>
-                  <td className="text-right font-mono">{elemental.bv.toLocaleString()}</td>
+                  <td className="text-right font-mono">{formatNumber(elemental.bv)}</td>
                   <td className="text-xs text-muted-foreground">
                     {elemental.activityLog && elemental.activityLog.length > 0 ? (
                       <div className="max-w-xs truncate">
