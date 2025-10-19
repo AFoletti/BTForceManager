@@ -218,6 +218,30 @@ Examples:
 - **LocalStorage** - Data persistence
 - **Create React App** - Build tooling
 
+## 📁 Repository Structure
+
+```
+/
+├── index.html              # Main app entry point (GitHub Pages serves this)
+├── static/                 # Built CSS and JavaScript bundles
+│   ├── css/
+│   └── js/
+├── frontend/               # Source code (for development)
+│   ├── src/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── App.js
+│   │   └── index.css
+│   ├── public/
+│   └── package.json
+├── docs/                   # Documentation
+│   ├── DEPLOYMENT.md
+│   └── GETTING_STARTED.md
+├── README.md               # This file
+└── .nojekyll              # Tells GitHub Pages to serve static files
+```
+
 ## 🚢 Deployment
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed GitHub Pages deployment instructions.
