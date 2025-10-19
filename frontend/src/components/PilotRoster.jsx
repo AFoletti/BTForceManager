@@ -7,16 +7,8 @@ export default function PilotRoster({ force, onUpdate }) {
   const updateInjuries = (pilotId, delta) => {
     const updatedPilots = force.pilots.map(pilot => {
       if (pilot.id === pilotId) {
-        const newInjuries = Math.max(0, Math.min(5, pilot.injuries + delta));
-        const activityLog = [...(pilot.activityLog || [])];
-        if (newInjuries !== pilot.injuries) {
-          activityLog.push({
-            timestamp: new Date().toISOString(),
-            action: `Injuries ${delta > 0 ? 'increased' : 'decreased'} to ${newInjuries}`,
-            mission: null
-          });
-        }
-        return { ...pilot, injuries: newInjuries, activityLog };
+        const newInjuries = Math.max(0, Math.min(6, pilot.injuries + delta));
+        return { ...pilot, injuries: newInjuries };
       }
       return pilot;
     });
@@ -25,9 +17,15 @@ export default function PilotRoster({ force, onUpdate }) {
   };
 
   const getInjuryColor = (injuries) => {
+    if (injuries === 6) return 'disabled'; // KIA
     if (injuries === 0) return 'operational';
     if (injuries <= 2) return 'damaged';
     return 'disabled';
+  };
+
+  const getInjuryDisplay = (injuries) => {
+    if (injuries === 6) return 'KIA';
+    return `${injuries}/6`;
   };
 
   return (
