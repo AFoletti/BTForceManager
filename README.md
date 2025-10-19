@@ -10,38 +10,69 @@ A comprehensive static web application for managing BattleTech Classic forces, m
 
 ### 🤖 Mech Management
 - Track mechs with status, pilot assignment, BV (Battle Value), and weight
+- **Edit mechs by clicking on them** in the roster table
 - View mech roster with images and detailed information
+- Add custom history notes for each mech
 - Monitor mech activity logs for repair and mission history
 - Support for multiple mech statuses (Operational, Damaged, Unavailable, etc.)
 
 ### 👤 Pilot Management
 - Manage pilots with gunnery and piloting skills
-- Track pilot injuries (0-5 scale) with +/- buttons
+- **Edit pilots by clicking on them** in the roster table
+- Track pilot injuries (0-6 scale) with +/- buttons, showing "KIA" at 6
+- Add custom history and background for each pilot
 - View injury status with color-coded badges
 - Activity logging for each pilot
 
+### 🎖️ Elemental Management
+- Manage Elemental infantry points with commander assignments
+- **Edit Elementals by clicking on them** in the roster table
+- Track gunnery and antimech skills
+- Monitor suits destroyed (0-4) and damaged (0-5) with +/- buttons
+- Add custom history for each Elemental point
+- Battle Value tracking and activity logging
+
 ### 🎯 Mission System
 - Create named missions with descriptions and objectives
+- Assign mechs and elementals to missions
+- Track total Battle Value (BV) of assigned forces
 - Warchest-based mission costing system
 - Mission cost deducted before mission starts
 - Warchest rewards added after mission completion
 - Write mission recaps and track outcomes
-- Mission history with status badges (Active/Complete)
+- Mission history with complete activity logs
 
-### 🔧 Repair Bay
+### 🔧 Downtime Operations (formerly Repair Bay)
+- Renamed and expanded repair system
 - Customizable repair actions with formula-based costs
-- Formulas use mech weight for dynamic pricing
-- Example: `Repair Armor: (weight/5)`, `Reconfigure Omni: (weight*20)/5`
-- Visual indicators for actions that make mechs unavailable
-- Real-time cost calculation based on selected mech weight
-- Warchest validation before repairs
+- Force-level WP (Warchest Point) multiplier
+- Formulas use mech weight/suits for dynamic pricing
+- Separate actions for mechs and elementals
+- "Other action" option for custom force-level operations
+- WP calculations automatically round up
+- Real-time cost calculation
+- Warchest validation before operations
+
+### 📄 PDF Export
+- **Export complete force reports as professionally formatted PDFs**
+- Military-themed design optimized for printing on white paper
+- Includes all force data in organized sections:
+  - Force Information header with stats
+  - Pilot Roster with skills and history
+  - Elemental Roster with suit status
+  - Mech Information with assignments
+  - Mission Log with complete details
+- Automatic page breaks for clean printing
+- Professional typography with tactical decorative elements
+- Download as `Force_Name_Force_Report.pdf`
 
 ### 📊 Data Management
 - **Multiple Forces**: Switch between different mercenary units
-- **JSON Editor**: Direct JSON editing for all data (mechs, pilots, repair actions, force info)
-- **Export/Import**: Download and upload force data as JSON files
-- **LocalStorage**: All data persists in browser localStorage
-- **Activity Logging**: Complete history of actions per mech and pilot
+- **JSON Editor**: Direct JSON editing for all data
+- **Export/Import**: Download force data as JSON files
+- **Static JSON Files**: Forces stored in `public/data/forces/` directory
+- **Activity Logging**: Complete history of actions per unit
+- **Add New Forces**: Create new forces with custom attributes
 
 ### 🎨 Design
 - **Dark Military Theme**: Tactical interface with aerospace orange accents
