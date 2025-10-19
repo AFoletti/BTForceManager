@@ -1,9 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Select } from './ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
-import { Shield } from 'lucide-react';
+import { Shield, Plus } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 
-export default function MechRoster({ force }) {
+export default function MechRoster({ force, onUpdate }) {
+  const [showDialog, setShowDialog] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    status: 'Operational',
+    pilot: '',
+    bv: 0,
+    weight: 0,
+    image: '',
+    history: ''
+  });
+
+  const handleSave = () => {
+    if (!formData.name || !formData.bv || !formData.weight) {
+      alert('Name, BV, and Weight are required');
+      return;
+    }
+
+    const newMech = {
+      id: `mech-${Date.now()}`,
+      name: formData.name,
+      status: formData.status,
+      pilot: formData.pilot,
+      bv: parseInt(formData.bv) || 0,
+      weight: parseInt(formData.weight) || 0,
+      image: formData.image,
+      history: formData.history,
+      activityLog: []
+    };
+
+    const updatedMechs = [...force.mechs, newMech];
+    onUpdate({ mechs: updatedMechs });
+
+    // Reset form
+    setFormData({
+      name: '',
+      status: 'Operational',
+      pilot: '',
+      bv: 0,
+      weight: 0,
+      image: '',
+      history: ''
+    });
+    setShowDialog(false);
+  };
   const getStatusColor = (status) => {
     const statusMap = {
       'Operational': 'operational',
