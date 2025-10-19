@@ -295,23 +295,23 @@ const ForcePDF = ({ force }) => {
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.gunnery}</Text>
+                  <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Antimech:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.antimech}</Text>
+                  <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>BV:</Text>
-                  <Text style={styles.unitStatValue}>{formatNumber(elemental.bv)}</Text>
+                  <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDestroyed}/4</Text>
+                  <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/4</Text>
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDamaged}/5</Text>
+                  <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
                 </View>
               </View>
               {elemental.history && (
