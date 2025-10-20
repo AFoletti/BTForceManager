@@ -1,0 +1,310 @@
+{
+  "id": "19th-great-white",
+  "name": "19th Great White",
+  "description": "For the Battle of Tukayyid Campaign",
+  "image": "https://www.wolfsdragoons.com/downloads/Media/pictures/BattleTech%20Insignias/CDSharks.gif",
+  "startingWarchest": 2000,
+  "currentWarchest": 2000,
+  "wpMultiplier": 5,
+  "otherActionsLog": [],
+  "mechs": [
+    {
+      "id": "mech-1760938639034",
+      "name": "Horned Owl",
+      "status": "Operational",
+      "pilot": "Aidan",
+      "bv": 1893,
+      "weight": 35,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938680473",
+      "name": "Vixen",
+      "status": "Operational",
+      "pilot": "Ahren",
+      "bv": 2107,
+      "weight": 30,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938738364",
+      "name": "Black Knight BL-6-KNT",
+      "status": "Operational",
+      "pilot": "Andela",
+      "bv": 2047,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938779264",
+      "name": "Supernova",
+      "status": "Operational",
+      "pilot": "Baber",
+      "bv": 4706,
+      "weight": 90,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938815718",
+      "name": "Puma A",
+      "status": "Operational",
+      "pilot": "Brea",
+      "bv": 1897,
+      "weight": 35,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938838972",
+      "name": "Puma Prime",
+      "status": "Operational",
+      "pilot": "Eskil",
+      "bv": 2750,
+      "weight": 35,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938876034",
+      "name": "Grendel B",
+      "status": "Operational",
+      "pilot": "Zeleny",
+      "bv": 2512,
+      "weight": 45,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938909336",
+      "name": "Ryoken Prime",
+      "status": "Operational",
+      "pilot": "Kiral",
+      "bv": 2736,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938937911",
+      "name": "Shadow Cat A",
+      "status": "Operational",
+      "pilot": "Haydar",
+      "bv": 2930,
+      "weight": 45,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938964711",
+      "name": "Masakari C",
+      "status": "Operational",
+      "pilot": "Clayton",
+      "bv": 5037,
+      "weight": 85,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    }
+  ],
+  "elementals": [
+    {
+      "id": "elemental-1760938532340",
+      "name": "Alpha Point",
+      "commander": "Lukyan",
+      "gunnery": 3,
+      "antimech": 4,
+      "suitsDestroyed": 0,
+      "suitsDamaged": 0,
+      "bv": 447,
+      "status": "Operational",
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "elemental-1760938546232",
+      "name": "Beta Point",
+      "commander": "Monika",
+      "gunnery": 3,
+      "antimech": 4,
+      "suitsDestroyed": 0,
+      "suitsDamaged": 0,
+      "bv": 447,
+      "status": "Operational",
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "elemental-1760938563432",
+      "name": "Charlie Point",
+      "commander": "Sang-Seung",
+      "gunnery": 3,
+      "antimech": 4,
+      "suitsDestroyed": 0,
+      "suitsDamaged": 0,
+      "bv": 447,
+      "status": "Operational",
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "elemental-1760938580767",
+      "name": "Delta Point",
+      "commander": "Svenja",
+      "gunnery": 3,
+      "antimech": 4,
+      "suitsDestroyed": 0,
+      "suitsDamaged": 0,
+      "bv": 447,
+      "status": "Operational",
+      "image": "",
+      "history": "",
+      "activityLog": []
+    }
+  ],
+  "pilots": [
+    {
+      "id": "pilot-1760938261553",
+      "name": "Star Captain Baber",
+      "gunnery": 2,
+      "piloting": 3,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938277391",
+      "name": "Zeleny",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938292407",
+      "name": "Hong-Lian",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938302837",
+      "name": "Haydar",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938311793",
+      "name": "Andela",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938320495",
+      "name": "Zahara",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938332396",
+      "name": "Wei-kang",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938342217",
+      "name": "Eskil",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938361147",
+      "name": "Star Colonel Lai-Yu",
+      "gunnery": 1,
+      "piloting": 2,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938384963",
+      "name": "Ahren",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938395731",
+      "name": "Aidan",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938403716",
+      "name": "Kiral",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938413154",
+      "name": "Brea",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "pilot-1760938430182",
+      "name": "Star Captain Clayton",
+      "gunnery": 2,
+      "piloting": 3,
+      "injuries": 0,
+      "history": "",
+      "activityLog": []
+    }
+  ],
+  "missions": [],
+  "repairActions": []
+}
