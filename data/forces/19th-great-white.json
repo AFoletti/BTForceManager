@@ -117,6 +117,50 @@
       "image": "",
       "history": "",
       "activityLog": []
+    },
+    {
+      "id": "mech-176093892364",
+      "name": "Ryoken B",
+      "status": "Operational",
+      "pilot": "Hong-Lian",
+      "bv": 3011,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760938909266",
+      "name": "Black Hawk Prime",
+      "status": "Operational",
+      "pilot": "Wei-kang",
+      "bv": 3515,
+      "weight": 50,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-17609389036786",
+      "name": "Summoner A",
+      "status": "Operational",
+      "pilot": "Zahara",
+      "bv": 2831,
+      "weight": 70,
+      "image": "",
+      "history": "",
+      "activityLog": []
+    },
+    {
+      "id": "mech-1760973709336",
+      "name": "Timber Wolf Prime",
+      "status": "Operational",
+      "pilot": "Lai-Yu",
+      "bv": 5529,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "activityLog": []
     }
   ],
   "elementals": [
