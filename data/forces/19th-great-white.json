@@ -4,7 +4,7 @@
   "description": "For the Battle of Tukayyid Campaign",
   "image": "https://www.wolfsdragoons.com/downloads/Media/pictures/BattleTech%20Insignias/CDSharks.gif",
   "startingWarchest": 2000,
-  "currentWarchest": 2000,
+  "currentWarchest": 1800,
   "wpMultiplier": 5,
   "otherActionsLog": [],
   "mechs": [
@@ -39,7 +39,13 @@
       "weight": 75,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "mech-1760938779264",
@@ -105,7 +111,13 @@
       "weight": 45,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "mech-1760938964711",
@@ -127,7 +139,13 @@
       "weight": 55,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "mech-1760938909266",
@@ -149,7 +167,13 @@
       "weight": 70,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "mech-1760973709336",
@@ -176,7 +200,13 @@
       "status": "Operational",
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "elemental-1760938546232",
@@ -190,7 +220,13 @@
       "status": "Operational",
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "elemental-1760938563432",
@@ -204,7 +240,13 @@
       "status": "Operational",
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "elemental-1760938580767",
@@ -218,7 +260,13 @@
       "status": "Operational",
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     }
   ],
   "pilots": [
@@ -247,7 +295,13 @@
       "piloting": 4,
       "injuries": 0,
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Ryoken B)",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "pilot-1760938302837",
@@ -256,7 +310,13 @@
       "piloting": 4,
       "injuries": 0,
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Shadow Cat A)",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "pilot-1760938311793",
@@ -265,7 +325,13 @@
       "piloting": 4,
       "injuries": 0,
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Black Knight BL-6-KNT)",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "pilot-1760938320495",
@@ -274,7 +340,13 @@
       "piloting": 4,
       "injuries": 0,
       "history": "",
-      "activityLog": []
+      "activityLog": [
+        {
+          "timestamp": "2025-10-24T16:25:08.379Z",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Summoner A)",
+          "mission": "M01 - Supply run in the Kozice Valley"
+        }
+      ]
     },
     {
       "id": "pilot-1760938332396",
@@ -349,6 +421,30 @@
       "activityLog": []
     }
   ],
-  "missions": [],
+  "missions": [
+    {
+      "name": "M01 - Supply run in the Kozice Valley",
+      "cost": 200,
+      "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies. I should not even formulate such a thought, but I think we came here unprepared and wrongly configured.\n\nI sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
+      "objectives": "- Determine which building are the supply warehouses [100]\n- At least 50% of our forces survive until the end of Turn 10 [100]\n- Destroy or cripple 25% of the defender's force [100]",
+      "recap": "",
+      "warchestGained": 0,
+      "completed": false,
+      "assignedMechs": [
+        "mech-1760938738364",
+        "mech-1760938937911",
+        "mech-176093892364",
+        "mech-17609389036786"
+      ],
+      "assignedElementals": [
+        "elemental-1760938532340",
+        "elemental-1760938546232",
+        "elemental-1760938563432",
+        "elemental-1760938580767"
+      ],
+      "id": "mission-1761323108379",
+      "createdAt": "2025-10-24T16:25:08.379Z"
+    }
+  ],
   "repairActions": []
 }
