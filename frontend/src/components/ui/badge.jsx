@@ -8,6 +8,7 @@ export function Badge({ className, variant = 'default', ...props }) {
     operational: 'bg-green-600 text-white',
     damaged: 'bg-amber-600 text-white',
     disabled: 'bg-red-600 text-white',
+    destroyed: 'bg-red-600 text-white',
     repairing: 'bg-blue-600 text-white',
     outline: 'border border-border text-foreground',
   };
