@@ -1,0 +1,14 @@
+{
+  "name": "battletech-forces-manager-simplified",
+  "version": "2.0.0",
+  "description": "Simplified BattleTech Forces Manager - Clean, readable code without bloat",
+  "main": "static/js/main.js",
+  "scripts": {
+    "build": "node build-simple.js",
+    "start": "python3 -m http.server 8080",
+    "clean": "rm -rf static/js/*.*.js static/css/*.*.css"
+  },
+  "keywords": ["battletech", "forces", "manager", "clean", "simple"],
+  "author": "Simplified by AI Assistant",
+  "license": "MIT"
+}
