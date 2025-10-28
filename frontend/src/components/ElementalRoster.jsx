@@ -109,7 +109,7 @@ export default function ElementalRoster({ force, onUpdate }) {
   const updateCounter = (elementalId, field, delta) => {
     const updatedElementals = force.elementals.map(elemental => {
       if (elemental.id === elementalId) {
-        const maxValue = field === 'suitsDestroyed' ? 4 : 5;
+        const maxValue = field === 'suitsDestroyed' ? 5 : 6;
         const currentValue = elemental[field];
         const newValue = Math.max(0, Math.min(maxValue, currentValue + delta));
         
@@ -126,6 +126,7 @@ export default function ElementalRoster({ force, onUpdate }) {
       'Operational': 'operational',
       'Damaged': 'damaged',
       'Disabled': 'disabled',
+      'Destroyed': 'destroyed',
       'Repairing': 'repairing',
       'Unavailable': 'disabled'
     };
@@ -226,7 +227,7 @@ export default function ElementalRoster({ force, onUpdate }) {
                         variant="outline"
                         size="icon"
                         onClick={() => updateCounter(elemental.id, 'suitsDestroyed', 1)}
-                        disabled={elemental.suitsDestroyed === 4}
+                        disabled={elemental.suitsDestroyed === 6}
                         className="h-7 w-7"
                       >
                         <Plus className="w-3 h-3" />
@@ -347,6 +348,7 @@ export default function ElementalRoster({ force, onUpdate }) {
                   <option value="Operational">Operational</option>
                   <option value="Damaged">Damaged</option>
                   <option value="Disabled">Disabled</option>
+                  <option value="Destroyed">Destroyed</option>
                   <option value="Repairing">Repairing</option>
                   <option value="Unavailable">Unavailable</option>
                 </Select>
