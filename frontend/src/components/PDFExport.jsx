@@ -104,6 +104,9 @@ const styles = StyleSheet.create({
   unitBadgeDisabled: {
     backgroundColor: '#DC2626',
   },
+  unitBadgeDestroyed: {
+    backgroundColor: '#DC2626',
+  },
   unitStatsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -194,6 +197,9 @@ const ForcePDF = ({ force }) => {
     }
     if (status === 'Disabled' || status === 'Unavailable') {
       return [styles.unitBadge, styles.unitBadgeDisabled];
+    }
+    if (status === 'Destroyed' || status === 'Unavailable') {
+      return [styles.unitBadge, styles.unitBadgeDestroyed];
     }
     return styles.unitBadge;
   };

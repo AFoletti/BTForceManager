@@ -43,6 +43,7 @@
     --status-operational: 142 76% 36%;
     --status-damaged: 38 92% 50%;
     --status-disabled: 0 72% 51%;
+    --status-destroyed: 0 72% 51%;
     --status-repairing: 217 91% 60%;
     
     /* Shadows */
