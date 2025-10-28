@@ -132,13 +132,7 @@ function Button({ children, onClick, variant = 'primary', size = 'md', className
   };
 
   return (
-    <button
-      className={classNames(baseClasses, variants[variant], sizes[size], className)}
-      onClick={onClick}
-      {...props}
-    >
-      {children}
-    </button>
+    <button className={classNames(baseClasses, variants[variant], sizes[size], className)} onClick={onClick} {...props}>{children}</button>
   );
 }
 
