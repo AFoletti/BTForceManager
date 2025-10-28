@@ -121,7 +121,7 @@ if (fs.existsSync(indexPath)) {
     allChecks = false;
   }
   
-  if (content.includes('main.css') && !content.match(/main\\.[a-f0-9]{8,}\\.css/)) {
+  if (content.includes('main.css') && !content.match(/main\.[a-f0-9]{8,}\.css/)) {
     console.log('   ✅ HTML references clean main.css');
   } else {
     console.log('   ❌ HTML still references versioned CSS files');
