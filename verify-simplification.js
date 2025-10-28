@@ -98,7 +98,7 @@ if (fs.existsSync(mainJsPath)) {
 console.log('\\n3️⃣  Checking for CASE statements...');
 if (fs.existsSync(mainJsPath)) {
   const content = fs.readFileSync(mainJsPath, 'utf8');
-  const caseMatches = content.match(/case\\s+|switch\\s*\\(/gi);
+  const caseMatches = content.match(/case\s+|switch\s*\(/gi);
   
   if (!caseMatches || caseMatches.length === 0) {
     console.log('   ✅ No CASE statements found');
