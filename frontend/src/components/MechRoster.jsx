@@ -96,6 +96,7 @@ export default function MechRoster({ force, onUpdate }) {
       'Operational': 'operational',
       'Damaged': 'damaged',
       'Disabled': 'disabled',
+      'Destroyed': 'destroyed',
       'Repairing': 'repairing',
       'Unavailable': 'disabled'
     };
@@ -202,6 +203,7 @@ export default function MechRoster({ force, onUpdate }) {
                   <option value="Operational">Operational</option>
                   <option value="Damaged">Damaged</option>
                   <option value="Disabled">Disabled</option>
+                  <option value="Destroyed">Destroyed</option>
                   <option value="Repairing">Repairing</option>
                   <option value="Unavailable">Unavailable</option>
                 </Select>
