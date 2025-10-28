@@ -227,7 +227,7 @@ export default function ElementalRoster({ force, onUpdate }) {
                         variant="outline"
                         size="icon"
                         onClick={() => updateCounter(elemental.id, 'suitsDestroyed', 1)}
-                        disabled={elemental.suitsDestroyed === 6}
+                        disabled={elemental.suitsDestroyed === 5}
                         className="h-7 w-7"
                       >
                         <Plus className="w-3 h-3" />
