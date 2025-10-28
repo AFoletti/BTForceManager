@@ -41,7 +41,7 @@ const findVersionedFiles = (dir) => {
         if (!item.startsWith('.') && item !== 'node_modules') {
           files.push(...findVersionedFiles(fullPath));
         }
-      } else if (/\\.[a-f0-9]{8,}\\.(js|css)$/i.test(item)) {
+      } else if (/\.[a-f0-9]{8,}\.(js|css)$/i.test(item)) {
         files.push(fullPath);
       }
     }
