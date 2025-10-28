@@ -114,7 +114,7 @@ const indexPath = '/app/index.html';
 if (fs.existsSync(indexPath)) {
   const content = fs.readFileSync(indexPath, 'utf8');
   
-  if (content.includes('main.js') && !content.match(/main\\.[a-f0-9]{8,}\\.js/)) {
+  if (content.includes('main.js') && !content.match(/main\.[a-f0-9]{8,}\.js/)) {
     console.log('   ✅ HTML references clean main.js');
   } else {
     console.log('   ❌ HTML still references versioned files');
