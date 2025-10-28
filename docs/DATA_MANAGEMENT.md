@@ -105,7 +105,7 @@ Your BattleTech Forces Manager uses **static JSON files** stored in the reposito
 ]
 ```
 
-**Status options:** `Operational`, `Damaged`, `Disabled`, `Repairing`, `Unavailable`
+**Status options:** `Operational`, `Damaged`, `Disabled`, `Destroyed`, `Repairing`, `Unavailable`
 
 ### Adding Pilots
 
