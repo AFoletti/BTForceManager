@@ -253,7 +253,54 @@ After this, `index.html` and `static/` at the root will contain the new bundle.
 
 ---
 
-## 7. Tech Stack
+## 7. Developer Notes (Frontend Source)
+
+This section is for anyone touching the `frontend/` React app.
+
+### 7.1 Component & module naming
+
+The source is organized by feature rather than by layer:
+
+- `src/App.js` – top-level layout: header, force banner, tabs.
+- `src/hooks/useForceManager.js` – loads forces from `data/forces/manifest.json` and individual JSON files, manages selected force and updates.
+- `src/lib/utils.js` – generic utilities:
+  - `cn()` – Tailwind/clsx class merging
+  - `formatNumber()` – apostrophe-separated thousands
+  - `evaluateFormula()` – simple `weight`-based formula evaluation (used in older Repair Bay)
+  - `formatDate()` – pretty timestamps
+  - `downloadJSON()` – generic JSON download helper
+- `src/components/` – feature components:
+  - `MechRoster.jsx`, `PilotRoster.jsx`, `ElementalRoster.jsx`
+  - `MissionManager.jsx`
+  - `DowntimeOperations.jsx` (current downtime implementation)
+  - `DataEditor.jsx`, `AddForceDialog.jsx`
+  - `PDFExport.jsx`
+- `src/components/ui/` – small presentational primitives (button, select, input, dialog, tabs, etc.).
+
+**Note on `RepairBay.jsx`:**
+
+- `RepairBay.jsx` is an older, mech-only repair panel that predates the current `DowntimeOperations` component.
+- It is **not used** by `App.js` anymore but is left in place as a reference implementation for formula-based repair actions.
+- If you don’t plan to use it as a reference, it can safely be deleted.
+
+### 7.2 Data contract (frontend ↔ static JSON)
+
+The runtime bundle expects the same JSON structure used in `data/`:
+
+- Forces are loaded from `./data/forces/manifest.json` and `./data/forces/*.json`.
+- Downtime actions are loaded from `./data/downtime-actions.json`.
+
+When editing the source, keep those relative paths and shapes consistent with the `data/` folder in the root. The root `data/` folder and the `frontend` dev server should both serve the same files when you test.
+
+### 7.3 Rebuilding after code changes
+
+After you change anything in `frontend/src`, rebuild and copy outputs as described in section **6.2** so the root `index.html` and `static/` stay in sync with your code.
+
+> Tip: It is often easiest to rebuild, test locally with `python3 -m http.server`, and then commit.
+
+---
+
+## 8. Tech Stack
 
 - **Runtime:** plain HTML + JS bundle + CSS bundle
 - **UI framework:** React 18 (bundled in `static/js/main.js`)
@@ -264,6 +311,6 @@ After this, `index.html` and `static/` at the root will contain the new bundle.
 
 ---
 
-## 8. License
+## 9. License
 
 MIT – use and modify freely for your own BattleTech campaigns.
