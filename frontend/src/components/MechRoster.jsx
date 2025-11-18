@@ -91,6 +91,7 @@ export default function MechRoster({ force, onUpdate }) {
 
     setShowDialog(false);
   };
+
   const getStatusColor = (status) => {
     const statusMap = {
       'Operational': 'operational',
@@ -150,7 +151,11 @@ export default function MechRoster({ force, onUpdate }) {
                   <td>
                     <div className="flex items-center gap-3">
                       {mech.image && (
-                        <img src={mech.image} alt={mech.name} className="w-10 h-10 rounded object-cover" />
+                        <img 
+                          src={mech.image} 
+                          alt={mech.name} 
+                          className="max-h-10 max-w-10 rounded object-contain" 
+                        />
                       )}
                       <span className="font-medium">{mech.name}</span>
                     </div>

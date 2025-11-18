@@ -127,7 +127,7 @@ export default function App() {
                 <img 
                   src={selectedForce.image} 
                   alt={selectedForce.name}
-                  className="w-32 h-32 rounded object-cover border-2 border-primary"
+                  className="max-h-32 max-w-32 rounded object-contain border-2 border-primary"
                 />
               )}
               <div className="flex-1">

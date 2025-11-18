@@ -198,7 +198,11 @@ export default function ElementalRoster({ force, onUpdate }) {
                   <td>
                     <div className="flex items-center gap-3">
                       {elemental.image && (
-                        <img src={elemental.image} alt={elemental.name} className="w-10 h-10 rounded object-cover" />
+                        <img 
+                          src={elemental.image} 
+                          alt={elemental.name} 
+                          className="max-h-10 max-w-10 rounded object-contain" 
+                        />
                       )}
                       <span className="font-medium">{elemental.name}</span>
                     </div>
