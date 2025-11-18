@@ -1,14 +1,18 @@
 {
-  "name": "battletech-forces-manager-simplified",
+  "name": "battletech-forces-manager-static",
   "version": "2.0.0",
-  "description": "Simplified BattleTech Forces Manager - Clean, readable code without bloat",
+  "description": "Static BattleTech Forces Manager - prebuilt SPA for GitHub Pages or any static host",
   "main": "static/js/main.js",
   "scripts": {
-    "build": "node build-simple.js",
-    "start": "python3 -m http.server 8080",
-    "clean": "rm -rf static/js/*.*.js static/css/*.*.css"
+    "serve": "python3 -m http.server 8080"
   },
-  "keywords": ["battletech", "forces", "manager", "clean", "simple"],
-  "author": "Simplified by AI Assistant",
+  "keywords": [
+    "battletech",
+    "forces",
+    "manager",
+    "static",
+    "github-pages"
+  ],
+  "author": "",
   "license": "MIT"
 }
