@@ -13,17 +13,14 @@
     <!-- Minimal inline favicon to avoid 404s -->
     <link rel="icon" href="data:," />
 
-    <!-- Main compiled CSS (Tailwind-based) -->
-    <link rel="stylesheet" href="static/css/main.css" />
+    <!-- Production CSS bundle -->
+    <link rel="stylesheet" href="./static/css/main.css" />
 
-    <!-- React and Babel CDN -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Production JS bundle (no in-browser Babel / CDN React) -->
+    <script defer src="./static/js/main.js"></script>
   </head>
-  <body class="bg-background text-foreground">
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!-- Our app entry, transpiled on the fly by Babel Standalone -->
-    <script type="text/babel" src="static/js/main.js"></script>
   </body>
 </html>
