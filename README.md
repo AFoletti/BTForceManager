@@ -12,9 +12,9 @@ This repository is intentionally lean: the root contains the deployable app, plu
 
 These are the only pieces you need for the live app:
 
-- `index.html` – main entry point
-- `static/js/main.js` – bundled React app
-- `static/css/main.css` – bundled Tailwind-based styles
+- `index.html` – main entry point (always references non-hashed `static/js/main.js` and `static/css/main.css`)
+- `static/js/main.js` – bundled React app (non-hashed filename)
+- `static/css/main.css` – bundled Tailwind-based styles (non-hashed filename)
 - `data/` – JSON data for forces & downtime rules
   - `data/forces/manifest.json` – list of force JSON files
   - `data/forces/*.json` – individual force definitions
@@ -127,9 +127,9 @@ At the root:
 │       └── *.json            # Individual forces
 ├── static/
 │   ├── css/
-│   │   └── main.css          # Compiled Tailwind-based CSS
+│   │   └── main.css          # Compiled Tailwind-based CSS (non-hashed)
 │   └── js/
-│       └── main.js           # Compiled React bundle
+│       └── main.js           # Compiled React bundle (non-hashed)
 └── frontend/                 # Original React+Tailwind source (optional)
     ├── package.json
     ├── tailwind.config.js
@@ -236,20 +236,28 @@ yarn start
 
 This starts the development server at `http://localhost:3000`.
 
-### 6.2 Build new production bundle
+### 6.2 Build new production bundle (non-hashed filenames in root)
+
+The Create React App build in `frontend/` will still produce hashed asset names inside the `build/` folder, but we treat that as an intermediate artifact and always _install_ the bundle under fixed, non-hashed names in `/app/static`.
 
 ```bash
 cd frontend
 yarn build
 
-# Copy the build output into the root for deployment
-cp -r build/static ../static
-cp build/index.html ../index.html
+# Copy the main JS/CSS bundles to fixed filenames used by index.html
+cp build/static/js/main*.js ../static/js/main.js
+cp build/static/css/main*.css ../static/css/main.css
+
+# IMPORTANT: do NOT copy build/index.html –
+# the root index.html is a hand-crafted file that always
+# references ./static/js/main.js and ./static/css/main.css.
 ```
 
-After this, `index.html` and `static/` at the root will contain the new bundle.
+After this, `/app/static/js/main.js` and `/app/static/css/main.css` contain the new bundle, and `/app/index.html` continues to reference those non-hashed filenames.
 
-> Note: The root `package.json` is only used for optional local static serving and is not part of the React build chain.
+> Note: The hashed files left in `frontend/build` can be ignored or cleaned; they are not used for deployment. The runtime app only ever loads `static/js/main.js` and `static/css/main.css`.
+
+> Also note: The root `package.json` is only used for optional local static serving and is not part of the React build chain.
 
 ---
 
