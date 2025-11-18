@@ -106,10 +106,12 @@ export default function ElementalRoster({ force, onUpdate }) {
 
     setShowDialog(false);
   };
+
   const updateCounter = (elementalId, field, delta) => {
     const updatedElementals = force.elementals.map(elemental => {
       if (elemental.id === elementalId) {
-        const maxValue = field === 'suitsDestroyed' ? 5 : 6;
+        // Both destroyed and damaged suits are capped at 5
+        const maxValue = 5;
         const currentValue = elemental[field];
         const newValue = Math.max(0, Math.min(maxValue, currentValue + delta));
         
@@ -221,7 +223,7 @@ export default function ElementalRoster({ force, onUpdate }) {
                         <Minus className="w-3 h-3" />
                       </Button>
                       <Badge variant={getSuitStatusColor(elemental.suitsDestroyed, elemental.suitsDamaged)}>
-                        {elemental.suitsDestroyed}/4
+                        {elemental.suitsDestroyed}/5
                       </Badge>
                       <Button
                         variant="outline"
