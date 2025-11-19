@@ -303,19 +303,32 @@ export default function MissionManager({ force, onUpdate }) {
                 ) : (
                   <div className="space-y-2">
                     {force.mechs.map((mech) => {
+                      if (mech.status === 'Destroyed') {
+                        return null;
+                      }
+
                       const pilot = findPilotForMech(force, mech);
+                      const hasPilot = Boolean(pilot);
+                      const pilotIsKIA = pilot && pilot.injuries === 6;
+                      const statusAllowsDeployment =
+                        mech.status === 'Operational' || mech.status === 'Damaged';
+                      const isSelectable = statusAllowsDeployment && hasPilot && !pilotIsKIA;
 
                       return (
                         <label
                           key={mech.id}
                           className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
                         >
-                          <input
-                            type="checkbox"
-                            checked={formData.assignedMechs.includes(mech.id)}
-                            onChange={() => toggleMechAssignment(mech.id)}
-                            className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
-                          />
+                          {isSelectable ? (
+                            <input
+                              type="checkbox"
+                              checked={formData.assignedMechs.includes(mech.id)}
+                              onChange={() => toggleMechAssignment(mech.id)}
+                              className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                            />
+                          ) : (
+                            <div className="w-4 h-4" aria-hidden="true" />
+                          )}
                           <div className="flex-1 flex items-center justify-between">
                             <div>
                               <span className="text-sm font-medium">{mech.name}</span>
