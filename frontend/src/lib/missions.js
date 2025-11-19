@@ -127,7 +127,7 @@ export function isElementalAvailableForMission(elemental) {
 /**
  * Calculate the total BV of a mission assignment.
  *
- * @param {Object} force
+ * @param {Force} force
  * @param {string[]} mechIds
  * @param {string[]} [elementalIds=[]]
  * @returns {number}
