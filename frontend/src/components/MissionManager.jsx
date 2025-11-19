@@ -285,25 +285,29 @@ export default function MissionManager({ force, onUpdate }) {
               </div>
             </div>
 
-            {/* Mech Assignment */}
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                <div className="flex items-center justify-between">
-                  <span>Assign Mechs to Mission</span>
-                  <span className="text-xs text-primary font-mono">
-                    BV:{' '}
-                    {formatNumber(
-                      calculateMissionTotalBV(force, formData.assignedMechs, []),
-                    )}
-                  </span>
-                </div>
-              </label>
-              <div className="border border-border rounded p-3 bg-muted/20 max-h-48 overflow-y-auto">
-                {force.mechs.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-2">No mechs available</p>
-                ) : (
-                  <div className="space-y-2">
-                    {force.mechs.map((mech) => {
+            {/* Force Assignment */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Mech Assignment */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  <div className="flex items-center justify-between">
+                    <span>Assign Mechs to Mission</span>
+                    <span className="text-xs text-primary font-mono">
+                      BV:{' '}
+                      {formatNumber(
+                        calculateMissionTotalBV(force, formData.assignedMechs, []),
+                      )}
+                    </span>
+                  </div>
+                </label>
+                <div className="border border-border rounded p-3 bg-muted/20 max-h-60 overflow-y-auto">
+                  {force.mechs.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-2">
+                      No mechs available
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {force.mechs.map((mech) => {
                       if (mech.status === 'Destroyed') {
                         return null;
                       }
