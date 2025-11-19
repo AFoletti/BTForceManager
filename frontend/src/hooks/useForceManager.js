@@ -56,10 +56,10 @@ export function useForceManager() {
         });
 
         const loadedForces = await Promise.all(forcePromises);
-        const validForces = loadedForces.filter(f => f !== null);
+        const validForces = loadedForces.filter((f) => f !== null).map(normalizeForce);
 
         setForces(validForces);
-        
+
         // Select first force by default
         if (validForces.length > 0) {
           setSelectedForceId(validForces[0].id);
