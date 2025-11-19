@@ -255,11 +255,11 @@ export function applyMissionCreation(force, formData, timestamp) {
 /**
  * Update an existing mission within a missions array.
  *
- * @param {Object[]} missions
+ * @param {Mission[]} missions
  * @param {string} missionId
- * @param {Object} formData
+ * @param {Mission} formData
  * @param {string} timestamp ISO timestamp string
- * @returns {Object[]}
+ * @returns {Mission[]}
  */
 export function applyMissionUpdate(missions, missionId, formData, timestamp) {
   return missions.map((mission) =>
