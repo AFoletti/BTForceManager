@@ -27,12 +27,27 @@ export function buildDowntimeContext(force, unit) {
  * of `eval`, but keeps it in one place and only substitutes known context keys.
  * It is assumed that downtime formulas come from trusted JSON in the repo.
  *
+ * IMPORTANT: Formulas are **not** user input. They come only from
+ * `data/downtime-actions.json` checked into version control. If you ever allow
+ * user-defined formulas, replace this with a proper expression parser.
+ *
  * @param {string} formula
  * @param {Object} context
  * @returns {number} Cost in WP, rounded up to the nearest integer (>= 0)
  */
 export function evaluateDowntimeCost(formula, context) {
   try {
+    // Basic guard: allow only word characters, digits, whitespace, and
+    // arithmetic operators/parentheses. This keeps formulas simple and
+    // aligned with the documented variables (weight, suitsDamaged,
+    // suitsDestroyed, wpMultiplier).
+    const safePattern = /^[\w\d\s+\-*/().]+$/;
+    if (!safePattern.test(formula)) {
+      // eslint-disable-next-line no-console
+      console.warn('Downtime formula contains unsupported characters:', formula);
+      return 0;
+    }
+
     const expression = formula.replace(/(\w+)/g, (match) =>
       Object.prototype.hasOwnProperty.call(context, match) ? context[match] : match,
     );
