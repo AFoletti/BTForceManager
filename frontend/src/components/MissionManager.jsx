@@ -326,14 +326,37 @@ export default function MissionManager({ force, onUpdate }) {
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Badge
-                                variant={
-                                  mech.status === 'Operational' ? 'operational' : 'outline'
+                              {(() => {
+                                const hasPilot = Boolean(pilot);
+                                const isPilotKIA = pilot && pilot.injuries === 6;
+
+                                if (!hasPilot) {
+                                  return (
+                                    <Badge variant="missingPilot" className="text-xs">
+                                      Missing Pilot
+                                    </Badge>
+                                  );
                                 }
-                                className="text-xs"
-                              >
-                                {mech.status}
-                              </Badge>
+
+                                if (isPilotKIA) {
+                                  return (
+                                    <Badge variant="destroyed" className="text-xs">
+                                      Pilot KIA
+                                    </Badge>
+                                  );
+                                }
+
+                                return (
+                                  <Badge
+                                    variant={
+                                      mech.status === 'Operational' ? 'operational' : 'outline'
+                                    }
+                                    className="text-xs"
+                                  >
+                                    {mech.status}
+                                  </Badge>
+                                );
+                              })()}
                               <span className="text-xs font-mono text-muted-foreground">
                                 {formatNumber(mech.bv)} BV
                               </span>
