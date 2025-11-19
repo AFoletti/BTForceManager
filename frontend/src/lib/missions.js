@@ -163,9 +163,9 @@ export function getAssignedMechs(force, mechIds) {
 /**
  * Return the elemental objects corresponding to the given ids, preserving order.
  *
- * @param {Object} force
+ * @param {Force} force
  * @param {string[]} elementalIds
- * @returns {Object[]}
+ * @returns {Elemental[]}
  */
 export function getAssignedElementals(force, elementalIds = []) {
   const elementals = force.elementals || [];
