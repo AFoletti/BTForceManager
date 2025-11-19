@@ -1,6 +1,27 @@
 // Helpers for mech–pilot relationships.
 // Centralises the logic that determines which pilot is assigned
 // to which mech, which pilots are available, etc.
+/**
+ * @typedef {Object} Mech
+ * @property {string} id
+ * @property {string} [pilot]
+ */
+
+/**
+ * @typedef {Object} Pilot
+ * @property {string} id
+ * @property {string} name
+ * @property {number} [gunnery]
+ * @property {number} [piloting]
+ * @property {number} [injuries]
+ */
+
+/**
+ * @typedef {Object} Force
+ * @property {Mech[]} mechs
+ * @property {Pilot[]} pilots
+ */
+
 
 /* eslint-disable jsdoc/require-param-type, jsdoc/require-returns-type */
 
