@@ -58,9 +58,9 @@ export function findMechForPilot(force, pilot) {
  * A pilot is considered unavailable if they are already assigned to a mech
  * other than the one currently being edited.
  *
- * @param {Object} force
- * @param {Object|null} editingMech The mech currently being edited (or null when creating)
- * @returns {Object[]} Array of pilot objects
+ * @param {Force} force
+ * @param {Mech|null} editingMech The mech currently being edited (or null when creating)
+ * @returns {Pilot[]} Array of pilot objects
  */
 export function getAvailablePilotsForMech(force, editingMech) {
   const pilots = force.pilots || [];
