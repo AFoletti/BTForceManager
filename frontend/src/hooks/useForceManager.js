@@ -41,9 +41,15 @@ export function useForceManager() {
         // First, get the manifest to know which files to load
         const manifestResponse = await fetch('./data/forces/manifest.json');
         if (!manifestResponse.ok) {
-          throw new Error('Failed to load forces manifest');
+          throw new Error(
+            'Failed to load forces manifest at data/forces/manifest.json. Check that the file exists and is correctly referenced.',
+          );
         }
         const manifest = await manifestResponse.json();
+
+        if (!manifest || !Array.isArray(manifest.forces)) {
+          throw new Error('Invalid forces manifest: expected a "forces" array.');
+        }
 
         // Load each force file
         const forcePromises = manifest.forces.map(async (filename) => {
