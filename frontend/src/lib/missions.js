@@ -180,10 +180,10 @@ export function getAssignedElementals(force, elementalIds = []) {
  *
  * Mirrors the behaviour previously implemented inline in MissionManager.
  *
- * @param {Object} force
- * @param {Object} formData
+ * @param {Force} force
+ * @param {Mission} formData
  * @param {string} timestamp ISO timestamp string
- * @returns {{ missions: Object[], mechs: Object[], elementals: Object[], pilots: Object[], currentWarchest: number }}
+ * @returns {{ missions: Mission[], mechs: Mech[], elementals: Elemental[], pilots: Pilot[], currentWarchest: number }}
  */
 export function applyMissionCreation(force, formData, timestamp) {
   const missions = [...(force.missions || [])];
