@@ -1,6 +1,59 @@
 // Mission-related helpers.
 // These functions are pure and never mutate the input `force` object.
 
+import { findPilotForMech } from './mechs';
+
+/**
+ * Determine if a mech is available for mission assignment.
+ *
+ * Rules (must all be true):
+ * - Mech is not destroyed
+ * - Status is Operational or Damaged
+ * - Mech has an assigned pilot
+ * - Pilot is not KIA (injuries !== 6)
+ *
+ * @param {Object} force
+ * @param {Object} mech
+ * @returns {boolean}
+ */
+export function isMechAvailableForMission(force, mech) {
+  if (!mech) return false;
+  if (mech.status === 'Destroyed') return false;
+
+  const statusAllowsDeployment = mech.status === 'Operational' || mech.status === 'Damaged';
+  if (!statusAllowsDeployment) return false;
+
+  const pilot = findPilotForMech(force, mech);
+  if (!pilot) return false;
+  if (pilot.injuries === 6) return false;
+
+  return true;
+}
+
+/**
+ * Determine if an elemental point is available for mission assignment.
+ *
+ * Rules (must all be true):
+ * - Less than 6 suits destroyed (otherwise point is hidden)
+ * - Status is Operational or Damaged
+ * - suitsDestroyed <= 4 (5 is visible but not selectable)
+ *
+ * @param {Object} elemental
+ * @returns {boolean}
+ */
+export function isElementalAvailableForMission(elemental) {
+  if (!elemental) return false;
+  if (elemental.suitsDestroyed >= 6) return false;
+
+  const statusAllowsDeployment =
+    elemental.status === 'Operational' || elemental.status === 'Damaged';
+  if (!statusAllowsDeployment) return false;
+
+  if (elemental.suitsDestroyed >= 5) return false;
+
+  return true;
+}
+
 /**
  * Calculate the total BV of a mission assignment.
  *
