@@ -82,7 +82,16 @@ export function useForceManager() {
         if (validForces.length > 0) {
           setSelectedForceId(validForces[0].id);
         }
-        
+
+        if (failedFiles.length > 0) {
+          const loadedCount = validForces.length;
+          const totalCount = manifest.forces.length;
+          const failedList = failedFiles.join(', ');
+          setError(
+            `Loaded ${loadedCount}/${totalCount} forces. Failed to load: ${failedList}. Check data/forces for missing or invalid JSON files.`,
+          );
+        }
+
         setLoading(false);
       } catch (err) {
         setError(err.message);
