@@ -20,6 +20,7 @@ export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
   const [formData, setFormData] = useState({
+
     name: '',
     cost: 0,
     description: '',
