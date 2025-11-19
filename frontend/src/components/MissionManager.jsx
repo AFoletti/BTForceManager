@@ -320,9 +320,11 @@ export default function MissionManager({ force, onUpdate }) {
                             <div>
                               <span className="text-sm font-medium">{mech.name}</span>
                               <div className="text-xs text-muted-foreground">
-                                {pilot
-                                  ? `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`
-                                  : 'Pilot: Missing Pilot'}
+                                {!pilot
+                                  ? 'Pilot: Missing Pilot'
+                                  : pilot.injuries === 6
+                                    ? `Pilot: ${pilot.name} - KIA`
+                                    : `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
