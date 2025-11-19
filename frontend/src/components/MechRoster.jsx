@@ -18,7 +18,7 @@ export default function MechRoster({ force, onUpdate }) {
     bv: 0,
     weight: 0,
     image: '',
-    history: ''
+    history: '',
   });
 
   const openDialog = (mech = null) => {
@@ -31,7 +31,7 @@ export default function MechRoster({ force, onUpdate }) {
         bv: mech.bv,
         weight: mech.weight,
         image: mech.image || '',
-        history: mech.history || ''
+        history: mech.history || '',
       });
     } else {
       setEditingMech(null);
@@ -42,7 +42,7 @@ export default function MechRoster({ force, onUpdate }) {
         bv: 0,
         weight: 0,
         image: '',
-        history: ''
+        history: '',
       });
     }
     setShowDialog(true);
@@ -50,25 +50,26 @@ export default function MechRoster({ force, onUpdate }) {
 
   const handleSave = () => {
     if (!formData.name || !formData.bv || !formData.weight) {
+      // eslint-disable-next-line no-alert
       alert('Name, BV, and Weight are required');
       return;
     }
 
     if (editingMech) {
       // Update existing mech
-      const updatedMechs = force.mechs.map(m => 
-        m.id === editingMech.id 
+      const updatedMechs = force.mechs.map((mech) =>
+        mech.id === editingMech.id
           ? {
-              ...m,
+              ...mech,
               name: formData.name,
               status: formData.status,
               pilot: formData.pilot,
-              bv: parseInt(formData.bv) || 0,
-              weight: parseInt(formData.weight) || 0,
+              bv: parseInt(formData.bv, 10) || 0,
+              weight: parseInt(formData.weight, 10) || 0,
               image: formData.image,
-              history: formData.history
+              history: formData.history,
             }
-          : m
+          : mech,
       );
       onUpdate({ mechs: updatedMechs });
     } else {
@@ -78,11 +79,11 @@ export default function MechRoster({ force, onUpdate }) {
         name: formData.name,
         status: formData.status,
         pilot: formData.pilot,
-        bv: parseInt(formData.bv) || 0,
-        weight: parseInt(formData.weight) || 0,
+        bv: parseInt(formData.bv, 10) || 0,
+        weight: parseInt(formData.weight, 10) || 0,
         image: formData.image,
         history: formData.history,
-        activityLog: []
+        activityLog: [],
       };
 
       const updatedMechs = [...force.mechs, newMech];
@@ -94,15 +95,27 @@ export default function MechRoster({ force, onUpdate }) {
 
   const getStatusColor = (status) => {
     const statusMap = {
-      'Operational': 'operational',
-      'Damaged': 'damaged',
-      'Disabled': 'disabled',
-      'Destroyed': 'destroyed',
-      'Repairing': 'repairing',
-      'Unavailable': 'disabled'
+      Operational: 'operational',
+      Damaged: 'damaged',
+      Disabled: 'disabled',
+      Destroyed: 'destroyed',
+      Repairing: 'repairing',
+      Unavailable: 'disabled',
     };
     return statusMap[status] || 'default';
   };
+
+  const getAvailablePilots = () => {
+    const assignedToOtherMechs = new Set(
+      force.mechs
+        .filter((mech) => mech.pilot && (!editingMech || mech.id !== editingMech.id))
+        .map((mech) => mech.pilot),
+    );
+
+    return force.pilots.filter((pilot) => !assignedToOtherMechs.has(pilot.name));
+  };
+
+  const availablePilots = getAvailablePilots();
 
   return (
     <div className="tactical-panel">
@@ -121,7 +134,7 @@ export default function MechRoster({ force, onUpdate }) {
           </div>
         </div>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="data-table">
           <thead>
@@ -142,8 +155,8 @@ export default function MechRoster({ force, onUpdate }) {
                 </td>
               </tr>
             ) : (
-              force.mechs.map(mech => (
-                <tr 
+              force.mechs.map((mech) => (
+                <tr
                   key={mech.id}
                   onClick={() => openDialog(mech)}
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
@@ -151,19 +164,21 @@ export default function MechRoster({ force, onUpdate }) {
                   <td>
                     <div className="flex items-center gap-3">
                       {mech.image && (
-                        <img 
-                          src={mech.image} 
-                          alt={mech.name} 
-                          className="max-h-10 max-w-10 rounded object-contain" 
+                        <img
+                          src={mech.image}
+                          alt={mech.name}
+                          className="max-h-10 max-w-10 rounded object-contain"
                         />
                       )}
                       <span className="font-medium">{mech.name}</span>
                     </div>
                   </td>
                   <td>
-                    <Badge variant={getStatusColor(mech.status)}>
-                      {mech.status}
-                    </Badge>
+                    {mech.pilot ? (
+                      <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
+                    ) : (
+                      <Badge variant="missingPilot">Missing Pilot</Badge>
+                    )}
                   </td>
                   <td className="text-muted-foreground">{mech.pilot || 'Unassigned'}</td>
                   <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
@@ -204,7 +219,10 @@ export default function MechRoster({ force, onUpdate }) {
 
               <div>
                 <label className="block text-sm font-medium mb-2">Status</label>
-                <Select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
+                <Select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                >
                   <option value="Operational">Operational</option>
                   <option value="Damaged">Damaged</option>
                   <option value="Disabled">Disabled</option>
@@ -218,11 +236,20 @@ export default function MechRoster({ force, onUpdate }) {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Pilot</label>
-                <Input
+                <Select
                   value={formData.pilot}
                   onChange={(e) => setFormData({ ...formData, pilot: e.target.value })}
-                  placeholder="Pilot name"
-                />
+                >
+                  <option value="">No pilot</option>
+                  {availablePilots.map((pilot) => (
+                    <option key={pilot.id} value={pilot.name}>
+                      {pilot.name} - G:{pilot.gunnery} / P:{pilot.piloting}
+                    </option>
+                  ))}
+                </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Only pilots not currently assigned to a mech are listed.
+                </p>
               </div>
 
               <div>
@@ -272,7 +299,10 @@ export default function MechRoster({ force, onUpdate }) {
               <Button variant="outline" onClick={() => setShowDialog(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleSave} disabled={!formData.name || !formData.bv || !formData.weight}>
+              <Button
+                onClick={handleSave}
+                disabled={!formData.name || !formData.bv || !formData.weight}
+              >
                 {editingMech ? 'Update Mech' : 'Add Mech'}
               </Button>
             </div>

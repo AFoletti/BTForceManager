@@ -10,15 +10,16 @@ export function Badge({ className, variant = 'default', ...props }) {
     disabled: 'bg-red-600 text-white',
     destroyed: 'bg-red-600 text-white',
     repairing: 'bg-blue-600 text-white',
+    missingPilot: 'bg-red-700 text-white',
     outline: 'border border-border text-foreground',
   };
-  
+
   return (
     <div
       className={cn(
         'inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium uppercase tracking-wider',
         variants[variant],
-        className
+        className,
       )}
       {...props}
     />
