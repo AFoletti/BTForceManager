@@ -236,12 +236,12 @@ export default function MechRoster({ force, onUpdate }) {
               <div>
                 <label className="block text-sm font-medium mb-2">Pilot</label>
                 <Select
-                  value={formData.pilot}
-                  onChange={(e) => setFormData({ ...formData, pilot: e.target.value })}
+                  value={formData.pilotId}
+                  onChange={(e) => setFormData({ ...formData, pilotId: e.target.value })}
                 >
                   <option value="">No pilot</option>
                   {availablePilots.map((pilot) => (
-                    <option key={pilot.id} value={pilot.name}>
+                    <option key={pilot.id} value={pilot.id}>
                       {pilot.name} - G:{pilot.gunnery} / P:{pilot.piloting}
                     </option>
                   ))}
