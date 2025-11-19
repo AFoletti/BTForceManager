@@ -108,7 +108,7 @@ export function isMechAvailableForMission(force, mech) {
  * - Status is Operational or Damaged
  * - suitsDestroyed <= 4 (5 is visible but not selectable)
  *
- * @param {Object} elemental
+ * @param {Elemental} elemental
  * @returns {boolean}
  */
 export function isElementalAvailableForMission(elemental) {
