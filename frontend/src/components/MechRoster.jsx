@@ -173,11 +173,11 @@ export default function MechRoster({ force, onUpdate }) {
                       <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
                     </td>
                     <td className="text-muted-foreground">
-                      {hasPilot
-                        ? `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`
-                        : isPilotKIA
-                          ? 'Pilot KIA'
-                          : 'Missing Pilot'}
+                      {!pilot
+                        ? 'Missing Pilot'
+                        : pilot.injuries === 6
+                          ? `${pilot.name} - KIA`
+                          : `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                     </td>
                     <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
                     <td className="text-right font-mono">{mech.weight}t</td>
