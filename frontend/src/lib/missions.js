@@ -82,8 +82,8 @@ import { findPilotForMech } from './mechs';
  * - Mech has an assigned pilot
  * - Pilot is not KIA (injuries !== 6)
  *
- * @param {Object} force
- * @param {Object} mech
+ * @param {Force} force
+ * @param {Mech} mech
  * @returns {boolean}
  */
 export function isMechAvailableForMission(force, mech) {
