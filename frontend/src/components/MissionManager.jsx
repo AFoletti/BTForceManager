@@ -14,6 +14,7 @@ import {
   applyMissionUpdate,
   applyMissionCompletion,
 } from '../lib/missions';
+import { findPilotForMech } from '../lib/mechs';
 
 export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -301,40 +302,46 @@ export default function MissionManager({ force, onUpdate }) {
                   <p className="text-sm text-muted-foreground text-center py-2">No mechs available</p>
                 ) : (
                   <div className="space-y-2">
-                    {force.mechs.map((mech) => (
-                      <label
-                        key={mech.id}
-                        className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.assignedMechs.includes(mech.id)}
-                          onChange={() => toggleMechAssignment(mech.id)}
-                          className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
-                        />
-                        <div className="flex-1 flex items-center justify-between">
-                          <div>
-                            <span className="text-sm font-medium">{mech.name}</span>
-                            <span className="text-xs text-muted-foreground ml-2">
-                              ({mech.pilot || 'Unassigned'})
-                            </span>
+                    {force.mechs.map((mech) => {
+                      const pilot = findPilotForMech(force, mech);
+
+                      return (
+                        <label
+                          key={mech.id}
+                          className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={formData.assignedMechs.includes(mech.id)}
+                            onChange={() => toggleMechAssignment(mech.id)}
+                            className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                          />
+                          <div className="flex-1 flex items-center justify-between">
+                            <div>
+                              <span className="text-sm font-medium">{mech.name}</span>
+                              <div className="text-xs text-muted-foreground">
+                                {pilot
+                                  ? `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`
+                                  : 'Pilot: Unassigned'}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant={
+                                  mech.status === 'Operational' ? 'operational' : 'outline'
+                                }
+                                className="text-xs"
+                              >
+                                {mech.status}
+                              </Badge>
+                              <span className="text-xs font-mono text-muted-foreground">
+                                {formatNumber(mech.bv)} BV
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge
-                              variant={
-                                mech.status === 'Operational' ? 'operational' : 'outline'
-                              }
-                              className="text-xs"
-                            >
-                              {mech.status}
-                            </Badge>
-                            <span className="text-xs font-mono text-muted-foreground">
-                              {formatNumber(mech.bv)} BV
-                            </span>
-                          </div>
-                        </div>
-                      </label>
-                    ))}
+                        </label>
+                      );
+                    })}
                   </div>
                 )}
               </div>

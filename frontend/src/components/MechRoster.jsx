@@ -149,6 +149,7 @@ export default function MechRoster({ force, onUpdate }) {
               force.mechs.map((mech) => {
                 const pilot = findPilotForMech(force, mech);
                 const hasPilot = Boolean(pilot);
+                const isPilotKIA = pilot && pilot.injuries === 6;
 
                 return (
                   <tr
@@ -169,10 +170,12 @@ export default function MechRoster({ force, onUpdate }) {
                       </div>
                     </td>
                     <td>
-                      {hasPilot ? (
-                        <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
-                      ) : (
+                      {!hasPilot ? (
                         <Badge variant="missingPilot">Missing Pilot</Badge>
+                      ) : isPilotKIA ? (
+                        <Badge variant="destroyed">Pilot KIA</Badge>
+                      ) : (
+                        <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
                       )}
                     </td>
                     <td className="text-muted-foreground">
