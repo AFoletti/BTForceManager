@@ -2,6 +2,74 @@
 // These functions are pure and never mutate the input `force` object.
 
 /* eslint-disable jsdoc/require-param-type, jsdoc/require-returns-type */
+/**
+ * @typedef {Object} Mech
+ * @property {string} id
+ * @property {string} name
+ * @property {string} [status]
+ * @property {string} [pilot]
+ * @property {number} [bv]
+ * @property {number} [weight]
+ * @property {Array<Object>} [activityLog]
+ */
+
+/**
+ * @typedef {Object} Pilot
+ * @property {string} id
+ * @property {string} name
+ * @property {number} [gunnery]
+ * @property {number} [piloting]
+ * @property {number} [injuries]
+ * @property {Array<Object>} [activityLog]
+ */
+
+/**
+ * @typedef {Object} Elemental
+ * @property {string} id
+ * @property {string} name
+ * @property {string} [status]
+ * @property {string} [commander]
+ * @property {number} [gunnery]
+ * @property {number} [antimech]
+ * @property {number} [suitsDestroyed]
+ * @property {number} [suitsDamaged]
+ * @property {number} [bv]
+ * @property {Array<Object>} [activityLog]
+ */
+
+/**
+ * @typedef {Object} Mission
+ * @property {string} id
+ * @property {string} name
+ * @property {number} cost
+ * @property {number} warchestGained
+ * @property {string} [description]
+ * @property {string} [objectives]
+ * @property {string} [recap]
+ * @property {boolean} [completed]
+ * @property {string[]} [assignedMechs]
+ * @property {string[]} [assignedElementals]
+ * @property {string} [createdAt]
+ * @property {string} [updatedAt]
+ * @property {string} [completedAt]
+ */
+
+/**
+ * @typedef {Object} Force
+ * @property {string} id
+ * @property {string} name
+ * @property {string} [description]
+ * @property {string} [image]
+ * @property {number} startingWarchest
+ * @property {number} currentWarchest
+ * @property {number} [wpMultiplier]
+ * @property {Mech[]} mechs
+ * @property {Pilot[]} pilots
+ * @property {Elemental[]} [elementals]
+ * @property {Mission[]} [missions]
+ * @property {Array<Object>} [otherActionsLog]
+ */
+
 
 import { findPilotForMech } from './mechs';
 
