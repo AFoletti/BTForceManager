@@ -322,7 +322,7 @@ export default function MissionManager({ force, onUpdate }) {
                               <div className="text-xs text-muted-foreground">
                                 {pilot
                                   ? `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`
-                                  : 'Pilot: Unassigned'}
+                                  : 'Pilot: Missing Pilot'}
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
