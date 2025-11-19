@@ -332,11 +332,7 @@ export default function MissionManager({ force, onUpdate }) {
                         }
 
                         const pilot = findPilotForMech(force, mech);
-                        const hasPilot = Boolean(pilot);
-                        const pilotIsKIA = pilot && pilot.injuries === 6;
-                        const statusAllowsDeployment =
-                          mech.status === 'Operational' || mech.status === 'Damaged';
-                        const isSelectable = statusAllowsDeployment && hasPilot && !pilotIsKIA;
+                        const isSelectable = isMechAvailableForMission(force, mech);
 
                         return (
                           <label
