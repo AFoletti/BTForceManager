@@ -396,7 +396,8 @@ export default function MissionManager({ force, onUpdate }) {
 
                       const statusAllowsDeployment =
                         elemental.status === 'Operational' || elemental.status === 'Damaged';
-                      const isSelectable = statusAllowsDeployment;
+                      const tooManySuitsDestroyed = elemental.suitsDestroyed >= 5;
+                      const isSelectable = statusAllowsDeployment && !tooManySuitsDestroyed;
 
                       return (
                         <label
