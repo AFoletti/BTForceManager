@@ -43,9 +43,9 @@ export function findPilotForMech(force, mech) {
 /**
  * Find the mech object a pilot is assigned to, if any.
  *
- * @param {Object} force
- * @param {Object} pilot
- * @returns {Object|null}
+ * @param {Force} force
+ * @param {Pilot} pilot
+ * @returns {Mech|null}
  */
 export function findMechForPilot(force, pilot) {
   if (!pilot) return null;
