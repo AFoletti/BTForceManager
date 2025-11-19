@@ -16,11 +16,28 @@ import {
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
 
+function getUnitStatusVariant(status) {
+  switch (status) {
+    case 'Operational':
+      return 'operational';
+    case 'Damaged':
+      return 'damaged';
+    case 'Disabled':
+    case 'Unavailable':
+      return 'disabled';
+    case 'Destroyed':
+      return 'destroyed';
+    case 'Repairing':
+      return 'repairing';
+    default:
+      return 'outline';
+  }
+}
+
 export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
   const [formData, setFormData] = useState({
-
     name: '',
     cost: 0,
     description: '',
@@ -308,78 +325,68 @@ export default function MissionManager({ force, onUpdate }) {
                   ) : (
                     <div className="space-y-2">
                       {force.mechs.map((mech) => {
-                      if (mech.status === 'Destroyed') {
-                        return null;
-                      }
+                        if (mech.status === 'Destroyed') {
+                          return null;
+                        }
 
-                      const pilot = findPilotForMech(force, mech);
-                      const hasPilot = Boolean(pilot);
-                      const pilotIsKIA = pilot && pilot.injuries === 6;
-                      const statusAllowsDeployment =
-                        mech.status === 'Operational' || mech.status === 'Damaged';
-                      const isSelectable = statusAllowsDeployment && hasPilot && !pilotIsKIA;
+                        const pilot = findPilotForMech(force, mech);
+                        const hasPilot = Boolean(pilot);
+                        const pilotIsKIA = pilot && pilot.injuries === 6;
+                        const statusAllowsDeployment =
+                          mech.status === 'Operational' || mech.status === 'Damaged';
+                        const isSelectable = statusAllowsDeployment && hasPilot && !pilotIsKIA;
 
-                      return (
-                        <label
-                          key={mech.id}
-                          className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
-                        >
-                          {isSelectable ? (
-                            <input
-                              type="checkbox"
-                              checked={formData.assignedMechs.includes(mech.id)}
-                              onChange={() => toggleMechAssignment(mech.id)}
-                              className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
-                            />
-                          ) : (
-                            <div className="w-4 h-4" aria-hidden="true" />
-                          )}
-                          <div className="flex-1 flex items-center justify-between">
-                            <div>
-                              <span className="text-sm font-medium">{mech.name}</span>
-                              <div className="text-xs text-muted-foreground">
-                                {!pilot
-                                  ? 'Pilot: Missing Pilot'
-                                  : pilot.injuries === 6
-                                    ? `Pilot: ${pilot.name} - KIA`
-                                    : `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
+                        return (
+                          <label
+                            key={mech.id}
+                            className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
+                          >
+                            {isSelectable ? (
+                              <input
+                                type="checkbox"
+                                checked={formData.assignedMechs.includes(mech.id)}
+                                onChange={() => toggleMechAssignment(mech.id)}
+                                className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                              />
+                            ) : (
+                              <div className="w-4 h-4" aria-hidden="true" />
+                            )}
+                            <div className="flex-1 flex items-center justify-between">
+                              <div>
+                                <span className="text-sm font-medium">{mech.name}</span>
+                                <div className="text-xs text-muted-foreground">
+                                  {!pilot
+                                    ? 'Pilot: Missing Pilot'
+                                    : pilot.injuries === 6
+                                      ? `Pilot: ${pilot.name} - KIA`
+                                      : `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Badge
+                                  variant={getUnitStatusVariant(mech.status)}
+                                  className="text-xs"
+                                >
+                                  {mech.status}
+                                </Badge>
+                                <span className="text-xs font-mono text-muted-foreground">
+                                  {formatNumber(mech.bv)} BV
+                                </span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Badge
-                                variant={
-                                  mech.status === 'Operational'
-                                    ? 'operational'
-                                    : mech.status === 'Damaged'
-                                      ? 'damaged'
-                                      : mech.status === 'Disabled' || mech.status === 'Unavailable'
-                                        ? 'disabled'
-                                        : mech.status === 'Destroyed'
-                                          ? 'destroyed'
-                                          : 'outline'
-                                }
-                                className="text-xs"
-                              >
-                                {mech.status}
-                              </Badge>
-                              <span className="text-xs font-mono text-muted-foreground">
-                                {formatNumber(mech.bv)} BV
-                              </span>
-                            </div>
-                          </div>
-                        </label>
-                      );
-                    })}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                {formData.assignedMechs.length > 0 && (
+                  <div className="mt-2 text-xs text-muted-foreground">
+                    {formData.assignedMechs.length} mech
+                    {formData.assignedMechs.length !== 1 ? 's' : ''} assigned
                   </div>
                 )}
               </div>
-              {formData.assignedMechs.length > 0 && (
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {formData.assignedMechs.length} mech
-                  {formData.assignedMechs.length !== 1 ? 's' : ''} assigned
-                </div>
-              )}
-            </div>
 
               {/* Elemental Assignment */}
               <div>
@@ -402,73 +409,64 @@ export default function MissionManager({ force, onUpdate }) {
                   ) : (
                     <div className="space-y-2">
                       {force.elementals.map((elemental) => {
-                      const isDestroyed = elemental.suitsDestroyed >= 6;
-                      if (isDestroyed) {
-                        return null;
-                      }
+                        const isDestroyed = elemental.suitsDestroyed >= 6;
+                        if (isDestroyed) {
+                          return null;
+                        }
 
-                      const statusAllowsDeployment =
-                        elemental.status === 'Operational' || elemental.status === 'Damaged';
-                      const tooManySuitsDestroyed = elemental.suitsDestroyed >= 5;
-                      const isSelectable = statusAllowsDeployment && !tooManySuitsDestroyed;
+                        const statusAllowsDeployment =
+                          elemental.status === 'Operational' ||
+                          elemental.status === 'Damaged';
+                        const tooManySuitsDestroyed = elemental.suitsDestroyed >= 5;
+                        const isSelectable = statusAllowsDeployment && !tooManySuitsDestroyed;
 
-                      return (
-                        <label
-                          key={elemental.id}
-                          className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
-                        >
-                          {isSelectable ? (
-                            <input
-                              type="checkbox"
-                              checked={formData.assignedElementals.includes(elemental.id)}
-                              onChange={() => toggleElementalAssignment(elemental.id)}
-                              className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
-                            />
-                          ) : (
-                            <div className="w-4 h-4" aria-hidden="true" />
-                          )}
-                          <div className="flex-1 flex items-center justify-between">
-                            <div>
-                              <span className="text-sm font-medium">{elemental.name}</span>
-                              <span className="text-xs text-muted-foreground ml-2">
-                                ({elemental.commander || 'Unassigned'})
-                              </span>
+                        return (
+                          <label
+                            key={elemental.id}
+                            className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
+                          >
+                            {isSelectable ? (
+                              <input
+                                type="checkbox"
+                                checked={formData.assignedElementals.includes(elemental.id)}
+                                onChange={() => toggleElementalAssignment(elemental.id)}
+                                className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                              />
+                            ) : (
+                              <div className="w-4 h-4" aria-hidden="true" />
+                            )}
+                            <div className="flex-1 flex items-center justify-between">
+                              <div>
+                                <span className="text-sm font-medium">{elemental.name}</span>
+                                <span className="text-xs text-muted-foreground ml-2">
+                                  ({elemental.commander || 'Unassigned'})
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Badge
+                                  variant={getUnitStatusVariant(elemental.status)}
+                                  className="text-xs"
+                                >
+                                  {elemental.status}
+                                </Badge>
+                                <span className="text-xs font-mono text-muted-foreground">
+                                  {formatNumber(elemental.bv)} BV
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Badge
-                                variant={
-                                  elemental.status === 'Operational'
-                                    ? 'operational'
-                                    : elemental.status === 'Damaged'
-                                      ? 'damaged'
-                                      : elemental.status === 'Disabled' ||
-                                        elemental.status === 'Unavailable'
-                                        ? 'disabled'
-                                        : elemental.status === 'Destroyed'
-                                          ? 'destroyed'
-                                          : 'outline'
-                                }
-                                className="text-xs"
-                              >
-                                {elemental.status}
-                              </Badge>
-                              <span className="text-xs font-mono text-muted-foreground">
-                                {formatNumber(elemental.bv)} BV
-                              </span>
-                            </div>
-                          </div>
-                        </label>
-                      );
-                    })}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                {formData.assignedElementals.length > 0 && (
+                  <div className="mt-2 text-xs text-muted-foreground">
+                    {formData.assignedElementals.length} elemental point
+                    {formData.assignedElementals.length !== 1 ? 's' : ''} assigned
                   </div>
                 )}
               </div>
-              {formData.assignedElementals.length > 0 && (
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {formData.assignedElementals.length} elemental point
-                  {formData.assignedElementals.length !== 1 ? 's' : ''} assigned
-                </div>
-              )}
             </div>
 
             {/* Total BV Display */}
