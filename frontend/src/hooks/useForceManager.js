@@ -52,13 +52,25 @@ export function useForceManager() {
         }
 
         // Load each force file
+        const failedFiles = [];
+
         const forcePromises = manifest.forces.map(async (filename) => {
-          const response = await fetch(`./data/forces/${filename}`);
-          if (!response.ok) {
-            console.error(`Failed to load ${filename}`);
+          try {
+            const response = await fetch(`./data/forces/${filename}`);
+            if (!response.ok) {
+              failedFiles.push(filename);
+              // eslint-disable-next-line no-console
+              console.error(`Failed to load force file: ${filename}`);
+              return null;
+            }
+            const data = await response.json();
+            return data;
+          } catch (fileError) {
+            failedFiles.push(filename);
+            // eslint-disable-next-line no-console
+            console.error(`Error loading force file ${filename}:`, fileError);
             return null;
           }
-          return response.json();
         });
 
         const loadedForces = await Promise.all(forcePromises);
