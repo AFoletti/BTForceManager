@@ -435,7 +435,14 @@ export default function MissionManager({ force, onUpdate }) {
                                 variant={
                                   elemental.status === 'Operational'
                                     ? 'operational'
-                                    : 'outline'
+                                    : elemental.status === 'Damaged'
+                                      ? 'damaged'
+                                      : elemental.status === 'Disabled' ||
+                                        elemental.status === 'Unavailable'
+                                        ? 'disabled'
+                                        : elemental.status === 'Destroyed'
+                                          ? 'destroyed'
+                                          : 'outline'
                                 }
                                 className="text-xs"
                               >
