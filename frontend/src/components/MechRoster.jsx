@@ -148,8 +148,6 @@ export default function MechRoster({ force, onUpdate }) {
             ) : (
               force.mechs.map((mech) => {
                 const pilot = findPilotForMech(force, mech);
-                const hasPilot = Boolean(pilot);
-                const isPilotKIA = pilot && pilot.injuries === 6;
 
                 return (
                   <tr
