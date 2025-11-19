@@ -276,10 +276,10 @@ export function applyMissionUpdate(missions, missionId, formData, timestamp) {
 /**
  * Mark a mission as completed and update the force warchest accordingly.
  *
- * @param {Object} force
+ * @param {Force} force
  * @param {string} missionId
  * @param {string} [timestamp] Optional ISO timestamp; defaults to now.
- * @returns {{ missions: Object[], currentWarchest: number }}
+ * @returns {{ missions: Mission[], currentWarchest: number }}
  */
 export function applyMissionCompletion(force, missionId, timestamp) {
   const completionTimestamp = timestamp || new Date().toISOString();
