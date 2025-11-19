@@ -15,7 +15,7 @@ export default function MechRoster({ force, onUpdate }) {
   const [formData, setFormData] = useState({
     name: '',
     status: 'Operational',
-    pilot: '',
+    pilotId: '',
     bv: 0,
     weight: 0,
     image: '',
@@ -28,7 +28,7 @@ export default function MechRoster({ force, onUpdate }) {
       setFormData({
         name: mech.name,
         status: mech.status,
-        pilot: mech.pilot || '',
+        pilotId: mech.pilotId || mech.pilot || '', // Support legacy 'pilot' field
         bv: mech.bv,
         weight: mech.weight,
         image: mech.image || '',
@@ -39,7 +39,7 @@ export default function MechRoster({ force, onUpdate }) {
       setFormData({
         name: '',
         status: 'Operational',
-        pilot: '',
+        pilotId: '',
         bv: 0,
         weight: 0,
         image: '',
