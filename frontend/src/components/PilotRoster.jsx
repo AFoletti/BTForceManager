@@ -5,6 +5,7 @@ import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, Minus, User } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { findMechForPilot } from '../lib/mechs';
 
 export default function PilotRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -14,7 +15,7 @@ export default function PilotRoster({ force, onUpdate }) {
     gunnery: 4,
     piloting: 5,
     injuries: 0,
-    history: ''
+    history: '',
   });
 
   const openDialog = (pilot = null) => {
@@ -25,7 +26,7 @@ export default function PilotRoster({ force, onUpdate }) {
         gunnery: pilot.gunnery,
         piloting: pilot.piloting,
         injuries: pilot.injuries,
-        history: pilot.history || ''
+        history: pilot.history || '',
       });
     } else {
       setEditingPilot(null);
@@ -34,7 +35,7 @@ export default function PilotRoster({ force, onUpdate }) {
         gunnery: 4,
         piloting: 5,
         injuries: 0,
-        history: ''
+        history: '',
       });
     }
     setShowDialog(true);
@@ -42,23 +43,24 @@ export default function PilotRoster({ force, onUpdate }) {
 
   const handleSave = () => {
     if (!formData.name) {
+      // eslint-disable-next-line no-alert
       alert('Name is required');
       return;
     }
 
     if (editingPilot) {
       // Update existing pilot
-      const updatedPilots = force.pilots.map(p => 
-        p.id === editingPilot.id 
+      const updatedPilots = force.pilots.map((pilot) =>
+        pilot.id === editingPilot.id
           ? {
-              ...p,
+              ...pilot,
               name: formData.name,
-              gunnery: parseInt(formData.gunnery) || 4,
-              piloting: parseInt(formData.piloting) || 5,
-              injuries: parseInt(formData.injuries) || 0,
-              history: formData.history
+              gunnery: parseInt(formData.gunnery, 10) || 4,
+              piloting: parseInt(formData.piloting, 10) || 5,
+              injuries: parseInt(formData.injuries, 10) || 0,
+              history: formData.history,
             }
-          : p
+          : pilot,
       );
       onUpdate({ pilots: updatedPilots });
     } else {
@@ -66,11 +68,11 @@ export default function PilotRoster({ force, onUpdate }) {
       const newPilot = {
         id: `pilot-${Date.now()}`,
         name: formData.name,
-        gunnery: parseInt(formData.gunnery) || 4,
-        piloting: parseInt(formData.piloting) || 5,
+        gunnery: parseInt(formData.gunnery, 10) || 4,
+        piloting: parseInt(formData.piloting, 10) || 5,
         injuries: 0,
         history: formData.history,
-        activityLog: []
+        activityLog: [],
       };
 
       const updatedPilots = [...force.pilots, newPilot];
@@ -79,15 +81,16 @@ export default function PilotRoster({ force, onUpdate }) {
 
     setShowDialog(false);
   };
+
   const updateInjuries = (pilotId, delta) => {
-    const updatedPilots = force.pilots.map(pilot => {
+    const updatedPilots = force.pilots.map((pilot) => {
       if (pilot.id === pilotId) {
         const newInjuries = Math.max(0, Math.min(6, pilot.injuries + delta));
         return { ...pilot, injuries: newInjuries };
       }
       return pilot;
     });
-    
+
     onUpdate({ pilots: updatedPilots });
   };
 
@@ -120,12 +123,13 @@ export default function PilotRoster({ force, onUpdate }) {
           </div>
         </div>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="data-table">
           <thead>
             <tr>
               <th>Name</th>
+              <th>Mech</th>
               <th className="text-center">Gunnery</th>
               <th className="text-center">Piloting</th>
               <th className="text-center">Injuries</th>
@@ -136,61 +140,68 @@ export default function PilotRoster({ force, onUpdate }) {
           <tbody>
             {force.pilots.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-8 text-muted-foreground">
+                <td colSpan="7" className="text-center py-8 text-muted-foreground">
                   No pilots in roster. Add pilots via Data Editor.
                 </td>
               </tr>
             ) : (
-              force.pilots.map(pilot => (
-                <tr 
-                  key={pilot.id}
-                  onClick={(e) => {
-                    // Don't open dialog if clicking on injury buttons
-                    if (!e.target.closest('button')) {
-                      openDialog(pilot);
-                    }
-                  }}
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
-                >
-                  <td className="font-medium">{pilot.name}</td>
-                  <td className="text-center font-mono">{pilot.gunnery}</td>
-                  <td className="text-center font-mono">{pilot.piloting}</td>
-                  <td className="text-center">
-                    <Badge variant={getInjuryColor(pilot.injuries)}>
-                      {getInjuryDisplay(pilot.injuries)}
-                    </Badge>
-                  </td>
-                  <td>
-                    <div className="flex items-center justify-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => updateInjuries(pilot.id, -1)}
-                        disabled={pilot.injuries === 0}
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => updateInjuries(pilot.id, 1)}
-                        disabled={pilot.injuries === 6}
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </td>
-                  <td className="text-xs text-muted-foreground">
-                    {pilot.activityLog && pilot.activityLog.length > 0 ? (
-                      <div className="max-w-xs truncate">
-                        {pilot.activityLog[pilot.activityLog.length - 1].action}
+              force.pilots.map((pilot) => {
+                const assignedMech = findMechForPilot(force, pilot);
+
+                return (
+                  <tr
+                    key={pilot.id}
+                    onClick={(e) => {
+                      // Don't open dialog if clicking on injury buttons
+                      if (!e.target.closest('button')) {
+                        openDialog(pilot);
+                      }
+                    }}
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  >
+                    <td className="font-medium">{pilot.name}</td>
+                    <td className="text-sm">
+                      {assignedMech ? assignedMech.name : 'Unassigned'}
+                    </td>
+                    <td className="text-center font-mono">{pilot.gunnery}</td>
+                    <td className="text-center font-mono">{pilot.piloting}</td>
+                    <td className="text-center">
+                      <Badge variant={getInjuryColor(pilot.injuries)}>
+                        {getInjuryDisplay(pilot.injuries)}
+                      </Badge>
+                    </td>
+                    <td>
+                      <div className="flex items-center justify-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateInjuries(pilot.id, -1)}
+                          disabled={pilot.injuries === 0}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateInjuries(pilot.id, 1)}
+                          disabled={pilot.injuries === 6}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
                       </div>
-                    ) : (
-                      <span className="text-muted-foreground/50">No activity</span>
-                    )}
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td className="text-xs text-muted-foreground">
+                      {pilot.activityLog && pilot.activityLog.length > 0 ? (
+                        <div className="max-w-xs truncate">
+                          {pilot.activityLog[pilot.activityLog.length - 1].action}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground/50">No activity</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

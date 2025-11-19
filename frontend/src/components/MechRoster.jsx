@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
 import { Shield, Plus } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
+import { findPilotForMech, getAvailablePilotsForMech } from '../lib/mechs';
 
 export default function MechRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -105,17 +106,7 @@ export default function MechRoster({ force, onUpdate }) {
     return statusMap[status] || 'default';
   };
 
-  const getAvailablePilots = () => {
-    const assignedToOtherMechs = new Set(
-      force.mechs
-        .filter((mech) => mech.pilot && (!editingMech || mech.id !== editingMech.id))
-        .map((mech) => mech.pilot),
-    );
-
-    return force.pilots.filter((pilot) => !assignedToOtherMechs.has(pilot.name));
-  };
-
-  const availablePilots = getAvailablePilots();
+  const availablePilots = getAvailablePilotsForMech(force, editingMech);
 
   return (
     <div className="tactical-panel">
@@ -155,45 +146,54 @@ export default function MechRoster({ force, onUpdate }) {
                 </td>
               </tr>
             ) : (
-              force.mechs.map((mech) => (
-                <tr
-                  key={mech.id}
-                  onClick={() => openDialog(mech)}
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
-                >
-                  <td>
-                    <div className="flex items-center gap-3">
-                      {mech.image && (
-                        <img
-                          src={mech.image}
-                          alt={mech.name}
-                          className="max-h-10 max-w-10 rounded object-contain"
-                        />
-                      )}
-                      <span className="font-medium">{mech.name}</span>
-                    </div>
-                  </td>
-                  <td>
-                    {mech.pilot ? (
-                      <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
-                    ) : (
-                      <Badge variant="missingPilot">Missing Pilot</Badge>
-                    )}
-                  </td>
-                  <td className="text-muted-foreground">{mech.pilot || 'Unassigned'}</td>
-                  <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
-                  <td className="text-right font-mono">{mech.weight}t</td>
-                  <td className="text-xs text-muted-foreground">
-                    {mech.activityLog && mech.activityLog.length > 0 ? (
-                      <div className="max-w-xs truncate">
-                        {mech.activityLog[mech.activityLog.length - 1].action}
+              force.mechs.map((mech) => {
+                const pilot = findPilotForMech(force, mech);
+                const hasPilot = Boolean(pilot);
+
+                return (
+                  <tr
+                    key={mech.id}
+                    onClick={() => openDialog(mech)}
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  >
+                    <td>
+                      <div className="flex items-center gap-3">
+                        {mech.image && (
+                          <img
+                            src={mech.image}
+                            alt={mech.name}
+                            className="max-h-10 max-w-10 rounded object-contain"
+                          />
+                        )}
+                        <span className="font-medium">{mech.name}</span>
                       </div>
-                    ) : (
-                      <span className="text-muted-foreground/50">No activity</span>
-                    )}
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td>
+                      {hasPilot ? (
+                        <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
+                      ) : (
+                        <Badge variant="missingPilot">Missing Pilot</Badge>
+                      )}
+                    </td>
+                    <td className="text-muted-foreground">
+                      {hasPilot
+                        ? `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`
+                        : 'Unassigned'}
+                    </td>
+                    <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
+                    <td className="text-right font-mono">{mech.weight}t</td>
+                    <td className="text-xs text-muted-foreground">
+                      {mech.activityLog && mech.activityLog.length > 0 ? (
+                        <div className="max-w-xs truncate">
+                          {mech.activityLog[mech.activityLog.length - 1].action}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground/50">No activity</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
