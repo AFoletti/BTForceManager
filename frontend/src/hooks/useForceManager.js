@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 
 // Normalize a raw force object loaded from JSON so components can rely on
 // certain fields always being present and correctly typed.
+/**
+ * @param {any} raw
+ * @returns {import('../lib/missions').Force}
+ */
 function normalizeForce(raw) {
   if (!raw || typeof raw !== 'object') return raw;
 
