@@ -388,42 +388,57 @@ export default function MissionManager({ force, onUpdate }) {
                   </p>
                 ) : (
                   <div className="space-y-2">
-                    {force.elementals.map((elemental) => (
-                      <label
-                        key={elemental.id}
-                        className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.assignedElementals.includes(elemental.id)}
-                          onChange={() => toggleElementalAssignment(elemental.id)}
-                          className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
-                        />
-                        <div className="flex-1 flex items-center justify-between">
-                          <div>
-                            <span className="text-sm font-medium">{elemental.name}</span>
-                            <span className="text-xs text-muted-foreground ml-2">
-                              ({elemental.commander || 'Unassigned'})
-                            </span>
+                    {force.elementals.map((elemental) => {
+                      const isDestroyed = elemental.suitsDestroyed >= 6;
+                      if (isDestroyed) {
+                        return null;
+                      }
+
+                      const statusAllowsDeployment =
+                        elemental.status === 'Operational' || elemental.status === 'Damaged';
+                      const isSelectable = statusAllowsDeployment;
+
+                      return (
+                        <label
+                          key={elemental.id}
+                          className="flex items-center gap-3 p-2 rounded hover:bg-muted/30 cursor-pointer transition-colors"
+                        >
+                          {isSelectable ? (
+                            <input
+                              type="checkbox"
+                              checked={formData.assignedElementals.includes(elemental.id)}
+                              onChange={() => toggleElementalAssignment(elemental.id)}
+                              className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                            />
+                          ) : (
+                            <div className="w-4 h-4" aria-hidden="true" />
+                          )}
+                          <div className="flex-1 flex items-center justify-between">
+                            <div>
+                              <span className="text-sm font-medium">{elemental.name}</span>
+                              <span className="text-xs text-muted-foreground ml-2">
+                                ({elemental.commander || 'Unassigned'})
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant={
+                                  elemental.status === 'Operational'
+                                    ? 'operational'
+                                    : 'outline'
+                                }
+                                className="text-xs"
+                              >
+                                {elemental.status}
+                              </Badge>
+                              <span className="text-xs font-mono text-muted-foreground">
+                                {formatNumber(elemental.bv)} BV
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge
-                              variant={
-                                elemental.status === 'Operational'
-                                  ? 'operational'
-                                  : 'outline'
-                              }
-                              className="text-xs"
-                            >
-                              {elemental.status}
-                            </Badge>
-                            <span className="text-xs font-mono text-muted-foreground">
-                              {formatNumber(elemental.bv)} BV
-                            </span>
-                          </div>
-                        </div>
-                      </label>
-                    ))}
+                        </label>
+                      );
+                    })}
                   </div>
                 )}
               </div>
