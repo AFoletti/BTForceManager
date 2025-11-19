@@ -2,14 +2,16 @@
 // Centralises the logic that determines which pilot is assigned
 // to which mech, which pilots are available, etc.
 
+/* eslint-disable jsdoc/require-param-type, jsdoc/require-returns-type */
+
 /**
  * Find the pilot object assigned to a mech, if any.
  * Matching is done by pilot name because mechs currently store
  * only the pilot's name.
  *
- * @param {Object} force
- * @param {Object} mech
- * @returns {Object|null}
+ * @param {Force} force
+ * @param {Mech} mech
+ * @returns {Pilot|null}
  */
 export function findPilotForMech(force, mech) {
   if (!mech || !mech.pilot) return null;
