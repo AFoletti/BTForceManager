@@ -1,5 +1,33 @@
 import { useState, useEffect } from 'react';
 
+// Normalize a raw force object loaded from JSON so components can rely on
+// certain fields always being present and correctly typed.
+function normalizeForce(raw) {
+  if (!raw || typeof raw !== 'object') return raw;
+
+  const normalized = { ...raw };
+
+  const toNumberOrDefault = (value, fallback) =>
+    typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+
+  normalized.startingWarchest = toNumberOrDefault(normalized.startingWarchest, 0);
+  normalized.currentWarchest = toNumberOrDefault(
+    normalized.currentWarchest,
+    normalized.startingWarchest,
+  );
+  normalized.wpMultiplier = toNumberOrDefault(normalized.wpMultiplier, 5);
+
+  normalized.mechs = Array.isArray(normalized.mechs) ? normalized.mechs : [];
+  normalized.pilots = Array.isArray(normalized.pilots) ? normalized.pilots : [];
+  normalized.elementals = Array.isArray(normalized.elementals) ? normalized.elementals : [];
+  normalized.missions = Array.isArray(normalized.missions) ? normalized.missions : [];
+  normalized.otherActionsLog = Array.isArray(normalized.otherActionsLog)
+    ? normalized.otherActionsLog
+    : [];
+
+  return normalized;
+}
+
 export function useForceManager() {
   const [forces, setForces] = useState([]);
   const [loading, setLoading] = useState(true);
