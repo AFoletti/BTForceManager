@@ -1,7 +1,6 @@
 // Mission-related helpers.
 // These functions are pure and never mutate the input `force` object.
 
-/* eslint-disable jsdoc/require-param-type, jsdoc/require-returns-type */
 /**
  * @typedef {Object} Mech
  * @property {string} id
