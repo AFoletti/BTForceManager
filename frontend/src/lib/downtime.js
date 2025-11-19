@@ -2,6 +2,8 @@
 // Centralises cost calculation and force updates so the component
 // stays mostly focused on UI concerns.
 
+/* eslint-disable jsdoc/require-param-type, jsdoc/require-returns-type */
+
 /**
  * Build the context object used when evaluating downtime formulas.
  *
