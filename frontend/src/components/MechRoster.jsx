@@ -15,7 +15,7 @@ export default function MechRoster({ force, onUpdate }) {
   const [formData, setFormData] = useState({
     name: '',
     status: 'Operational',
-    pilot: '',
+    pilotId: '',
     bv: 0,
     weight: 0,
     image: '',
@@ -28,7 +28,7 @@ export default function MechRoster({ force, onUpdate }) {
       setFormData({
         name: mech.name,
         status: mech.status,
-        pilot: mech.pilot || '',
+        pilotId: mech.pilotId || mech.pilot || '', // Support legacy 'pilot' field
         bv: mech.bv,
         weight: mech.weight,
         image: mech.image || '',
@@ -39,7 +39,7 @@ export default function MechRoster({ force, onUpdate }) {
       setFormData({
         name: '',
         status: 'Operational',
-        pilot: '',
+        pilotId: '',
         bv: 0,
         weight: 0,
         image: '',
@@ -64,7 +64,9 @@ export default function MechRoster({ force, onUpdate }) {
               ...mech,
               name: formData.name,
               status: formData.status,
-              pilot: formData.pilot,
+              pilotId: formData.pilotId,
+              // Remove legacy 'pilot' field if it exists
+              pilot: undefined,
               bv: parseInt(formData.bv, 10) || 0,
               weight: parseInt(formData.weight, 10) || 0,
               image: formData.image,
@@ -79,7 +81,7 @@ export default function MechRoster({ force, onUpdate }) {
         id: `mech-${Date.now()}`,
         name: formData.name,
         status: formData.status,
-        pilot: formData.pilot,
+        pilotId: formData.pilotId,
         bv: parseInt(formData.bv, 10) || 0,
         weight: parseInt(formData.weight, 10) || 0,
         image: formData.image,
@@ -234,12 +236,12 @@ export default function MechRoster({ force, onUpdate }) {
               <div>
                 <label className="block text-sm font-medium mb-2">Pilot</label>
                 <Select
-                  value={formData.pilot}
-                  onChange={(e) => setFormData({ ...formData, pilot: e.target.value })}
+                  value={formData.pilotId}
+                  onChange={(e) => setFormData({ ...formData, pilotId: e.target.value })}
                 >
                   <option value="">No pilot</option>
                   {availablePilots.map((pilot) => (
-                    <option key={pilot.id} value={pilot.name}>
+                    <option key={pilot.id} value={pilot.id}>
                       {pilot.name} - G:{pilot.gunnery} / P:{pilot.piloting}
                     </option>
                   ))}

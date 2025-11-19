@@ -17,7 +17,8 @@
       "weight": 35,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938395731"
     },
     {
       "id": "mech-1760938680473",
@@ -28,7 +29,8 @@
       "weight": 30,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938384963"
     },
     {
       "id": "mech-1760938738364",
@@ -45,7 +47,8 @@
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
         }
-      ]
+      ],
+      "pilotId": "pilot-1760938311793"
     },
     {
       "id": "mech-1760938779264",
@@ -56,7 +59,8 @@
       "weight": 90,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938261553"
     },
     {
       "id": "mech-1760938815718",
@@ -67,7 +71,8 @@
       "weight": 35,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938413154"
     },
     {
       "id": "mech-1760938838972",
@@ -78,7 +83,8 @@
       "weight": 35,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938342217"
     },
     {
       "id": "mech-1760938876034",
@@ -89,7 +95,8 @@
       "weight": 45,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938277391"
     },
     {
       "id": "mech-176093890933235",
@@ -100,7 +107,8 @@
       "weight": 55,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938403716"
     },
     {
       "id": "mech-1760938937911",
@@ -117,7 +125,8 @@
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
         }
-      ]
+      ],
+      "pilotId": "pilot-1760938302837"
     },
     {
       "id": "mech-1760938964711",
@@ -128,7 +137,8 @@
       "weight": 85,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938430182"
     },
     {
       "id": "mech-176093892364",
@@ -145,7 +155,8 @@
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
         }
-      ]
+      ],
+      "pilotId": "pilot-1760938292407"
     },
     {
       "id": "mech-1760938909266",
@@ -156,7 +167,8 @@
       "weight": 50,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938332396"
     },
     {
       "id": "mech-17609389036786",
@@ -173,7 +185,8 @@
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
         }
-      ]
+      ],
+      "pilotId": "pilot-1760938320495"
     },
     {
       "id": "mech-1760973709336",
@@ -184,7 +197,8 @@
       "weight": 75,
       "image": "",
       "history": "",
-      "activityLog": []
+      "activityLog": [],
+      "pilotId": "pilot-1760938361147"
     }
   ],
   "elementals": [

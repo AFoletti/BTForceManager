@@ -4,7 +4,8 @@
 /**
  * @typedef {Object} Mech
  * @property {string} id
- * @property {string} [pilot]
+ * @property {string} [pilotId]
+ * @property {string} [pilot] - Deprecated: legacy name field, use pilotId
  */
 
 /**
@@ -25,17 +26,28 @@
 
 /**
  * Find the pilot object assigned to a mech, if any.
- * Matching is done by pilot name because mechs currently store
- * only the pilot's name.
+ * Matching is done by pilot ID. For backward compatibility, falls back to name matching
+ * if pilotId is not present but pilot (name) is.
  *
  * @param {Force} force
  * @param {Mech} mech
  * @returns {Pilot|null}
  */
 export function findPilotForMech(force, mech) {
-  if (!mech || !mech.pilot) return null;
+  if (!mech) return null;
   const pilots = force.pilots || [];
-  return pilots.find((pilot) => pilot.name === mech.pilot) || null;
+  
+  // New approach: use pilotId
+  if (mech.pilotId) {
+    return pilots.find((pilot) => pilot.id === mech.pilotId) || null;
+  }
+  
+  // Legacy fallback: use pilot name (for backward compatibility)
+  if (mech.pilot) {
+    return pilots.find((pilot) => pilot.name === mech.pilot) || null;
+  }
+  
+  return null;
 }
 
 /**
@@ -48,7 +60,11 @@ export function findPilotForMech(force, mech) {
 export function findMechForPilot(force, pilot) {
   if (!pilot) return null;
   const mechs = force.mechs || [];
-  return mechs.find((mech) => mech.pilot === pilot.name) || null;
+  
+  // Check both pilotId (new) and pilot name (legacy)
+  return mechs.find((mech) => 
+    mech.pilotId === pilot.id || mech.pilot === pilot.name
+  ) || null;
 }
 
 /**
@@ -64,11 +80,23 @@ export function getAvailablePilotsForMech(force, editingMech) {
   const pilots = force.pilots || [];
   const mechs = force.mechs || [];
 
-  const assignedToOtherMechs = new Set(
-    mechs
-      .filter((mech) => mech.pilot && (!editingMech || mech.id !== editingMech.id))
-      .map((mech) => mech.pilot),
-  );
+  // Build set of assigned pilot IDs and names (for legacy support)
+  const assignedPilotIds = new Set();
+  const assignedPilotNames = new Set();
+  
+  mechs.forEach((mech) => {
+    // Skip the mech being edited
+    if (editingMech && mech.id === editingMech.id) return;
+    
+    if (mech.pilotId) {
+      assignedPilotIds.add(mech.pilotId);
+    }
+    if (mech.pilot) {
+      assignedPilotNames.add(mech.pilot);
+    }
+  });
 
-  return pilots.filter((pilot) => !assignedToOtherMechs.has(pilot.name));
+  return pilots.filter((pilot) => 
+    !assignedPilotIds.has(pilot.id) && !assignedPilotNames.has(pilot.name)
+  );
 }
