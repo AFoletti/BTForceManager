@@ -10,26 +10,13 @@ export function formatNumber(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 }
 
-export function evaluateFormula(formula, weight) {
-  try {
-    // Replace 'weight' with actual value and evaluate
-    const expression = formula.replace(/weight/gi, weight.toString());
-    // Simple math evaluation (supports basic operations)
-    const result = eval(expression);
-    return Math.round(result * 10) / 10; // Round to 1 decimal
-  } catch (error) {
-    console.error('Formula evaluation error:', error);
-    return 0;
-  }
-}
-
 export function formatDate(date) {
   return new Date(date).toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 }
 

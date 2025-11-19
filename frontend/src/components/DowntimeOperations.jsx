@@ -5,6 +5,13 @@ import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Textarea } from './ui/textarea';
 import { Wrench, AlertTriangle, Settings } from 'lucide-react';
+import {
+  buildDowntimeContext,
+  evaluateDowntimeCost,
+  applyMechDowntimeAction,
+  applyElementalDowntimeAction,
+  logOtherDowntimeAction,
+} from '../lib/downtime';
 
 export default function DowntimeOperations({ force, onUpdate }) {
   const [selectedUnitType, setSelectedUnitType] = useState('mech');
@@ -14,7 +21,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [otherActionData, setOtherActionData] = useState({ description: '', cost: 0 });
   const [wpMultiplier, setWpMultiplier] = useState(force.wpMultiplier || 5);
   const [editingMultiplier, setEditingMultiplier] = useState(false);
-  
+
   // Load downtime actions from JSON
   const [mechActions, setMechActions] = useState([]);
   const [elementalActions, setElementalActions] = useState([]);
@@ -22,35 +29,40 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
   useEffect(() => {
     fetch('./data/downtime-actions.json')
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setMechActions(data.mechActions || []);
         setElementalActions(data.elementalActions || []);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
+        // eslint-disable-next-line no-console
         console.error('Failed to load downtime actions:', err);
         setLoading(false);
       });
   }, []);
 
-  const selectedUnit = selectedUnitType === 'mech'
-    ? force.mechs.find(m => m.id === selectedUnitId)
-    : force.elementals?.find(e => e.id === selectedUnitId);
+  const selectedUnit =
+    selectedUnitType === 'mech'
+      ? force.mechs.find((m) => m.id === selectedUnitId)
+      : force.elementals?.find((e) => e.id === selectedUnitId);
 
-  const otherAction = { id: 'other', name: 'Other Action', formula: 'custom', makesUnavailable: false };
+  const otherAction = {
+    id: 'other',
+    name: 'Other Action',
+    formula: 'custom',
+    makesUnavailable: false,
+  };
 
   const availableActions = [
     ...(selectedUnitType === 'mech' ? mechActions : elementalActions),
-    otherAction
+    otherAction,
   ];
 
   if (loading) {
     return (
       <div className="tactical-panel">
-        <div className="p-6 text-center text-muted-foreground">
-          Loading downtime actions...
-        </div>
+        <div className="p-6 text-center text-muted-foreground">Loading downtime actions...</div>
       </div>
     );
   }
@@ -58,28 +70,11 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const calculateCost = () => {
     if (!selectedUnit || !selectedAction) return 0;
 
-    const action = availableActions.find(a => a.id === selectedAction);
-    if (!action) return 0;
+    const action = availableActions.find((a) => a.id === selectedAction);
+    if (!action || action.id === 'other') return 0;
 
-    if (action.id === 'other') return 0;
-
-    try {
-      const context = {
-        weight: selectedUnit.weight || 0,
-        suitsDamaged: selectedUnit.suitsDamaged || 0,
-        suitsDestroyed: selectedUnit.suitsDestroyed || 0,
-        wpMultiplier: force.wpMultiplier || 5
-      };
-
-      const result = eval(action.formula.replace(/(\w+)/g, (match) => {
-        return context[match] !== undefined ? context[match] : match;
-      }));
-
-      return Math.ceil(result); // Always round up to upper integer
-    } catch (error) {
-      console.error('Formula evaluation error:', error);
-      return 0;
-    }
+    const context = buildDowntimeContext(force, selectedUnit);
+    return evaluateDowntimeCost(action.formula, context);
   };
 
   const cost = calculateCost();
@@ -95,55 +90,29 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
     const timestamp = new Date().toISOString();
     const lastMission = force.missions?.[force.missions.length - 1];
-    const action = availableActions.find(a => a.id === selectedAction);
+    const action = availableActions.find((a) => a.id === selectedAction);
+
+    if (!action) return;
 
     if (selectedUnitType === 'mech') {
-      const updatedMechs = force.mechs.map(mech => {
-        if (mech.id === selectedUnitId) {
-          const activityLog = [...(mech.activityLog || [])];
-          activityLog.push({
-            timestamp,
-            action: `${action.name} performed (${cost} WP)`,
-            mission: lastMission?.name || null
-          });
-
-          return {
-            ...mech,
-            status: action.makesUnavailable ? 'Unavailable' : mech.status,
-            activityLog
-          };
-        }
-        return mech;
+      const result = applyMechDowntimeAction(force, {
+        mechId: selectedUnitId,
+        action,
+        cost,
+        timestamp,
+        lastMissionName: lastMission?.name || null,
       });
-
-      const newWarchest = force.currentWarchest - cost;
-      onUpdate({ mechs: updatedMechs, currentWarchest: newWarchest });
+      onUpdate(result);
     } else {
-      const updatedElementals = (force.elementals || []).map(elemental => {
-        if (elemental.id === selectedUnitId) {
-          const activityLog = [...(elemental.activityLog || [])];
-          activityLog.push({
-            timestamp,
-            action: `${action.name} performed (${cost} WP)`,
-            mission: lastMission?.name || null
-          });
-
-          let updates = { activityLog };
-
-          // Reset counters based on action
-          if (selectedAction === 'repair-elemental') {
-            updates.suitsDamaged = 0;
-          } else if (selectedAction === 'purchase-elemental') {
-            updates.suitsDestroyed = 0;
-          }
-
-          return { ...elemental, ...updates };
-        }
-        return elemental;
+      const result = applyElementalDowntimeAction(force, {
+        elementalId: selectedUnitId,
+        actionId: selectedAction,
+        action,
+        cost,
+        timestamp,
+        lastMissionName: lastMission?.name || null,
       });
-
-      const newWarchest = force.currentWarchest - cost;
-      onUpdate({ elementals: updatedElementals, currentWarchest: newWarchest });
+      onUpdate(result);
     }
 
     setSelectedUnitId('');
@@ -155,16 +124,13 @@ export default function DowntimeOperations({ force, onUpdate }) {
     if (otherActionData.cost > force.currentWarchest) return;
 
     const timestamp = new Date().toISOString();
-    const otherActionsLog = [...(force.otherActionsLog || [])];
-    
-    otherActionsLog.push({
-      timestamp,
+    const result = logOtherDowntimeAction(force, {
       description: otherActionData.description,
-      cost: otherActionData.cost
+      cost: otherActionData.cost,
+      timestamp,
     });
 
-    const newWarchest = force.currentWarchest - otherActionData.cost;
-    onUpdate({ otherActionsLog, currentWarchest: newWarchest });
+    onUpdate(result);
 
     setShowOtherActionDialog(false);
     setOtherActionData({ description: '', cost: 0 });
@@ -207,9 +173,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     <Button size="sm" onClick={saveWpMultiplier}>
                       Save
                     </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
+                    <Button
+                      size="sm"
+                      variant="outline"
                       onClick={() => {
                         setWpMultiplier(force.wpMultiplier || 5);
                         setEditingMultiplier(false);
@@ -245,11 +211,14 @@ export default function DowntimeOperations({ force, onUpdate }) {
           <div className="grid md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium mb-2">Unit Type</label>
-              <Select value={selectedUnitType} onChange={(e) => {
-                setSelectedUnitType(e.target.value);
-                setSelectedUnitId('');
-                setSelectedAction('');
-              }}>
+              <Select
+                value={selectedUnitType}
+                onChange={(e) => {
+                  setSelectedUnitType(e.target.value);
+                  setSelectedUnitId('');
+                  setSelectedAction('');
+                }}
+              >
                 <option value="mech">Mech</option>
                 <option value="elemental">Elemental</option>
               </Select>
@@ -257,27 +226,27 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
             <div>
               <label className="block text-sm font-medium mb-2">Select Unit</label>
-              <Select 
-                value={selectedUnitId} 
+              <Select
+                value={selectedUnitId}
                 onChange={(e) => {
                   setSelectedUnitId(e.target.value);
                   setSelectedAction('');
                 }}
               >
                 <option value="">-- Choose unit --</option>
-                {selectedUnitType === 'mech' ? (
-                  force.mechs.map(mech => (
-                    <option key={mech.id} value={mech.id}>
-                      {mech.name} ({mech.weight}t) - {mech.status}
-                    </option>
-                  ))
-                ) : (
-                  (force.elementals || []).map(elemental => (
-                    <option key={elemental.id} value={elemental.id}>
-                      {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{elemental.suitsDamaged})
-                    </option>
-                  ))
-                )}
+                {selectedUnitType === 'mech'
+                  ? force.mechs.map((mech) => (
+                      <option key={mech.id} value={mech.id}>
+                        {mech.name} ({mech.weight}t) - {mech.status}
+                      </option>
+                    ))
+                  : (force.elementals || []).map((elemental) => (
+                      <option key={elemental.id} value={elemental.id}>
+                        {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{
+                          elemental.suitsDamaged
+                        })
+                      </option>
+                    ))}
               </Select>
             </div>
 
@@ -289,7 +258,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                 disabled={!selectedUnitId}
               >
                 <option value="">-- Choose action --</option>
-                {availableActions.map(action => (
+                {availableActions.map((action) => (
                   <option key={action.id} value={action.id}>
                     {action.name} {action.makesUnavailable ? '(Unavailable)' : ''}
                   </option>
@@ -308,15 +277,19 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     <div className="text-sm">Weight: {selectedUnit.weight} tons</div>
                   ) : (
                     <div className="text-sm">
-                      Suits: {selectedUnit.suitsDestroyed} destroyed, {selectedUnit.suitsDamaged} damaged
+                      Suits: {selectedUnit.suitsDestroyed} destroyed,{' '}
+                      {selectedUnit.suitsDamaged} damaged
                     </div>
                   )}
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground mb-1">Action</div>
-                  <div className="font-semibold">{availableActions.find(a => a.id === selectedAction)?.name}</div>
+                  <div className="font-semibold">
+                    {availableActions.find((a) => a.id === selectedAction)?.name}
+                  </div>
                   <div className="text-sm font-mono text-muted-foreground">
-                    Formula: {availableActions.find(a => a.id === selectedAction)?.formula}
+                    Formula:{' '}
+                    {availableActions.find((a) => a.id === selectedAction)?.formula}
                   </div>
                 </div>
               </div>
@@ -329,7 +302,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                   </div>
                 </div>
 
-                {availableActions.find(a => a.id === selectedAction)?.makesUnavailable && (
+                {availableActions.find((a) => a.id === selectedAction)?.makesUnavailable && (
                   <div className="flex items-center gap-2 text-amber-400 text-sm">
                     <AlertTriangle className="w-4 h-4" />
                     Unit will be unavailable
@@ -345,7 +318,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
               disabled={!selectedUnit || !selectedAction || (!canAfford && selectedAction !== 'other')}
               size="lg"
             >
-              {selectedAction === 'other' ? 'Configure Other Action' : `Perform Action (${cost} WP)`}
+              {selectedAction === 'other'
+                ? 'Configure Other Action'
+                : `Perform Action (${cost} WP)`}
             </Button>
           </div>
 
@@ -362,7 +337,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
       {force.otherActionsLog && force.otherActionsLog.length > 0 && (
         <div className="tactical-panel">
           <div className="tactical-header">
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Other Actions History</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider">
+              Other Actions History
+            </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="data-table">
@@ -374,15 +351,18 @@ export default function DowntimeOperations({ force, onUpdate }) {
                 </tr>
               </thead>
               <tbody>
-                {force.otherActionsLog.slice().reverse().map((log, idx) => (
-                  <tr key={idx}>
-                    <td className="text-sm text-muted-foreground">
-                      {new Date(log.timestamp).toLocaleString()}
-                    </td>
-                    <td>{log.description}</td>
-                    <td className="text-right font-mono text-destructive">-{log.cost} WP</td>
-                  </tr>
-                ))}
+                {force.otherActionsLog
+                  .slice()
+                  .reverse()
+                  .map((log, idx) => (
+                    <tr key={idx}>
+                      <td className="text-sm text-muted-foreground">
+                        {new Date(log.timestamp).toLocaleString()}
+                      </td>
+                      <td>{log.description}</td>
+                      <td className="text-right font-mono text-destructive">-{log.cost} WP</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -401,7 +381,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
               <label className="block text-sm font-medium mb-2">Action Description</label>
               <Textarea
                 value={otherActionData.description}
-                onChange={(e) => setOtherActionData({ ...otherActionData, description: e.target.value })}
+                onChange={(e) =>
+                  setOtherActionData({ ...otherActionData, description: e.target.value })
+                }
                 placeholder="e.g., Hire technician, Purchase supplies, Training session..."
                 rows={3}
               />
@@ -412,7 +394,12 @@ export default function DowntimeOperations({ force, onUpdate }) {
               <Input
                 type="number"
                 value={otherActionData.cost}
-                onChange={(e) => setOtherActionData({ ...otherActionData, cost: parseFloat(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setOtherActionData({
+                    ...otherActionData,
+                    cost: parseFloat(e.target.value) || 0,
+                  })
+                }
                 placeholder="0"
                 min="0"
               />
@@ -434,7 +421,11 @@ export default function DowntimeOperations({ force, onUpdate }) {
               </Button>
               <Button
                 onClick={performOtherAction}
-                disabled={!otherActionData.description || otherActionData.cost <= 0 || otherActionData.cost > force.currentWarchest}
+                disabled={
+                  !otherActionData.description ||
+                  otherActionData.cost <= 0 ||
+                  otherActionData.cost > force.currentWarchest
+                }
               >
                 Perform Action ({otherActionData.cost} WP)
               </Button>
@@ -446,24 +437,34 @@ export default function DowntimeOperations({ force, onUpdate }) {
       {/* Actions Reference */}
       <div className="tactical-panel bg-muted/20">
         <div className="tactical-header">
-          <h3 className="text-sm font-semibold uppercase tracking-wider">Available Actions Reference</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider">
+            Available Actions Reference
+          </h3>
         </div>
         <div className="p-4 space-y-3 text-sm">
           <div className="text-muted-foreground mb-2">
-            Actions are loaded from <code className="bg-muted px-1.5 py-0.5 rounded text-xs">data/downtime-actions.json</code>
+            Actions are loaded from{' '}
+            <code className="bg-muted px-1.5 py-0.5 rounded text-xs">
+              data/downtime-actions.json
+            </code>
           </div>
-          
+
           <div>
             <div className="font-medium mb-2 text-primary">Mech Actions:</div>
-            {mechActions.map(action => (
+            {mechActions.map((action) => (
               <div key={action.id} className="mb-2 pl-3 border-l-2 border-muted">
                 <div className="font-medium">{action.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  Formula: <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
-                  {action.makesUnavailable && <span className="ml-2 text-amber-400">(Makes Unavailable)</span>}
+                  Formula:{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
+                  {action.makesUnavailable && (
+                    <span className="ml-2 text-amber-400">(Makes Unavailable)</span>
+                  )}
                 </div>
                 {action.description && (
-                  <div className="text-xs text-muted-foreground mt-0.5">{action.description}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    {action.description}
+                  </div>
                 )}
               </div>
             ))}
@@ -471,14 +472,17 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
           <div>
             <div className="font-medium mb-2 text-primary">Elemental Actions:</div>
-            {elementalActions.map(action => (
+            {elementalActions.map((action) => (
               <div key={action.id} className="mb-2 pl-3 border-l-2 border-muted">
                 <div className="font-medium">{action.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  Formula: <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
+                  Formula:{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
                 </div>
                 {action.description && (
-                  <div className="text-xs text-muted-foreground mt-0.5">{action.description}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    {action.description}
+                  </div>
                 )}
               </div>
             ))}
@@ -486,10 +490,23 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
           <div className="pt-2 border-t border-border">
             <div className="text-xs text-muted-foreground">
-              <p className="mb-1">💡 <strong>To modify actions:</strong></p>
+              <p className="mb-1">
+                💡 <strong>To modify actions:</strong>
+              </p>
               <ol className="list-decimal list-inside ml-2 space-y-0.5">
-                <li>Edit <code className="bg-muted px-1 py-0.5 rounded">data/downtime-actions.json</code></li>
-                <li>Formulas use: <code className="bg-muted px-1 py-0.5 rounded">weight</code>, <code className="bg-muted px-1 py-0.5 rounded">wpMultiplier</code>, <code className="bg-muted px-1 py-0.5 rounded">suitsDamaged</code>, <code className="bg-muted px-1 py-0.5 rounded">suitsDestroyed</code></li>
+                <li>
+                  Edit{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">
+                    data/downtime-actions.json
+                  </code>
+                </li>
+                <li>
+                  Formulas use:{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">weight</code>,{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">wpMultiplier</code>,{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">suitsDamaged</code>,{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">suitsDestroyed</code>
+                </li>
                 <li>Commit and push to GitHub</li>
               </ol>
             </div>

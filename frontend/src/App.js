@@ -25,7 +25,7 @@ export default function App() {
     addNewForce,
     exportForce,
     loading,
-    error
+    error,
   } = useForceManager();
 
   const [showAddForceDialog, setShowAddForceDialog] = useState(false);
@@ -39,7 +39,10 @@ export default function App() {
 
   const handleAddForce = (newForce) => {
     addNewForce(newForce);
-    alert(`✅ Force "${newForce.name}" created!\n\n⚠️ IMPORTANT: This is a session-only force.\nTo persist:\n1. Go to Data Editor tab\n2. Click "Export Force"\n3. Save as data/forces/${newForce.id}.json\n4. Add "${newForce.id}.json" to manifest.json\n5. Commit and push to GitHub`);
+    // eslint-disable-next-line no-alert
+    alert(
+      `✅ Force "${newForce.name}" created!\n\n⚠️ IMPORTANT: This is a session-only force.\nTo persist:\n1. Go to Data Editor tab\n2. Click "Export Force"\n3. Save as data/forces/${newForce.id}.json\n4. Add "${newForce.id}.json" to manifest.json\n5. Commit and push to GitHub`,
+    );
   };
 
   if (loading) {
@@ -61,7 +64,9 @@ export default function App() {
           <h2 className="text-xl font-bold text-foreground mb-2">Error Loading Data</h2>
           <p className="text-muted-foreground mb-4">{error}</p>
           <p className="text-sm text-muted-foreground">
-            Make sure <code className="bg-muted px-2 py-1 rounded">data/forces.json</code> exists in the repository.
+            Make sure{' '}
+            <code className="bg-muted px-2 py-1 rounded">data/forces/manifest.json</code>{' '}
+            exists in the repository.
           </p>
         </div>
       </div>
@@ -83,32 +88,32 @@ export default function App() {
                 <p className="text-xs text-muted-foreground">Classic Mech & Pilot Management System</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
-              <Select 
-                value={selectedForceId} 
+              <Select
+                value={selectedForceId}
                 onChange={(e) => setSelectedForceId(e.target.value)}
                 className="w-64"
               >
-                {forces.map(force => (
+                {forces.map((force) => (
                   <option key={force.id} value={force.id}>
                     {force.name} (WP: {force.currentWarchest}/{force.startingWarchest})
                   </option>
                 ))}
               </Select>
-              
-              <Button 
-                variant="secondary" 
-                size="sm" 
+
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => setShowAddForceDialog(true)}
                 title="Create new force"
               >
                 <Plus className="w-4 h-4" />
                 Add Force
               </Button>
-              
+
               <PDFExport force={selectedForce} />
-              
+
               <Button variant="outline" size="sm" onClick={handleExport}>
                 <Download className="w-4 h-4" />
                 Export
@@ -124,8 +129,8 @@ export default function App() {
           <div className="container mx-auto px-4 py-6">
             <div className="flex items-start gap-6">
               {selectedForce.image && (
-                <img 
-                  src={selectedForce.image} 
+                <img
+                  src={selectedForce.image}
                   alt={selectedForce.name}
                   className="max-h-32 max-w-32 rounded object-contain border-2 border-primary"
                 />
@@ -136,7 +141,9 @@ export default function App() {
                 <div className="flex items-center gap-6 text-sm">
                   <div>
                     <span className="text-muted-foreground">Warchest:</span>
-                    <span className="ml-2 font-mono font-semibold text-primary">{selectedForce.currentWarchest} WP</span>
+                    <span className="ml-2 font-mono font-semibold text-primary">
+                      {selectedForce.currentWarchest} WP
+                    </span>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Starting:</span>
