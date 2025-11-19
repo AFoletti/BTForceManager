@@ -170,18 +170,14 @@ export default function MechRoster({ force, onUpdate }) {
                       </div>
                     </td>
                     <td>
-                      {!hasPilot ? (
-                        <Badge variant="missingPilot">Missing Pilot</Badge>
-                      ) : isPilotKIA ? (
-                        <Badge variant="destroyed">Pilot KIA</Badge>
-                      ) : (
-                        <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
-                      )}
+                      <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
                     </td>
                     <td className="text-muted-foreground">
                       {hasPilot
                         ? `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`
-                        : 'Unassigned'}
+                        : isPilotKIA
+                          ? 'Pilot KIA'
+                          : 'Missing Pilot'}
                     </td>
                     <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
                     <td className="text-right font-mono">{mech.weight}t</td>
