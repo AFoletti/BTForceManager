@@ -13,6 +13,8 @@ import {
   applyMissionCreation,
   applyMissionUpdate,
   applyMissionCompletion,
+  isMechAvailableForMission,
+  isElementalAvailableForMission,
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
 
