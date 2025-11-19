@@ -23,8 +23,6 @@
  */
 
 
-/* eslint-disable jsdoc/require-param-type, jsdoc/require-returns-type */
-
 /**
  * Find the pilot object assigned to a mech, if any.
  * Matching is done by pilot name because mechs currently store
