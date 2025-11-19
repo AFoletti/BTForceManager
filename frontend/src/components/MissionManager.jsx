@@ -407,16 +407,11 @@ export default function MissionManager({ force, onUpdate }) {
                   ) : (
                     <div className="space-y-2">
                       {force.elementals.map((elemental) => {
-                        const isDestroyed = elemental.suitsDestroyed >= 6;
-                        if (isDestroyed) {
+                        if (!isElementalAvailableForMission(elemental)) {
                           return null;
                         }
 
-                        const statusAllowsDeployment =
-                          elemental.status === 'Operational' ||
-                          elemental.status === 'Damaged';
-                        const tooManySuitsDestroyed = elemental.suitsDestroyed >= 5;
-                        const isSelectable = statusAllowsDeployment && !tooManySuitsDestroyed;
+                        const isSelectable = isElementalAvailableForMission(elemental);
 
                         return (
                           <label
