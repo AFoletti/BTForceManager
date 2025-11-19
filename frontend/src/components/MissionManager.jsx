@@ -381,27 +381,27 @@ export default function MissionManager({ force, onUpdate }) {
               )}
             </div>
 
-            {/* Elemental Assignment */}
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                <div className="flex items-center justify-between">
-                  <span>Assign Elementals to Mission</span>
-                  <span className="text-xs text-primary font-mono">
-                    BV:{' '}
-                    {formatNumber(
-                      calculateMissionTotalBV(force, [], formData.assignedElementals),
-                    )}
-                  </span>
-                </div>
-              </label>
-              <div className="border border-border rounded p-3 bg-muted/20 max-h-48 overflow-y-auto">
-                {!force.elementals || force.elementals.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-2">
-                    No elementals available
-                  </p>
-                ) : (
-                  <div className="space-y-2">
-                    {force.elementals.map((elemental) => {
+              {/* Elemental Assignment */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  <div className="flex items-center justify-between">
+                    <span>Assign Elementals to Mission</span>
+                    <span className="text-xs text-primary font-mono">
+                      BV:{' '}
+                      {formatNumber(
+                        calculateMissionTotalBV(force, [], formData.assignedElementals),
+                      )}
+                    </span>
+                  </div>
+                </label>
+                <div className="border border-border rounded p-3 bg-muted/20 max-h-60 overflow-y-auto">
+                  {!force.elementals || force.elementals.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-2">
+                      No elementals available
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {force.elementals.map((elemental) => {
                       const isDestroyed = elemental.suitsDestroyed >= 6;
                       if (isDestroyed) {
                         return null;
