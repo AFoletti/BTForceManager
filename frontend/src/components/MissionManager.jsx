@@ -239,7 +239,7 @@ export default function MissionManager({ force, onUpdate }) {
       </div>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent onClose={() => setShowDialog(false)}>
+        <DialogContent onClose={() => setShowDialog(false)} className="max-w-5xl">
           <DialogHeader>
             <DialogTitle>{editingMission ? 'Edit Mission' : 'Create New Mission'}</DialogTitle>
           </DialogHeader>
