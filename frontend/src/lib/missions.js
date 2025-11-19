@@ -150,9 +150,9 @@ export function calculateMissionTotalBV(force, mechIds, elementalIds = []) {
 /**
  * Return the mech objects corresponding to the given ids, preserving order.
  *
- * @param {Object} force
+ * @param {Force} force
  * @param {string[]} mechIds
- * @returns {Object[]}
+ * @returns {Mech[]}
  */
 export function getAssignedMechs(force, mechIds) {
   return mechIds
