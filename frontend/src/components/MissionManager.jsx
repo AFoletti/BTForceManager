@@ -344,7 +344,15 @@ export default function MissionManager({ force, onUpdate }) {
                             <div className="flex items-center gap-2">
                               <Badge
                                 variant={
-                                  mech.status === 'Operational' ? 'operational' : 'outline'
+                                  mech.status === 'Operational'
+                                    ? 'operational'
+                                    : mech.status === 'Damaged'
+                                      ? 'damaged'
+                                      : mech.status === 'Disabled' || mech.status === 'Unavailable'
+                                        ? 'disabled'
+                                        : mech.status === 'Destroyed'
+                                          ? 'destroyed'
+                                          : 'outline'
                                 }
                                 className="text-xs"
                               >
