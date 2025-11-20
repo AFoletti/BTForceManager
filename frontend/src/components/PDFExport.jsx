@@ -692,7 +692,7 @@ const ForcePDF = ({ force }) => {
             );
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
-            const missionDate = mission.inGameDate || mission.completedAt || mission.createdAt || '';
+            const missionDate = mission.createdAt || '';
 
             return (
               <View key={mission.id} style={styles.missionCard} wrap={false}>
