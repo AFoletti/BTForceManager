@@ -557,22 +557,6 @@ const ForcePDF = ({ force }) => {
           </View>
         </View>
 
-        {/* Force Image */}
-        {force.image && (
-          <View style={{ marginTop: 12, marginBottom: 4, alignItems: 'flex-start' }}>
-            <Image
-              src={force.image}
-              style={{
-                maxWidth: 180,
-                maxHeight: 90,
-                objectFit: 'contain',
-                borderRadius: 4,
-                border: '1 solid #D1D5DB',
-              }}
-            />
-          </View>
-        )}
-
         {/* Pilot Roster Section */}
         <Text style={styles.sectionHeader} break>
           █ PILOT ROSTER
