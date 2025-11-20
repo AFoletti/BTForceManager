@@ -409,41 +409,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
         </div>
       </div>
 
-      {/* Other Actions Log */}
-      {force.otherActionsLog && force.otherActionsLog.length > 0 && (
-        <div className="tactical-panel">
-          <div className="tactical-header">
-            <h3 className="text-sm font-semibold uppercase tracking-wider">
-              Other Actions History
-            </h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Action</th>
-                  <th className="text-right">Cost</th>
-                </tr>
-              </thead>
-              <tbody>
-                {force.otherActionsLog
-                  .slice()
-                  .reverse()
-                  .map((log, idx) => (
-                    <tr key={idx}>
-                      <td className="text-sm text-muted-foreground">
-                        {new Date(log.timestamp).toLocaleString()}
-                      </td>
-                      <td>{log.description}</td>
-                      <td className="text-right font-mono text-destructive">-{log.cost} WP</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      {/* Other Actions Log removed: other actions are now logged directly on units */}
 
       {/* Other Action Dialog */}
       <Dialog open={showOtherActionDialog} onOpenChange={setShowOtherActionDialog}>
