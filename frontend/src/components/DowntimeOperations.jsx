@@ -104,7 +104,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
     if (!selectedUnit || !selectedAction || !canAfford) return;
 
-    const timestamp = new Date().toISOString();
+    const timestamp = force.currentDate;
     const inGameDate = force.currentDate;
     const lastMission = force.missions?.[force.missions.length - 1];
     const action = availableActions.find((a) => a.id === selectedAction);
@@ -153,7 +153,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
     if (!otherActionData.description || otherActionData.cost <= 0) return;
     if (otherActionData.cost > force.currentWarchest) return;
 
-    const timestamp = new Date().toISOString();
+    const timestamp = force.currentDate;
     const inGameDate = force.currentDate;
     const lastMission = force.missions?.[force.missions.length - 1];
 
