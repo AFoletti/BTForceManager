@@ -342,7 +342,6 @@ export default function MissionManager({ force, onUpdate }) {
                 Optional. Must be between years 2400 and 3500.
               </p>
             </div>
-            </div>
 
             {/* Force Assignment */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
