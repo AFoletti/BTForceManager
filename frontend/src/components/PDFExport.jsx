@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
   },
   // Cover/Header Section
   coverSection: {
-    marginBottom: 18,
-    borderBottom: '2 solid #2C2C2C',
-    paddingBottom: 12,
+    marginBottom: 16,
+    borderBottom: '1 solid #D1D5DB',
+    paddingBottom: 10,
   },
   coverHeaderRow: {
     flexDirection: 'row',
