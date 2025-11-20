@@ -290,7 +290,6 @@ export function applyMissionCompletion(force, missionId, timestamp) {
       return {
         ...mission,
         completed: true,
-        completedAt: completionTimestamp,
       };
     }
     return mission;
