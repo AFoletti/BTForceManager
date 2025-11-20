@@ -438,38 +438,6 @@ export default function DowntimeOperations({ force, onUpdate }) {
         </div>
       )}
             <div>
-              <label className="block text-sm font-medium mb-2">In-Game Date (YYYY-MM-DD)</label>
-              <Input
-                type="text"
-                value={otherActionData.inGameDate}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value === '') {
-                    setOtherActionData({ ...otherActionData, inGameDate: '' });
-                    return;
-                  }
-
-                  const isValidFormat = /^\d{4}-\d{2}-\d{2}$/.test(value);
-                  if (!isValidFormat) {
-                    setOtherActionData({ ...otherActionData, inGameDate: value });
-                    return;
-                  }
-
-                  const year = Number(value.slice(0, 4));
-                  if (year < 2400 || year > 3500) {
-                    setOtherActionData({ ...otherActionData, inGameDate: value });
-                    return;
-                  }
-
-                  setOtherActionData({ ...otherActionData, inGameDate: value });
-                }}
-                placeholder="3025-01-15"
-              />
-              <div className="text-xs text-muted-foreground mt-1">
-                Optional. Must be between years 2400 and 3500.
-              </div>
-            </div>
-
 
       {/* Other Action Dialog */}
       <Dialog open={showOtherActionDialog} onOpenChange={setShowOtherActionDialog}>
