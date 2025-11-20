@@ -536,17 +536,29 @@ const ForcePDF = ({ force }) => {
 
         {/* Force Information Header */}
         <View style={styles.coverSection}>
+          <View style={{ position: 'relative', marginBottom: 6 }}>
+            <View style={{
+              position: 'absolute',
+              left: 0,
+              top: -10,
+              width: 140,
+              height: 140,
+              borderRadius: 70,
+              border: '0.75 solid #E5E7EB',
+              opacity: 0.15,
+            }} />
+          </View>
           <View style={styles.coverHeaderRow}>
             <View style={styles.forceImageWrapper}>
               {force.image && (
                 <Image
                   src={force.image}
                   style={{
-                    maxWidth: 70,
-                    maxHeight: 70,
+                    maxWidth: 80,
+                    maxHeight: 80,
                     objectFit: 'contain',
                     borderRadius: 4,
-                    border: '1 solid #D1D5DB',
+                    border: '0.75 solid #D1D5DB',
                   }}
                 />
               )}
