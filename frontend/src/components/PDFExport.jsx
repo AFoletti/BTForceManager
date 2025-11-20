@@ -578,7 +578,7 @@ const ForcePDF = ({ force }) => {
                     />
                   </View>
                 )}
-                </View>
+
                 {pilot.history && (
                   <View style={styles.unitHistory}>
                     <Text>{pilot.history}</Text>
