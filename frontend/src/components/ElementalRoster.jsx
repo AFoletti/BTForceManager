@@ -21,7 +21,8 @@ export default function ElementalRoster({ force, onUpdate }) {
     bv: 0,
     status: 'Operational',
     image: '',
-    history: ''
+    history: '',
+    warchestCost: 0,
   });
 
   const openDialog = (elemental = null) => {
@@ -37,7 +38,8 @@ export default function ElementalRoster({ force, onUpdate }) {
         bv: elemental.bv,
         status: elemental.status,
         image: elemental.image || '',
-        history: elemental.history || ''
+        history: elemental.history || '',
+        warchestCost: elemental.warchestCost || 0,
       });
     } else {
       setEditingElemental(null);
@@ -51,7 +53,8 @@ export default function ElementalRoster({ force, onUpdate }) {
         bv: 0,
         status: 'Operational',
         image: '',
-        history: ''
+        history: '',
+        warchestCost: 0,
       });
     }
     setShowDialog(true);
@@ -78,13 +81,20 @@ export default function ElementalRoster({ force, onUpdate }) {
               bv: parseInt(formData.bv) || 0,
               status: formData.status,
               image: formData.image,
-              history: formData.history
+              history: formData.history,
+              warchestCost: parseInt(formData.warchestCost) || 0,
             }
           : e
       );
-      onUpdate({ elementals: updatedElementals });
+      const prevCost = editingElemental.warchestCost || 0;
+      const newCost = parseInt(formData.warchestCost, 10) || 0;
+      const delta = newCost - prevCost;
+      const currentWarchest = force.currentWarchest - delta;
+      onUpdate({ elementals: updatedElementals, currentWarchest });
     } else {
       // Add new elemental
+      const warchestCost = parseInt(formData.warchestCost) || 0;
+      const timestamp = force.currentDate;
       const newElemental = {
         id: `elemental-${Date.now()}`,
         name: formData.name,
@@ -97,11 +107,19 @@ export default function ElementalRoster({ force, onUpdate }) {
         status: formData.status,
         image: formData.image,
         history: formData.history,
-        activityLog: []
+        warchestCost,
+        activityLog: [
+          {
+            timestamp,
+            action: `Purchased elemental point for ${warchestCost} WP`,
+            mission: null,
+          },
+        ],
       };
 
       const updatedElementals = [...(force.elementals || []), newElemental];
-      onUpdate({ elementals: updatedElementals });
+      const currentWarchest = force.currentWarchest - warchestCost;
+      onUpdate({ elementals: updatedElementals, currentWarchest });
     }
 
     setShowDialog(false);
@@ -334,6 +352,20 @@ export default function ElementalRoster({ force, onUpdate }) {
                   max="8"
                 />
               </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
+              <Input
+                type="number"
+                value={formData.warchestCost}
+                onChange={(e) => setFormData({ ...formData, warchestCost: e.target.value })}
+                placeholder="0"
+                min="0"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Cost in WP to acquire this elemental point. This will be subtracted from the current Warchest.
+              </p>
+            </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">BV (Battle Value) *</label>

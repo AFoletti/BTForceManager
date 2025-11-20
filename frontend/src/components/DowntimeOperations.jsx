@@ -10,6 +10,7 @@ import {
   evaluateDowntimeCost,
   applyMechDowntimeAction,
   applyElementalDowntimeAction,
+  applyPilotDowntimeAction,
   logOtherDowntimeAction,
 } from '../lib/downtime';
 
@@ -25,6 +26,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
   // Load downtime actions from JSON
   const [mechActions, setMechActions] = useState([]);
   const [elementalActions, setElementalActions] = useState([]);
+  const [pilotActions, setPilotActions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
       .then((data) => {
         setMechActions(data.mechActions || []);
         setElementalActions(data.elementalActions || []);
+        setPilotActions(data.pilotActions || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -45,7 +48,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const selectedUnit =
     selectedUnitType === 'mech'
       ? force.mechs.find((m) => m.id === selectedUnitId)
-      : force.elementals?.find((e) => e.id === selectedUnitId);
+      : selectedUnitType === 'elemental'
+        ? force.elementals?.find((e) => e.id === selectedUnitId)
+        : force.pilots?.find((p) => p.id === selectedUnitId);
 
   const otherAction = {
     id: 'other',
@@ -55,7 +60,11 @@ export default function DowntimeOperations({ force, onUpdate }) {
   };
 
   const availableActions = [
-    ...(selectedUnitType === 'mech' ? mechActions : elementalActions),
+    ...(selectedUnitType === 'mech'
+      ? mechActions
+      : selectedUnitType === 'elemental'
+        ? elementalActions
+        : pilotActions),
     otherAction,
   ];
 
@@ -73,6 +82,13 @@ export default function DowntimeOperations({ force, onUpdate }) {
     const action = availableActions.find((a) => a.id === selectedAction);
     if (!action || action.id === 'other') return 0;
 
+    if (selectedUnitType === 'pilot') {
+      // For pilot actions, we currently use flat WP costs from downtime-actions.json
+      // so the formula is evaluated with only wpMultiplier.
+      const context = buildDowntimeContext(force, {});
+      return evaluateDowntimeCost(action.formula, context);
+    }
+
     const context = buildDowntimeContext(force, selectedUnit);
     return evaluateDowntimeCost(action.formula, context);
   };
@@ -88,7 +104,8 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
     if (!selectedUnit || !selectedAction || !canAfford) return;
 
-    const timestamp = new Date().toISOString();
+    const timestamp = force.currentDate;
+    const inGameDate = force.currentDate;
     const lastMission = force.missions?.[force.missions.length - 1];
     const action = availableActions.find((a) => a.id === selectedAction);
 
@@ -100,16 +117,29 @@ export default function DowntimeOperations({ force, onUpdate }) {
         action,
         cost,
         timestamp,
+        inGameDate,
         lastMissionName: lastMission?.name || null,
       });
       onUpdate(result);
-    } else {
+    } else if (selectedUnitType === 'elemental') {
       const result = applyElementalDowntimeAction(force, {
         elementalId: selectedUnitId,
         actionId: selectedAction,
         action,
         cost,
         timestamp,
+        inGameDate,
+        lastMissionName: lastMission?.name || null,
+      });
+      onUpdate(result);
+    } else if (selectedUnitType === 'pilot') {
+      const result = applyPilotDowntimeAction(force, {
+        pilotId: selectedUnitId,
+        actionId: selectedAction,
+        action,
+        cost,
+        timestamp,
+        inGameDate,
         lastMissionName: lastMission?.name || null,
       });
       onUpdate(result);
@@ -123,14 +153,46 @@ export default function DowntimeOperations({ force, onUpdate }) {
     if (!otherActionData.description || otherActionData.cost <= 0) return;
     if (otherActionData.cost > force.currentWarchest) return;
 
-    const timestamp = new Date().toISOString();
-    const result = logOtherDowntimeAction(force, {
+    const timestamp = force.currentDate;
+    const inGameDate = force.currentDate;
+    const lastMission = force.missions?.[force.missions.length - 1];
+
+    // Always log at force level for global history and WP deduction
+    const baseResult = logOtherDowntimeAction(force, {
       description: otherActionData.description,
       cost: otherActionData.cost,
       timestamp,
+      inGameDate,
     });
 
-    onUpdate(result);
+    const updated = { ...baseResult };
+
+    // Additionally log on the specific unit's activity log, if a unit is selected
+    if (selectedUnitType === 'mech' && selectedUnitId) {
+      updated.mechs = force.mechs.map((mech) => {
+        if (mech.id !== selectedUnitId) return mech;
+        const activityLog = [...(mech.activityLog || [])];
+        activityLog.push({
+          timestamp,
+          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          mission: lastMission?.name || null,
+        });
+        return { ...mech, activityLog };
+      });
+    } else if (selectedUnitType === 'elemental' && selectedUnitId) {
+      updated.elementals = (force.elementals || []).map((elemental) => {
+        if (elemental.id !== selectedUnitId) return elemental;
+        const activityLog = [...(elemental.activityLog || [])];
+        activityLog.push({
+          timestamp,
+          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          mission: lastMission?.name || null,
+        });
+        return { ...elemental, activityLog };
+      });
+    }
+
+    onUpdate(updated);
 
     setShowOtherActionDialog(false);
     setOtherActionData({ description: '', cost: 0 });
@@ -221,6 +283,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
               >
                 <option value="mech">Mech</option>
                 <option value="elemental">Elemental</option>
+                <option value="pilot">Pilot</option>
               </Select>
             </div>
 
@@ -240,13 +303,19 @@ export default function DowntimeOperations({ force, onUpdate }) {
                         {mech.name} ({mech.weight}t) - {mech.status}
                       </option>
                     ))
-                  : (force.elementals || []).map((elemental) => (
-                      <option key={elemental.id} value={elemental.id}>
-                        {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{
-                          elemental.suitsDamaged
-                        })
-                      </option>
-                    ))}
+                  : selectedUnitType === 'elemental'
+                    ? (force.elementals || []).map((elemental) => (
+                        <option key={elemental.id} value={elemental.id}>
+                          {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{
+                            elemental.suitsDamaged
+                          })
+                        </option>
+                      ))
+                    : force.pilots.map((pilot) => (
+                        <option key={pilot.id} value={pilot.id}>
+                          {pilot.name} (G:{pilot.gunnery}/P:{pilot.piloting}, Inj:{pilot.injuries})
+                        </option>
+                      ))}
               </Select>
             </div>
 

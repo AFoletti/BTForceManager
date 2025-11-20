@@ -21,6 +21,21 @@ function normalizeForce(raw) {
   );
   normalized.wpMultiplier = toNumberOrDefault(normalized.wpMultiplier, 5);
 
+  // Ensure there is always a valid in-universe date on the force.
+  // Mandatory format: YYYY-MM-DD, years between 2400 and 3500.
+  const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+  const rawDate = typeof normalized.currentDate === 'string' ? normalized.currentDate : '';
+  if (datePattern.test(rawDate)) {
+    const year = Number(rawDate.slice(0, 4));
+    if (year >= 2400 && year <= 3500) {
+      normalized.currentDate = rawDate;
+    } else {
+      normalized.currentDate = '3025-01-01';
+    }
+  } else {
+    normalized.currentDate = '3025-01-01';
+  }
+
   normalized.mechs = Array.isArray(normalized.mechs) ? normalized.mechs : [];
   normalized.pilots = Array.isArray(normalized.pilots) ? normalized.pilots : [];
   normalized.elementals = Array.isArray(normalized.elementals) ? normalized.elementals : [];
@@ -108,6 +123,9 @@ export function useForceManager() {
 
   const selectedForce = forces.find(f => f.id === selectedForceId);
 
+  // Helper to get the current in-universe date for logging purposes
+  const getCurrentInGameDate = () => selectedForce?.currentDate || null;
+
   const updateForceData = (updates) => {
     setForces(prev => 
       prev.map(force =>
@@ -141,6 +159,7 @@ export function useForceManager() {
     addNewForce,
     exportData,
     exportForce,
+    getCurrentInGameDate,
     loading,
     error
   };

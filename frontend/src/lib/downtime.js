@@ -73,7 +73,10 @@ export function evaluateDowntimeCost(formula, context) {
  * @param {{ mechId: string, action: Object, cost: number, timestamp: string, lastMissionName: string | null }} params
  * @returns {{ mechs: Object[], currentWarchest: number }}
  */
-export function applyMechDowntimeAction(force, { mechId, action, cost, timestamp, lastMissionName }) {
+export function applyMechDowntimeAction(
+  force,
+  { mechId, action, cost, timestamp, lastMissionName },
+) {
   const mechs = force.mechs.map((mech) => {
     if (mech.id !== mechId) return mech;
 
@@ -141,11 +144,15 @@ export function applyElementalDowntimeAction(
  * @param {{ description: string, cost: number, timestamp: string }} params
  * @returns {{ otherActionsLog: Object[], currentWarchest: number }}
  */
-export function logOtherDowntimeAction(force, { description, cost, timestamp }) {
+export function logOtherDowntimeAction(
+  force,
+  { description, cost, timestamp, inGameDate },
+) {
   const otherActionsLog = [...(force.otherActionsLog || [])];
 
   otherActionsLog.push({
     timestamp,
+    inGameDate,
     description,
     cost,
   });
@@ -153,4 +160,61 @@ export function logOtherDowntimeAction(force, { description, cost, timestamp }) 
   const currentWarchest = force.currentWarchest - cost;
 
   return { otherActionsLog, currentWarchest };
+}
+
+/**
+ * Apply a pilot downtime action to a force.
+ *
+ * Supported action ids (by convention, see data/downtime-actions.json):
+ * - train-gunnery: reduce gunnery by 1 (to a minimum of 0)
+ * - train-piloting: reduce piloting by 1 (to a minimum of 0)
+ * - heal-injury: heal one injury (reducing injuries by 1, minimum 0)
+ *
+ * @param {Object} force
+ * @param {{ pilotId: string, actionId: string, action: Object, cost: number, timestamp: string, inGameDate?: string, lastMissionName: string | null }} params
+ * @returns {{ pilots: Object[], currentWarchest: number }}
+ */
+export function applyPilotDowntimeAction(
+  force,
+  { pilotId, actionId, action, cost, timestamp, inGameDate, lastMissionName },
+) {
+  const pilots = (force.pilots || []).map((pilot) => {
+    if (pilot.id !== pilotId) return pilot;
+
+    const activityLog = [...(pilot.activityLog || [])];
+    activityLog.push({
+      timestamp,
+      action:
+        `${action.name} performed (${cost} WP)` +
+        (lastMissionName ? ` after ${lastMissionName}` : ''),
+      mission: lastMissionName,
+    });
+
+    let gunnery = pilot.gunnery;
+    let piloting = pilot.piloting;
+    let injuries = pilot.injuries;
+
+    if (actionId === 'train-gunnery') {
+      const base = typeof gunnery === 'number' ? gunnery : 4;
+      gunnery = Math.max(0, Math.min(8, base - 1));
+    } else if (actionId === 'train-piloting') {
+      const base = typeof piloting === 'number' ? piloting : 5;
+      piloting = Math.max(0, Math.min(8, base - 1));
+    } else if (actionId === 'heal-injury') {
+      const base = typeof injuries === 'number' ? injuries : 0;
+      injuries = Math.max(0, Math.min(6, base - 1));
+    }
+
+    return {
+      ...pilot,
+      gunnery,
+      piloting,
+      injuries,
+      activityLog,
+    };
+  });
+
+  const currentWarchest = force.currentWarchest - cost;
+
+  return { pilots, currentWarchest };
 }

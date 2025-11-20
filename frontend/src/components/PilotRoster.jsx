@@ -16,6 +16,7 @@ export default function PilotRoster({ force, onUpdate }) {
     piloting: 5,
     injuries: 0,
     history: '',
+    warchestCost: 0,
   });
 
   const openDialog = (pilot = null) => {
@@ -27,6 +28,7 @@ export default function PilotRoster({ force, onUpdate }) {
         piloting: pilot.piloting,
         injuries: pilot.injuries,
         history: pilot.history || '',
+        warchestCost: pilot.warchestCost || 0,
       });
     } else {
       setEditingPilot(null);
@@ -36,6 +38,7 @@ export default function PilotRoster({ force, onUpdate }) {
         piloting: 5,
         injuries: 0,
         history: '',
+        warchestCost: 0,
       });
     }
     setShowDialog(true);
@@ -59,12 +62,19 @@ export default function PilotRoster({ force, onUpdate }) {
               piloting: parseInt(formData.piloting, 10) || 5,
               injuries: parseInt(formData.injuries, 10) || 0,
               history: formData.history,
+              warchestCost: parseInt(formData.warchestCost, 10) || 0,
             }
           : pilot,
       );
-      onUpdate({ pilots: updatedPilots });
+      const prevCost = editingPilot.warchestCost || 0;
+      const newCost = parseInt(formData.warchestCost, 10) || 0;
+      const delta = newCost - prevCost;
+      const currentWarchest = force.currentWarchest - delta;
+      onUpdate({ pilots: updatedPilots, currentWarchest });
     } else {
       // Add new pilot
+      const warchestCost = parseInt(formData.warchestCost, 10) || 0;
+      const timestamp = force.currentDate;
       const newPilot = {
         id: `pilot-${Date.now()}`,
         name: formData.name,
@@ -72,11 +82,19 @@ export default function PilotRoster({ force, onUpdate }) {
         piloting: parseInt(formData.piloting, 10) || 5,
         injuries: 0,
         history: formData.history,
-        activityLog: [],
+        warchestCost,
+        activityLog: [
+          {
+            timestamp,
+            action: `Hired pilot for ${warchestCost} WP`,
+            mission: null,
+          },
+        ],
       };
 
       const updatedPilots = [...force.pilots, newPilot];
-      onUpdate({ pilots: updatedPilots });
+      const currentWarchest = force.currentWarchest - warchestCost;
+      onUpdate({ pilots: updatedPilots, currentWarchest });
     }
 
     setShowDialog(false);
@@ -240,6 +258,20 @@ export default function PilotRoster({ force, onUpdate }) {
 
               <div>
                 <label className="block text-sm font-medium mb-2">Piloting</label>
+            <div>
+              <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
+              <Input
+                type="number"
+                value={formData.warchestCost}
+                onChange={(e) => setFormData({ ...formData, warchestCost: e.target.value })}
+                placeholder="0"
+                min="0"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Cost in WP to recruit this pilot. This will be subtracted from the current Warchest.
+              </p>
+            </div>
+
                 <Input
                   type="number"
                   value={formData.piloting}

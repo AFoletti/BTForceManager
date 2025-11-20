@@ -54,7 +54,9 @@ export default function MissionManager({ force, onUpdate }) {
   const openDialog = (mission = null) => {
     if (mission) {
       setEditingMission(mission);
-      setFormData(mission);
+      setFormData({
+        ...mission,
+      });
     } else {
       setEditingMission(null);
       setFormData({
@@ -91,7 +93,7 @@ export default function MissionManager({ force, onUpdate }) {
   };
 
   const saveMission = () => {
-    const timestamp = new Date().toISOString();
+    const timestamp = force.currentDate;
 
     if (editingMission) {
       const missions = applyMissionUpdate(
