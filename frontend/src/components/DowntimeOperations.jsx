@@ -288,13 +288,19 @@ export default function DowntimeOperations({ force, onUpdate }) {
                         {mech.name} ({mech.weight}t) - {mech.status}
                       </option>
                     ))
-                  : (force.elementals || []).map((elemental) => (
-                      <option key={elemental.id} value={elemental.id}>
-                        {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{
-                          elemental.suitsDamaged
-                        })
-                      </option>
-                    ))}
+                  : selectedUnitType === 'elemental'
+                    ? (force.elementals || []).map((elemental) => (
+                        <option key={elemental.id} value={elemental.id}>
+                          {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{
+                            elemental.suitsDamaged
+                          })
+                        </option>
+                      ))
+                    : force.pilots.map((pilot) => (
+                        <option key={pilot.id} value={pilot.id}>
+                          {pilot.name} (G:{pilot.gunnery}/P:{pilot.piloting}, Inj:{pilot.injuries})
+                        </option>
+                      ))}
               </Select>
             </div>
 
