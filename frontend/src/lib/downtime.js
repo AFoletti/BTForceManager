@@ -151,6 +151,7 @@ export function logOtherDowntimeAction(force, { description, cost, timestamp, in
 
   otherActionsLog.push({
     timestamp,
+    inGameDate,
     description,
     cost,
   });
