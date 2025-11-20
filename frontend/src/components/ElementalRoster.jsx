@@ -94,6 +94,7 @@ export default function ElementalRoster({ force, onUpdate }) {
     } else {
       // Add new elemental
       const warchestCost = parseInt(formData.warchestCost) || 0;
+      const timestamp = new Date().toISOString();
       const newElemental = {
         id: `elemental-${Date.now()}`,
         name: formData.name,
@@ -107,7 +108,13 @@ export default function ElementalRoster({ force, onUpdate }) {
         image: formData.image,
         history: formData.history,
         warchestCost,
-        activityLog: []
+        activityLog: [
+          {
+            timestamp,
+            action: `Purchased elemental point for ${warchestCost} WP`,
+            mission: null,
+          },
+        ],
       };
 
       const updatedElementals = [...(force.elementals || []), newElemental];
