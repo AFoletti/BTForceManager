@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer';
 import { Button } from './ui/button';
 import {
   calculateMissionTotalBV,
