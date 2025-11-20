@@ -71,6 +71,7 @@ export default function MissionManager({ force, onUpdate }) {
         completed: false,
         assignedMechs: [],
         assignedElementals: [],
+        inGameDate: '',
       });
     }
     setShowDialog(true);
