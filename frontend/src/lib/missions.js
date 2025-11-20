@@ -266,9 +266,9 @@ export function applyMissionUpdate(missions, missionId, formData, timestamp) {
   return missions.map((mission) =>
     mission.id === missionId
       ? {
+          ...mission,
           ...formData,
           id: missionId,
-          updatedAt: timestamp,
         }
       : mission,
   );
