@@ -232,6 +232,20 @@ const styles = StyleSheet.create({
     color: '#555',
     marginLeft: 10,
   },
+  // Decorative hexagon grid (bottom-right) for sci-fi feel
+  hexRow: {
+    flexDirection: 'row',
+  },
+  hex: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    border: '0.5 solid #E5E7EB',
+    margin: 1,
+  },
+  hexRowOffset: {
+    marginLeft: 5,
+  },
   // Warchest accounting
   warchestSection: {
     marginTop: 10,
