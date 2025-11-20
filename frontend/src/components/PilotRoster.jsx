@@ -87,6 +87,7 @@ export default function PilotRoster({ force, onUpdate }) {
         activityLog: [
           {
             timestamp,
+            inGameDate,
             action: `Hired pilot for ${warchestCost} WP`,
             mission: null,
           },
