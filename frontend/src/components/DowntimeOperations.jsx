@@ -111,6 +111,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
         action,
         cost,
         timestamp,
+        inGameDate,
         lastMissionName: lastMission?.name || null,
       });
       onUpdate(result);
