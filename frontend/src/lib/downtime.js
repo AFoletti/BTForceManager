@@ -154,6 +154,12 @@ export function logOtherDowntimeAction(force, { description, cost, timestamp, in
     inGameDate,
     description,
     cost,
+  });
+
+  const currentWarchest = force.currentWarchest - cost;
+
+  return { otherActionsLog, currentWarchest };
+}
 
 /**
  * Apply a pilot downtime action to a force.
