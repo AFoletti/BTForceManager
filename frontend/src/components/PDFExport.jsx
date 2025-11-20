@@ -598,7 +598,7 @@ const ForcePDF = ({ force }) => {
         </View>
 
         {/* Pilot Roster Section */}
-        <Text style={styles.sectionHeader}>
+        <Text style={styles.sectionHeader} break>
           █ PILOT ROSTER
         </Text>
         {pilots.length > 0 ? (
