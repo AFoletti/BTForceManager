@@ -130,6 +130,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
     if (otherActionData.cost > force.currentWarchest) return;
 
     const timestamp = new Date().toISOString();
+    const inGameDate = otherActionData.inGameDate && otherActionData.inGameDate.trim() !== ''
+      ? otherActionData.inGameDate
+      : undefined;
     const lastMission = force.missions?.[force.missions.length - 1];
 
     // Always log at force level for global history and WP deduction
@@ -137,6 +140,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
       description: otherActionData.description,
       cost: otherActionData.cost,
       timestamp,
+      inGameDate,
     });
 
     const updated = { ...baseResult };
