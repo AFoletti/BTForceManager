@@ -47,6 +47,18 @@ const styles = StyleSheet.create({
     borderBottom: '3 solid #2C2C2C',
     paddingBottom: 20,
   },
+  coverHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  forceImageWrapper: {
+    width: 80,
+    marginRight: 12,
+  },
+  forceTitleWrapper: {
+    flex: 1,
+  },
   forceTitle: {
     fontSize: 28,
     fontWeight: 'bold',
