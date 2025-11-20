@@ -150,32 +150,26 @@ export default function DowntimeOperations({ force, onUpdate }) {
   };
 
   const performOtherAction = () => {
-    if (!otherActionData.description || otherActionData.cost <= 0) return;
-    if (otherActionData.cost > force.currentWarchest) return;
+    if (!otherActionData.description) return;
+
+    const cost = otherActionData.cost || 0;
+    if (cost > force.currentWarchest) return;
 
     const timestamp = force.currentDate;
     const inGameDate = force.currentDate;
     const lastMission = force.missions?.[force.missions.length - 1];
 
-    // Always log at force level for global history and WP deduction
-    const baseResult = logOtherDowntimeAction(force, {
-      description: otherActionData.description,
-      cost: otherActionData.cost,
-      timestamp,
-      inGameDate,
-    });
+    const updated = { ...force, currentWarchest: force.currentWarchest - cost };
 
-    const updated = { ...baseResult };
-
-    // Additionally log on the specific unit's activity log, if a unit is selected
     if (selectedUnitType === 'mech' && selectedUnitId) {
       updated.mechs = force.mechs.map((mech) => {
         if (mech.id !== selectedUnitId) return mech;
         const activityLog = [...(mech.activityLog || [])];
         activityLog.push({
           timestamp,
-          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          action: `Other: ${otherActionData.description} (${cost} WP)`,
           mission: lastMission?.name || null,
+          cost,
         });
         return { ...mech, activityLog };
       });
@@ -185,10 +179,23 @@ export default function DowntimeOperations({ force, onUpdate }) {
         const activityLog = [...(elemental.activityLog || [])];
         activityLog.push({
           timestamp,
-          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          action: `Other: ${otherActionData.description} (${cost} WP)`,
           mission: lastMission?.name || null,
+          cost,
         });
         return { ...elemental, activityLog };
+      });
+    } else if (selectedUnitType === 'pilot' && selectedUnitId) {
+      updated.pilots = (force.pilots || []).map((pilot) => {
+        if (pilot.id !== selectedUnitId) return pilot;
+        const activityLog = [...(pilot.activityLog || [])];
+        activityLog.push({
+          timestamp,
+          action: `Other: ${otherActionData.description} (${cost} WP)`,
+          mission: lastMission?.name || null,
+          cost,
+        });
+        return { ...pilot, activityLog };
       });
     }
 
@@ -402,41 +409,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
         </div>
       </div>
 
-      {/* Other Actions Log */}
-      {force.otherActionsLog && force.otherActionsLog.length > 0 && (
-        <div className="tactical-panel">
-          <div className="tactical-header">
-            <h3 className="text-sm font-semibold uppercase tracking-wider">
-              Other Actions History
-            </h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Action</th>
-                  <th className="text-right">Cost</th>
-                </tr>
-              </thead>
-              <tbody>
-                {force.otherActionsLog
-                  .slice()
-                  .reverse()
-                  .map((log, idx) => (
-                    <tr key={idx}>
-                      <td className="text-sm text-muted-foreground">
-                        {new Date(log.timestamp).toLocaleString()}
-                      </td>
-                      <td>{log.description}</td>
-                      <td className="text-right font-mono text-destructive">-{log.cost} WP</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      {/* Other Actions Log removed: other actions are now logged directly on units */}
 
       {/* Other Action Dialog */}
       <Dialog open={showOtherActionDialog} onOpenChange={setShowOtherActionDialog}>
@@ -492,10 +465,10 @@ export default function DowntimeOperations({ force, onUpdate }) {
                 onClick={performOtherAction}
                 disabled={
                   !otherActionData.description ||
-                  otherActionData.cost <= 0 ||
+                  otherActionData.cost < 0 ||
                   otherActionData.cost > force.currentWarchest
                 }
-              >
+             >
                 Perform Action ({otherActionData.cost} WP)
               </Button>
             </div>

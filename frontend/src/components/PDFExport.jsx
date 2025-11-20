@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer';
 import { Button } from './ui/button';
 import {
   calculateMissionTotalBV,
@@ -18,17 +18,6 @@ const formatNumber = (num) => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 };
 
-const formatDateTime = (value) => {
-  if (!value) return '';
-  try {
-    const d = new Date(value);
-    if (Number.isNaN(d.getTime())) return '';
-    return d.toLocaleString();
-  } catch {
-    return '';
-  }
-};
-
 // Military-themed styles for PDF
 const styles = StyleSheet.create({
   page: {
@@ -37,11 +26,38 @@ const styles = StyleSheet.create({
     fontSize: 10,
     backgroundColor: '#FFFFFF',
   },
+  // Sci-fi frame and accents
+  pageBackground: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    bottom: 20,
+    border: '1.5 solid #E5E7EB',
+  },
+  pageCornerAccent: {
+    position: 'absolute',
+    width: 40,
+    height: 4,
+    backgroundColor: '#111827',
+  },
   // Cover/Header Section
   coverSection: {
     marginBottom: 30,
     borderBottom: '3 solid #2C2C2C',
     paddingBottom: 20,
+  },
+  coverHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  forceImageWrapper: {
+    width: 80,
+    marginRight: 12,
+  },
+  forceTitleWrapper: {
+    flex: 1,
   },
   forceTitle: {
     fontSize: 28,
@@ -115,18 +131,35 @@ const styles = StyleSheet.create({
   unitBadge: {
     fontSize: 9,
     color: '#FFF',
-    backgroundColor: '#4A7C59',
+    backgroundColor: '#16A34A', // operational - green
     padding: '3 8',
     borderRadius: 2,
   },
   unitBadgeDamaged: {
-    backgroundColor: '#D97706',
+    backgroundColor: '#F59E0B', // damaged - amber
   },
   unitBadgeDisabled: {
-    backgroundColor: '#DC2626',
+    backgroundColor: '#9CA3AF', // disabled/unavailable - gray
   },
   unitBadgeDestroyed: {
-    backgroundColor: '#7F1D1D',
+    backgroundColor: '#DC2626', // destroyed/KIA - red
+  },
+  unitBadgeKIA: {
+    backgroundColor: '#DC2626',
+  },
+  unitBadgeRepairing: {
+    backgroundColor: '#3B82F6', // repairing - blue
+  },
+  unitContentRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  unitImageWrapper: {
+    width: 80,
+    alignItems: 'flex-start',
+  },
+  unitStatsWrapper: {
+    flex: 1,
   },
   unitStatsGrid: {
     flexDirection: 'row',
@@ -199,6 +232,100 @@ const styles = StyleSheet.create({
     color: '#555',
     marginLeft: 10,
   },
+  // Decorative hexagon grid (bottom-right) for sci-fi feel
+  hexRow: {
+    flexDirection: 'row',
+  },
+  hex: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    border: '0.5 solid #E5E7EB',
+    margin: 1,
+  },
+  hexRowOffset: {
+    marginLeft: 5,
+  },
+  // Warchest accounting
+  warchestSection: {
+    marginTop: 10,
+    marginBottom: 20,
+    padding: 10,
+    border: '1 solid #D4D4D4',
+    backgroundColor: '#F9FAFB',
+  },
+  warchestHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  warchestHeaderText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  warchestTableHeader: {
+    flexDirection: 'row',
+    borderBottom: '1 solid #E5E7EB',
+    paddingBottom: 4,
+    marginBottom: 4,
+  },
+  warchestTableHeaderCell: {
+    fontSize: 8,
+    fontWeight: 'bold',
+    color: '#6B7280',
+  },
+  warchestTableRow: {
+    flexDirection: 'row',
+    paddingVertical: 2,
+  },
+  warchestCellDate: {
+    width: '18%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellType: {
+    width: '14%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellUnit: {
+    width: '23%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellDesc: {
+    width: '25%',
+    fontSize: 9,
+    color: '#4B5563',
+  },
+  warchestCellCost: {
+    width: '10%',
+    fontSize: 9,
+    textAlign: 'right',
+  },
+  warchestCellGain: {
+    width: '10%',
+    fontSize: 9,
+    textAlign: 'right',
+  },
+  warchestCostNegative: {
+    color: '#B91C1C', // red-700
+    fontWeight: 'bold',
+  },
+  warchestGainPositive: {
+    color: '#166534', // green-700
+    fontWeight: 'bold',
+  },
+  warchestSummaryRow: {
+    marginTop: 6,
+    borderTop: '1 solid #E5E7EB',
+    paddingTop: 4,
+  },
+  warchestSummaryText: {
+    fontSize: 9,
+    color: '#111827',
+  },
   // Footer
   pageNumber: {
     position: 'absolute',
@@ -211,10 +338,16 @@ const styles = StyleSheet.create({
   },
 });
 
+// Removed orphaned JSX block
+
+
 const ForcePDF = ({ force }) => {
   const getStatusBadgeStyle = (status) => {
-    if (status === 'Damaged' || status === 'Repairing') {
+    if (status === 'Damaged') {
       return [styles.unitBadge, styles.unitBadgeDamaged];
+    }
+    if (status === 'Repairing') {
+      return [styles.unitBadge, styles.unitBadgeRepairing];
     }
     if (status === 'Disabled' || status === 'Unavailable') {
       return [styles.unitBadge, styles.unitBadgeDisabled];
@@ -223,6 +356,23 @@ const ForcePDF = ({ force }) => {
       return [styles.unitBadge, styles.unitBadgeDestroyed];
     }
     return styles.unitBadge;
+  };
+
+  // Helper to sort activity logs by timestamp (YYYY-MM-DD), oldest first
+  const sortActivityLog = (log = []) => {
+    return [...log].sort((a, b) => {
+      const ta = a?.timestamp || '';
+      const tb = b?.timestamp || '';
+      return ta.localeCompare(tb);
+    });
+  };
+
+  const formatActivityLine = (entry) => {
+    const date = entry?.timestamp || '';
+    const missionLabel = entry?.mission ? ` [${entry.mission}]` : '';
+    const hasCost = typeof entry?.cost === 'number' && !Number.isNaN(entry.cost);
+    const costLabel = hasCost ? ` (${formatNumber(entry.cost)} WP)` : '';
+    return `${date}${date ? ' – ' : ''}${entry?.action || ''}${missionLabel}${costLabel}`;
   };
 
   const currentWarchest =
@@ -238,18 +388,150 @@ const ForcePDF = ({ force }) => {
   const pilots = force.pilots || [];
   const elementals = force.elementals || [];
   const missions = force.missions || [];
-  const otherActionsLog = force.otherActionsLog || [];
   const currentDateLabel = force.currentDate;
+
+  // Build a flattened, chronologically ordered warchest ledger
+  const ledgerEntries = [];
+
+  // Helper to push a cost (negative WP) entry
+  const pushCost = ({ timestamp, sourceType, unitName, description, cost }) => {
+    if (!timestamp) return;
+    const safeCost = typeof cost === 'number' && !Number.isNaN(cost) ? cost : 0;
+    ledgerEntries.push({
+      timestamp,
+      sourceType,
+      unitName,
+      description,
+      cost: -Math.abs(safeCost),
+      gain: 0,
+    });
+  };
+
+  // Helper to push a gain (positive WP) entry
+  const pushGain = ({ timestamp, sourceType, unitName, description, gain }) => {
+    if (!timestamp) return;
+    const safeGain = typeof gain === 'number' && !Number.isNaN(gain) ? gain : 0;
+    ledgerEntries.push({
+      timestamp,
+      sourceType,
+      unitName,
+      description,
+      cost: 0,
+      gain: Math.abs(safeGain),
+    });
+  };
+
+  // Mech activity costs
+  mechs.forEach((mech) => {
+    (mech.activityLog || []).forEach((entry) => {
+      if (typeof entry.cost === 'number' && entry.cost !== 0) {
+        pushCost({
+          timestamp: entry.timestamp,
+          sourceType: 'Mech',
+          unitName: mech.name,
+          description: entry.action,
+          cost: entry.cost,
+        });
+      }
+    });
+  });
+
+  // Elemental activity costs
+  elementals.forEach((elemental) => {
+    (elemental.activityLog || []).forEach((entry) => {
+      if (typeof entry.cost === 'number' && entry.cost !== 0) {
+        pushCost({
+          timestamp: entry.timestamp,
+          sourceType: 'Elemental',
+          unitName: elemental.name,
+          description: entry.action,
+          cost: entry.cost,
+        });
+      }
+    });
+  });
+
+  // Pilot activity costs
+  pilots.forEach((pilot) => {
+    (pilot.activityLog || []).forEach((entry) => {
+      if (typeof entry.cost === 'number' && entry.cost !== 0) {
+        pushCost({
+          timestamp: entry.timestamp,
+          sourceType: 'Pilot',
+          unitName: pilot.name,
+          description: entry.action,
+          cost: entry.cost,
+        });
+      }
+    });
+  });
+
+  // Mission costs and gains
+  missions.forEach((mission) => {
+    const missionTimestamp =
+      mission.inGameDate || mission.completedAt || mission.createdAt || force.currentDate;
+
+    const missionCost = mission.cost || 0;
+    if (missionCost !== 0) {
+      pushCost({
+        timestamp: missionTimestamp,
+        sourceType: 'Mission',
+        unitName: mission.name || 'Mission',
+        description: 'Track cost',
+        cost: missionCost,
+      });
+    }
+
+    const gain = mission.warchestGained || 0;
+    if (gain !== 0) {
+      pushGain({
+        timestamp: missionTimestamp,
+        sourceType: 'Mission',
+        unitName: mission.name || 'Mission',
+        description: 'Warchest points earned',
+        gain,
+      });
+    }
+  });
+
+  // Sort ledger by timestamp (YYYY-MM-DD) oldest first
+  ledgerEntries.sort((a, b) => {
+    const ta = a.timestamp || '';
+    const tb = b.timestamp || '';
+    return ta.localeCompare(tb);
+  });
+
+  const totalSpent = ledgerEntries.reduce((sum, e) => sum + Math.min(e.cost, 0), 0);
+  const totalGained = ledgerEntries.reduce((sum, e) => sum + Math.max(e.gain, 0), 0);
+
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Force Information Header */}
         <View style={styles.coverSection}>
-          <Text style={styles.forceTitle}>{force.name}</Text>
-          <Text style={styles.forceSubtitle}>
-            {force.description || 'Elite mercenary unit force report'}
-          </Text>
+          <View style={styles.coverHeaderRow}>
+            <View style={styles.forceImageWrapper}>
+              {force.image && (
+                <Image
+                  src={force.image}
+                  style={{
+                    maxWidth: 80,
+                    maxHeight: 80,
+                    objectFit: 'contain',
+                    borderRadius: 4,
+                    border: '1 solid #D1D5DB',
+                  }}
+                />
+              )}
+            </View>
+            <View style={styles.forceTitleWrapper}>
+              <Text style={styles.forceTitle}>{force.name}</Text>
+              <Text style={styles.forceSubtitle}>
+                {force.description || 'Elite mercenary unit force report'}
+              </Text>
+            </View>
+          </View>
 
           <View style={styles.forceStatsRow}>
             <View style={styles.forceStatBox}>
@@ -301,26 +583,51 @@ const ForcePDF = ({ force }) => {
               <View key={pilot.id} style={styles.unitCard} wrap={false}>
                 <View style={styles.unitHeader}>
                   <Text style={styles.unitName}>{pilot.name}</Text>
-                  <Text style={styles.unitBadge}>
+                  <Text
+                    style={
+                      pilot.injuries === 6
+                        ? [styles.unitBadge, styles.unitBadgeKIA]
+                        : styles.unitBadge
+                    }
+                  >
                     {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries || 0}/6`}
                   </Text>
                 </View>
-                <View style={styles.unitStatsGrid}>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                    <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                <View style={styles.unitContentRow}>
+                  <View style={styles.unitImageWrapper}>
+                    {pilot.image && (
+                      <Image
+                        src={pilot.image}
+                        style={{
+                          maxWidth: 80,
+                          maxHeight: 80,
+                          objectFit: 'cover',
+                          borderRadius: 4,
+                          border: '1 solid #9CA3AF',
+                        }}
+                      />
+                    )}
                   </View>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Piloting:</Text>
-                    <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
-                  </View>
-                  {assignedMech && (
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
-                      <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                  <View style={styles.unitStatsWrapper}>
+                    <View style={styles.unitStatsGrid}>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                        <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Piloting:</Text>
+                        <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                      </View>
+                      {assignedMech && (
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
+                          <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                        </View>
+                      )}
                     </View>
-                  )}
+                  </View>
                 </View>
+
                 {pilot.history && (
                   <View style={styles.unitHistory}>
                     <Text>{pilot.history}</Text>
@@ -329,10 +636,9 @@ const ForcePDF = ({ force }) => {
                 {pilot.activityLog && pilot.activityLog.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                    {pilot.activityLog.map((entry, idx) => (
+                    {sortActivityLog(pilot.activityLog).map((entry, idx) => (
                       <Text key={idx} style={styles.missionText}>
-                        {force.currentDate} – {entry.action}
-                        {entry.mission ? ` [${entry.mission}]` : ''}
+                        {formatActivityLine(entry)}
                       </Text>
                     ))}
                   </View>
@@ -355,30 +661,48 @@ const ForcePDF = ({ force }) => {
                 <Text style={styles.unitName}>{elemental.name}</Text>
                 <Text style={getStatusBadgeStyle(elemental.status)}>{elemental.status}</Text>
               </View>
-              <View style={styles.unitStatsGrid}>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Commander:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
+              <View style={styles.unitContentRow}>
+                <View style={styles.unitImageWrapper}>
+                  {elemental.image && (
+                    <Image
+                      src={elemental.image}
+                      style={{
+                        maxWidth: 80,
+                        maxHeight: 80,
+                        objectFit: 'cover',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  )}
                 </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Antimech:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>BV:</Text>
-                  <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
+                <View style={styles.unitStatsWrapper}>
+                  <View style={styles.unitStatsGrid}>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Commander:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Antimech:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>BV:</Text>
+                      <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
               {elemental.history && (
@@ -389,10 +713,9 @@ const ForcePDF = ({ force }) => {
               {elemental.activityLog && elemental.activityLog.length > 0 && (
                 <View style={styles.missionSection}>
                   <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                  {elemental.activityLog.map((entry, idx) => (
+                  {sortActivityLog(elemental.activityLog).map((entry, idx) => (
                     <Text key={idx} style={styles.missionText}>
-                      {force.currentDate} – {entry.action}
-                      {entry.mission ? ` [${entry.mission}]` : ''}
+                      {formatActivityLine(entry)}
                     </Text>
                   ))}
                 </View>
@@ -428,18 +751,36 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.unitName}>{mech.name}</Text>
                   <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
                 </View>
-                <View style={styles.unitStatsGrid}>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Pilot:</Text>
-                    <Text style={styles.unitStatValue}>{pilotDisplay}</Text>
+                <View style={styles.unitContentRow}>
+                  <View style={styles.unitImageWrapper}>
+                    {mech.image && (
+                      <Image
+                        src={mech.image}
+                        style={{
+                          maxWidth: 100,
+                          maxHeight: 80,
+                          objectFit: 'contain',
+                          borderRadius: 4,
+                          border: '1 solid #9CA3AF',
+                        }}
+                      />
+                    )}
                   </View>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>BV:</Text>
-                    <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
-                  </View>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Weight:</Text>
-                    <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
+                  <View style={styles.unitStatsWrapper}>
+                    <View style={styles.unitStatsGrid}>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Pilot:</Text>
+                        <Text style={styles.unitStatValue}>{pilotDisplay}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>BV:</Text>
+                        <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Weight:</Text>
+                        <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
                 {mech.history && (
@@ -450,10 +791,9 @@ const ForcePDF = ({ force }) => {
                 {mech.activityLog && mech.activityLog.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                    {mech.activityLog.map((entry, idx) => (
+                    {sortActivityLog(mech.activityLog).map((entry, idx) => (
                       <Text key={idx} style={styles.missionText}>
-                        {force.currentDate} – {entry.action}
-                        {entry.mission ? ` [${entry.mission}]` : ''}
+                        {formatActivityLine(entry)}
                       </Text>
                     ))}
                   </View>
@@ -480,8 +820,38 @@ const ForcePDF = ({ force }) => {
               assignedMechIds,
               assignedElementalIds,
             );
+        {/* Hexagon pattern bottom-right */}
+        <View
+          style={{
+            position: 'absolute',
+            right: 40,
+            bottom: 60,
+            opacity: 0.3,
+          }}
+          fixed
+        >
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={[styles.hexRow, styles.hexRowOffset]}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+        </View>
+
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
+            const missionDate = mission.createdAt || '';
 
             return (
               <View key={mission.id} style={styles.missionCard} wrap={false}>
@@ -489,16 +859,7 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
                   <Text style={styles.missionMeta}>
                     Status: {statusLabel}
-                    Date: {force.currentDate}
-                    {mission.createdAt
-                      ? ` | Created: ${formatDateTime(mission.createdAt)}`
-                      : ''}
-                    {mission.completedAt
-                      ? ` | Completed: ${formatDateTime(mission.completedAt)}`
-                      : ''}
-                    {mission.updatedAt
-                      ? ` | Updated: ${formatDateTime(mission.updatedAt)}`
-                      : ''}
+                    {missionDate ? ` | Date: ${missionDate}` : ''}
                   </Text>
                   <Text style={styles.missionMeta}>
                     Cost: {formatNumber(mission.cost || 0)} WP | Gained:{' '}
@@ -556,33 +917,69 @@ const ForcePDF = ({ force }) => {
           <Text style={styles.missionText}>No missions recorded for this force.</Text>
         )}
 
-        {/* Other Actions History */}
+        {/* Warchest Accounting */}
         <Text style={styles.sectionHeader} break>
-          █ OTHER ACTIONS HISTORY
+          █ WARCHEST ACCOUNTING
         </Text>
-        {otherActionsLog.length > 0 ? (
-          otherActionsLog
-            .slice()
-            .sort((a, b) => {
-              // oldest first
-              const da = new Date(a.timestamp || 0).getTime();
-              const db = new Date(b.timestamp || 0).getTime();
-              return da - db;
-            })
-            .map((entry, idx) => (
-              <View key={idx} style={styles.missionCard} wrap={false}>
-                <Text style={styles.missionMeta}>
-                  {force.currentDate}
-                </Text>
-                <Text style={styles.missionText}>{entry.description}</Text>
-                <Text style={styles.missionMeta}>
-                  Cost: -{formatNumber(entry.cost || 0)} WP
+        <View style={styles.warchestSection}>
+          <View style={styles.warchestHeaderRow}>
+            <Text style={styles.warchestHeaderText}>Financial Ledger</Text>
+            <Text style={styles.warchestHeaderText}>
+              Starting: {formatNumber(startingWarchest)} WP | Current: {formatNumber(currentWarchest)} WP
+            </Text>
+          </View>
+
+          {ledgerEntries.length > 0 ? (
+            <>
+              <View style={styles.warchestTableHeader}>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellDate]}>Date</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellType]}>Type</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellUnit]}>Unit/Mission</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellDesc]}>Description</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellCost]}>Cost</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellGain]}>Gain</Text>
+              </View>
+
+              {ledgerEntries.map((entry, idx) => (
+                <View key={idx} style={styles.warchestTableRow} wrap={false}>
+                  <Text style={styles.warchestCellDate}>{entry.timestamp}</Text>
+                  <Text style={styles.warchestCellType}>{entry.sourceType}</Text>
+                  <Text style={styles.warchestCellUnit}>{entry.unitName}</Text>
+                  <Text style={styles.warchestCellDesc}>{entry.description}</Text>
+                  <Text
+                    style={[
+                      styles.warchestCellCost,
+                      entry.cost < 0 ? styles.warchestCostNegative : null,
+                    ]}
+                  >
+                    {entry.cost < 0 ? `-${formatNumber(Math.abs(entry.cost))}` : ''}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.warchestCellGain,
+                      entry.gain > 0 ? styles.warchestGainPositive : null,
+                    ]}
+                  >
+                    {entry.gain > 0 ? `+${formatNumber(entry.gain)}` : ''}
+                  </Text>
+                </View>
+              ))}
+
+              <View style={styles.warchestSummaryRow}>
+                <Text style={styles.warchestSummaryText}>
+                  Total Spent: -{formatNumber(Math.abs(totalSpent))} WP | Total Gained: +
+                  {formatNumber(totalGained)} WP | Net:{' '}
+                  {formatNumber(totalGained + totalSpent)} WP | Current Warchest:{' '}
+                  {formatNumber(currentWarchest)} WP
                 </Text>
               </View>
-            ))
-        ) : (
-          <Text style={styles.missionText}>No other downtime actions recorded.</Text>
-        )}
+            </>
+          ) : (
+            <Text style={styles.missionText}>No warchest-affecting actions recorded.</Text>
+          )}
+        </View>
+
+        {/* Other Actions History removed: other downtime actions are now logged directly on units */}
 
         {/* Page Number */}
         <Text

@@ -113,6 +113,7 @@ export default function ElementalRoster({ force, onUpdate }) {
             timestamp,
             action: `Purchased elemental point for ${warchestCost} WP`,
             mission: null,
+            cost: warchestCost,
           },
         ],
       };

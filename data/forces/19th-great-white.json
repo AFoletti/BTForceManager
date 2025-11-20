@@ -2,7 +2,7 @@
   "id": "19th-the-great-white-lai-yu-s-hunters",
   "name": "19th The Great White - Lai-Yu's hunters",
   "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
-  "image": "https://www.wolfsdragoons.com/downloads/Media/pictures/BattleTech%20Insignias/CDSharks.gif",
+  "image": "https://i.ibb.co/HfkcQWkg/CDSharks.gif",
   "startingWarchest": 2000,
   "currentWarchest": 1800,
   "wpMultiplier": 5,
@@ -305,7 +305,7 @@
       "suitsDamaged": 0,
       "bv": 590,
       "status": "Operational",
-      "image": "",
+      "image": "https://i.ibb.co/fdFCJVph/IWM20-950.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
