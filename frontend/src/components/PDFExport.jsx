@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   },
   pageCornerAccent: {
     position: 'absolute',
-    width: 36,
-    height: 3,
+    width: 32,
+    height: 2,
     backgroundColor: '#111827',
   },
   // Cover/Header Section
