@@ -291,7 +291,6 @@ const styles = StyleSheet.create({
   },
 });
 
-        {/* Warchest Accounting */}
         <Text style={styles.sectionHeader} break>
           █ WARCHEST ACCOUNTING
         </Text>
