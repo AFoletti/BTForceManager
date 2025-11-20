@@ -638,11 +638,11 @@ const ForcePDF = ({ force }) => {
                         <Image
                           src={pilot.image}
                           style={{
-                            maxWidth: 70,
-                            maxHeight: 70,
+                            maxWidth: 85,
+                            maxHeight: 85,
                             objectFit: 'cover',
                             borderRadius: 4,
-                            border: '1 solid #9CA3AF',
+                            border: '0.75 solid #9CA3AF',
                           }}
                         />
                       )}
