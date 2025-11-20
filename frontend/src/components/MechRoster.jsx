@@ -34,6 +34,7 @@ export default function MechRoster({ force, onUpdate }) {
         weight: mech.weight,
         image: mech.image || '',
         history: mech.history || '',
+        warchestCost: mech.warchestCost || 0,
       });
     } else {
       setEditingMech(null);
