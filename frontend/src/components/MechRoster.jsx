@@ -86,6 +86,7 @@ export default function MechRoster({ force, onUpdate }) {
     } else {
       // Add new mech
       const warchestCost = parseInt(formData.warchestCost, 10) || 0;
+      const timestamp = new Date().toISOString();
       const newMech = {
         id: `mech-${Date.now()}`,
         name: formData.name,
@@ -96,7 +97,13 @@ export default function MechRoster({ force, onUpdate }) {
         image: formData.image,
         history: formData.history,
         warchestCost,
-        activityLog: [],
+        activityLog: [
+          {
+            timestamp,
+            action: `Purchased mech for ${warchestCost} WP`,
+            mission: null,
+          },
+        ],
       };
 
       const updatedMechs = [...force.mechs, newMech];
