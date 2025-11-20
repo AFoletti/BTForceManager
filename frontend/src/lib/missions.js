@@ -232,6 +232,7 @@ export function applyMissionCreation(force, formData, timestamp) {
       const activityLog = [...(pilot.activityLog || [])];
       activityLog.push({
         timestamp,
+        inGameDate: force.currentDate || null,
         action: `Assigned to mission: ${formData.name} (piloting ${pilotMech.name})`,
         mission: formData.name,
       });
