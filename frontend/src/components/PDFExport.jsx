@@ -291,6 +291,69 @@ const styles = StyleSheet.create({
   },
 });
 
+        {/* Warchest Accounting */}
+        <Text style={styles.sectionHeader} break>
+          █ WARCHEST ACCOUNTING
+        </Text>
+        <View style={styles.warchestSection}>
+          <View style={styles.warchestHeaderRow}>
+            <Text style={styles.warchestHeaderText}>Financial Ledger</Text>
+            <Text style={styles.warchestHeaderText}>
+              Starting: {formatNumber(startingWarchest)} WP | Current: {formatNumber(currentWarchest)} WP
+            </Text>
+          </View>
+
+          {ledgerEntries.length > 0 ? (
+            <>
+              <View style={styles.warchestTableHeader}>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellDate]}>Date</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellType]}>Type</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellUnit]}>Unit/Mission</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellDesc]}>Description</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellCost]}>Cost</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellGain]}>Gain</Text>
+              </View>
+
+              {ledgerEntries.map((entry, idx) => (
+                <View key={idx} style={styles.warchestTableRow} wrap={false}>
+                  <Text style={styles.warchestCellDate}>{entry.timestamp}</Text>
+                  <Text style={styles.warchestCellType}>{entry.sourceType}</Text>
+                  <Text style={styles.warchestCellUnit}>{entry.unitName}</Text>
+                  <Text style={styles.warchestCellDesc}>{entry.description}</Text>
+                  <Text
+                    style={[
+                      styles.warchestCellCost,
+                      entry.cost < 0 ? styles.warchestCostNegative : null,
+                    ]}
+                  >
+                    {entry.cost < 0 ? `-${formatNumber(Math.abs(entry.cost))}` : ''}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.warchestCellGain,
+                      entry.gain > 0 ? styles.warchestGainPositive : null,
+                    ]}
+                  >
+                    {entry.gain > 0 ? `+${formatNumber(entry.gain)}` : ''}
+                  </Text>
+                </View>
+              ))}
+
+              <View style={styles.warchestSummaryRow}>
+                <Text style={styles.warchestSummaryText}>
+                  Total Spent: -{formatNumber(Math.abs(totalSpent))} WP | Total Gained: +
+                  {formatNumber(totalGained)} WP | Net:{' '}
+                  {formatNumber(totalGained + totalSpent)} WP | Current Warchest:{' '}
+                  {formatNumber(currentWarchest)} WP
+                </Text>
+              </View>
+            </>
+          ) : (
+            <Text style={styles.missionText}>No warchest-affecting actions recorded.</Text>
+          )}
+        </View>
+
+
 const ForcePDF = ({ force }) => {
         <Text style={styles.sectionHeader} break>
           █ WARCHEST ACCOUNTING
