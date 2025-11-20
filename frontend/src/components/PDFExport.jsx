@@ -119,18 +119,21 @@ const styles = StyleSheet.create({
   unitBadge: {
     fontSize: 9,
     color: '#FFF',
-    backgroundColor: '#4A7C59',
+    backgroundColor: '#16A34A', // operational - green
     padding: '3 8',
     borderRadius: 2,
   },
   unitBadgeDamaged: {
-    backgroundColor: '#D97706',
+    backgroundColor: '#F59E0B', // damaged - amber
   },
   unitBadgeDisabled: {
-    backgroundColor: '#DC2626',
+    backgroundColor: '#9CA3AF', // disabled/unavailable - gray
   },
   unitBadgeDestroyed: {
-    backgroundColor: '#7F1D1D',
+    backgroundColor: '#DC2626', // destroyed/KIA - red
+  },
+  unitBadgeRepairing: {
+    backgroundColor: '#3B82F6', // repairing - blue
   },
   unitStatsGrid: {
     flexDirection: 'row',
