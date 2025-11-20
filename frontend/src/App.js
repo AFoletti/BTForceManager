@@ -186,7 +186,7 @@ export default function App() {
                 Pilots
               </TabsTrigger>
               <TabsTrigger value="missions">
-                <FileText className="w-4 h-4" />
+                <Target className="w-4 h-4" />
                 Missions
               </TabsTrigger>
               <TabsTrigger value="downtime">
