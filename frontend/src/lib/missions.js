@@ -282,7 +282,7 @@ export function applyMissionUpdate(missions, missionId, formData, timestamp) {
  * @returns {{ missions: Mission[], currentWarchest: number }}
  */
 export function applyMissionCompletion(force, missionId, timestamp) {
-  const completionTimestamp = timestamp || new Date().toISOString();
+  const completionTimestamp = timestamp || force.currentDate;
 
   const missions = force.missions.map((mission) => {
     if (mission.id === missionId && !mission.completed) {
