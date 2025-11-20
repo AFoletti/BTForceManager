@@ -33,19 +33,19 @@ const styles = StyleSheet.create({
     left: 18,
     right: 18,
     bottom: 18,
-    border: '1.5 solid #E5E7EB',
+    border: '0.75 solid #CBD5F5',
   },
   pageCornerAccent: {
     position: 'absolute',
-    width: 36,
-    height: 3,
+    width: 32,
+    height: 2,
     backgroundColor: '#111827',
   },
   // Cover/Header Section
   coverSection: {
-    marginBottom: 18,
-    borderBottom: '2 solid #2C2C2C',
-    paddingBottom: 12,
+    marginBottom: 16,
+    borderBottom: '1 solid #D1D5DB',
+    paddingBottom: 10,
   },
   coverHeaderRow: {
     flexDirection: 'row',
@@ -62,15 +62,15 @@ const styles = StyleSheet.create({
   forceTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 6,
+    color: '#111827',
+    marginBottom: 4,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
   },
   forceSubtitle: {
-    fontSize: 10,
-    color: '#4A4A4A',
-    marginBottom: 10,
+    fontSize: 9,
+    color: '#6B7280',
+    marginBottom: 8,
     fontStyle: 'italic',
   },
   forceStatsRow: {
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   },
   forceStatBox: {
     padding: 6,
-    backgroundColor: '#F5F5F5',
-    borderLeft: '3 solid #8B4513',
+    backgroundColor: '#F9FAFB',
+    borderLeft: '2 solid #4B5320',
     minWidth: 110,
   },
   forceStatLabel: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     marginTop: 18,
     marginBottom: 10,
     paddingBottom: 6,
-    borderBottom: '2 solid #8B4513',
+    borderBottom: '2 solid #4B5320',
   },
   // Roster grid
   rosterGrid: {
@@ -121,9 +121,9 @@ const styles = StyleSheet.create({
   // Unit Cards
   unitCard: {
     padding: 8,
-    border: '1 solid #CCCCCC',
-    borderLeft: '4 solid #8B4513',
-    backgroundColor: '#FAFAFA',
+    border: '0.75 solid #D1D5DB',
+    borderLeft: '3 solid #4B5320',
+    backgroundColor: '#FFFFFF',
   },
   unitHeader: {
     flexDirection: 'row',
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   unitImageWrapper: {
-    width: 70,
+    width: 80,
     alignItems: 'flex-start',
     marginRight: 6,
   },
@@ -192,11 +192,11 @@ const styles = StyleSheet.create({
   },
   unitHistory: {
     fontSize: 8,
-    color: '#555',
-    marginTop: 6,
-    padding: 6,
-    backgroundColor: '#F5F5F5',
-    borderLeft: '2 solid #CCC',
+    color: '#374151',
+    marginTop: 5,
+    padding: 5,
+    backgroundColor: '#F9FAFB',
+    borderLeft: '1.5 solid #D1D5DB',
     fontStyle: 'italic',
   },
   // Mission Log
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 8,
     border: '1 solid #CCCCCC',
-    borderTop: '3 solid #8B4513',
+    borderTop: '3 solid #4B5320',
     backgroundColor: '#FAFAFA',
   },
   missionHeader: {
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   activityDate: {
-    width: '25%',
+    width: '24%',
     fontSize: 8,
     color: '#6B7280',
   },
@@ -275,8 +275,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 16,
     padding: 8,
-    border: '1 solid #D4D4D4',
-    backgroundColor: '#F9FAFB',
+    border: '0.75 solid #D1D5DB',
+    backgroundColor: '#FFFFFF',
   },
   warchestHeaderRow: {
     flexDirection: 'row',
@@ -536,17 +536,29 @@ const ForcePDF = ({ force }) => {
 
         {/* Force Information Header */}
         <View style={styles.coverSection}>
+          <View style={{ position: 'relative', marginBottom: 6 }}>
+            <View style={{
+              position: 'absolute',
+              left: 0,
+              top: -10,
+              width: 140,
+              height: 140,
+              borderRadius: 70,
+              border: '0.75 solid #E5E7EB',
+              opacity: 0.15,
+            }} />
+          </View>
           <View style={styles.coverHeaderRow}>
             <View style={styles.forceImageWrapper}>
               {force.image && (
                 <Image
                   src={force.image}
                   style={{
-                    maxWidth: 70,
-                    maxHeight: 70,
+                    maxWidth: 80,
+                    maxHeight: 80,
                     objectFit: 'contain',
                     borderRadius: 4,
-                    border: '1 solid #D1D5DB',
+                    border: '0.75 solid #D1D5DB',
                   }}
                 />
               )}
@@ -626,11 +638,11 @@ const ForcePDF = ({ force }) => {
                         <Image
                           src={pilot.image}
                           style={{
-                            maxWidth: 70,
-                            maxHeight: 70,
+                            maxWidth: 85,
+                            maxHeight: 110,
                             objectFit: 'cover',
                             borderRadius: 4,
-                            border: '1 solid #9CA3AF',
+                            border: '0.75 solid #9CA3AF',
                           }}
                         />
                       )}
@@ -697,11 +709,11 @@ const ForcePDF = ({ force }) => {
                       <Image
                         src={elemental.image}
                         style={{
-                          maxWidth: 70,
-                          maxHeight: 70,
+                          maxWidth: 85,
+                          maxHeight: 110,
                           objectFit: 'cover',
                           borderRadius: 4,
-                          border: '1 solid #9CA3AF',
+                          border: '0.75 solid #9CA3AF',
                         }}
                       />
                     )}
@@ -790,11 +802,11 @@ const ForcePDF = ({ force }) => {
                         <Image
                           src={mech.image}
                           style={{
-                            maxWidth: 90,
-                            maxHeight: 70,
+                            maxWidth: 85,
+                            maxHeight: 110,
                             objectFit: 'contain',
                             borderRadius: 4,
-                            border: '1 solid #9CA3AF',
+                            border: '0.75 solid #9CA3AF',
                           }}
                         />
                       )}
