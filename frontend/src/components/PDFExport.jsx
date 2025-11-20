@@ -303,8 +303,11 @@ const styles = StyleSheet.create({
 
 const ForcePDF = ({ force }) => {
   const getStatusBadgeStyle = (status) => {
-    if (status === 'Damaged' || status === 'Repairing') {
+    if (status === 'Damaged') {
       return [styles.unitBadge, styles.unitBadgeDamaged];
+    }
+    if (status === 'Repairing') {
+      return [styles.unitBadge, styles.unitBadgeRepairing];
     }
     if (status === 'Disabled' || status === 'Unavailable') {
       return [styles.unitBadge, styles.unitBadgeDisabled];
