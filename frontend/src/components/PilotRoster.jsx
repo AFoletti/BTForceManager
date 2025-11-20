@@ -28,6 +28,7 @@ export default function PilotRoster({ force, onUpdate }) {
         piloting: pilot.piloting,
         injuries: pilot.injuries,
         history: pilot.history || '',
+        warchestCost: pilot.warchestCost || 0,
       });
     } else {
       setEditingPilot(null);
