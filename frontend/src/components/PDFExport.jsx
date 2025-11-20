@@ -698,6 +698,20 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.unitName}>{mech.name}</Text>
                   <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
                 </View>
+                {mech.image && (
+                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+                    <Image
+                      src={mech.image}
+                      style={{
+                        maxWidth: 100,
+                        maxHeight: 80,
+                        objectFit: 'contain',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  </View>
+                )}
                 <View style={styles.unitStatsGrid}>
                   <View style={styles.unitStatItem}>
                     <Text style={styles.unitStatLabel}>Pilot:</Text>
