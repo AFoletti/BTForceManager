@@ -184,8 +184,9 @@ export function applyPilotDowntimeAction(
     const activityLog = [...(pilot.activityLog || [])];
     activityLog.push({
       timestamp,
-      inGameDate,
-      action: `${action.name} performed (${cost} WP)` + (lastMissionName ? ` after ${lastMissionName}` : ''),
+      action:
+        `${action.name} performed (${cost} WP)` +
+        (lastMissionName ? ` after ${lastMissionName}` : ''),
       mission: lastMissionName,
     });
 
