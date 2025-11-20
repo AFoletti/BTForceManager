@@ -57,7 +57,6 @@ export default function MissionManager({ force, onUpdate }) {
       setEditingMission(mission);
       setFormData({
         ...mission,
-        inGameDate: mission.inGameDate || '',
       });
     } else {
       setEditingMission(null);
