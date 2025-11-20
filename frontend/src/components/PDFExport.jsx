@@ -18,17 +18,6 @@ const formatNumber = (num) => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 };
 
-const formatDateTime = (value) => {
-  if (!value) return '';
-  try {
-    const d = new Date(value);
-    if (Number.isNaN(d.getTime())) return '';
-    return d.toLocaleString();
-  } catch {
-    return '';
-  }
-};
-
 // Military-themed styles for PDF
 const styles = StyleSheet.create({
   page: {
@@ -692,7 +681,7 @@ const ForcePDF = ({ force }) => {
             );
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
-            const missionDate = mission.inGameDate || mission.completedAt || mission.createdAt || '';
+            const missionDate = mission.createdAt || '';
 
             return (
               <View key={mission.id} style={styles.missionCard} wrap={false}>
@@ -701,15 +690,6 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionMeta}>
                     Status: {statusLabel}
                     {missionDate ? ` | Date: ${missionDate}` : ''}
-                    {mission.createdAt
-                      ? ` | Created: ${formatDateTime(mission.createdAt)}`
-                      : ''}
-                    {mission.completedAt
-                      ? ` | Completed: ${formatDateTime(mission.completedAt)}`
-                      : ''}
-                    {mission.updatedAt
-                      ? ` | Updated: ${formatDateTime(mission.updatedAt)}`
-                      : ''}
                   </Text>
                   <Text style={styles.missionMeta}>
                     Cost: {formatNumber(mission.cost || 0)} WP | Gained:{' '}

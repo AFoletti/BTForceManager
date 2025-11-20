@@ -49,8 +49,6 @@
  * @property {string[]} [assignedMechs]
  * @property {string[]} [assignedElementals]
  * @property {string} [createdAt]
- * @property {string} [updatedAt]
- * @property {string} [completedAt]
  */
 
 /**
@@ -268,9 +266,9 @@ export function applyMissionUpdate(missions, missionId, formData, timestamp) {
   return missions.map((mission) =>
     mission.id === missionId
       ? {
+          ...mission,
           ...formData,
           id: missionId,
-          updatedAt: timestamp,
         }
       : mission,
   );
@@ -285,14 +283,11 @@ export function applyMissionUpdate(missions, missionId, formData, timestamp) {
  * @returns {{ missions: Mission[], currentWarchest: number }}
  */
 export function applyMissionCompletion(force, missionId, timestamp) {
-  const completionTimestamp = timestamp || force.currentDate;
-
   const missions = force.missions.map((mission) => {
     if (mission.id === missionId && !mission.completed) {
       return {
         ...mission,
         completed: true,
-        completedAt: completionTimestamp,
       };
     }
     return mission;
