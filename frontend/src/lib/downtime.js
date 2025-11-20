@@ -216,10 +216,3 @@ export function applyPilotDowntimeAction(
 
   return { pilots, currentWarchest };
 }
-
-  });
-
-  const currentWarchest = force.currentWarchest - cost;
-
-  return { otherActionsLog, currentWarchest };
-}
