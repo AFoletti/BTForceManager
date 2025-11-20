@@ -121,9 +121,9 @@ const styles = StyleSheet.create({
   // Unit Cards
   unitCard: {
     padding: 8,
-    border: '1 solid #CCCCCC',
-    borderLeft: '4 solid #4B5320',
-    backgroundColor: '#FAFAFA',
+    border: '0.75 solid #D1D5DB',
+    borderLeft: '3 solid #4B5320',
+    backgroundColor: '#FFFFFF',
   },
   unitHeader: {
     flexDirection: 'row',
