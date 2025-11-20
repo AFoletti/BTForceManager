@@ -139,6 +139,36 @@ export default function App() {
               <div className="flex-1">
                 <h2 className="text-2xl font-bold text-foreground mb-2">{selectedForce.name}</h2>
                 <p className="text-sm text-muted-foreground mb-3">{selectedForce.description}</p>
+                <div className="mt-3 flex items-center gap-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Current Date (in-universe):</span>
+                    <input
+                      type="text"
+                      className="ml-2 px-2 py-1 rounded border border-border bg-background font-mono text-xs w-32"
+                      value={selectedForce.currentDate || ''}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === '') {
+                          updateForceData({ currentDate: '' });
+                          return;
+                        }
+                        const isValidFormat = /^\d{4}-\d{2}-\d{2}$/.test(value);
+                        if (!isValidFormat) {
+                          updateForceData({ currentDate: value });
+                          return;
+                        }
+                        const year = Number(value.slice(0, 4));
+                        if (year < 2400 || year > 3500) {
+                          updateForceData({ currentDate: value });
+                          return;
+                        }
+                        updateForceData({ currentDate: value });
+                      }}
+                      placeholder="3025-01-01"
+                    />
+                  </div>
+                </div>
+
                 <div className="flex items-center gap-6 text-sm">
                   <div>
                     <span className="text-muted-foreground">Warchest:</span>
