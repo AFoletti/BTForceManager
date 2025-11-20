@@ -74,6 +74,7 @@ export default function PilotRoster({ force, onUpdate }) {
     } else {
       // Add new pilot
       const warchestCost = parseInt(formData.warchestCost, 10) || 0;
+      const timestamp = new Date().toISOString();
       const newPilot = {
         id: `pilot-${Date.now()}`,
         name: formData.name,
@@ -82,7 +83,13 @@ export default function PilotRoster({ force, onUpdate }) {
         injuries: 0,
         history: formData.history,
         warchestCost,
-        activityLog: [],
+        activityLog: [
+          {
+            timestamp,
+            action: `Hired pilot for ${warchestCost} WP`,
+            mission: null,
+          },
+        ],
       };
 
       const updatedPilots = [...force.pilots, newPilot];
