@@ -291,9 +291,7 @@ const styles = StyleSheet.create({
   },
 });
 
-        <Text style={styles.sectionHeader} break>
-          █ WARCHEST ACCOUNTING
-        </Text>
+// Removed orphaned JSX
         <View style={styles.warchestSection}>
           <View style={styles.warchestHeaderRow}>
             <Text style={styles.warchestHeaderText}>Financial Ledger</Text>
@@ -354,9 +352,7 @@ const styles = StyleSheet.create({
 
 
 const ForcePDF = ({ force }) => {
-        <Text style={styles.sectionHeader} break>
-          █ WARCHEST ACCOUNTING
-        </Text>
+// Removed orphaned JSX
         <View style={styles.warchestSection}>
           <View style={styles.warchestHeaderRow}>
             <Text style={styles.warchestHeaderText}>Financial Ledger</Text>
