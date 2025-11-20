@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   forceStatBox: {
     padding: 6,
     backgroundColor: '#F5F5F5',
-    borderLeft: '3 solid #8B4513',
+    borderLeft: '3 solid #4B5320',
     minWidth: 110,
   },
   forceStatLabel: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     marginTop: 18,
     marginBottom: 10,
     paddingBottom: 6,
-    borderBottom: '2 solid #8B4513',
+    borderBottom: '2 solid #4B5320',
   },
   // Roster grid
   rosterGrid: {
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   unitCard: {
     padding: 8,
     border: '1 solid #CCCCCC',
-    borderLeft: '4 solid #8B4513',
+    borderLeft: '4 solid #4B5320',
     backgroundColor: '#FAFAFA',
   },
   unitHeader: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 8,
     border: '1 solid #CCCCCC',
-    borderTop: '3 solid #8B4513',
+    borderTop: '3 solid #4B5320',
     backgroundColor: '#FAFAFA',
   },
   missionHeader: {
