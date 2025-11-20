@@ -484,7 +484,7 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
                   <Text style={styles.missionMeta}>
                     Status: {statusLabel}
-                    {mission.inGameDate ? `Date: ${mission.inGameDate}` : ''}
+                    {force.currentDate ? `Date: ${force.currentDate}` : ''}
                     {mission.createdAt
                       ? ` | Created: ${formatDateTime(mission.createdAt)}`
                       : ''}
