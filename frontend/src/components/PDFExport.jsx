@@ -545,7 +545,13 @@ const ForcePDF = ({ force }) => {
               <View key={pilot.id} style={styles.unitCard} wrap={false}>
                 <View style={styles.unitHeader}>
                   <Text style={styles.unitName}>{pilot.name}</Text>
-                  <Text style={styles.unitBadge}>
+                  <Text
+                    style={
+                      pilot.injuries === 6
+                        ? [styles.unitBadge, styles.unitBadgeKIA]
+                        : styles.unitBadge
+                    }
+                  >
                     {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries || 0}/6`}
                   </Text>
                 </View>
