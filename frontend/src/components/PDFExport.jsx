@@ -466,12 +466,6 @@ const ForcePDF = ({ force }) => {
         <View style={styles.coverSection}>
           <Text style={styles.forceTitle}>{force.name}</Text>
           <Text style={styles.forceSubtitle}>
-        {/* Page frame accents for sci-fi look, optimized for white paper */}
-        <View style={styles.pageBackground} fixed />
-        <View style={[styles.pageCornerAccent, { top: 20, left: 20 }]} fixed />
-        <View style={[styles.pageCornerAccent, { top: 20, right: 20 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 20, left: 20 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 20, right: 20 }]} fixed />
 
             {force.description || 'Elite mercenary unit force report'}
           </Text>
@@ -514,14 +508,6 @@ const ForcePDF = ({ force }) => {
           </View>
         </View>
 
-        {/* Pilot Roster Section */}
-        <Text style={styles.sectionHeader} break>
-          █ PILOT ROSTER
-        </Text>
-        {pilots.length > 0 ? (
-          pilots.map((pilot) => {
-            const assignedMech = findMechForPilot(force, pilot);
-
         {/* Force Image */}
         {force.image && (
           <View style={{ marginTop: 12, marginBottom: 4, alignItems: 'flex-start' }}>
@@ -538,6 +524,13 @@ const ForcePDF = ({ force }) => {
           </View>
         )}
 
+        {/* Pilot Roster Section */}
+        <Text style={styles.sectionHeader} break>
+          █ PILOT ROSTER
+        </Text>
+        {pilots.length > 0 ? (
+          pilots.map((pilot) => {
+            const assignedMech = findMechForPilot(force, pilot);
 
             return (
               <View key={pilot.id} style={styles.unitCard} wrap={false}>
