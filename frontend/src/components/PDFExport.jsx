@@ -282,6 +282,10 @@ const ForcePDF = ({ force }) => {
               <Text style={styles.forceStatLabel}>WP Multiplier</Text>
               <Text style={styles.forceStatValue}>{force.wpMultiplier || 5}x</Text>
             </View>
+            <View style={styles.forceStatBox}>
+              <Text style={styles.forceStatLabel}>Current Date</Text>
+              <Text style={styles.forceStatValue}>{currentDateLabel || '—'}</Text>
+            </View>
           </View>
         </View>
 
