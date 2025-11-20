@@ -241,6 +241,21 @@ const styles = StyleSheet.create({
     color: '#555',
     marginLeft: 10,
   },
+  // Activity log table-style rows
+  activityRow: {
+    flexDirection: 'row',
+    marginBottom: 2,
+  },
+  activityDate: {
+    width: '25%',
+    fontSize: 8,
+    color: '#6B7280',
+  },
+  activityText: {
+    flex: 1,
+    fontSize: 8,
+    color: '#555',
+  },
   // Decorative hexagon grid (bottom-right) for sci-fi feel
   hexRow: {
     flexDirection: 'row',
