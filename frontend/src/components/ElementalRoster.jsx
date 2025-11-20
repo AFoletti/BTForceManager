@@ -81,11 +81,16 @@ export default function ElementalRoster({ force, onUpdate }) {
               bv: parseInt(formData.bv) || 0,
               status: formData.status,
               image: formData.image,
-              history: formData.history
+              history: formData.history,
+              warchestCost: parseInt(formData.warchestCost) || 0,
             }
           : e
       );
-      onUpdate({ elementals: updatedElementals });
+      const prevCost = editingElemental.warchestCost || 0;
+      const newCost = parseInt(formData.warchestCost, 10) || 0;
+      const delta = newCost - prevCost;
+      const currentWarchest = force.currentWarchest - delta;
+      onUpdate({ elementals: updatedElementals, currentWarchest });
     } else {
       // Add new elemental
       const newElemental = {
