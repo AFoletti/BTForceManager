@@ -199,6 +199,86 @@ const styles = StyleSheet.create({
     color: '#555',
     marginLeft: 10,
   },
+  // Warchest accounting
+  warchestSection: {
+    marginTop: 10,
+    marginBottom: 20,
+    padding: 10,
+    border: '1 solid #D4D4D4',
+    backgroundColor: '#F9FAFB',
+  },
+  warchestHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  warchestHeaderText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  warchestTableHeader: {
+    flexDirection: 'row',
+    borderBottom: '1 solid #E5E7EB',
+    paddingBottom: 4,
+    marginBottom: 4,
+  },
+  warchestTableHeaderCell: {
+    fontSize: 8,
+    fontWeight: 'bold',
+    color: '#6B7280',
+  },
+  warchestTableRow: {
+    flexDirection: 'row',
+    paddingVertical: 2,
+  },
+  warchestCellDate: {
+    width: '18%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellType: {
+    width: '14%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellUnit: {
+    width: '23%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellDesc: {
+    width: '25%',
+    fontSize: 9,
+    color: '#4B5563',
+  },
+  warchestCellCost: {
+    width: '10%',
+    fontSize: 9,
+    textAlign: 'right',
+  },
+  warchestCellGain: {
+    width: '10%',
+    fontSize: 9,
+    textAlign: 'right',
+  },
+  warchestCostNegative: {
+    color: '#B91C1C', // red-700
+    fontWeight: 'bold',
+  },
+  warchestGainPositive: {
+    color: '#166534', // green-700
+    fontWeight: 'bold',
+  },
+  warchestSummaryRow: {
+    marginTop: 6,
+    borderTop: '1 solid #E5E7EB',
+    paddingTop: 4,
+  },
+  warchestSummaryText: {
+    fontSize: 9,
+    color: '#111827',
+  },
   // Footer
   pageNumber: {
     position: 'absolute',
