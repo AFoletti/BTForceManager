@@ -85,6 +85,7 @@ export function applyMechDowntimeAction(
       timestamp,
       action: `${action.name} performed (${cost} WP)`,
       mission: lastMissionName,
+      cost,
     });
 
     return {
