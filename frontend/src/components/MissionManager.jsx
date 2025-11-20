@@ -302,6 +302,13 @@ export default function MissionManager({ force, onUpdate }) {
                     setFormData({
                       ...formData,
                       warchestGained: parseInt(e.target.value, 10) || 0,
+                    })
+                  }
+                  placeholder="0"
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-2">In-Game Date (YYYY-MM-DD)</label>
               <Input
@@ -335,12 +342,6 @@ export default function MissionManager({ force, onUpdate }) {
                 Optional. Must be between years 2400 and 3500.
               </p>
             </div>
-
-                    })
-                  }
-                  placeholder="0"
-                />
-              </div>
             </div>
 
             {/* Force Assignment */}
