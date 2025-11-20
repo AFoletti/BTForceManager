@@ -18,7 +18,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [selectedUnitId, setSelectedUnitId] = useState('');
   const [selectedAction, setSelectedAction] = useState('');
   const [showOtherActionDialog, setShowOtherActionDialog] = useState(false);
-  const [otherActionData, setOtherActionData] = useState({ description: '', cost: 0 });
+  const [otherActionData, setOtherActionData] = useState({ description: '', cost: 0, inGameDate: '' });
   const [wpMultiplier, setWpMultiplier] = useState(force.wpMultiplier || 5);
   const [editingMultiplier, setEditingMultiplier] = useState(false);
 
