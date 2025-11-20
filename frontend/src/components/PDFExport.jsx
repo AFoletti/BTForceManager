@@ -255,7 +255,6 @@ const ForcePDF = ({ force }) => {
   const pilots = force.pilots || [];
   const elementals = force.elementals || [];
   const missions = force.missions || [];
-  const otherActionsLog = force.otherActionsLog || [];
   const currentDateLabel = force.currentDate;
 
   return (
