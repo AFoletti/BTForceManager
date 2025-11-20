@@ -24,6 +24,7 @@ export default function App() {
     updateForceData,
     addNewForce,
     exportForce,
+    getCurrentInGameDate,
     loading,
     error,
   } = useForceManager();
