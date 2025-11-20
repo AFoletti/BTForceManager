@@ -566,37 +566,40 @@ const ForcePDF = ({ force }) => {
                     {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries || 0}/6`}
                   </Text>
                 </View>
-                <View style={styles.unitStatsGrid}>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                    <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                <View style={styles.unitContentRow}>
+                  <View style={styles.unitImageWrapper}>
+                    {pilot.image && (
+                      <Image
+                        src={pilot.image}
+                        style={{
+                          maxWidth: 80,
+                          maxHeight: 80,
+                          objectFit: 'cover',
+                          borderRadius: 4,
+                          border: '1 solid #9CA3AF',
+                        }}
+                      />
+                    )}
                   </View>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Piloting:</Text>
-                    <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
-                  </View>
-                  {assignedMech && (
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
-                      <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                  <View style={styles.unitStatsWrapper}>
+                    <View style={styles.unitStatsGrid}>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                        <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Piloting:</Text>
+                        <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                      </View>
+                      {assignedMech && (
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
+                          <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                        </View>
+                      )}
                     </View>
-                  )}
-                </View>
-
-                {pilot.image && (
-                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
-                    <Image
-                      src={pilot.image}
-                      style={{
-                        maxWidth: 80,
-                        maxHeight: 80,
-                        objectFit: 'cover',
-                        borderRadius: 4,
-                        border: '1 solid #9CA3AF',
-                      }}
-                    />
                   </View>
-                )}
+                </View>
 
                 {pilot.history && (
                   <View style={styles.unitHistory}>
