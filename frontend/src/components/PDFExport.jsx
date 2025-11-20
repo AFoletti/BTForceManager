@@ -1,11 +1,32 @@
 import React, { useState } from 'react';
 import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
 import { Button } from './ui/button';
+import {
+  calculateMissionTotalBV,
+  getAssignedMechs,
+  getAssignedElementals,
+} from '../lib/missions';
+import { findPilotForMech, findMechForPilot } from '../lib/mechs';
 
-// Safe number formatter for PDF
+// Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
-  if (num === null || num === undefined || isNaN(num)) return '0';
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+  if (num === null || num === undefined || Number.isNaN(num)) return '0';
+  const n = Number(num);
+  if (Number.isNaN(n)) return '0';
+  return n
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+};
+
+const formatDateTime = (value) => {
+  if (!value) return '';
+  try {
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleString();
+  } catch {
+    return '';
+  }
 };
 
 // Military-themed styles for PDF
@@ -105,7 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#DC2626',
   },
   unitBadgeDestroyed: {
-    backgroundColor: '#DC2626',
+    backgroundColor: '#7F1D1D',
   },
   unitStatsGrid: {
     flexDirection: 'row',
@@ -198,11 +219,26 @@ const ForcePDF = ({ force }) => {
     if (status === 'Disabled' || status === 'Unavailable') {
       return [styles.unitBadge, styles.unitBadgeDisabled];
     }
-    if (status === 'Destroyed' || status === 'Unavailable') {
+    if (status === 'Destroyed') {
       return [styles.unitBadge, styles.unitBadgeDestroyed];
     }
     return styles.unitBadge;
   };
+
+  const currentWarchest =
+    typeof force.currentWarchest === 'number'
+      ? force.currentWarchest
+      : typeof force.warchest === 'number'
+        ? force.warchest
+        : 0;
+
+  const startingWarchest = typeof force.startingWarchest === 'number' ? force.startingWarchest : 0;
+
+  const mechs = force.mechs || [];
+  const pilots = force.pilots || [];
+  const elementals = force.elementals || [];
+  const missions = force.missions || [];
+  const otherActionsLog = force.otherActionsLog || [];
 
   return (
     <Document>
@@ -210,86 +246,105 @@ const ForcePDF = ({ force }) => {
         {/* Force Information Header */}
         <View style={styles.coverSection}>
           <Text style={styles.forceTitle}>{force.name}</Text>
-          <Text style={styles.forceSubtitle}>{force.description || 'Elite mercenary unit'}</Text>
-          
+          <Text style={styles.forceSubtitle}>
+            {force.description || 'Elite mercenary unit force report'}
+          </Text>
+
           <View style={styles.forceStatsRow}>
             <View style={styles.forceStatBox}>
-              <Text style={styles.forceStatLabel}>Warchest</Text>
-              <Text style={styles.forceStatValue}>{formatNumber(force.warchest || force.currentWarchest || 0)} WP</Text>
+              <Text style={styles.forceStatLabel}>Current Warchest</Text>
+              <Text style={styles.forceStatValue}>{formatNumber(currentWarchest)} WP</Text>
             </View>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Starting Warchest</Text>
-              <Text style={styles.forceStatValue}>{formatNumber(force.startingWarchest || 0)} WP</Text>
+              <Text style={styles.forceStatValue}>{formatNumber(startingWarchest)} WP</Text>
             </View>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Mechs</Text>
-              <Text style={styles.forceStatValue}>{force.mechs?.length || 0}</Text>
+              <Text style={styles.forceStatValue}>{mechs.length}</Text>
             </View>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Pilots</Text>
-              <Text style={styles.forceStatValue}>{force.pilots?.length || 0}</Text>
+              <Text style={styles.forceStatValue}>{pilots.length}</Text>
             </View>
           </View>
           <View style={styles.forceStatsRow}>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Elementals</Text>
-              <Text style={styles.forceStatValue}>{force.elementals?.length || 0}</Text>
+              <Text style={styles.forceStatValue}>{elementals.length}</Text>
             </View>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>Missions</Text>
-              <Text style={styles.forceStatValue}>{force.missions?.length || 0}</Text>
+              <Text style={styles.forceStatValue}>{missions.length}</Text>
             </View>
             <View style={styles.forceStatBox}>
               <Text style={styles.forceStatLabel}>WP Multiplier</Text>
-              <Text style={styles.forceStatValue}>{force.wpMultiplier || 1.0}x</Text>
+              <Text style={styles.forceStatValue}>{force.wpMultiplier || 5}x</Text>
             </View>
           </View>
         </View>
 
         {/* Pilot Roster Section */}
-        <Text style={styles.sectionHeader} break>█ PILOT ROSTER</Text>
-        {force.pilots && force.pilots.length > 0 ? (
-          force.pilots.map((pilot, index) => (
-            <View key={pilot.id} style={styles.unitCard} wrap={false}>
-              <View style={styles.unitHeader}>
-                <Text style={styles.unitName}>{pilot.name}</Text>
-                <Text style={styles.unitBadge}>
-                  {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries}/6`}
-                </Text>
-              </View>
-              <View style={styles.unitStatsGrid}>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                  <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Piloting:</Text>
-                  <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
-                </View>
-              </View>
-              {pilot.history && (
-                <View style={styles.unitHistory}>
-                  <Text>{pilot.history}</Text>
-                </View>
-              )}
-              {pilot.activityLog && pilot.activityLog.length > 0 && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Recent Activity:</Text>
-                  <Text style={styles.missionText}>
-                    {pilot.activityLog[pilot.activityLog.length - 1].action}
+        <Text style={styles.sectionHeader} break>
+          █ PILOT ROSTER
+        </Text>
+        {pilots.length > 0 ? (
+          pilots.map((pilot) => {
+            const assignedMech = findMechForPilot(force, pilot);
+
+            return (
+              <View key={pilot.id} style={styles.unitCard} wrap={false}>
+                <View style={styles.unitHeader}>
+                  <Text style={styles.unitName}>{pilot.name}</Text>
+                  <Text style={styles.unitBadge}>
+                    {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries || 0}/6`}
                   </Text>
                 </View>
-              )}
-            </View>
-          ))
+                <View style={styles.unitStatsGrid}>
+                  <View style={styles.unitStatItem}>
+                    <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                    <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                  </View>
+                  <View style={styles.unitStatItem}>
+                    <Text style={styles.unitStatLabel}>Piloting:</Text>
+                    <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                  </View>
+                  {assignedMech && (
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
+                      <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                    </View>
+                  )}
+                </View>
+                {pilot.history && (
+                  <View style={styles.unitHistory}>
+                    <Text>{pilot.history}</Text>
+                  </View>
+                )}
+                {pilot.activityLog && pilot.activityLog.length > 0 && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>Activity Log:</Text>
+                    {pilot.activityLog.map((entry, idx) => (
+                      <Text key={idx} style={styles.missionText}>
+                        {formatDateTime(entry.timestamp)} – {entry.action}
+                        {entry.mission ? ` [${entry.mission}]` : ''}
+                      </Text>
+                    ))}
+                  </View>
+                )}
+              </View>
+            );
+          })
         ) : (
-          <Text style={styles.missionText}>No pilots assigned to this force.</Text>
+          <Text style={styles.missionText}>No pilots in this force.</Text>
         )}
 
         {/* Elemental Roster Section */}
-        <Text style={styles.sectionHeader} break>█ ELEMENTAL ROSTER</Text>
-        {force.elementals && force.elementals.length > 0 ? (
-          force.elementals.map((elemental, index) => (
+        <Text style={styles.sectionHeader} break>
+          █ ELEMENTAL ROSTER
+        </Text>
+        {elementals.length > 0 ? (
+          elementals.map((elemental) => (
             <View key={elemental.id} style={styles.unitCard} wrap={false}>
               <View style={styles.unitHeader}>
                 <Text style={styles.unitName}>{elemental.name}</Text>
@@ -314,7 +369,7 @@ const ForcePDF = ({ force }) => {
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/4</Text>
+                  <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
                 </View>
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
@@ -328,116 +383,205 @@ const ForcePDF = ({ force }) => {
               )}
               {elemental.activityLog && elemental.activityLog.length > 0 && (
                 <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Recent Activity:</Text>
-                  <Text style={styles.missionText}>
-                    {elemental.activityLog[elemental.activityLog.length - 1].action}
-                  </Text>
+                  <Text style={styles.missionSectionTitle}>Activity Log:</Text>
+                  {elemental.activityLog.map((entry, idx) => (
+                    <Text key={idx} style={styles.missionText}>
+                      {formatDateTime(entry.timestamp)} – {entry.action}
+                      {entry.mission ? ` [${entry.mission}]` : ''}
+                    </Text>
+                  ))}
                 </View>
               )}
             </View>
           ))
         ) : (
-          <Text style={styles.missionText}>No elemental points assigned to this force.</Text>
+          <Text style={styles.missionText}>No elemental points in this force.</Text>
         )}
 
         {/* Mech Information Section */}
-        <Text style={styles.sectionHeader} break>█ MECH INFORMATION</Text>
-        {force.mechs && force.mechs.length > 0 ? (
-          force.mechs.map((mech, index) => (
-            <View key={mech.id} style={styles.unitCard} wrap={false}>
-              <View style={styles.unitHeader}>
-                <Text style={styles.unitName}>{mech.name}</Text>
-                <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
+        <Text style={styles.sectionHeader} break>
+          █ MECH ROSTER
+        </Text>
+        {mechs.length > 0 ? (
+          mechs.map((mech) => {
+            const pilot = findPilotForMech(force, mech);
+
+            let pilotDisplay = 'Missing Pilot';
+            if (pilot) {
+              if (pilot.injuries === 6) {
+                pilotDisplay = `${pilot.name} - KIA`;
+              } else {
+                pilotDisplay = `${pilot.name} - G:${pilot.gunnery || 0} / P:${
+                  pilot.piloting || 0
+                }`;
+              }
+            }
+
+            return (
+              <View key={mech.id} style={styles.unitCard} wrap={false}>
+                <View style={styles.unitHeader}>
+                  <Text style={styles.unitName}>{mech.name}</Text>
+                  <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
+                </View>
+                <View style={styles.unitStatsGrid}>
+                  <View style={styles.unitStatItem}>
+                    <Text style={styles.unitStatLabel}>Pilot:</Text>
+                    <Text style={styles.unitStatValue}>{pilotDisplay}</Text>
+                  </View>
+                  <View style={styles.unitStatItem}>
+                    <Text style={styles.unitStatLabel}>BV:</Text>
+                    <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
+                  </View>
+                  <View style={styles.unitStatItem}>
+                    <Text style={styles.unitStatLabel}>Weight:</Text>
+                    <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
+                  </View>
+                </View>
+                {mech.history && (
+                  <View style={styles.unitHistory}>
+                    <Text>{mech.history}</Text>
+                  </View>
+                )}
+                {mech.activityLog && mech.activityLog.length > 0 && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>Activity Log:</Text>
+                    {mech.activityLog.map((entry, idx) => (
+                      <Text key={idx} style={styles.missionText}>
+                        {formatDateTime(entry.timestamp)} – {entry.action}
+                        {entry.mission ? ` [${entry.mission}]` : ''}
+                      </Text>
+                    ))}
+                  </View>
+                )}
               </View>
-              <View style={styles.unitStatsGrid}>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Pilot:</Text>
-                  <Text style={styles.unitStatValue}>{mech.pilot || 'Unassigned'}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>BV:</Text>
-                  <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Weight:</Text>
-                  <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
-                </View>
-              </View>
-              {mech.history && (
-                <View style={styles.unitHistory}>
-                  <Text>{mech.history}</Text>
-                </View>
-              )}
-              {mech.activityLog && mech.activityLog.length > 0 && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Recent Activity:</Text>
-                  <Text style={styles.missionText}>
-                    {mech.activityLog[mech.activityLog.length - 1].action}
-                  </Text>
-                </View>
-              )}
-            </View>
-          ))
+            );
+          })
         ) : (
-          <Text style={styles.missionText}>No mechs assigned to this force.</Text>
+          <Text style={styles.missionText}>No mechs in this force.</Text>
         )}
 
         {/* Mission Log Section */}
-        <Text style={styles.sectionHeader} break>█ MISSION LOG</Text>
-        {force.missions && force.missions.length > 0 ? (
-          force.missions.map((mission, index) => (
-            <View key={mission.id} style={styles.missionCard} wrap={false}>
-              <View style={styles.missionHeader}>
-                <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
-                <Text style={styles.missionMeta}>
-                  Cost: {formatNumber(mission.cost || 0)} WP | Gained: {formatNumber(mission.gained || 0)} WP | Total BV: {formatNumber(mission.totalBV || 0)}
-                </Text>
+        <Text style={styles.sectionHeader} break>
+          █ MISSION LOG
+        </Text>
+        {missions.length > 0 ? (
+          missions.map((mission) => {
+            const assignedMechIds = mission.assignedMechs || [];
+            const assignedElementalIds = mission.assignedElementals || [];
+            const assignedMechObjects = getAssignedMechs(force, assignedMechIds);
+            const assignedElementalObjects = getAssignedElementals(force, assignedElementalIds);
+            const totalBV = calculateMissionTotalBV(
+              force,
+              assignedMechIds,
+              assignedElementalIds,
+            );
+
+            const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
+
+            return (
+              <View key={mission.id} style={styles.missionCard} wrap={false}>
+                <View style={styles.missionHeader}>
+                  <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
+                  <Text style={styles.missionMeta}>
+                    Status: {statusLabel}
+                    {mission.createdAt
+                      ? ` | Created: ${formatDateTime(mission.createdAt)}`
+                      : ''}
+                    {mission.completedAt
+                      ? ` | Completed: ${formatDateTime(mission.completedAt)}`
+                      : ''}
+                    {mission.updatedAt
+                      ? ` | Updated: ${formatDateTime(mission.updatedAt)}`
+                      : ''}
+                  </Text>
+                  <Text style={styles.missionMeta}>
+                    Cost: {formatNumber(mission.cost || 0)} WP | Gained:{' '}
+                    {formatNumber(mission.warchestGained || 0)} WP | Total BV:{' '}
+                    {formatNumber(totalBV || 0)}
+                  </Text>
+                </View>
+
+                {mission.description && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>Description:</Text>
+                    <Text style={styles.missionText}>{mission.description}</Text>
+                  </View>
+                )}
+
+                {mission.objectives && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>Objectives:</Text>
+                    <Text style={styles.missionText}>{mission.objectives}</Text>
+                  </View>
+                )}
+
+                {assignedMechObjects.length > 0 && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>Assigned Mechs:</Text>
+                    {assignedMechObjects.map((m) => (
+                      <Text key={m.id} style={styles.missionUnits}>
+                        • {m.name} ({formatNumber(m.bv || 0)} BV, {m.status || 'Unknown'})
+                      </Text>
+                    ))}
+                  </View>
+                )}
+
+                {assignedElementalObjects.length > 0 && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>Assigned Elementals:</Text>
+                    {assignedElementalObjects.map((e) => (
+                      <Text key={e.id} style={styles.missionUnits}>
+                        • {e.name} ({formatNumber(e.bv || 0)} BV, {e.status || 'Unknown'})
+                      </Text>
+                    ))}
+                  </View>
+                )}
+
+                {mission.recap && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>After Action Report:</Text>
+                    <Text style={styles.missionText}>{mission.recap}</Text>
+                  </View>
+                )}
               </View>
-              
-              {mission.description && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Description:</Text>
-                  <Text style={styles.missionText}>{mission.description}</Text>
-                </View>
-              )}
-              
-              {mission.objectives && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Objectives:</Text>
-                  <Text style={styles.missionText}>{mission.objectives}</Text>
-                </View>
-              )}
-              
-              {mission.assignedMechs && mission.assignedMechs.length > 0 && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Assigned Mechs:</Text>
-                  <Text style={styles.missionUnits}>{mission.assignedMechs.join(', ')}</Text>
-                </View>
-              )}
-              
-              {mission.assignedElementals && mission.assignedElementals.length > 0 && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Assigned Elementals:</Text>
-                  <Text style={styles.missionUnits}>{mission.assignedElementals.join(', ')}</Text>
-                </View>
-              )}
-              
-              {mission.recap && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>After Action Report:</Text>
-                  <Text style={styles.missionText}>{mission.recap}</Text>
-                </View>
-              )}
-            </View>
-          ))
+            );
+          })
         ) : (
           <Text style={styles.missionText}>No missions recorded for this force.</Text>
         )}
 
+        {/* Other Actions History */}
+        <Text style={styles.sectionHeader} break>
+          █ OTHER ACTIONS HISTORY
+        </Text>
+        {otherActionsLog.length > 0 ? (
+          otherActionsLog
+            .slice()
+            .sort((a, b) => {
+              // oldest first
+              const da = new Date(a.timestamp || 0).getTime();
+              const db = new Date(b.timestamp || 0).getTime();
+              return da - db;
+            })
+            .map((entry, idx) => (
+              <View key={idx} style={styles.missionCard} wrap={false}>
+                <Text style={styles.missionMeta}>{formatDateTime(entry.timestamp)}</Text>
+                <Text style={styles.missionText}>{entry.description}</Text>
+                <Text style={styles.missionMeta}>
+                  Cost: -{formatNumber(entry.cost || 0)} WP
+                </Text>
+              </View>
+            ))
+        ) : (
+          <Text style={styles.missionText}>No other downtime actions recorded.</Text>
+        )}
+
         {/* Page Number */}
-        <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
-          `${pageNumber} / ${totalPages}`
-        )} fixed />
+        <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+          fixed
+        />
       </Page>
     </Document>
   );
@@ -451,12 +595,11 @@ export default function PDFExport({ force }) {
   const handleGeneratePDF = async () => {
     try {
       setIsGenerating(true);
-      const fileName = `${force.name.replace(/\s+/g, '_')}_Force_Report.pdf`;
-      
-      // Generate PDF
+      const safeName = force.name ? force.name.replace(/\s+/g, '_') : 'force';
+      const fileName = `${safeName}_Force_Report.pdf`;
+
       const blob = await pdf(<ForcePDF force={force} />).toBlob();
-      
-      // Create download link
+
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -465,19 +608,21 @@ export default function PDFExport({ force }) {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      
+
       setIsGenerating(false);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error generating PDF:', error);
+      // eslint-disable-next-line no-alert
       alert('Failed to generate PDF. Please try again.');
       setIsGenerating(false);
     }
   };
 
   return (
-    <Button 
+    <Button
       variant="default"
-      size="sm" 
+      size="sm"
       onClick={handleGeneratePDF}
       disabled={isGenerating}
       className="bg-accent text-accent-foreground hover:bg-accent/90"
