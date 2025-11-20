@@ -132,6 +132,9 @@ const styles = StyleSheet.create({
   unitBadgeDestroyed: {
     backgroundColor: '#DC2626', // destroyed/KIA - red
   },
+  unitBadgeKIA: {
+    backgroundColor: '#DC2626',
+  },
   unitBadgeRepairing: {
     backgroundColor: '#3B82F6', // repairing - blue
   },
