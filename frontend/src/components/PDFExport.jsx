@@ -138,6 +138,17 @@ const styles = StyleSheet.create({
   unitBadgeRepairing: {
     backgroundColor: '#3B82F6', // repairing - blue
   },
+  unitContentRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  unitImageWrapper: {
+    width: 80,
+    alignItems: 'flex-start',
+  },
+  unitStatsWrapper: {
+    flex: 1,
+  },
   unitStatsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -555,37 +566,40 @@ const ForcePDF = ({ force }) => {
                     {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries || 0}/6`}
                   </Text>
                 </View>
-                <View style={styles.unitStatsGrid}>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                    <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                <View style={styles.unitContentRow}>
+                  <View style={styles.unitImageWrapper}>
+                    {pilot.image && (
+                      <Image
+                        src={pilot.image}
+                        style={{
+                          maxWidth: 80,
+                          maxHeight: 80,
+                          objectFit: 'cover',
+                          borderRadius: 4,
+                          border: '1 solid #9CA3AF',
+                        }}
+                      />
+                    )}
                   </View>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Piloting:</Text>
-                    <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
-                  </View>
-                  {assignedMech && (
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
-                      <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                  <View style={styles.unitStatsWrapper}>
+                    <View style={styles.unitStatsGrid}>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                        <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Piloting:</Text>
+                        <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                      </View>
+                      {assignedMech && (
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
+                          <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                        </View>
+                      )}
                     </View>
-                  )}
-                </View>
-
-                {pilot.image && (
-                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
-                    <Image
-                      src={pilot.image}
-                      style={{
-                        maxWidth: 80,
-                        maxHeight: 80,
-                        objectFit: 'cover',
-                        borderRadius: 4,
-                        border: '1 solid #9CA3AF',
-                      }}
-                    />
                   </View>
-                )}
+                </View>
 
                 {pilot.history && (
                   <View style={styles.unitHistory}>
@@ -620,17 +634,9 @@ const ForcePDF = ({ force }) => {
                 <Text style={styles.unitName}>{elemental.name}</Text>
                 <Text style={getStatusBadgeStyle(elemental.status)}>{elemental.status}</Text>
               </View>
-              <View style={styles.unitStatsGrid}>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Commander:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
-                </View>
-                {elemental.image && (
-                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+              <View style={styles.unitContentRow}>
+                <View style={styles.unitImageWrapper}>
+                  {elemental.image && (
                     <Image
                       src={elemental.image}
                       style={{
@@ -641,23 +647,35 @@ const ForcePDF = ({ force }) => {
                         border: '1 solid #9CA3AF',
                       }}
                     />
+                  )}
+                </View>
+                <View style={styles.unitStatsWrapper}>
+                  <View style={styles.unitStatsGrid}>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Commander:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Antimech:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>BV:</Text>
+                      <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
+                    </View>
                   </View>
-                )}
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Antimech:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>BV:</Text>
-                  <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
                 </View>
               </View>
               {elemental.history && (
@@ -706,32 +724,36 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.unitName}>{mech.name}</Text>
                   <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
                 </View>
-                {mech.image && (
-                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
-                    <Image
-                      src={mech.image}
-                      style={{
-                        maxWidth: 100,
-                        maxHeight: 80,
-                        objectFit: 'contain',
-                        borderRadius: 4,
-                        border: '1 solid #9CA3AF',
-                      }}
-                    />
+                <View style={styles.unitContentRow}>
+                  <View style={styles.unitImageWrapper}>
+                    {mech.image && (
+                      <Image
+                        src={mech.image}
+                        style={{
+                          maxWidth: 100,
+                          maxHeight: 80,
+                          objectFit: 'contain',
+                          borderRadius: 4,
+                          border: '1 solid #9CA3AF',
+                        }}
+                      />
+                    )}
                   </View>
-                )}
-                <View style={styles.unitStatsGrid}>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Pilot:</Text>
-                    <Text style={styles.unitStatValue}>{pilotDisplay}</Text>
-                  </View>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>BV:</Text>
-                    <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
-                  </View>
-                  <View style={styles.unitStatItem}>
-                    <Text style={styles.unitStatLabel}>Weight:</Text>
-                    <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
+                  <View style={styles.unitStatsWrapper}>
+                    <View style={styles.unitStatsGrid}>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Pilot:</Text>
+                        <Text style={styles.unitStatValue}>{pilotDisplay}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>BV:</Text>
+                        <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Weight:</Text>
+                        <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
                 {mech.history && (
