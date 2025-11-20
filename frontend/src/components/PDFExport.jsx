@@ -456,6 +456,13 @@ const ForcePDF = ({ force }) => {
   });
 
   const totalSpent = ledgerEntries.reduce((sum, e) => sum + Math.min(e.cost, 0), 0);
+        {/* Page frame accents for sci-fi look, optimized for white paper */}
+        <View style={styles.pageBackground} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, right: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, right: 20 }]} fixed />
+
   const totalGained = ledgerEntries.reduce((sum, e) => sum + Math.max(e.gain, 0), 0);
 
   return (
