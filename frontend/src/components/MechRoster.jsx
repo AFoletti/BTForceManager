@@ -20,6 +20,7 @@ export default function MechRoster({ force, onUpdate }) {
     weight: 0,
     image: '',
     history: '',
+    warchestCost: 0,
   });
 
   const openDialog = (mech = null) => {
