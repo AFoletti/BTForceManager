@@ -25,6 +25,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
   // Load downtime actions from JSON
   const [mechActions, setMechActions] = useState([]);
   const [elementalActions, setElementalActions] = useState([]);
+  const [pilotActions, setPilotActions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
