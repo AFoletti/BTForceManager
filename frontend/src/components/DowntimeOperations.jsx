@@ -437,7 +437,6 @@ export default function DowntimeOperations({ force, onUpdate }) {
           </div>
         </div>
       )}
-            <div>
 
       {/* Other Action Dialog */}
       <Dialog open={showOtherActionDialog} onOpenChange={setShowOtherActionDialog}>
