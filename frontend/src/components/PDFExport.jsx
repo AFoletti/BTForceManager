@@ -572,7 +572,7 @@ const ForcePDF = ({ force }) => {
             .map((entry, idx) => (
               <View key={idx} style={styles.missionCard} wrap={false}>
                 <Text style={styles.missionMeta}>
-                  {force.currentDate || entry.inGameDate || formatDateTime(entry.timestamp)}
+                  {force.currentDate}
                 </Text>
                 <Text style={styles.missionText}>{entry.description}</Text>
                 <Text style={styles.missionMeta}>
