@@ -225,6 +225,23 @@ const ForcePDF = ({ force }) => {
     return styles.unitBadge;
   };
 
+  // Helper to sort activity logs by timestamp (YYYY-MM-DD), oldest first
+  const sortActivityLog = (log = []) => {
+    return [...log].sort((a, b) => {
+      const ta = a?.timestamp || '';
+      const tb = b?.timestamp || '';
+      return ta.localeCompare(tb);
+    });
+  };
+
+  const formatActivityLine = (entry) => {
+    const date = entry?.timestamp || '';
+    const missionLabel = entry?.mission ? ` [${entry.mission}]` : '';
+    const hasCost = typeof entry?.cost === 'number' && !Number.isNaN(entry.cost);
+    const costLabel = hasCost ? ` (${formatNumber(entry.cost)} WP)` : '';
+    return `${date}${date ? ' – ' : ''}${entry?.action || ''}${missionLabel}${costLabel}`;
+  };
+
   const currentWarchest =
     typeof force.currentWarchest === 'number'
       ? force.currentWarchest
@@ -238,7 +255,6 @@ const ForcePDF = ({ force }) => {
   const pilots = force.pilots || [];
   const elementals = force.elementals || [];
   const missions = force.missions || [];
-  const otherActionsLog = force.otherActionsLog || [];
   const currentDateLabel = force.currentDate;
 
   return (
@@ -329,10 +345,9 @@ const ForcePDF = ({ force }) => {
                 {pilot.activityLog && pilot.activityLog.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                    {pilot.activityLog.map((entry, idx) => (
+                    {sortActivityLog(pilot.activityLog).map((entry, idx) => (
                       <Text key={idx} style={styles.missionText}>
-                        {force.currentDate} – {entry.action}
-                        {entry.mission ? ` [${entry.mission}]` : ''}
+                        {formatActivityLine(entry)}
                       </Text>
                     ))}
                   </View>
@@ -389,10 +404,9 @@ const ForcePDF = ({ force }) => {
               {elemental.activityLog && elemental.activityLog.length > 0 && (
                 <View style={styles.missionSection}>
                   <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                  {elemental.activityLog.map((entry, idx) => (
+                  {sortActivityLog(elemental.activityLog).map((entry, idx) => (
                     <Text key={idx} style={styles.missionText}>
-                      {force.currentDate} – {entry.action}
-                      {entry.mission ? ` [${entry.mission}]` : ''}
+                      {formatActivityLine(entry)}
                     </Text>
                   ))}
                 </View>
@@ -450,10 +464,9 @@ const ForcePDF = ({ force }) => {
                 {mech.activityLog && mech.activityLog.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                    {mech.activityLog.map((entry, idx) => (
+                    {sortActivityLog(mech.activityLog).map((entry, idx) => (
                       <Text key={idx} style={styles.missionText}>
-                        {force.currentDate} – {entry.action}
-                        {entry.mission ? ` [${entry.mission}]` : ''}
+                        {formatActivityLine(entry)}
                       </Text>
                     ))}
                   </View>
@@ -482,6 +495,7 @@ const ForcePDF = ({ force }) => {
             );
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
+            const missionDate = mission.inGameDate || mission.completedAt || mission.createdAt || '';
 
             return (
               <View key={mission.id} style={styles.missionCard} wrap={false}>
@@ -489,7 +503,7 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
                   <Text style={styles.missionMeta}>
                     Status: {statusLabel}
-                    Date: {force.currentDate}
+                    {missionDate ? ` | Date: ${missionDate}` : ''}
                     {mission.createdAt
                       ? ` | Created: ${formatDateTime(mission.createdAt)}`
                       : ''}
@@ -556,33 +570,7 @@ const ForcePDF = ({ force }) => {
           <Text style={styles.missionText}>No missions recorded for this force.</Text>
         )}
 
-        {/* Other Actions History */}
-        <Text style={styles.sectionHeader} break>
-          █ OTHER ACTIONS HISTORY
-        </Text>
-        {otherActionsLog.length > 0 ? (
-          otherActionsLog
-            .slice()
-            .sort((a, b) => {
-              // oldest first
-              const da = new Date(a.timestamp || 0).getTime();
-              const db = new Date(b.timestamp || 0).getTime();
-              return da - db;
-            })
-            .map((entry, idx) => (
-              <View key={idx} style={styles.missionCard} wrap={false}>
-                <Text style={styles.missionMeta}>
-                  {force.currentDate}
-                </Text>
-                <Text style={styles.missionText}>{entry.description}</Text>
-                <Text style={styles.missionMeta}>
-                  Cost: -{formatNumber(entry.cost || 0)} WP
-                </Text>
-              </View>
-            ))
-        ) : (
-          <Text style={styles.missionText}>No other downtime actions recorded.</Text>
-        )}
+        {/* Other Actions History removed: other downtime actions are now logged directly on units */}
 
         {/* Page Number */}
         <Text
