@@ -649,7 +649,7 @@ const ForcePDF = ({ force }) => {
                   {pilot.activityLog && pilot.activityLog.length > 0 && (
                     <View style={styles.missionSection}>
                       <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                      {getRecentEntries(pilot.activityLog).map((entry, idx) => (
+                      {sortActivityLog(pilot.activityLog).map((entry, idx) => (
                         <Text key={idx} style={styles.missionText}>
                           {formatActivityLine(entry)}
                         </Text>
