@@ -16,6 +16,7 @@ export default function PilotRoster({ force, onUpdate }) {
     piloting: 5,
     injuries: 0,
     history: '',
+    warchestCost: 0,
   });
 
   const openDialog = (pilot = null) => {
