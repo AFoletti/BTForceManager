@@ -239,7 +239,7 @@ const ForcePDF = ({ force }) => {
   const elementals = force.elementals || [];
   const missions = force.missions || [];
   const otherActionsLog = force.otherActionsLog || [];
-  const currentDateLabel = force.currentDate || '';
+  const currentDateLabel = force.currentDate;
 
   return (
     <Document>
