@@ -144,7 +144,10 @@ export function applyElementalDowntimeAction(
  * @param {{ description: string, cost: number, timestamp: string }} params
  * @returns {{ otherActionsLog: Object[], currentWarchest: number }}
  */
-export function logOtherDowntimeAction(force, { description, cost, timestamp, inGameDate }) {
+export function logOtherDowntimeAction(
+  force,
+  { description, cost, timestamp, inGameDate },
+) {
   const otherActionsLog = [...(force.otherActionsLog || [])];
 
   otherActionsLog.push({
