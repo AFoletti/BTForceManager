@@ -123,9 +123,20 @@ export default function DowntimeOperations({ force, onUpdate }) {
         lastMissionName: lastMission?.name || null,
       });
       onUpdate(result);
-    } else {
+    } else if (selectedUnitType === 'elemental') {
       const result = applyElementalDowntimeAction(force, {
         elementalId: selectedUnitId,
+        actionId: selectedAction,
+        action,
+        cost,
+        timestamp,
+        inGameDate,
+        lastMissionName: lastMission?.name || null,
+      });
+      onUpdate(result);
+    } else if (selectedUnitType === 'pilot') {
+      const result = applyPilotDowntimeAction(force, {
+        pilotId: selectedUnitId,
         actionId: selectedAction,
         action,
         cost,
