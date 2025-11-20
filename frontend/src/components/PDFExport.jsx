@@ -68,9 +68,9 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
   },
   forceSubtitle: {
-    fontSize: 10,
-    color: '#4A4A4A',
-    marginBottom: 10,
+    fontSize: 9,
+    color: '#6B7280',
+    marginBottom: 8,
     fontStyle: 'italic',
   },
   forceStatsRow: {
