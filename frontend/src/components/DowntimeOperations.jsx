@@ -34,6 +34,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
       .then((data) => {
         setMechActions(data.mechActions || []);
         setElementalActions(data.elementalActions || []);
+        setPilotActions(data.pilotActions || []);
         setLoading(false);
       })
       .catch((err) => {
