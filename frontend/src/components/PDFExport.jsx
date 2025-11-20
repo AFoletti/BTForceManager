@@ -820,6 +820,35 @@ const ForcePDF = ({ force }) => {
               assignedMechIds,
               assignedElementalIds,
             );
+        {/* Hexagon pattern bottom-right */}
+        <View
+          style={{
+            position: 'absolute',
+            right: 40,
+            bottom: 60,
+            opacity: 0.3,
+          }}
+          fixed
+        >
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={[styles.hexRow, styles.hexRowOffset]}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+        </View>
+
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
             const missionDate = mission.createdAt || '';
