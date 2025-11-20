@@ -87,6 +87,7 @@ export default function MechRoster({ force, onUpdate }) {
       // Add new mech
       const warchestCost = parseInt(formData.warchestCost, 10) || 0;
       const timestamp = new Date().toISOString();
+      const inGameDate = force.currentDate || null;
       const newMech = {
         id: `mech-${Date.now()}`,
         name: formData.name,
