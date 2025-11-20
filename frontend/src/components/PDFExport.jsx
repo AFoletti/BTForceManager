@@ -496,11 +496,28 @@ const ForcePDF = ({ force }) => {
       <Page size="A4" style={styles.page}>
         {/* Force Information Header */}
         <View style={styles.coverSection}>
-          <Text style={styles.forceTitle}>{force.name}</Text>
-          <Text style={styles.forceSubtitle}>
-
-            {force.description || 'Elite mercenary unit force report'}
-          </Text>
+          <View style={styles.coverHeaderRow}>
+            <View style={styles.forceImageWrapper}>
+              {force.image && (
+                <Image
+                  src={force.image}
+                  style={{
+                    maxWidth: 80,
+                    maxHeight: 80,
+                    objectFit: 'contain',
+                    borderRadius: 4,
+                    border: '1 solid #D1D5DB',
+                  }}
+                />
+              )}
+            </View>
+            <View style={styles.forceTitleWrapper}>
+              <Text style={styles.forceTitle}>{force.name}</Text>
+              <Text style={styles.forceSubtitle}>
+                {force.description || 'Elite mercenary unit force report'}
+              </Text>
+            </View>
+          </View>
 
           <View style={styles.forceStatsRow}>
             <View style={styles.forceStatBox}>
