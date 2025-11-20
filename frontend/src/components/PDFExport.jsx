@@ -465,10 +465,9 @@ const ForcePDF = ({ force }) => {
                 {mech.activityLog && mech.activityLog.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                    {mech.activityLog.map((entry, idx) => (
+                    {sortActivityLog(mech.activityLog).map((entry, idx) => (
                       <Text key={idx} style={styles.missionText}>
-                        {force.currentDate} – {entry.action}
-                        {entry.mission ? ` [${entry.mission}]` : ''}
+                        {formatActivityLine(entry)}
                       </Text>
                     ))}
                   </View>
