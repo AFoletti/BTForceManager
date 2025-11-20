@@ -10,6 +10,7 @@ import {
   evaluateDowntimeCost,
   applyMechDowntimeAction,
   applyElementalDowntimeAction,
+  applyPilotDowntimeAction,
   logOtherDowntimeAction,
 } from '../lib/downtime';
 
