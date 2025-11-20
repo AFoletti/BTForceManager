@@ -89,6 +89,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
     if (!selectedUnit || !selectedAction || !canAfford) return;
 
     const timestamp = new Date().toISOString();
+    const inGameDate = otherActionData.inGameDate && otherActionData.inGameDate.trim() !== ''
+      ? otherActionData.inGameDate
+      : undefined;
     const lastMission = force.missions?.[force.missions.length - 1];
     const action = availableActions.find((a) => a.id === selectedAction);
 
