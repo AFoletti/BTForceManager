@@ -59,7 +59,11 @@ export default function DowntimeOperations({ force, onUpdate }) {
   };
 
   const availableActions = [
-    ...(selectedUnitType === 'mech' ? mechActions : elementalActions),
+    ...(selectedUnitType === 'mech'
+      ? mechActions
+      : selectedUnitType === 'elemental'
+        ? elementalActions
+        : pilotActions),
     otherAction,
   ];
 
