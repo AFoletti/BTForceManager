@@ -759,7 +759,7 @@ const ForcePDF = ({ force }) => {
         )}
 
         {/* Mech Information Section */}
-        <Text style={styles.sectionHeader}>
+        <Text style={styles.sectionHeader} break>
           █ MECH ROSTER
         </Text>
         {mechs.length > 0 ? (
