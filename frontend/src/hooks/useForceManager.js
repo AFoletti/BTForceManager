@@ -108,6 +108,9 @@ export function useForceManager() {
 
   const selectedForce = forces.find(f => f.id === selectedForceId);
 
+  // Helper to get the current in-universe date for logging purposes
+  const getCurrentInGameDate = () => selectedForce?.currentDate || null;
+
   const updateForceData = (updates) => {
     setForces(prev => 
       prev.map(force =>
