@@ -62,10 +62,15 @@ export default function PilotRoster({ force, onUpdate }) {
               piloting: parseInt(formData.piloting, 10) || 5,
               injuries: parseInt(formData.injuries, 10) || 0,
               history: formData.history,
+              warchestCost: parseInt(formData.warchestCost, 10) || 0,
             }
           : pilot,
       );
-      onUpdate({ pilots: updatedPilots });
+      const prevCost = editingPilot.warchestCost || 0;
+      const newCost = parseInt(formData.warchestCost, 10) || 0;
+      const delta = newCost - prevCost;
+      const currentWarchest = force.currentWarchest - delta;
+      onUpdate({ pilots: updatedPilots, currentWarchest });
     } else {
       // Add new pilot
       const newPilot = {
