@@ -302,6 +302,40 @@ export default function MissionManager({ force, onUpdate }) {
                     setFormData({
                       ...formData,
                       warchestGained: parseInt(e.target.value, 10) || 0,
+            <div>
+              <label className="block text-sm font-medium mb-2">In-Game Date (YYYY-MM-DD)</label>
+              <Input
+                type="text"
+                value={formData.inGameDate}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Allow empty to mean "no date"; otherwise validate basic format and range
+                  if (value === '') {
+                    setFormData({ ...formData, inGameDate: '' });
+                    return;
+                  }
+
+                  const isValidFormat = /^\d{4}-\d{2}-\d{2}$/.test(value);
+                  if (!isValidFormat) {
+                    setFormData({ ...formData, inGameDate: value });
+                    return;
+                  }
+
+                  const year = Number(value.slice(0, 4));
+                  if (year < 2400 || year > 3500) {
+                    setFormData({ ...formData, inGameDate: value });
+                    return;
+                  }
+
+                  setFormData({ ...formData, inGameDate: value });
+                }}
+                placeholder="3025-01-15"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Optional. Must be between years 2400 and 3500.
+              </p>
+            </div>
+
                     })
                   }
                   placeholder="0"
