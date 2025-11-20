@@ -634,17 +634,9 @@ const ForcePDF = ({ force }) => {
                 <Text style={styles.unitName}>{elemental.name}</Text>
                 <Text style={getStatusBadgeStyle(elemental.status)}>{elemental.status}</Text>
               </View>
-              <View style={styles.unitStatsGrid}>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Commander:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
-                </View>
-                {elemental.image && (
-                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+              <View style={styles.unitContentRow}>
+                <View style={styles.unitImageWrapper}>
+                  {elemental.image && (
                     <Image
                       src={elemental.image}
                       style={{
@@ -655,23 +647,35 @@ const ForcePDF = ({ force }) => {
                         border: '1 solid #9CA3AF',
                       }}
                     />
+                  )}
+                </View>
+                <View style={styles.unitStatsWrapper}>
+                  <View style={styles.unitStatsGrid}>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Commander:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Antimech:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>BV:</Text>
+                      <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
+                    </View>
+                    <View style={styles.unitStatItem}>
+                      <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
+                      <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
+                    </View>
                   </View>
-                )}
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Antimech:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>BV:</Text>
-                  <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
-                </View>
-                <View style={styles.unitStatItem}>
-                  <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
-                  <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
                 </View>
               </View>
               {elemental.history && (
