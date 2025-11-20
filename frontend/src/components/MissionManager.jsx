@@ -55,7 +55,10 @@ export default function MissionManager({ force, onUpdate }) {
   const openDialog = (mission = null) => {
     if (mission) {
       setEditingMission(mission);
-      setFormData(mission);
+      setFormData({
+        ...mission,
+        inGameDate: mission.inGameDate || '',
+      });
     } else {
       setEditingMission(null);
       setFormData({
