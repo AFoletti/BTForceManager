@@ -389,11 +389,10 @@ const ForcePDF = ({ force }) => {
   };
 
   const formatActivityLine = (entry) => {
-    const date = entry?.timestamp || '';
     const missionLabel = entry?.mission ? ` [${entry.mission}]` : '';
     const hasCost = typeof entry?.cost === 'number' && !Number.isNaN(entry.cost);
     const costLabel = hasCost ? ` (${formatNumber(entry.cost)} WP)` : '';
-    return `${date}${date ? ' – ' : ''}${entry?.action || ''}${missionLabel}${costLabel}`;
+    return `${entry?.action || ''}${missionLabel}${costLabel}`;
   };
 
   const currentWarchest =
