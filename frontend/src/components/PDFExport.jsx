@@ -47,6 +47,18 @@ const styles = StyleSheet.create({
     borderBottom: '3 solid #2C2C2C',
     paddingBottom: 20,
   },
+  coverHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  forceImageWrapper: {
+    width: 80,
+    marginRight: 12,
+  },
+  forceTitleWrapper: {
+    flex: 1,
+  },
   forceTitle: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -219,6 +231,20 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: '#555',
     marginLeft: 10,
+  },
+  // Decorative hexagon grid (bottom-right) for sci-fi feel
+  hexRow: {
+    flexDirection: 'row',
+  },
+  hex: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    border: '0.5 solid #E5E7EB',
+    margin: 1,
+  },
+  hexRowOffset: {
+    marginLeft: 5,
   },
   // Warchest accounting
   warchestSection: {
@@ -484,11 +510,28 @@ const ForcePDF = ({ force }) => {
       <Page size="A4" style={styles.page}>
         {/* Force Information Header */}
         <View style={styles.coverSection}>
-          <Text style={styles.forceTitle}>{force.name}</Text>
-          <Text style={styles.forceSubtitle}>
-
-            {force.description || 'Elite mercenary unit force report'}
-          </Text>
+          <View style={styles.coverHeaderRow}>
+            <View style={styles.forceImageWrapper}>
+              {force.image && (
+                <Image
+                  src={force.image}
+                  style={{
+                    maxWidth: 80,
+                    maxHeight: 80,
+                    objectFit: 'contain',
+                    borderRadius: 4,
+                    border: '1 solid #D1D5DB',
+                  }}
+                />
+              )}
+            </View>
+            <View style={styles.forceTitleWrapper}>
+              <Text style={styles.forceTitle}>{force.name}</Text>
+              <Text style={styles.forceSubtitle}>
+                {force.description || 'Elite mercenary unit force report'}
+              </Text>
+            </View>
+          </View>
 
           <View style={styles.forceStatsRow}>
             <View style={styles.forceStatBox}>
@@ -527,22 +570,6 @@ const ForcePDF = ({ force }) => {
             </View>
           </View>
         </View>
-
-        {/* Force Image */}
-        {force.image && (
-          <View style={{ marginTop: 12, marginBottom: 4, alignItems: 'flex-start' }}>
-            <Image
-              src={force.image}
-              style={{
-                maxWidth: 180,
-                maxHeight: 90,
-                objectFit: 'contain',
-                borderRadius: 4,
-                border: '1 solid #D1D5DB',
-              }}
-            />
-          </View>
-        )}
 
         {/* Pilot Roster Section */}
         <Text style={styles.sectionHeader} break>
@@ -793,6 +820,35 @@ const ForcePDF = ({ force }) => {
               assignedMechIds,
               assignedElementalIds,
             );
+        {/* Hexagon pattern bottom-right */}
+        <View
+          style={{
+            position: 'absolute',
+            right: 40,
+            bottom: 60,
+            opacity: 0.3,
+          }}
+          fixed
+        >
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={[styles.hexRow, styles.hexRowOffset]}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+        </View>
+
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
             const missionDate = mission.createdAt || '';
