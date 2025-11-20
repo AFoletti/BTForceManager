@@ -182,7 +182,7 @@ export default function App() {
                 Elementals
               </TabsTrigger>
               <TabsTrigger value="pilots">
-                <FileText className="w-4 h-4" />
+                <User className="w-4 h-4" />
                 Pilots
               </TabsTrigger>
               <TabsTrigger value="missions">
