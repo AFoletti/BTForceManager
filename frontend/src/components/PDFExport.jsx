@@ -275,8 +275,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 16,
     padding: 8,
-    border: '1 solid #D4D4D4',
-    backgroundColor: '#F9FAFB',
+    border: '0.75 solid #D1D5DB',
+    backgroundColor: '#FFFFFF',
   },
   warchestHeaderRow: {
     flexDirection: 'row',
