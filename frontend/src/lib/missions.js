@@ -49,8 +49,6 @@
  * @property {string[]} [assignedMechs]
  * @property {string[]} [assignedElementals]
  * @property {string} [createdAt]
- * @property {string} [updatedAt]
- * @property {string} [completedAt]
  */
 
 /**
