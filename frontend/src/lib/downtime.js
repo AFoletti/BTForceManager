@@ -75,7 +75,7 @@ export function evaluateDowntimeCost(formula, context) {
  */
 export function applyMechDowntimeAction(
   force,
-  { mechId, action, cost, timestamp, lastMissionName, inGameDate },
+  { mechId, action, cost, timestamp, lastMissionName },
 ) {
   const mechs = force.mechs.map((mech) => {
     if (mech.id !== mechId) return mech;
