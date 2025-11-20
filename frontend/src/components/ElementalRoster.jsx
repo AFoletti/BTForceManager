@@ -38,7 +38,8 @@ export default function ElementalRoster({ force, onUpdate }) {
         bv: elemental.bv,
         status: elemental.status,
         image: elemental.image || '',
-        history: elemental.history || ''
+        history: elemental.history || '',
+        warchestCost: elemental.warchestCost || 0,
       });
     } else {
       setEditingElemental(null);
