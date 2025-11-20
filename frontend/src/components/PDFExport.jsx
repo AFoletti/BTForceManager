@@ -538,6 +538,21 @@ const ForcePDF = ({ force }) => {
                       <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
                       <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
                     </View>
+                {pilot.image && (
+                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+                    <Image
+                      src={pilot.image}
+                      style={{
+                        maxWidth: 80,
+                        maxHeight: 80,
+                        objectFit: 'cover',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  </View>
+                )}
+
                   )}
                 </View>
                 {pilot.history && (
