@@ -225,6 +225,23 @@ const ForcePDF = ({ force }) => {
     return styles.unitBadge;
   };
 
+  // Helper to sort activity logs by timestamp (YYYY-MM-DD), oldest first
+  const sortActivityLog = (log = []) => {
+    return [...log].sort((a, b) => {
+      const ta = a?.timestamp || '';
+      const tb = b?.timestamp || '';
+      return ta.localeCompare(tb);
+    });
+  };
+
+  const formatActivityLine = (entry) => {
+    const date = entry?.timestamp || '';
+    const missionLabel = entry?.mission ? ` [${entry.mission}]` : '';
+    const hasCost = typeof entry?.cost === 'number' && !Number.isNaN(entry.cost);
+    const costLabel = hasCost ? ` (${formatNumber(entry.cost)} WP)` : '';
+    return `${date}${date ? ' – ' : ''}${entry?.action || ''}${missionLabel}${costLabel}`;
+  };
+
   const currentWarchest =
     typeof force.currentWarchest === 'number'
       ? force.currentWarchest
