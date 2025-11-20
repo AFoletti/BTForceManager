@@ -680,7 +680,7 @@ const ForcePDF = ({ force }) => {
         )}
 
         {/* Elemental Roster Section */}
-        <Text style={styles.sectionHeader} break>
+        <Text style={styles.sectionHeader}>
           █ ELEMENTAL ROSTER
         </Text>
         {elementals.length > 0 ? (
