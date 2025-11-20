@@ -26,6 +26,21 @@ const styles = StyleSheet.create({
     fontSize: 10,
     backgroundColor: '#FFFFFF',
   },
+  // Sci-fi frame and accents
+  pageBackground: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    bottom: 20,
+    border: '1.5 solid #E5E7EB',
+  },
+  pageCornerAccent: {
+    position: 'absolute',
+    width: 40,
+    height: 4,
+    backgroundColor: '#111827',
+  },
   // Cover/Header Section
   coverSection: {
     marginBottom: 30,
