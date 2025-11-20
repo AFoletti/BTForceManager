@@ -53,7 +53,8 @@ export default function ElementalRoster({ force, onUpdate }) {
         bv: 0,
         status: 'Operational',
         image: '',
-        history: ''
+        history: '',
+        warchestCost: 0,
       });
     }
     setShowDialog(true);
