@@ -466,12 +466,6 @@ const ForcePDF = ({ force }) => {
         <View style={styles.coverSection}>
           <Text style={styles.forceTitle}>{force.name}</Text>
           <Text style={styles.forceSubtitle}>
-        {/* Page frame accents for sci-fi look, optimized for white paper */}
-        <View style={styles.pageBackground} fixed />
-        <View style={[styles.pageCornerAccent, { top: 20, left: 20 }]} fixed />
-        <View style={[styles.pageCornerAccent, { top: 20, right: 20 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 20, left: 20 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 20, right: 20 }]} fixed />
 
             {force.description || 'Elite mercenary unit force report'}
           </Text>
