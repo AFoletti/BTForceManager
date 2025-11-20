@@ -561,6 +561,9 @@ const ForcePDF = ({ force }) => {
                       <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
                       <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
                     </View>
+                  )}
+                </View>
+
                 {pilot.image && (
                   <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
                     <Image
@@ -575,8 +578,6 @@ const ForcePDF = ({ force }) => {
                     />
                   </View>
                 )}
-
-                  )}
                 </View>
                 {pilot.history && (
                   <View style={styles.unitHistory}>
