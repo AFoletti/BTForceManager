@@ -268,6 +268,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
               >
                 <option value="mech">Mech</option>
                 <option value="elemental">Elemental</option>
+                <option value="pilot">Pilot</option>
               </Select>
             </div>
 
