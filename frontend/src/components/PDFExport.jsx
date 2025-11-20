@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     left: 18,
     right: 18,
     bottom: 18,
-    border: '1.5 solid #E5E7EB',
+    border: '0.75 solid #CBD5F5',
   },
   pageCornerAccent: {
     position: 'absolute',
