@@ -88,6 +88,7 @@ export default function PilotRoster({ force, onUpdate }) {
             timestamp,
             action: `Hired pilot for ${warchestCost} WP`,
             mission: null,
+            cost: warchestCost,
           },
         ],
       };
