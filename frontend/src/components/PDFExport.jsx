@@ -802,8 +802,8 @@ const ForcePDF = ({ force }) => {
                         <Image
                           src={mech.image}
                           style={{
-                            maxWidth: 95,
-                            maxHeight: 85,
+                            maxWidth: 85,
+                            maxHeight: 110,
                             objectFit: 'contain',
                             borderRadius: 4,
                             border: '0.75 solid #9CA3AF',
