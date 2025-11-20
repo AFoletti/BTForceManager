@@ -47,7 +47,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const selectedUnit =
     selectedUnitType === 'mech'
       ? force.mechs.find((m) => m.id === selectedUnitId)
-      : force.elementals?.find((e) => e.id === selectedUnitId);
+      : selectedUnitType === 'elemental'
+        ? force.elementals?.find((e) => e.id === selectedUnitId)
+        : force.pilots?.find((p) => p.id === selectedUnitId);
 
   const otherAction = {
     id: 'other',
