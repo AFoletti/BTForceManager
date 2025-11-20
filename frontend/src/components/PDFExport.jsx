@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
 });
 
-        {/* Warchest Accounting */}
+const ForcePDF = ({ force }) => {
         <Text style={styles.sectionHeader} break>
           █ WARCHEST ACCOUNTING
         </Text>
