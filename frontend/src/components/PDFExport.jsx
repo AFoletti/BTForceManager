@@ -654,6 +654,21 @@ const ForcePDF = ({ force }) => {
         <Text style={styles.sectionHeader} break>
           █ MECH ROSTER
         </Text>
+                {mech.image && (
+                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+                    <Image
+                      src={mech.image}
+                      style={{
+                        maxWidth: 100,
+                        maxHeight: 80,
+                        objectFit: 'contain',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  </View>
+                )}
+
         {mechs.length > 0 ? (
           mechs.map((mech) => {
             const pilot = findPilotForMech(force, mech);
