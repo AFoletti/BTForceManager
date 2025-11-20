@@ -190,6 +190,7 @@ export function applyPilotDowntimeAction(
         `${action.name} performed (${cost} WP)` +
         (lastMissionName ? ` after ${lastMissionName}` : ''),
       mission: lastMissionName,
+      cost,
     });
 
     let gunnery = pilot.gunnery;
