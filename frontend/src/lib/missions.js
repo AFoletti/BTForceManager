@@ -237,6 +237,7 @@ export function applyMissionCreation(force, formData, timestamp) {
         inGameDate: force.currentDate,
         action: `Assigned to mission: ${formData.name} (piloting ${pilotMech.name})`,
         mission: formData.name,
+        cost: 0,
       });
       return { ...pilot, activityLog };
     }
