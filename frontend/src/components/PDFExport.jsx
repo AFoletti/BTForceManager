@@ -508,14 +508,6 @@ const ForcePDF = ({ force }) => {
           </View>
         </View>
 
-        {/* Pilot Roster Section */}
-        <Text style={styles.sectionHeader} break>
-          █ PILOT ROSTER
-        </Text>
-        {pilots.length > 0 ? (
-          pilots.map((pilot) => {
-            const assignedMech = findMechForPilot(force, pilot);
-
         {/* Force Image */}
         {force.image && (
           <View style={{ marginTop: 12, marginBottom: 4, alignItems: 'flex-start' }}>
@@ -532,6 +524,13 @@ const ForcePDF = ({ force }) => {
           </View>
         )}
 
+        {/* Pilot Roster Section */}
+        <Text style={styles.sectionHeader} break>
+          █ PILOT ROSTER
+        </Text>
+        {pilots.length > 0 ? (
+          pilots.map((pilot) => {
+            const assignedMech = findMechForPilot(force, pilot);
 
             return (
               <View key={pilot.id} style={styles.unitCard} wrap={false}>
