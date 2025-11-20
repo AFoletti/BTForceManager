@@ -217,6 +217,7 @@ export function applyMissionCreation(force, formData, timestamp) {
         timestamp,
         action: `Assigned to mission: ${formData.name}`,
         mission: formData.name,
+        cost: 0,
       });
       return { ...elemental, activityLog };
     }
