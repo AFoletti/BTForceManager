@@ -150,32 +150,26 @@ export default function DowntimeOperations({ force, onUpdate }) {
   };
 
   const performOtherAction = () => {
-    if (!otherActionData.description || otherActionData.cost <= 0) return;
-    if (otherActionData.cost > force.currentWarchest) return;
+    if (!otherActionData.description) return;
+
+    const cost = otherActionData.cost || 0;
+    if (cost > force.currentWarchest) return;
 
     const timestamp = force.currentDate;
     const inGameDate = force.currentDate;
     const lastMission = force.missions?.[force.missions.length - 1];
 
-    // Always log at force level for global history and WP deduction
-    const baseResult = logOtherDowntimeAction(force, {
-      description: otherActionData.description,
-      cost: otherActionData.cost,
-      timestamp,
-      inGameDate,
-    });
+    const updated = { ...force, currentWarchest: force.currentWarchest - cost };
 
-    const updated = { ...baseResult };
-
-    // Additionally log on the specific unit's activity log, if a unit is selected
     if (selectedUnitType === 'mech' && selectedUnitId) {
       updated.mechs = force.mechs.map((mech) => {
         if (mech.id !== selectedUnitId) return mech;
         const activityLog = [...(mech.activityLog || [])];
         activityLog.push({
           timestamp,
-          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          action: `Other: ${otherActionData.description} (${cost} WP)`,
           mission: lastMission?.name || null,
+          cost,
         });
         return { ...mech, activityLog };
       });
@@ -185,10 +179,23 @@ export default function DowntimeOperations({ force, onUpdate }) {
         const activityLog = [...(elemental.activityLog || [])];
         activityLog.push({
           timestamp,
-          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          action: `Other: ${otherActionData.description} (${cost} WP)`,
           mission: lastMission?.name || null,
+          cost,
         });
         return { ...elemental, activityLog };
+      });
+    } else if (selectedUnitType === 'pilot' && selectedUnitId) {
+      updated.pilots = (force.pilots || []).map((pilot) => {
+        if (pilot.id !== selectedUnitId) return pilot;
+        const activityLog = [...(pilot.activityLog || [])];
+        activityLog.push({
+          timestamp,
+          action: `Other: ${otherActionData.description} (${cost} WP)`,
+          mission: lastMission?.name || null,
+          cost,
+        });
+        return { ...pilot, activityLog };
       });
     }
 
