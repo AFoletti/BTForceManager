@@ -101,6 +101,7 @@ export default function MechRoster({ force, onUpdate }) {
         activityLog: [
           {
             timestamp,
+            inGameDate,
             action: `Purchased mech for ${warchestCost} WP`,
             mission: null,
           },
