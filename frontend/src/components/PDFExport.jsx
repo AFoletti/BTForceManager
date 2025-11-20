@@ -416,15 +416,29 @@ const ForcePDF = ({ force }) => {
     });
   });
 
-  // Mission gains
+  // Mission costs and gains
   missions.forEach((mission) => {
+    const missionTimestamp =
+      mission.inGameDate || mission.completedAt || mission.createdAt || force.currentDate;
+
+    const missionCost = mission.cost || 0;
+    if (missionCost !== 0) {
+      pushCost({
+        timestamp: missionTimestamp,
+        sourceType: 'Mission',
+        unitName: mission.name || 'Mission',
+        description: 'Track cost',
+        cost: missionCost,
+      });
+    }
+
     const gain = mission.warchestGained || 0;
     if (gain !== 0) {
       pushGain({
-        timestamp: mission.inGameDate || mission.completedAt || mission.createdAt || force.currentDate,
+        timestamp: missionTimestamp,
         sourceType: 'Mission',
         unitName: mission.name || 'Mission',
-        description: mission.recap || mission.description || 'Mission outcome',
+        description: 'Warchest points earned',
         gain,
       });
     }
