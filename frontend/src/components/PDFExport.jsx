@@ -199,6 +199,86 @@ const styles = StyleSheet.create({
     color: '#555',
     marginLeft: 10,
   },
+  // Warchest accounting
+  warchestSection: {
+    marginTop: 10,
+    marginBottom: 20,
+    padding: 10,
+    border: '1 solid #D4D4D4',
+    backgroundColor: '#F9FAFB',
+  },
+  warchestHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  warchestHeaderText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  warchestTableHeader: {
+    flexDirection: 'row',
+    borderBottom: '1 solid #E5E7EB',
+    paddingBottom: 4,
+    marginBottom: 4,
+  },
+  warchestTableHeaderCell: {
+    fontSize: 8,
+    fontWeight: 'bold',
+    color: '#6B7280',
+  },
+  warchestTableRow: {
+    flexDirection: 'row',
+    paddingVertical: 2,
+  },
+  warchestCellDate: {
+    width: '18%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellType: {
+    width: '14%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellUnit: {
+    width: '23%',
+    fontSize: 9,
+    color: '#374151',
+  },
+  warchestCellDesc: {
+    width: '25%',
+    fontSize: 9,
+    color: '#4B5563',
+  },
+  warchestCellCost: {
+    width: '10%',
+    fontSize: 9,
+    textAlign: 'right',
+  },
+  warchestCellGain: {
+    width: '10%',
+    fontSize: 9,
+    textAlign: 'right',
+  },
+  warchestCostNegative: {
+    color: '#B91C1C', // red-700
+    fontWeight: 'bold',
+  },
+  warchestGainPositive: {
+    color: '#166534', // green-700
+    fontWeight: 'bold',
+  },
+  warchestSummaryRow: {
+    marginTop: 6,
+    borderTop: '1 solid #E5E7EB',
+    paddingTop: 4,
+  },
+  warchestSummaryText: {
+    fontSize: 9,
+    color: '#111827',
+  },
   // Footer
   pageNumber: {
     position: 'absolute',
@@ -210,6 +290,9 @@ const styles = StyleSheet.create({
     color: '#999',
   },
 });
+
+// Removed orphaned JSX block
+
 
 const ForcePDF = ({ force }) => {
   const getStatusBadgeStyle = (status) => {
@@ -256,6 +339,106 @@ const ForcePDF = ({ force }) => {
   const elementals = force.elementals || [];
   const missions = force.missions || [];
   const currentDateLabel = force.currentDate;
+
+  // Build a flattened, chronologically ordered warchest ledger
+  const ledgerEntries = [];
+
+  // Helper to push a cost (negative WP) entry
+  const pushCost = ({ timestamp, sourceType, unitName, description, cost }) => {
+    if (!timestamp) return;
+    const safeCost = typeof cost === 'number' && !Number.isNaN(cost) ? cost : 0;
+    ledgerEntries.push({
+      timestamp,
+      sourceType,
+      unitName,
+      description,
+      cost: -Math.abs(safeCost),
+      gain: 0,
+    });
+  };
+
+  // Helper to push a gain (positive WP) entry
+  const pushGain = ({ timestamp, sourceType, unitName, description, gain }) => {
+    if (!timestamp) return;
+    const safeGain = typeof gain === 'number' && !Number.isNaN(gain) ? gain : 0;
+    ledgerEntries.push({
+      timestamp,
+      sourceType,
+      unitName,
+      description,
+      cost: 0,
+      gain: Math.abs(safeGain),
+    });
+  };
+
+  // Mech activity costs
+  mechs.forEach((mech) => {
+    (mech.activityLog || []).forEach((entry) => {
+      if (typeof entry.cost === 'number' && entry.cost !== 0) {
+        pushCost({
+          timestamp: entry.timestamp,
+          sourceType: 'Mech',
+          unitName: mech.name,
+          description: entry.action,
+          cost: entry.cost,
+        });
+      }
+    });
+  });
+
+  // Elemental activity costs
+  elementals.forEach((elemental) => {
+    (elemental.activityLog || []).forEach((entry) => {
+      if (typeof entry.cost === 'number' && entry.cost !== 0) {
+        pushCost({
+          timestamp: entry.timestamp,
+          sourceType: 'Elemental',
+          unitName: elemental.name,
+          description: entry.action,
+          cost: entry.cost,
+        });
+      }
+    });
+  });
+
+  // Pilot activity costs
+  pilots.forEach((pilot) => {
+    (pilot.activityLog || []).forEach((entry) => {
+      if (typeof entry.cost === 'number' && entry.cost !== 0) {
+        pushCost({
+          timestamp: entry.timestamp,
+          sourceType: 'Pilot',
+          unitName: pilot.name,
+          description: entry.action,
+          cost: entry.cost,
+        });
+      }
+    });
+  });
+
+  // Mission gains
+  missions.forEach((mission) => {
+    const gain = mission.warchestGained || 0;
+    if (gain !== 0) {
+      pushGain({
+        timestamp: mission.inGameDate || mission.completedAt || mission.createdAt || force.currentDate,
+        sourceType: 'Mission',
+        unitName: mission.name || 'Mission',
+        description: mission.recap || mission.description || 'Mission outcome',
+        gain,
+      });
+    }
+  });
+
+  // Sort ledger by timestamp (YYYY-MM-DD) oldest first
+  ledgerEntries.sort((a, b) => {
+    const ta = a.timestamp || '';
+    const tb = b.timestamp || '';
+    return ta.localeCompare(tb);
+  });
+
+  const totalSpent = ledgerEntries.reduce((sum, e) => sum + Math.min(e.cost, 0), 0);
+  const totalGained = ledgerEntries.reduce((sum, e) => sum + Math.max(e.gain, 0), 0);
 
   return (
     <Document>
@@ -569,6 +752,68 @@ const ForcePDF = ({ force }) => {
         ) : (
           <Text style={styles.missionText}>No missions recorded for this force.</Text>
         )}
+
+        {/* Warchest Accounting */}
+        <Text style={styles.sectionHeader} break>
+          █ WARCHEST ACCOUNTING
+        </Text>
+        <View style={styles.warchestSection}>
+          <View style={styles.warchestHeaderRow}>
+            <Text style={styles.warchestHeaderText}>Financial Ledger</Text>
+            <Text style={styles.warchestHeaderText}>
+              Starting: {formatNumber(startingWarchest)} WP | Current: {formatNumber(currentWarchest)} WP
+            </Text>
+          </View>
+
+          {ledgerEntries.length > 0 ? (
+            <>
+              <View style={styles.warchestTableHeader}>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellDate]}>Date</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellType]}>Type</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellUnit]}>Unit/Mission</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellDesc]}>Description</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellCost]}>Cost</Text>
+                <Text style={[styles.warchestTableHeaderCell, styles.warchestCellGain]}>Gain</Text>
+              </View>
+
+              {ledgerEntries.map((entry, idx) => (
+                <View key={idx} style={styles.warchestTableRow} wrap={false}>
+                  <Text style={styles.warchestCellDate}>{entry.timestamp}</Text>
+                  <Text style={styles.warchestCellType}>{entry.sourceType}</Text>
+                  <Text style={styles.warchestCellUnit}>{entry.unitName}</Text>
+                  <Text style={styles.warchestCellDesc}>{entry.description}</Text>
+                  <Text
+                    style={[
+                      styles.warchestCellCost,
+                      entry.cost < 0 ? styles.warchestCostNegative : null,
+                    ]}
+                  >
+                    {entry.cost < 0 ? `-${formatNumber(Math.abs(entry.cost))}` : ''}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.warchestCellGain,
+                      entry.gain > 0 ? styles.warchestGainPositive : null,
+                    ]}
+                  >
+                    {entry.gain > 0 ? `+${formatNumber(entry.gain)}` : ''}
+                  </Text>
+                </View>
+              ))}
+
+              <View style={styles.warchestSummaryRow}>
+                <Text style={styles.warchestSummaryText}>
+                  Total Spent: -{formatNumber(Math.abs(totalSpent))} WP | Total Gained: +
+                  {formatNumber(totalGained)} WP | Net:{' '}
+                  {formatNumber(totalGained + totalSpent)} WP | Current Warchest:{' '}
+                  {formatNumber(currentWarchest)} WP
+                </Text>
+              </View>
+            </>
+          ) : (
+            <Text style={styles.missionText}>No warchest-affecting actions recorded.</Text>
+          )}
+        </View>
 
         {/* Other Actions History removed: other downtime actions are now logged directly on units */}
 
