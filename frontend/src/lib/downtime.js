@@ -83,7 +83,6 @@ export function applyMechDowntimeAction(
     const activityLog = [...(mech.activityLog || [])];
     activityLog.push({
       timestamp,
-      inGameDate,
       action: `${action.name} performed (${cost} WP)`,
       mission: lastMissionName,
     });
