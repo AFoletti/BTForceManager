@@ -124,13 +124,43 @@ export default function DowntimeOperations({ force, onUpdate }) {
     if (otherActionData.cost > force.currentWarchest) return;
 
     const timestamp = new Date().toISOString();
-    const result = logOtherDowntimeAction(force, {
+    const lastMission = force.missions?.[force.missions.length - 1];
+
+    // Always log at force level for global history and WP deduction
+    const baseResult = logOtherDowntimeAction(force, {
       description: otherActionData.description,
       cost: otherActionData.cost,
       timestamp,
     });
 
-    onUpdate(result);
+    const updated = { ...baseResult };
+
+    // Additionally log on the specific unit's activity log, if a unit is selected
+    if (selectedUnitType === 'mech' && selectedUnitId) {
+      updated.mechs = force.mechs.map((mech) => {
+        if (mech.id !== selectedUnitId) return mech;
+        const activityLog = [...(mech.activityLog || [])];
+        activityLog.push({
+          timestamp,
+          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          mission: lastMission?.name || null,
+        });
+        return { ...mech, activityLog };
+      });
+    } else if (selectedUnitType === 'elemental' && selectedUnitId) {
+      updated.elementals = (force.elementals || []).map((elemental) => {
+        if (elemental.id !== selectedUnitId) return elemental;
+        const activityLog = [...(elemental.activityLog || [])];
+        activityLog.push({
+          timestamp,
+          action: `Other: ${otherActionData.description} (${otherActionData.cost} WP)`,
+          mission: lastMission?.name || null,
+        });
+        return { ...elemental, activityLog };
+      });
+    }
+
+    onUpdate(updated);
 
     setShowOtherActionDialog(false);
     setOtherActionData({ description: '', cost: 0 });
