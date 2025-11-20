@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   unitImageWrapper: {
-    width: 70,
+    width: 80,
     alignItems: 'flex-start',
     marginRight: 6,
   },
