@@ -74,8 +74,7 @@ export default function PilotRoster({ force, onUpdate }) {
     } else {
       // Add new pilot
       const warchestCost = parseInt(formData.warchestCost, 10) || 0;
-      const timestamp = new Date().toISOString();
-      const inGameDate = force.currentDate;
+      const timestamp = force.currentDate;
       const newPilot = {
         id: `pilot-${Date.now()}`,
         name: formData.name,
