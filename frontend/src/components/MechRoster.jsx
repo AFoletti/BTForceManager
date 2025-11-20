@@ -102,6 +102,7 @@ export default function MechRoster({ force, onUpdate }) {
             timestamp,
             action: `Purchased mech for ${warchestCost} WP`,
             mission: null,
+            cost: warchestCost,
           },
         ],
       };
