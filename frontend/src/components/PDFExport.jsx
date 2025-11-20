@@ -21,97 +21,106 @@ const formatNumber = (num) => {
 // Military-themed styles for PDF
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 28,
     fontFamily: 'Helvetica',
-    fontSize: 10,
+    fontSize: 9,
     backgroundColor: '#FFFFFF',
   },
   // Sci-fi frame and accents
   pageBackground: {
     position: 'absolute',
-    top: 20,
-    left: 20,
-    right: 20,
-    bottom: 20,
+    top: 18,
+    left: 18,
+    right: 18,
+    bottom: 18,
     border: '1.5 solid #E5E7EB',
   },
   pageCornerAccent: {
     position: 'absolute',
-    width: 40,
-    height: 4,
+    width: 36,
+    height: 3,
     backgroundColor: '#111827',
   },
   // Cover/Header Section
   coverSection: {
-    marginBottom: 30,
-    borderBottom: '3 solid #2C2C2C',
-    paddingBottom: 20,
+    marginBottom: 18,
+    borderBottom: '2 solid #2C2C2C',
+    paddingBottom: 12,
   },
   coverHeaderRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   forceImageWrapper: {
-    width: 80,
-    marginRight: 12,
+    width: 70,
+    marginRight: 10,
   },
   forceTitleWrapper: {
     flex: 1,
   },
   forceTitle: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#1A1A1A',
-    marginBottom: 8,
+    marginBottom: 6,
     textTransform: 'uppercase',
-    letterSpacing: 2,
+    letterSpacing: 1.5,
   },
   forceSubtitle: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#4A4A4A',
-    marginBottom: 15,
+    marginBottom: 10,
     fontStyle: 'italic',
   },
   forceStatsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: 6,
   },
   forceStatBox: {
-    padding: 8,
+    padding: 6,
     backgroundColor: '#F5F5F5',
     borderLeft: '3 solid #8B4513',
-    minWidth: 120,
+    minWidth: 110,
   },
   forceStatLabel: {
-    fontSize: 8,
+    fontSize: 7,
     color: '#666',
     textTransform: 'uppercase',
     letterSpacing: 1,
-    marginBottom: 3,
+    marginBottom: 2,
   },
   forceStatValue: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#2C2C2C',
   },
   // Section Headers
   sectionHeader: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#1A1A1A',
     textTransform: 'uppercase',
     letterSpacing: 1.5,
-    marginTop: 25,
-    marginBottom: 15,
-    paddingBottom: 8,
+    marginTop: 18,
+    marginBottom: 10,
+    paddingBottom: 6,
     borderBottom: '2 solid #8B4513',
+  },
+  // Roster grid
+  rosterGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  rosterItem: {
+    width: '48%',
+    marginBottom: 8,
   },
   // Unit Cards
   unitCard: {
-    marginBottom: 15,
-    padding: 12,
+    padding: 8,
     border: '1 solid #CCCCCC',
     borderLeft: '4 solid #8B4513',
     backgroundColor: '#FAFAFA',
@@ -119,20 +128,20 @@ const styles = StyleSheet.create({
   unitHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
-    paddingBottom: 6,
+    marginBottom: 6,
+    paddingBottom: 4,
     borderBottom: '1 solid #E0E0E0',
   },
   unitName: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#1A1A1A',
   },
   unitBadge: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#FFF',
     backgroundColor: '#16A34A', // operational - green
-    padding: '3 8',
+    padding: '2 6',
     borderRadius: 2,
   },
   unitBadgeDamaged: {
@@ -152,11 +161,11 @@ const styles = StyleSheet.create({
   },
   unitContentRow: {
     flexDirection: 'row',
-    gap: 8,
   },
   unitImageWrapper: {
-    width: 80,
+    width: 70,
     alignItems: 'flex-start',
+    marginRight: 6,
   },
   unitStatsWrapper: {
     flex: 1,
@@ -164,71 +173,71 @@ const styles = StyleSheet.create({
   unitStatsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 8,
   },
   unitStatItem: {
     flexDirection: 'row',
     minWidth: '45%',
+    marginRight: 6,
+    marginBottom: 3,
   },
   unitStatLabel: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#666',
-    marginRight: 5,
+    marginRight: 4,
   },
   unitStatValue: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: 'bold',
     color: '#2C2C2C',
   },
   unitHistory: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#555',
-    marginTop: 8,
-    padding: 8,
+    marginTop: 6,
+    padding: 6,
     backgroundColor: '#F5F5F5',
     borderLeft: '2 solid #CCC',
     fontStyle: 'italic',
   },
   // Mission Log
   missionCard: {
-    marginBottom: 15,
-    padding: 12,
+    marginBottom: 10,
+    padding: 8,
     border: '1 solid #CCCCCC',
     borderTop: '3 solid #8B4513',
     backgroundColor: '#FAFAFA',
   },
   missionHeader: {
-    marginBottom: 8,
+    marginBottom: 6,
   },
   missionName: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#1A1A1A',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   missionMeta: {
     fontSize: 8,
     color: '#666',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   missionSection: {
-    marginTop: 8,
+    marginTop: 6,
   },
   missionSectionTitle: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: 'bold',
     color: '#4A4A4A',
-    marginBottom: 4,
+    marginBottom: 3,
     textTransform: 'uppercase',
   },
   missionText: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#555',
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   },
   missionUnits: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#555',
     marginLeft: 10,
   },
@@ -249,29 +258,29 @@ const styles = StyleSheet.create({
   // Warchest accounting
   warchestSection: {
     marginTop: 10,
-    marginBottom: 20,
-    padding: 10,
+    marginBottom: 16,
+    padding: 8,
     border: '1 solid #D4D4D4',
     backgroundColor: '#F9FAFB',
   },
   warchestHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   warchestHeaderText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
     color: '#111827',
   },
   warchestTableHeader: {
     flexDirection: 'row',
     borderBottom: '1 solid #E5E7EB',
-    paddingBottom: 4,
-    marginBottom: 4,
+    paddingBottom: 3,
+    marginBottom: 3,
   },
   warchestTableHeaderCell: {
-    fontSize: 8,
+    fontSize: 7,
     fontWeight: 'bold',
     color: '#6B7280',
   },
@@ -281,32 +290,32 @@ const styles = StyleSheet.create({
   },
   warchestCellDate: {
     width: '18%',
-    fontSize: 9,
+    fontSize: 8,
     color: '#374151',
   },
   warchestCellType: {
     width: '14%',
-    fontSize: 9,
+    fontSize: 8,
     color: '#374151',
   },
   warchestCellUnit: {
     width: '23%',
-    fontSize: 9,
+    fontSize: 8,
     color: '#374151',
   },
   warchestCellDesc: {
     width: '25%',
-    fontSize: 9,
+    fontSize: 8,
     color: '#4B5563',
   },
   warchestCellCost: {
     width: '10%',
-    fontSize: 9,
+    fontSize: 8,
     textAlign: 'right',
   },
   warchestCellGain: {
     width: '10%',
-    fontSize: 9,
+    fontSize: 8,
     textAlign: 'right',
   },
   warchestCostNegative: {
@@ -318,28 +327,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   warchestSummaryRow: {
-    marginTop: 6,
+    marginTop: 4,
     borderTop: '1 solid #E5E7EB',
-    paddingTop: 4,
+    paddingTop: 3,
   },
   warchestSummaryText: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#111827',
   },
   // Footer
   pageNumber: {
     position: 'absolute',
-    fontSize: 10,
-    bottom: 20,
+    fontSize: 9,
+    bottom: 18,
     left: 0,
     right: 0,
     textAlign: 'center',
     color: '#999',
   },
 });
-
-// Removed orphaned JSX block
-
 
 const ForcePDF = ({ force }) => {
   const getStatusBadgeStyle = (status) => {
@@ -365,6 +371,13 @@ const ForcePDF = ({ force }) => {
       const tb = b?.timestamp || '';
       return ta.localeCompare(tb);
     });
+  };
+
+  // Get the most recent `limit` entries from an activity log
+  const getRecentEntries = (log = [], limit = 2) => {
+    const sorted = sortActivityLog(log || []);
+    if (sorted.length <= limit) return sorted;
+    return sorted.slice(sorted.length - limit);
   };
 
   const formatActivityLine = (entry) => {
@@ -504,10 +517,16 @@ const ForcePDF = ({ force }) => {
   const totalSpent = ledgerEntries.reduce((sum, e) => sum + Math.min(e.cost, 0), 0);
   const totalGained = ledgerEntries.reduce((sum, e) => sum + Math.max(e.gain, 0), 0);
 
-
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* Page frame & accents */}
+        <View style={styles.pageBackground} fixed />
+        <View style={[styles.pageCornerAccent, { top: 18, left: 18 }]} fixed />
+        <View style={[styles.pageCornerAccent, { top: 18, right: 18 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 18, left: 18 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 18, right: 18 }]} fixed />
+
         {/* Force Information Header */}
         <View style={styles.coverSection}>
           <View style={styles.coverHeaderRow}>
@@ -516,8 +535,8 @@ const ForcePDF = ({ force }) => {
                 <Image
                   src={force.image}
                   style={{
-                    maxWidth: 80,
-                    maxHeight: 80,
+                    maxWidth: 70,
+                    maxHeight: 70,
                     objectFit: 'contain',
                     borderRadius: 4,
                     border: '1 solid #D1D5DB',
@@ -576,31 +595,102 @@ const ForcePDF = ({ force }) => {
           █ PILOT ROSTER
         </Text>
         {pilots.length > 0 ? (
-          pilots.map((pilot) => {
-            const assignedMech = findMechForPilot(force, pilot);
+          <View style={styles.rosterGrid}>
+            {pilots.map((pilot) => {
+              const assignedMech = findMechForPilot(force, pilot);
 
-            return (
-              <View key={pilot.id} style={styles.unitCard} wrap={false}>
+              return (
+                <View key={pilot.id} style={[styles.unitCard, styles.rosterItem]} wrap={false}>
+                  <View style={styles.unitHeader}>
+                    <Text style={styles.unitName}>{pilot.name}</Text>
+                    <Text
+                      style={
+                        pilot.injuries === 6
+                          ? [styles.unitBadge, styles.unitBadgeKIA]
+                          : styles.unitBadge
+                      }
+                    >
+                      {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries || 0}/6`}
+                    </Text>
+                  </View>
+                  <View style={styles.unitContentRow}>
+                    <View style={styles.unitImageWrapper}>
+                      {pilot.image && (
+                        <Image
+                          src={pilot.image}
+                          style={{
+                            maxWidth: 70,
+                            maxHeight: 70,
+                            objectFit: 'cover',
+                            borderRadius: 4,
+                            border: '1 solid #9CA3AF',
+                          }}
+                        />
+                      )}
+                    </View>
+                    <View style={styles.unitStatsWrapper}>
+                      <View style={styles.unitStatsGrid}>
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                          <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                        </View>
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>Piloting:</Text>
+                          <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                        </View>
+                        {assignedMech && (
+                          <View style={styles.unitStatItem}>
+                            <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
+                            <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                          </View>
+                        )}
+                      </View>
+                    </View>
+                  </View>
+
+                  {pilot.history && (
+                    <View style={styles.unitHistory}>
+                      <Text>{pilot.history}</Text>
+                    </View>
+                  )}
+                  {pilot.activityLog && pilot.activityLog.length > 0 && (
+                    <View style={styles.missionSection}>
+                      <Text style={styles.missionSectionTitle}>Activity Log:</Text>
+                      {getRecentEntries(pilot.activityLog).map((entry, idx) => (
+                        <Text key={idx} style={styles.missionText}>
+                          {formatActivityLine(entry)}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        ) : (
+          <Text style={styles.missionText}>No pilots in this force.</Text>
+        )}
+
+        {/* Elemental Roster Section */}
+        <Text style={styles.sectionHeader} break>
+          █ ELEMENTAL ROSTER
+        </Text>
+        {elementals.length > 0 ? (
+          <View style={styles.rosterGrid}>
+            {elementals.map((elemental) => (
+              <View key={elemental.id} style={[styles.unitCard, styles.rosterItem]} wrap={false}>
                 <View style={styles.unitHeader}>
-                  <Text style={styles.unitName}>{pilot.name}</Text>
-                  <Text
-                    style={
-                      pilot.injuries === 6
-                        ? [styles.unitBadge, styles.unitBadgeKIA]
-                        : styles.unitBadge
-                    }
-                  >
-                    {pilot.injuries === 6 ? 'KIA' : `Injuries: ${pilot.injuries || 0}/6`}
-                  </Text>
+                  <Text style={styles.unitName}>{elemental.name}</Text>
+                  <Text style={getStatusBadgeStyle(elemental.status)}>{elemental.status}</Text>
                 </View>
                 <View style={styles.unitContentRow}>
                   <View style={styles.unitImageWrapper}>
-                    {pilot.image && (
+                    {elemental.image && (
                       <Image
-                        src={pilot.image}
+                        src={elemental.image}
                         style={{
-                          maxWidth: 80,
-                          maxHeight: 80,
+                          maxWidth: 70,
+                          maxHeight: 70,
                           objectFit: 'cover',
                           borderRadius: 4,
                           border: '1 solid #9CA3AF',
@@ -611,32 +701,41 @@ const ForcePDF = ({ force }) => {
                   <View style={styles.unitStatsWrapper}>
                     <View style={styles.unitStatsGrid}>
                       <View style={styles.unitStatItem}>
-                        <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                        <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
+                        <Text style={styles.unitStatLabel}>Commander:</Text>
+                        <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
                       </View>
                       <View style={styles.unitStatItem}>
-                        <Text style={styles.unitStatLabel}>Piloting:</Text>
-                        <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                        <Text style={styles.unitStatLabel}>Gunnery:</Text>
+                        <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
                       </View>
-                      {assignedMech && (
-                        <View style={styles.unitStatItem}>
-                          <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
-                          <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
-                        </View>
-                      )}
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Antimech:</Text>
+                        <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>BV:</Text>
+                        <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
+                        <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
+                      </View>
+                      <View style={styles.unitStatItem}>
+                        <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
+                        <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
+                      </View>
                     </View>
                   </View>
                 </View>
-
-                {pilot.history && (
+                {elemental.history && (
                   <View style={styles.unitHistory}>
-                    <Text>{pilot.history}</Text>
+                    <Text>{elemental.history}</Text>
                   </View>
                 )}
-                {pilot.activityLog && pilot.activityLog.length > 0 && (
+                {elemental.activityLog && elemental.activityLog.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                    {sortActivityLog(pilot.activityLog).map((entry, idx) => (
+                    {getRecentEntries(elemental.activityLog).map((entry, idx) => (
                       <Text key={idx} style={styles.missionText}>
                         {formatActivityLine(entry)}
                       </Text>
@@ -644,84 +743,8 @@ const ForcePDF = ({ force }) => {
                   </View>
                 )}
               </View>
-            );
-          })
-        ) : (
-          <Text style={styles.missionText}>No pilots in this force.</Text>
-        )}
-
-        {/* Elemental Roster Section */}
-        <Text style={styles.sectionHeader} break>
-          █ ELEMENTAL ROSTER
-        </Text>
-        {elementals.length > 0 ? (
-          elementals.map((elemental) => (
-            <View key={elemental.id} style={styles.unitCard} wrap={false}>
-              <View style={styles.unitHeader}>
-                <Text style={styles.unitName}>{elemental.name}</Text>
-                <Text style={getStatusBadgeStyle(elemental.status)}>{elemental.status}</Text>
-              </View>
-              <View style={styles.unitContentRow}>
-                <View style={styles.unitImageWrapper}>
-                  {elemental.image && (
-                    <Image
-                      src={elemental.image}
-                      style={{
-                        maxWidth: 80,
-                        maxHeight: 80,
-                        objectFit: 'cover',
-                        borderRadius: 4,
-                        border: '1 solid #9CA3AF',
-                      }}
-                    />
-                  )}
-                </View>
-                <View style={styles.unitStatsWrapper}>
-                  <View style={styles.unitStatsGrid}>
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Commander:</Text>
-                      <Text style={styles.unitStatValue}>{elemental.commander || 'Unassigned'}</Text>
-                    </View>
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                      <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
-                    </View>
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Antimech:</Text>
-                      <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
-                    </View>
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>BV:</Text>
-                      <Text style={styles.unitStatValue}>{formatNumber(elemental.bv || 0)}</Text>
-                    </View>
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Suits Destroyed:</Text>
-                      <Text style={styles.unitStatValue}>{elemental.suitsDestroyed || 0}/5</Text>
-                    </View>
-                    <View style={styles.unitStatItem}>
-                      <Text style={styles.unitStatLabel}>Suits Damaged:</Text>
-                      <Text style={styles.unitStatValue}>{elemental.suitsDamaged || 0}/5</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              {elemental.history && (
-                <View style={styles.unitHistory}>
-                  <Text>{elemental.history}</Text>
-                </View>
-              )}
-              {elemental.activityLog && elemental.activityLog.length > 0 && (
-                <View style={styles.missionSection}>
-                  <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                  {sortActivityLog(elemental.activityLog).map((entry, idx) => (
-                    <Text key={idx} style={styles.missionText}>
-                      {formatActivityLine(entry)}
-                    </Text>
-                  ))}
-                </View>
-              )}
-            </View>
-          ))
+            ))}
+          </View>
         ) : (
           <Text style={styles.missionText}>No elemental points in this force.</Text>
         )}
@@ -731,76 +754,78 @@ const ForcePDF = ({ force }) => {
           █ MECH ROSTER
         </Text>
         {mechs.length > 0 ? (
-          mechs.map((mech) => {
-            const pilot = findPilotForMech(force, mech);
+          <View style={styles.rosterGrid}>
+            {mechs.map((mech) => {
+              const pilot = findPilotForMech(force, mech);
 
-            let pilotDisplay = 'Missing Pilot';
-            if (pilot) {
-              if (pilot.injuries === 6) {
-                pilotDisplay = `${pilot.name} - KIA`;
-              } else {
-                pilotDisplay = `${pilot.name} - G:${pilot.gunnery || 0} / P:${
-                  pilot.piloting || 0
-                }`;
+              let pilotDisplay = 'Missing Pilot';
+              if (pilot) {
+                if (pilot.injuries === 6) {
+                  pilotDisplay = `${pilot.name} - KIA`;
+                } else {
+                  pilotDisplay = `${pilot.name} - G:${pilot.gunnery || 0} / P:${
+                    pilot.piloting || 0
+                  }`;
+                }
               }
-            }
 
-            return (
-              <View key={mech.id} style={styles.unitCard} wrap={false}>
-                <View style={styles.unitHeader}>
-                  <Text style={styles.unitName}>{mech.name}</Text>
-                  <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
-                </View>
-                <View style={styles.unitContentRow}>
-                  <View style={styles.unitImageWrapper}>
-                    {mech.image && (
-                      <Image
-                        src={mech.image}
-                        style={{
-                          maxWidth: 100,
-                          maxHeight: 80,
-                          objectFit: 'contain',
-                          borderRadius: 4,
-                          border: '1 solid #9CA3AF',
-                        }}
-                      />
-                    )}
+              return (
+                <View key={mech.id} style={[styles.unitCard, styles.rosterItem]} wrap={false}>
+                  <View style={styles.unitHeader}>
+                    <Text style={styles.unitName}>{mech.name}</Text>
+                    <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
                   </View>
-                  <View style={styles.unitStatsWrapper}>
-                    <View style={styles.unitStatsGrid}>
-                      <View style={styles.unitStatItem}>
-                        <Text style={styles.unitStatLabel}>Pilot:</Text>
-                        <Text style={styles.unitStatValue}>{pilotDisplay}</Text>
-                      </View>
-                      <View style={styles.unitStatItem}>
-                        <Text style={styles.unitStatLabel}>BV:</Text>
-                        <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
-                      </View>
-                      <View style={styles.unitStatItem}>
-                        <Text style={styles.unitStatLabel}>Weight:</Text>
-                        <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
+                  <View style={styles.unitContentRow}>
+                    <View style={styles.unitImageWrapper}>
+                      {mech.image && (
+                        <Image
+                          src={mech.image}
+                          style={{
+                            maxWidth: 90,
+                            maxHeight: 70,
+                            objectFit: 'contain',
+                            borderRadius: 4,
+                            border: '1 solid #9CA3AF',
+                          }}
+                        />
+                      )}
+                    </View>
+                    <View style={styles.unitStatsWrapper}>
+                      <View style={styles.unitStatsGrid}>
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>Pilot:</Text>
+                          <Text style={styles.unitStatValue}>{pilotDisplay}</Text>
+                        </View>
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>BV:</Text>
+                          <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
+                        </View>
+                        <View style={styles.unitStatItem}>
+                          <Text style={styles.unitStatLabel}>Weight:</Text>
+                          <Text style={styles.unitStatValue}>{mech.weight || 0}t</Text>
+                        </View>
                       </View>
                     </View>
                   </View>
+                  {mech.history && (
+                    <View style={styles.unitHistory}>
+                      <Text>{mech.history}</Text>
+                    </View>
+                  )}
+                  {mech.activityLog && mech.activityLog.length > 0 && (
+                    <View style={styles.missionSection}>
+                      <Text style={styles.missionSectionTitle}>Activity Log:</Text>
+                      {getRecentEntries(mech.activityLog).map((entry, idx) => (
+                        <Text key={idx} style={styles.missionText}>
+                          {formatActivityLine(entry)}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
                 </View>
-                {mech.history && (
-                  <View style={styles.unitHistory}>
-                    <Text>{mech.history}</Text>
-                  </View>
-                )}
-                {mech.activityLog && mech.activityLog.length > 0 && (
-                  <View style={styles.missionSection}>
-                    <Text style={styles.missionSectionTitle}>Activity Log:</Text>
-                    {sortActivityLog(mech.activityLog).map((entry, idx) => (
-                      <Text key={idx} style={styles.missionText}>
-                        {formatActivityLine(entry)}
-                      </Text>
-                    ))}
-                  </View>
-                )}
-              </View>
-            );
-          })
+              );
+            })}
+          </View>
         ) : (
           <Text style={styles.missionText}>No mechs in this force.</Text>
         )}
@@ -820,35 +845,6 @@ const ForcePDF = ({ force }) => {
               assignedMechIds,
               assignedElementalIds,
             );
-        {/* Hexagon pattern bottom-right */}
-        <View
-          style={{
-            position: 'absolute',
-            right: 40,
-            bottom: 60,
-            opacity: 0.3,
-          }}
-          fixed
-        >
-          <View style={styles.hexRow}>
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-          </View>
-          <View style={[styles.hexRow, styles.hexRowOffset]}>
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-          </View>
-          <View style={styles.hexRow}>
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-            <View style={styles.hex} />
-          </View>
-        </View>
-
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
             const missionDate = mission.createdAt || '';
@@ -979,7 +975,34 @@ const ForcePDF = ({ force }) => {
           )}
         </View>
 
-        {/* Other Actions History removed: other downtime actions are now logged directly on units */}
+        {/* Decorative hex pattern bottom-right */}
+        <View
+          style={{
+            position: 'absolute',
+            right: 40,
+            bottom: 60,
+            opacity: 0.2,
+          }}
+          fixed
+        >
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={[styles.hexRow, styles.hexRowOffset]}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+          <View style={styles.hexRow}>
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+            <View style={styles.hex} />
+          </View>
+        </View>
 
         {/* Page Number */}
         <Text
