@@ -273,6 +273,20 @@ export default function MechRoster({ force, onUpdate }) {
                 />
               </div>
 
+            <div>
+              <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
+              <Input
+                type="number"
+                value={formData.warchestCost}
+                onChange={(e) => setFormData({ ...formData, warchestCost: e.target.value })}
+                placeholder="0"
+                min="0"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Cost in WP to acquire this mech. This will be subtracted from the current Warchest.
+              </p>
+            </div>
+
               <div>
                 <label className="block text-sm font-medium mb-2">Weight (tons) *</label>
                 <Input
