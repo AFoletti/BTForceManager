@@ -140,16 +140,12 @@ export function applyElementalDowntimeAction(
 }
 
 /**
- * Log a generic "other" downtime action at force level.
+ * Legacy helper for logging generic "other" downtime actions at force level.
  *
- * @param {Object} force
- * @param {{ description: string, cost: number, timestamp: string }} params
- * @returns {{ otherActionsLog: Object[], currentWarchest: number }}
+ * This is kept for backward compatibility with existing data files that may
+ * still contain an `otherActionsLog` array, but is no longer used by the UI.
  */
-export function logOtherDowntimeAction(
-  force,
-  { description, cost, timestamp, inGameDate },
-) {
+export function logOtherDowntimeAction(force, { description, cost, timestamp, inGameDate }) {
   const otherActionsLog = [...(force.otherActionsLog || [])];
 
   otherActionsLog.push({
