@@ -85,6 +85,7 @@ export default function MechRoster({ force, onUpdate }) {
       onUpdate({ mechs: updatedMechs, currentWarchest });
     } else {
       // Add new mech
+      const warchestCost = parseInt(formData.warchestCost, 10) || 0;
       const newMech = {
         id: `mech-${Date.now()}`,
         name: formData.name,
@@ -94,11 +95,13 @@ export default function MechRoster({ force, onUpdate }) {
         weight: parseInt(formData.weight, 10) || 0,
         image: formData.image,
         history: formData.history,
+        warchestCost,
         activityLog: [],
       };
 
       const updatedMechs = [...force.mechs, newMech];
-      onUpdate({ mechs: updatedMechs });
+      const currentWarchest = force.currentWarchest - warchestCost;
+      onUpdate({ mechs: updatedMechs, currentWarchest });
     }
 
     setShowDialog(false);
