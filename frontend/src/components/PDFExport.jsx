@@ -373,13 +373,6 @@ const ForcePDF = ({ force }) => {
     });
   };
 
-  // Get the most recent `limit` entries from an activity log
-  const getRecentEntries = (log = [], limit = 2) => {
-    const sorted = sortActivityLog(log || []);
-    if (sorted.length <= limit) return sorted;
-    return sorted.slice(sorted.length - limit);
-  };
-
   const formatActivityLine = (entry) => {
     const date = entry?.timestamp || '';
     const missionLabel = entry?.mission ? ` [${entry.mission}]` : '';
