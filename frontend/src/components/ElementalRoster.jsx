@@ -111,7 +111,6 @@ export default function ElementalRoster({ force, onUpdate }) {
         activityLog: [
           {
             timestamp,
-            inGameDate,
             action: `Purchased elemental point for ${warchestCost} WP`,
             mission: null,
           },
