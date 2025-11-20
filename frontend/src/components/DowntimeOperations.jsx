@@ -499,10 +499,10 @@ export default function DowntimeOperations({ force, onUpdate }) {
                 onClick={performOtherAction}
                 disabled={
                   !otherActionData.description ||
-                  otherActionData.cost <= 0 ||
+                  otherActionData.cost < 0 ||
                   otherActionData.cost > force.currentWarchest
                 }
-              >
+             >
                 Perform Action ({otherActionData.cost} WP)
               </Button>
             </div>
