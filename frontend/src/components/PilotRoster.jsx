@@ -73,6 +73,7 @@ export default function PilotRoster({ force, onUpdate }) {
       onUpdate({ pilots: updatedPilots, currentWarchest });
     } else {
       // Add new pilot
+      const warchestCost = parseInt(formData.warchestCost, 10) || 0;
       const newPilot = {
         id: `pilot-${Date.now()}`,
         name: formData.name,
@@ -80,11 +81,13 @@ export default function PilotRoster({ force, onUpdate }) {
         piloting: parseInt(formData.piloting, 10) || 5,
         injuries: 0,
         history: formData.history,
+        warchestCost,
         activityLog: [],
       };
 
       const updatedPilots = [...force.pilots, newPilot];
-      onUpdate({ pilots: updatedPilots });
+      const currentWarchest = force.currentWarchest - warchestCost;
+      onUpdate({ pilots: updatedPilots, currentWarchest });
     }
 
     setShowDialog(false);
