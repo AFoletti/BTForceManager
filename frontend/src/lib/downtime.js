@@ -109,7 +109,7 @@ export function applyMechDowntimeAction(
  */
 export function applyElementalDowntimeAction(
   force,
-  { elementalId, actionId, action, cost, timestamp, lastMissionName },
+  { elementalId, actionId, action, cost, timestamp, lastMissionName, inGameDate },
 ) {
   const elementals = (force.elementals || []).map((elemental) => {
     if (elemental.id !== elementalId) return elemental;
