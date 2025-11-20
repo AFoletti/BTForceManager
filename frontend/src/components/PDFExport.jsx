@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   activityDate: {
-    width: '25%',
+    width: '24%',
     fontSize: 8,
     color: '#6B7280',
   },
