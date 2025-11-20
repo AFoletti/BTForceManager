@@ -499,6 +499,23 @@ const ForcePDF = ({ force }) => {
           pilots.map((pilot) => {
             const assignedMech = findMechForPilot(force, pilot);
 
+        {/* Force Image */}
+        {force.image && (
+          <View style={{ marginTop: 12, marginBottom: 4, alignItems: 'flex-start' }}>
+            <Image
+              src={force.image}
+              style={{
+                maxWidth: 180,
+                maxHeight: 90,
+                objectFit: 'contain',
+                borderRadius: 4,
+                border: '1 solid #D1D5DB',
+              }}
+            />
+          </View>
+        )}
+
+
             return (
               <View key={pilot.id} style={styles.unitCard} wrap={false}>
                 <View style={styles.unitHeader}>
