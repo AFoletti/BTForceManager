@@ -94,8 +94,7 @@ export default function ElementalRoster({ force, onUpdate }) {
     } else {
       // Add new elemental
       const warchestCost = parseInt(formData.warchestCost) || 0;
-      const timestamp = new Date().toISOString();
-      const inGameDate = force.currentDate;
+      const timestamp = force.currentDate;
       const newElemental = {
         id: `elemental-${Date.now()}`,
         name: formData.name,
