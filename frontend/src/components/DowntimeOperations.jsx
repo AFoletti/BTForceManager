@@ -123,10 +123,6 @@ export default function DowntimeOperations({ force, onUpdate }) {
     setSelectedUnitId('');
     setSelectedAction('');
   };
-    const inGameDate = otherActionData.inGameDate && otherActionData.inGameDate.trim() !== ''
-      ? otherActionData.inGameDate
-      : undefined;
-
 
   const performOtherAction = () => {
     if (!otherActionData.description || otherActionData.cost <= 0) return;
