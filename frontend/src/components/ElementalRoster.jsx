@@ -93,6 +93,7 @@ export default function ElementalRoster({ force, onUpdate }) {
       onUpdate({ elementals: updatedElementals, currentWarchest });
     } else {
       // Add new elemental
+      const warchestCost = parseInt(formData.warchestCost) || 0;
       const newElemental = {
         id: `elemental-${Date.now()}`,
         name: formData.name,
@@ -105,11 +106,13 @@ export default function ElementalRoster({ force, onUpdate }) {
         status: formData.status,
         image: formData.image,
         history: formData.history,
+        warchestCost,
         activityLog: []
       };
 
       const updatedElementals = [...(force.elementals || []), newElemental];
-      onUpdate({ elementals: updatedElementals });
+      const currentWarchest = force.currentWarchest - warchestCost;
+      onUpdate({ elementals: updatedElementals, currentWarchest });
     }
 
     setShowDialog(false);
