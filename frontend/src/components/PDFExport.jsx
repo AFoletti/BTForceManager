@@ -570,33 +570,7 @@ const ForcePDF = ({ force }) => {
           <Text style={styles.missionText}>No missions recorded for this force.</Text>
         )}
 
-        {/* Other Actions History */}
-        <Text style={styles.sectionHeader} break>
-          █ OTHER ACTIONS HISTORY
-        </Text>
-        {otherActionsLog.length > 0 ? (
-          otherActionsLog
-            .slice()
-            .sort((a, b) => {
-              // oldest first
-              const da = new Date(a.timestamp || 0).getTime();
-              const db = new Date(b.timestamp || 0).getTime();
-              return da - db;
-            })
-            .map((entry, idx) => (
-              <View key={idx} style={styles.missionCard} wrap={false}>
-                <Text style={styles.missionMeta}>
-                  {force.currentDate}
-                </Text>
-                <Text style={styles.missionText}>{entry.description}</Text>
-                <Text style={styles.missionMeta}>
-                  Cost: -{formatNumber(entry.cost || 0)} WP
-                </Text>
-              </View>
-            ))
-        ) : (
-          <Text style={styles.missionText}>No other downtime actions recorded.</Text>
-        )}
+        {/* Other Actions History removed: other downtime actions are now logged directly on units */}
 
         {/* Page Number */}
         <Text
