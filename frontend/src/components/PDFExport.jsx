@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   forceTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 6,
+    color: '#111827',
+    marginBottom: 4,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
   },
