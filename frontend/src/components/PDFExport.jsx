@@ -565,7 +565,9 @@ const ForcePDF = ({ force }) => {
             })
             .map((entry, idx) => (
               <View key={idx} style={styles.missionCard} wrap={false}>
-                <Text style={styles.missionMeta}>{formatDateTime(entry.timestamp)}</Text>
+                <Text style={styles.missionMeta}>
+                  {entry.inGameDate ? `${entry.inGameDate}` : formatDateTime(entry.timestamp)}
+                </Text>
                 <Text style={styles.missionText}>{entry.description}</Text>
                 <Text style={styles.missionMeta}>
                   Cost: -{formatNumber(entry.cost || 0)} WP
