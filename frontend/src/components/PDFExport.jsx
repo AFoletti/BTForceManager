@@ -386,7 +386,7 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionSectionTitle}>Activity Log:</Text>
                   {elemental.activityLog.map((entry, idx) => (
                     <Text key={idx} style={styles.missionText}>
-                      {formatDateTime(entry.timestamp)} – {entry.action}
+                      {entry.inGameDate ? `${entry.inGameDate}` : formatDateTime(entry.timestamp)} – {entry.action}
                       {entry.mission ? ` [${entry.mission}]` : ''}
                     </Text>
                   ))}
