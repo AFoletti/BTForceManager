@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer';
 import { Button } from './ui/button';
 import {
   calculateMissionTotalBV,
@@ -25,6 +25,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
     fontSize: 10,
     backgroundColor: '#FFFFFF',
+  },
+  // Sci-fi frame and accents
+  pageBackground: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    bottom: 20,
+    border: '1.5 solid #E5E7EB',
+  },
+  pageCornerAccent: {
+    position: 'absolute',
+    width: 40,
+    height: 4,
+    backgroundColor: '#111827',
   },
   // Cover/Header Section
   coverSection: {
@@ -443,6 +458,7 @@ const ForcePDF = ({ force }) => {
   const totalSpent = ledgerEntries.reduce((sum, e) => sum + Math.min(e.cost, 0), 0);
   const totalGained = ledgerEntries.reduce((sum, e) => sum + Math.max(e.gain, 0), 0);
 
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -450,6 +466,13 @@ const ForcePDF = ({ force }) => {
         <View style={styles.coverSection}>
           <Text style={styles.forceTitle}>{force.name}</Text>
           <Text style={styles.forceSubtitle}>
+        {/* Page frame accents for sci-fi look, optimized for white paper */}
+        <View style={styles.pageBackground} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, right: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, right: 20 }]} fixed />
+
             {force.description || 'Elite mercenary unit force report'}
           </Text>
 
@@ -499,6 +522,23 @@ const ForcePDF = ({ force }) => {
           pilots.map((pilot) => {
             const assignedMech = findMechForPilot(force, pilot);
 
+        {/* Force Image */}
+        {force.image && (
+          <View style={{ marginTop: 12, marginBottom: 4, alignItems: 'flex-start' }}>
+            <Image
+              src={force.image}
+              style={{
+                maxWidth: 180,
+                maxHeight: 90,
+                objectFit: 'contain',
+                borderRadius: 4,
+                border: '1 solid #D1D5DB',
+              }}
+            />
+          </View>
+        )}
+
+
             return (
               <View key={pilot.id} style={styles.unitCard} wrap={false}>
                 <View style={styles.unitHeader}>
@@ -523,6 +563,22 @@ const ForcePDF = ({ force }) => {
                     </View>
                   )}
                 </View>
+
+                {pilot.image && (
+                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+                    <Image
+                      src={pilot.image}
+                      style={{
+                        maxWidth: 80,
+                        maxHeight: 80,
+                        objectFit: 'cover',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  </View>
+                )}
+
                 {pilot.history && (
                   <View style={styles.unitHistory}>
                     <Text>{pilot.history}</Text>
@@ -565,6 +621,20 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.unitStatLabel}>Gunnery:</Text>
                   <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
                 </View>
+                {elemental.image && (
+                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+                    <Image
+                      src={elemental.image}
+                      style={{
+                        maxWidth: 80,
+                        maxHeight: 80,
+                        objectFit: 'cover',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  </View>
+                )}
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Antimech:</Text>
                   <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
@@ -628,6 +698,20 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.unitName}>{mech.name}</Text>
                   <Text style={getStatusBadgeStyle(mech.status)}>{mech.status}</Text>
                 </View>
+                {mech.image && (
+                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+                    <Image
+                      src={mech.image}
+                      style={{
+                        maxWidth: 100,
+                        maxHeight: 80,
+                        objectFit: 'contain',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  </View>
+                )}
                 <View style={styles.unitStatsGrid}>
                   <View style={styles.unitStatItem}>
                     <Text style={styles.unitStatLabel}>Pilot:</Text>
