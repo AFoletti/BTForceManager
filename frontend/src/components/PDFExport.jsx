@@ -192,11 +192,11 @@ const styles = StyleSheet.create({
   },
   unitHistory: {
     fontSize: 8,
-    color: '#555',
-    marginTop: 6,
-    padding: 6,
-    backgroundColor: '#F5F5F5',
-    borderLeft: '2 solid #CCC',
+    color: '#374151',
+    marginTop: 5,
+    padding: 5,
+    backgroundColor: '#F9FAFB',
+    borderLeft: '1.5 solid #D1D5DB',
     fontStyle: 'italic',
   },
   // Mission Log
