@@ -701,15 +701,6 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionMeta}>
                     Status: {statusLabel}
                     {missionDate ? ` | Date: ${missionDate}` : ''}
-                    {mission.createdAt
-                      ? ` | Created: ${formatDateTime(mission.createdAt)}`
-                      : ''}
-                    {mission.completedAt
-                      ? ` | Completed: ${formatDateTime(mission.completedAt)}`
-                      : ''}
-                    {mission.updatedAt
-                      ? ` | Updated: ${formatDateTime(mission.updatedAt)}`
-                      : ''}
                   </Text>
                   <Text style={styles.missionMeta}>
                     Cost: {formatNumber(mission.cost || 0)} WP | Gained:{' '}
