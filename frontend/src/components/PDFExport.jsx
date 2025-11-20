@@ -138,6 +138,17 @@ const styles = StyleSheet.create({
   unitBadgeRepairing: {
     backgroundColor: '#3B82F6', // repairing - blue
   },
+  unitContentRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  unitImageWrapper: {
+    width: 80,
+    alignItems: 'flex-start',
+  },
+  unitStatsWrapper: {
+    flex: 1,
+  },
   unitStatsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
