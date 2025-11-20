@@ -74,10 +74,15 @@ export default function MechRoster({ force, onUpdate }) {
               weight: parseInt(formData.weight, 10) || 0,
               image: formData.image,
               history: formData.history,
+              warchestCost: parseInt(formData.warchestCost, 10) || 0,
             }
           : mech,
       );
-      onUpdate({ mechs: updatedMechs });
+      const prevCost = editingMech.warchestCost || 0;
+      const newCost = parseInt(formData.warchestCost, 10) || 0;
+      const delta = newCost - prevCost;
+      const currentWarchest = force.currentWarchest - delta;
+      onUpdate({ mechs: updatedMechs, currentWarchest });
     } else {
       // Add new mech
       const newMech = {
