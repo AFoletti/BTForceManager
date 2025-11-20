@@ -119,6 +119,7 @@ export function applyElementalDowntimeAction(
       timestamp,
       action: `${action.name} performed (${cost} WP)`,
       mission: lastMissionName,
+      cost,
     });
 
     const updates = { activityLog };
