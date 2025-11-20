@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   },
   forceStatBox: {
     padding: 6,
-    backgroundColor: '#F5F5F5',
-    borderLeft: '3 solid #4B5320',
+    backgroundColor: '#F9FAFB',
+    borderLeft: '2 solid #4B5320',
     minWidth: 110,
   },
   forceStatLabel: {
