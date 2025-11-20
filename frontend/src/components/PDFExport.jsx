@@ -620,22 +620,21 @@ const ForcePDF = ({ force }) => {
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Gunnery:</Text>
                   <Text style={styles.unitStatValue}>{elemental.gunnery || 0}</Text>
-              {elemental.image && (
-                <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
-                  <Image
-                    src={elemental.image}
-                    style={{
-                      maxWidth: 80,
-                      maxHeight: 80,
-                      objectFit: 'cover',
-                      borderRadius: 4,
-                      border: '1 solid #9CA3AF',
-                    }}
-                  />
                 </View>
-              )}
-
-                </View>
+                {elemental.image && (
+                  <View style={{ marginBottom: 6, alignItems: 'flex-start' }}>
+                    <Image
+                      src={elemental.image}
+                      style={{
+                        maxWidth: 80,
+                        maxHeight: 80,
+                        objectFit: 'cover',
+                        borderRadius: 4,
+                        border: '1 solid #9CA3AF',
+                      }}
+                    />
+                  </View>
+                )}
                 <View style={styles.unitStatItem}>
                   <Text style={styles.unitStatLabel}>Antimech:</Text>
                   <Text style={styles.unitStatValue}>{elemental.antimech || 0}</Text>
