@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Wrench, Download, Database, Users, Plus, User, Target } from 'lucide-react';
+import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -12,6 +12,7 @@ import DowntimeOperations from './components/DowntimeOperations';
 import DataEditor from './components/DataEditor';
 import AddForceDialog from './components/AddForceDialog';
 import PDFExport from './components/PDFExport';
+import LedgerTab from './components/LedgerTab';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
@@ -85,7 +86,7 @@ export default function App() {
               </div>
               <div>
                 <h1 className="text-xl font-bold tracking-tight">BattleTech Forces Manager</h1>
-                <p className="text-xs text-muted-foreground">Classic Mech & Pilot Management System</p>
+                <p className="text-xs text-muted-foreground">Classic Mech &amp; Pilot Management System</p>
               </div>
             </div>
 
@@ -143,25 +144,17 @@ export default function App() {
                     <span className="text-muted-foreground">Current Date (in-universe):</span>
                     <input
                       type="text"
+                      data-testid="current-date-input"
                       className="ml-2 px-2 py-1 rounded border border-border bg-background font-mono text-xs w-32"
                       value={selectedForce.currentDate || ''}
                       onChange={(e) => {
                         const value = e.target.value;
-                        if (value === '') {
-                          updateForceData({ currentDate: '' });
-                          return;
-                        }
-                        const isValidFormat = /^\d{4}-\d{2}-\d{2}$/.test(value);
-                        if (!isValidFormat) {
+                        if (!value) {
+                          // Do not allow deleting the date entirely; fall back to default.
+                          updateForceData({ currentDate: '3025-01-01' });
+                        } else {
                           updateForceData({ currentDate: value });
-                          return;
                         }
-                        const year = Number(value.slice(0, 4));
-                        if (year < 2400 || year > 3500) {
-                          updateForceData({ currentDate: value });
-                          return;
-                        }
-                        updateForceData({ currentDate: value });
                       }}
                       placeholder="3025-01-01"
                     />
@@ -202,7 +195,7 @@ export default function App() {
       <main className="container mx-auto px-4 py-8">
         {selectedForce ? (
           <Tabs defaultValue="mechs" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6 lg:w-auto">
+            <TabsList className="grid w-full grid-cols-7 lg:w-auto">
               <TabsTrigger value="mechs">
                 <Shield className="w-4 h-4" />
                 Mechs
@@ -222,6 +215,10 @@ export default function App() {
               <TabsTrigger value="downtime">
                 <Wrench className="w-4 h-4" />
                 Downtime
+              </TabsTrigger>
+              <TabsTrigger value="ledger">
+                <List className="w-4 h-4" />
+                Ledger
               </TabsTrigger>
               <TabsTrigger value="data">
                 <Database className="w-4 h-4" />
@@ -247,6 +244,10 @@ export default function App() {
 
             <TabsContent value="downtime">
               <DowntimeOperations force={selectedForce} onUpdate={updateForceData} />
+            </TabsContent>
+
+            <TabsContent value="ledger">
+              <LedgerTab force={selectedForce} />
             </TabsContent>
 
             <TabsContent value="data">
