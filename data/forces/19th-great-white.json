@@ -4,7 +4,7 @@
   "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
   "image": "https://i.ibb.co/HfkcQWkg/CDSharks.gif",
   "startingWarchest": 2000,
-  "currentWarchest": 1652,
+  "currentWarchest": 1352,
   "wpMultiplier": 5,
   "mechs": [
     {
@@ -760,7 +760,7 @@
     },
     {
       "name": "M02 - Pursuit: the Shark is hunted",
-      "cost": 0,
+      "cost": 300,
       "description": "After the disaster at the supply depot, ComStar jumped on some scouting elements of my Trinary.\nOnce again in overwhelming numbers, they however have a hard time keeping up with our superior speed and mobility.\n\nI hate to see Trueborn warriors run from a fight, but I learned something from last battle... there is little sense in accepting to fight three or four against one.\nSo I ordered my warriors to regroup. An I will fight in the rearguard, making ComStar pay!",
       "objectives": "- Escape: at least 50% of our force exits the zone of engagement [300]\n- We were never here: at least 75% of our force exits the zone of engagement [100]",
       "recap": "",
