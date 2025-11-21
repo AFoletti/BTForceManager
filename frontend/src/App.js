@@ -85,7 +85,7 @@ export default function App() {
               </div>
               <div>
                 <h1 className="text-xl font-bold tracking-tight">BattleTech Forces Manager</h1>
-                <p className="text-xs text-muted-foreground">Classic Mech & Pilot Management System</p>
+                <p className="text-xs text-muted-foreground">Classic Mech &amp; Pilot Management System</p>
               </div>
             </div>
 
@@ -143,25 +143,17 @@ export default function App() {
                     <span className="text-muted-foreground">Current Date (in-universe):</span>
                     <input
                       type="text"
+                      data-testid="current-date-input"
                       className="ml-2 px-2 py-1 rounded border border-border bg-background font-mono text-xs w-32"
                       value={selectedForce.currentDate || ''}
                       onChange={(e) => {
                         const value = e.target.value;
-                        if (value === '') {
-                          updateForceData({ currentDate: '' });
-                          return;
-                        }
-                        const isValidFormat = /^\d{4}-\d{2}-\d{2}$/.test(value);
-                        if (!isValidFormat) {
+                        if (!value) {
+                          // Do not allow deleting the date entirely; fall back to default.
+                          updateForceData({ currentDate: '3025-01-01' });
+                        } else {
                           updateForceData({ currentDate: value });
-                          return;
                         }
-                        const year = Number(value.slice(0, 4));
-                        if (year < 2400 || year > 3500) {
-                          updateForceData({ currentDate: value });
-                          return;
-                        }
-                        updateForceData({ currentDate: value });
                       }}
                       placeholder="3025-01-01"
                     />
