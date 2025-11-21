@@ -3,6 +3,7 @@
 // activity logs into a single, chronologically ordered list.
 
 import { formatNumber } from './utils';
+import { getMissionObjectiveReward } from './missions';
 
 /**
  * Build a flattened, chronologically ordered warchest ledger from a force.
@@ -10,7 +11,7 @@ import { formatNumber } from './utils';
  * Each entry has the shape:
  *   {
  *     timestamp: string,
- *     sourceType: 'Mech' | 'Elemental' | 'Pilot' | 'Mission',
+ *     sourceType: 'Mech' | 'Elemental' | 'Pilot' | 'Mission' | 'Objective',
  *     unitName: string,
  *     description: string,
  *     cost: number,   // negative for spent, 0 otherwise
@@ -104,7 +105,7 @@ export function buildLedgerEntries(force) {
     });
   });
 
-  // Mission costs and gains
+  // Mission costs and objective gains
   missions.forEach((mission) => {
     const missionTimestamp =
       mission.inGameDate || mission.completedAt || mission.createdAt || force.currentDate;
@@ -120,14 +121,21 @@ export function buildLedgerEntries(force) {
       });
     }
 
-    const gain = mission.warchestGained || 0;
-    if (gain !== 0) {
-      pushGain({
-        timestamp: missionTimestamp,
-        sourceType: 'Mission',
-        unitName: mission.name || 'Mission',
-        description: 'Warchest points earned',
-        gain,
+    if (Array.isArray(mission.objectives)) {
+      mission.objectives.forEach((objective) => {
+        if (!objective || !objective.achieved) return;
+        const reward =
+          typeof objective.wpReward === 'number' && objective.wpReward > 0
+            ? objective.wpReward
+            : 0;
+        if (reward <= 0) return;
+        pushGain({
+          timestamp: missionTimestamp,
+          sourceType: 'Objective',
+          unitName: mission.name || 'Mission',
+          description: objective.title || 'Objective',
+          gain: reward,
+        });
       });
     }
   });

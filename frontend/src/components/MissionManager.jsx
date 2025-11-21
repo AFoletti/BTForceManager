@@ -15,6 +15,7 @@ import {
   applyMissionCompletion,
   isMechAvailableForMission,
   isElementalAvailableForMission,
+  getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
 
@@ -36,40 +37,59 @@ function getUnitStatusVariant(status) {
   }
 }
 
+const emptyMissionForm = {
+  name: '',
+  cost: 0,
+  description: '',
+  objectives: [],
+  recap: '',
+  completed: false,
+  assignedMechs: [],
+  assignedElementals: [],
+};
+
 export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    cost: 0,
-    description: '',
-    objectives: '',
-    recap: '',
-    warchestGained: 0,
-    completed: false,
-    assignedMechs: [],
-    assignedElementals: [],
-  });
+  const [formData, setFormData] = useState(emptyMissionForm);
+
+  const [showCompleteDialog, setShowCompleteDialog] = useState(false);
+  const [missionBeingCompleted, setMissionBeingCompleted] = useState(null);
+  const [completionObjectives, setCompletionObjectives] = useState([]);
+  const [completionRecap, setCompletionRecap] = useState('');
+
+  const normaliseObjectives = (rawObjectives) => {
+    if (Array.isArray(rawObjectives)) return rawObjectives;
+    if (typeof rawObjectives === 'string' && rawObjectives.trim().length > 0) {
+      return [
+        {
+          id: `obj-${Date.now()}`,
+          title: 'Objectives',
+          description: rawObjectives.trim(),
+          wpReward: 0,
+          achieved: false,
+        },
+      ];
+    }
+    return [];
+  };
 
   const openDialog = (mission = null) => {
     if (mission) {
       setEditingMission(mission);
       setFormData({
-        ...mission,
+        name: mission.name || '',
+        cost: mission.cost || 0,
+        description: mission.description || '',
+        objectives: normaliseObjectives(mission.objectives),
+        recap: mission.recap || '',
+        completed: mission.completed || false,
+        assignedMechs: mission.assignedMechs || [],
+        assignedElementals: mission.assignedElementals || [],
       });
     } else {
       setEditingMission(null);
-      setFormData({
-        name: '',
-        cost: 0,
-        description: '',
-        objectives: '',
-        recap: '',
-        warchestGained: 0,
-        completed: false,
-        assignedMechs: [],
-        assignedElementals: [],
-      });
+      setFormData(emptyMissionForm);
     }
     setShowDialog(true);
   };
@@ -92,29 +112,127 @@ export default function MissionManager({ force, onUpdate }) {
     }));
   };
 
+  const updateObjectiveField = (index, field, value) => {
+    setFormData((prev) => {
+      const objectives = [...(prev.objectives || [])];
+      const target = objectives[index] || {
+        id: `obj-${Date.now()}-${index}`,
+        title: '',
+        description: '',
+        wpReward: 0,
+        achieved: false,
+      };
+      const updated = {
+        ...target,
+        [field]: field === 'wpReward' ? Math.max(0, parseInt(value, 10) || 0) : value,
+      };
+      objectives[index] = updated;
+      return { ...prev, objectives };
+    });
+  };
+
+  const addObjective = () => {
+    setFormData((prev) => ({
+      ...prev,
+      objectives: [
+        ...(prev.objectives || []),
+        {
+          id: `obj-${Date.now()}-${(prev.objectives || []).length}`,
+          title: '',
+          description: '',
+          wpReward: 0,
+          achieved: false,
+        },
+      ],
+    }));
+  };
+
+  const removeObjective = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      objectives: (prev.objectives || []).filter((_, i) => i !== index),
+    }));
+  };
+
   const saveMission = () => {
     const timestamp = force.currentDate;
 
+    const cleanObjectives = (formData.objectives || []).map((obj) => ({
+      ...obj,
+      wpReward:
+        typeof obj.wpReward === 'number' && obj.wpReward > 0
+          ? Math.floor(obj.wpReward)
+          : 0,
+      achieved: Boolean(obj.achieved),
+    }));
+
+    const payload = {
+      ...formData,
+      objectives: cleanObjectives,
+    };
+
     if (editingMission) {
-      const missions = applyMissionUpdate(
-        force.missions || [],
-        editingMission.id,
-        formData,
-        timestamp,
-      );
+      const missions = applyMissionUpdate(force.missions || [], editingMission.id, payload, timestamp);
       onUpdate({ missions });
       setShowDialog(false);
       return;
     }
 
-    const result = applyMissionCreation(force, formData, timestamp);
+    const result = applyMissionCreation(force, payload, timestamp);
     onUpdate(result);
     setShowDialog(false);
   };
 
-  const handleCompleteMission = (missionId) => {
-    const result = applyMissionCompletion(force, missionId);
+  const openCompleteDialog = (mission) => {
+    const objectives = normaliseObjectives(mission.objectives).map((obj) => ({
+      ...obj,
+      wpReward:
+        typeof obj.wpReward === 'number' && obj.wpReward > 0
+          ? Math.floor(obj.wpReward)
+          : 0,
+      achieved: Boolean(obj.achieved),
+    }));
+
+    setMissionBeingCompleted(mission);
+    setCompletionObjectives(objectives);
+    setCompletionRecap(mission.recap || '');
+    setShowCompleteDialog(true);
+  };
+
+  const toggleCompletionObjective = (index) => {
+    setCompletionObjectives((prev) =>
+      prev.map((obj, i) => (i === index ? { ...obj, achieved: !obj.achieved } : obj)),
+    );
+  };
+
+  const confirmCompleteMission = () => {
+    if (!missionBeingCompleted) return;
+    const timestamp = force.currentDate;
+
+    const updatedObjectives = completionObjectives.map((obj) => ({
+      ...obj,
+      wpReward:
+        typeof obj.wpReward === 'number' && obj.wpReward > 0
+          ? Math.floor(obj.wpReward)
+          : 0,
+      achieved: Boolean(obj.achieved),
+    }));
+
+    const completionData = {
+      objectives: updatedObjectives,
+      recap: completionRecap,
+    };
+
+    const result = applyMissionCompletion(
+      force,
+      missionBeingCompleted.id,
+      completionData,
+      timestamp,
+    );
+
     onUpdate(result);
+    setShowCompleteDialog(false);
+    setMissionBeingCompleted(null);
   };
 
   return (
@@ -140,125 +258,145 @@ export default function MissionManager({ force, onUpdate }) {
               <p>No missions yet. Create your first mission to get started.</p>
             </div>
           ) : (
-            force.missions.map((mission) => (
-              <div key={mission.id} className="border border-border rounded-lg p-4 bg-muted/20">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-semibold text-lg">{mission.name}</h4>
-                      {mission.completed ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-600 text-white rounded text-xs font-medium uppercase">
-                          <CheckCircle2 className="w-3 h-3" />
-                          Complete
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-600 text-white rounded text-xs font-medium uppercase">
-                          <AlertCircle className="w-3 h-3" />
-                          Active
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{mission.description}</p>
-                    {mission.objectives && (
-                      <div className="text-sm">
-                        <span className="font-medium">Objectives:</span>
-                        <p className="text-muted-foreground">{mission.objectives}</p>
-                      </div>
-                    )}
+            force.missions.map((mission) => {
+              const reward = getMissionObjectiveReward(mission);
 
-                    {/* Assigned Mechs */}
-                    {mission.assignedMechs && mission.assignedMechs.length > 0 && (
-                      <div className="mt-3 p-3 bg-background/50 rounded border border-border">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <Shield className="w-4 h-4 text-primary" />
-                            <span className="font-medium text-sm">Assigned Force</span>
-                          </div>
-                          <div className="text-sm">
-                            <span className="text-muted-foreground">Total BV:</span>
-                            <span className="ml-2 font-mono font-bold text-primary">
-                              {formatNumber(
-                                calculateMissionTotalBV(
-                                  force,
-                                  mission.assignedMechs,
-                                  mission.assignedElementals || [],
-                                ),
-                              )}
-                            </span>
-                          </div>
+              return (
+                <div key={mission.id} className="border border-border rounded-lg p-4 bg-muted/20">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-semibold text-lg">{mission.name}</h4>
+                        {mission.completed ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-600 text-white rounded text-xs font-medium uppercase">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Complete
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-600 text-white rounded text-xs font-medium uppercase">
+                            <AlertCircle className="w-3 h-3" />
+                            Active
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-2">{mission.description}</p>
+
+                      {Array.isArray(mission.objectives) && mission.objectives.length > 0 && (
+                        <div className="mt-2 text-sm">
+                          <span className="font-medium">Objectives:</span>
+                          <ul className="mt-1 space-y-1 text-muted-foreground">
+                            {mission.objectives.map((obj) => (
+                              <li key={obj.id} className="flex items-center gap-2 text-xs">
+                                <span>{obj.achieved ? '☑' : '☐'}</span>
+                                <span>
+                                  {obj.title || 'Objective'}
+                                  {obj.wpReward > 0 && (
+                                    <span className="ml-1 text-emerald-400 font-mono">
+                                      (+{formatNumber(obj.wpReward)} WP)
+                                    </span>
+                                  )}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <div className="space-y-2">
-                          {mission.assignedMechs.length > 0 && (
-                            <div>
-                              <div className="text-xs text-muted-foreground mb-1">Mechs:</div>
-                              <div className="flex flex-wrap gap-2">
-                                {getAssignedMechs(force, mission.assignedMechs).map((mech) => (
-                                  <Badge key={mech.id} variant="secondary" className="text-xs">
-                                    {mech.name} ({formatNumber(mech.bv)} BV)
-                                  </Badge>
-                                ))}
-                              </div>
+                      )}
+
+                      {/* Assigned Mechs */}
+                      {mission.assignedMechs && mission.assignedMechs.length > 0 && (
+                        <div className="mt-3 p-3 bg-background/50 rounded border border-border">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Shield className="w-4 h-4 text-primary" />
+                              <span className="font-medium text-sm">Assigned Force</span>
                             </div>
-                          )}
-                          {mission.assignedElementals && mission.assignedElementals.length > 0 && (
-                            <div>
-                              <div className="text-xs text-muted-foreground mb-1">Elementals:</div>
-                              <div className="flex flex-wrap gap-2">
-                                {getAssignedElementals(force, mission.assignedElementals).map(
-                                  (elemental) => (
-                                    <Badge key={elemental.id} variant="secondary" className="text-xs">
-                                      {elemental.name} ({formatNumber(elemental.bv)} BV)
-                                    </Badge>
+                            <div className="text-sm">
+                              <span className="text-muted-foreground">Total BV:</span>
+                              <span className="ml-2 font-mono font-bold text-primary">
+                                {formatNumber(
+                                  calculateMissionTotalBV(
+                                    force,
+                                    mission.assignedMechs,
+                                    mission.assignedElementals || [],
                                   ),
                                 )}
-                              </div>
+                              </span>
                             </div>
-                          )}
+                          </div>
+                          <div className="space-y-2">
+                            {mission.assignedMechs.length > 0 && (
+                              <div>
+                                <div className="text-xs text-muted-foreground mb-1">Mechs:</div>
+                                <div className="flex flex-wrap gap-2">
+                                  {getAssignedMechs(force, mission.assignedMechs).map((mech) => (
+                                    <Badge key={mech.id} variant="secondary" className="text-xs">
+                                      {mech.name} ({formatNumber(mech.bv)} BV)
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {mission.assignedElementals && mission.assignedElementals.length > 0 && (
+                              <div>
+                                <div className="text-xs text-muted-foreground mb-1">Elementals:</div>
+                                <div className="flex flex-wrap gap-2">
+                                  {getAssignedElementals(force, mission.assignedElementals).map(
+                                    (elemental) => (
+                                      <Badge key={elemental.id} variant="secondary" className="text-xs">
+                                        {elemental.name} ({formatNumber(elemental.bv)} BV)
+                                      </Badge>
+                                    ),
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {mission.recap && (
-                      <div className="text-sm mt-2 p-3 bg-background/50 rounded">
-                        <span className="font-medium">Mission Recap:</span>
-                        <p className="text-muted-foreground mt-1">{mission.recap}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between pt-3 border-t border-border">
-                  <div className="flex gap-4 text-sm">
-                    <span>
-                      <span className="text-muted-foreground">Cost:</span>
-                      <span className="ml-1 font-mono text-destructive">-{mission.cost} WP</span>
-                    </span>
-                    <span>
-                      <span className="text-muted-foreground">Gained:</span>
-                      <span className="ml-1 font-mono text-green-400">+{mission.warchestGained} WP</span>
-                    </span>
-                    <span className="text-muted-foreground text-xs">
-                      {formatDate(mission.createdAt)}
-                    </span>
+                      {mission.recap && (
+                        <div className="text-sm mt-2 p-3 bg-background/50 rounded">
+                          <span className="font-medium">Mission Recap:</span>
+                          <p className="text-muted-foreground mt-1">{mission.recap}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => openDialog(mission)}>
-                      Edit
-                    </Button>
-                    {!mission.completed && (
-                      <Button size="sm" onClick={() => handleCompleteMission(mission.id)}>
-                        Complete
+                  <div className="flex items-center justify-between pt-3 border-t border-border">
+                    <div className="flex gap-4 text-sm">
+                      <span>
+                        <span className="text-muted-foreground">Cost:</span>
+                        <span className="ml-1 font-mono text-destructive">-{mission.cost} WP</span>
+                      </span>
+                      <span>
+                        <span className="text-muted-foreground">Gained:</span>
+                        <span className="ml-1 font-mono text-green-400">+{reward} WP</span>
+                      </span>
+                      <span className="text-muted-foreground text-xs">
+                        {formatDate(mission.createdAt)}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => openDialog(mission)}>
+                        Edit
                       </Button>
-                    )}
+                      {!mission.completed && (
+                        <Button size="sm" onClick={() => openCompleteDialog(mission)}>
+                          Complete
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
 
+      {/* Mission create/edit dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent onClose={() => setShowDialog(false)} className="max-w-5xl">
           <DialogHeader>
@@ -285,20 +423,6 @@ export default function MissionManager({ force, onUpdate }) {
                     setFormData({
                       ...formData,
                       cost: parseInt(e.target.value, 10) || 0,
-                    })
-                  }
-                  placeholder="0"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Warchest Gained</label>
-                <Input
-                  type="number"
-                  value={formData.warchestGained}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      warchestGained: parseInt(e.target.value, 10) || 0,
                     })
                   }
                   placeholder="0"
@@ -493,26 +617,62 @@ export default function MissionManager({ force, onUpdate }) {
               />
             </div>
 
+            {/* Structured objectives */}
             <div>
-              <label className="block text-sm font-medium mb-2">Objectives</label>
-              <Textarea
-                value={formData.objectives}
-                onChange={(e) => setFormData({ ...formData, objectives: e.target.value })}
-                placeholder="List mission objectives..."
-                rows={3}
-              />
-            </div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium">Objectives</label>
+                <Button size="xs" variant="outline" onClick={addObjective}>
+                  Add Objective
+                </Button>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Mission Recap (after completion)
-              </label>
-              <Textarea
-                value={formData.recap}
-                onChange={(e) => setFormData({ ...formData, recap: e.target.value })}
-                placeholder="What happened during the mission..."
-                rows={3}
-              />
+              {(formData.objectives || []).length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  No objectives yet. Add at least one to define how this mission awards Warchest
+                  points when completed.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {formData.objectives.map((obj, index) => (
+                    <div
+                      key={obj.id || `obj-${index}`}
+                      className="border border-border rounded p-3 bg-muted/10 space-y-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Input
+                          className="flex-1"
+                          value={obj.title || ''}
+                          onChange={(e) => updateObjectiveField(index, 'title', e.target.value)}
+                          placeholder="Objective title (e.g., Hold Kozice bridges)"
+                        />
+                        <Input
+                          type="number"
+                          className="w-24"
+                          value={obj.wpReward || 0}
+                          onChange={(e) => updateObjectiveField(index, 'wpReward', e.target.value)}
+                          min={0}
+                        />
+                        <span className="text-xs text-muted-foreground">WP</span>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          onClick={() => removeObjective(index)}
+                        >
+                          ×
+                        </Button>
+                      </div>
+                      <Textarea
+                        value={obj.description || ''}
+                        onChange={(e) =>
+                          updateObjectiveField(index, 'description', e.target.value)
+                        }
+                        placeholder="Optional details for this objective..."
+                        rows={2}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
@@ -524,6 +684,96 @@ export default function MissionManager({ force, onUpdate }) {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mission completion dialog */}
+      <Dialog open={showCompleteDialog} onOpenChange={setShowCompleteDialog}>
+        <DialogContent onClose={() => setShowCompleteDialog(false)} className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              Complete Mission{missionBeingCompleted ? `: ${missionBeingCompleted.name}` : ''}
+            </DialogTitle>
+          </DialogHeader>
+
+          {missionBeingCompleted && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Review Objectives</label>
+                {completionObjectives.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    This mission has no structured objectives. You can still complete it, but no
+                    Warchest reward will be granted.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {completionObjectives.map((obj, index) => (
+                      <label
+                        key={obj.id}
+                        className="flex items-start gap-2 p-2 rounded hover:bg-muted/30 cursor-pointer text-sm"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mt-1"
+                          checked={obj.achieved}
+                          onChange={() => toggleCompletionObjective(index)}
+                        />
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{obj.title || 'Objective'}</span>
+                            {obj.wpReward > 0 && (
+                              <span className="text-xs font-mono text-emerald-400">
+                                +{formatNumber(obj.wpReward)} WP
+                              </span>
+                            )}
+                          </div>
+                          {obj.description && (
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              {obj.description}
+                            </p>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">After Action Report</label>
+                <Textarea
+                  value={completionRecap}
+                  onChange={(e) => setCompletionRecap(e.target.value)}
+                  placeholder="What happened during the mission..."
+                  rows={4}
+                />
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>
+                  Total reward from achieved objectives:{' '}
+                  <span className="font-mono text-emerald-400">
+                    +{formatNumber(
+                      completionObjectives.reduce(
+                        (sum, obj) =>
+                          obj.achieved && obj.wpReward > 0 ? sum + obj.wpReward : sum,
+                        0,
+                      ),
+                    )}{' '}
+                    WP
+                  </span>
+                </span>
+                <span>Current Warchest: {formatNumber(force.currentWarchest)} WP</span>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button variant="outline" onClick={() => setShowCompleteDialog(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={confirmCompleteMission}>Confirm Completion</Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

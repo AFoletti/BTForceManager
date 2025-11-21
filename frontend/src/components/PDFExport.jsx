@@ -5,6 +5,7 @@ import {
   calculateMissionTotalBV,
   getAssignedMechs,
   getAssignedElementals,
+  getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot } from '../lib/mechs';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
@@ -765,6 +766,7 @@ const ForcePDF = ({ force }) => {
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
             const missionDate = mission.createdAt || '';
+            const reward = getMissionObjectiveReward(mission);
 
             return (
               <View key={mission.id} style={styles.missionCard} wrap={false}>
@@ -772,11 +774,11 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
                   <Text style={styles.missionMeta}>
                     Status: {statusLabel}
-                    {missionDate ? ` | Date: {missionDate}` : ''}
+                    {missionDate ? ` | Date: ${missionDate}` : ''}
                   </Text>
                   <Text style={styles.missionMeta}>
                     Cost: {formatNumber(mission.cost || 0)} WP | Gained:{' '}
-                    {formatNumber(mission.warchestGained || 0)} WP | Total BV:{' '}
+                    {formatNumber(reward || 0)} WP | Total BV:{' '}
                     {formatNumber(totalBV || 0)}
                   </Text>
                 </View>
@@ -788,10 +790,16 @@ const ForcePDF = ({ force }) => {
                   </View>
                 )}
 
-                {mission.objectives && (
+                {Array.isArray(mission.objectives) && mission.objectives.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Objectives:</Text>
-                    <Text style={styles.missionText}>{mission.objectives}</Text>
+                    {mission.objectives.map((obj) => (
+                      <Text key={obj.id} style={styles.missionText}>
+                        {obj.achieved ? '[X] ' : '[ ] '}
+                        {obj.title || 'Objective'}
+                        {obj.wpReward > 0 && ` (+${formatNumber(obj.wpReward)} WP)`}
+                      </Text>
+                    ))}
                   </View>
                 )}
 
