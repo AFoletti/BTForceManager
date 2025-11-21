@@ -56,7 +56,7 @@
     {
       "id": "heal-injury",
       "name": "Heal 1 Injury",
-      "formula": "30*wpMultiplier",
+      "formula": "30/wpMultiplier",
       "makesUnavailable": false,
       "description": "Heal one pilot injury (up to maximum health)"
     }
