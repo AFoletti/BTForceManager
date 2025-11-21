@@ -4,7 +4,7 @@
   "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
   "image": "https://i.ibb.co/HfkcQWkg/CDSharks.gif",
   "startingWarchest": 2000,
-  "currentWarchest": 1800,
+  "currentWarchest": 1652,
   "wpMultiplier": 5,
   "mechs": [
     {
@@ -22,6 +22,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
+          "mission": "M02 - Pursuit: the Shark is hunted",
           "cost": 0
         }
       ]
@@ -41,6 +47,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
+          "mission": "M02 - Pursuit: the Shark is hunted",
           "cost": 0
         }
       ]
@@ -103,6 +115,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
+          "mission": "M02 - Pursuit: the Shark is hunted",
           "cost": 0
         }
       ]
@@ -167,7 +185,7 @@
     {
       "id": "mech-1763627370406",
       "name": "Shadow Cat A",
-      "status": "Operational",
+      "status": "Unavailable",
       "pilotId": "pilot-1763626938065",
       "bv": 2930,
       "weight": 45,
@@ -185,6 +203,18 @@
           "timestamp": "3052-05-04",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Internal Structure performed (18 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 18
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Armor performed (9 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 9
         }
       ]
     },
@@ -210,7 +240,7 @@
     {
       "id": "mech-1763627412185",
       "name": "Ryoken B",
-      "status": "Operational",
+      "status": "Destroyed",
       "pilotId": "pilot-1763626930209",
       "bv": 3011,
       "weight": 55,
@@ -253,7 +283,7 @@
     {
       "id": "mech-1763627451425",
       "name": "Summoner A",
-      "status": "Operational",
+      "status": "Unavailable",
       "pilotId": "pilot-1763626966154",
       "bv": 2831,
       "weight": 70,
@@ -271,6 +301,24 @@
           "timestamp": "3052-05-04",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Internal Structure performed (28 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 28
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Armor performed (14 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 14
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Other: Replenish ammo (2 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 2
         }
       ]
     },
@@ -289,6 +337,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
+          "mission": "M02 - Pursuit: the Shark is hunted",
           "cost": 0
         }
       ]
@@ -319,6 +373,12 @@
           "timestamp": "3052-05-04",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Elemental performed (3 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 3
         }
       ]
     },
@@ -331,7 +391,7 @@
       "suitsDestroyed": 0,
       "suitsDamaged": 0,
       "bv": 590,
-      "status": "Operational",
+      "status": "Unavailable",
       "image": "",
       "history": "",
       "warchestCost": 0,
@@ -346,6 +406,12 @@
           "timestamp": "3052-05-04",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley"
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Purchase Elemental performed (50 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 50
         }
       ]
     },
@@ -486,6 +552,12 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 6
         }
       ]
     },
@@ -503,6 +575,24 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 6
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 6
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 6
         }
       ]
     },
@@ -649,9 +739,9 @@
       "cost": 200,
       "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies. I should not even formulate such a thought, but I think we came here unprepared and wrongly configured.\n\nI sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
       "objectives": "- Determine which building are the supply warehouses [100]\n- At least 50% of our forces survive until the end of Turn 10 [100]\n- Destroy or cripple 25% of the defender's force [100]",
-      "recap": "",
+      "recap": "It was a disaster. An embarrassment for our clan. And for ComStar too!\nI studied the ROMs. My warriors perofrmed way below what I am in the right to expect from them, but the level of indecent dezgra tactics used on them is chilling. ComStar ganged up in pairs, threes and even fours to isolated warriors, and pounded them to dust.\nWe barely scratched their paint.\nWe came back with nothing... nothing.\n\nAnd now we have to hurry. Elements of my trinary are chased down.\nI will fight in the rearguard to stop the tide of those swarming rats. They will learn what a Trueborn can do.",
       "warchestGained": 0,
-      "completed": false,
+      "completed": true,
       "assignedMechs": [
         "mech-1763627233012",
         "mech-1763627370406",
@@ -667,8 +757,27 @@
       "id": "mission-1763627587725",
       "createdAt": "3052-05-04",
       "updatedAt": "3052-05-04"
+    },
+    {
+      "name": "M02 - Pursuit: the Shark is hunted",
+      "cost": 0,
+      "description": "After the disaster at the supply depot, ComStar jumped on some scouting elements of my Trinary.\nOnce again in overwhelming numbers, they however have a hard time keeping up with our superior speed and mobility.\n\nI hate to see Trueborn warriors run from a fight, but I learned something from last battle... there is little sense in accepting to fight three or four against one.\nSo I ordered my warriors to regroup. An I will fight in the rearguard, making ComStar pay!",
+      "objectives": "- Escape: at least 50% of our force exits the zone of engagement [300]\n- We were never here: at least 75% of our force exits the zone of engagement [100]",
+      "recap": "",
+      "warchestGained": 0,
+      "completed": false,
+      "assignedMechs": [
+        "mech-1763627170957",
+        "mech-1763627203001",
+        "mech-1763627276791",
+        "mech-1763627467793"
+      ],
+      "assignedElementals": [],
+      "id": "mission-1763698333878",
+      "createdAt": "3052-05-07"
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-04"
+  "currentDate": "3052-05-07",
+  "otherActionsLog": []
 }
