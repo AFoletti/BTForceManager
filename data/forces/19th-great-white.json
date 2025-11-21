@@ -739,6 +739,7 @@
       "name": "M01 - Supply run in the Kozice Valley",
       "cost": 200,
       "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies. I should not even formulate such a thought, but I think we came here unprepared and wrongly configured.\n\nI sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
+      "inGameDate": "3052-05-04",
       "objectives": [
         {
           "id": "obj-m01-1",
