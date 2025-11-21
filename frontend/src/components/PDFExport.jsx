@@ -7,6 +7,7 @@ import {
   getAssignedElementals,
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot } from '../lib/mechs';
+import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 
 // Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
@@ -410,119 +411,13 @@ const ForcePDF = ({ force }) => {
   const missions = force.missions || [];
   const currentDateLabel = force.currentDate;
 
-  // Build a flattened, chronologically ordered warchest ledger
-  const ledgerEntries = [];
-
-  // Helper to push a cost (negative WP) entry
-  const pushCost = ({ timestamp, sourceType, unitName, description, cost }) => {
-    if (!timestamp) return;
-    const safeCost = typeof cost === 'number' && !Number.isNaN(cost) ? cost : 0;
-    ledgerEntries.push({
-      timestamp,
-      sourceType,
-      unitName,
-      description,
-      cost: -Math.abs(safeCost),
-      gain: 0,
-    });
-  };
-
-  // Helper to push a gain (positive WP) entry
-  const pushGain = ({ timestamp, sourceType, unitName, description, gain }) => {
-    if (!timestamp) return;
-    const safeGain = typeof gain === 'number' && !Number.isNaN(gain) ? gain : 0;
-    ledgerEntries.push({
-      timestamp,
-      sourceType,
-      unitName,
-      description,
-      cost: 0,
-      gain: Math.abs(safeGain),
-    });
-  };
-
-  // Mech activity costs
-  mechs.forEach((mech) => {
-    (mech.activityLog || []).forEach((entry) => {
-      if (typeof entry.cost === 'number' && entry.cost !== 0) {
-        pushCost({
-          timestamp: entry.timestamp,
-          sourceType: 'Mech',
-          unitName: mech.name,
-          description: entry.action,
-          cost: entry.cost,
-        });
-      }
-    });
-  });
-
-  // Elemental activity costs
-  elementals.forEach((elemental) => {
-    (elemental.activityLog || []).forEach((entry) => {
-      if (typeof entry.cost === 'number' && entry.cost !== 0) {
-        pushCost({
-          timestamp: entry.timestamp,
-          sourceType: 'Elemental',
-          unitName: elemental.name,
-          description: entry.action,
-          cost: entry.cost,
-        });
-      }
-    });
-  });
-
-  // Pilot activity costs
-  pilots.forEach((pilot) => {
-    (pilot.activityLog || []).forEach((entry) => {
-      if (typeof entry.cost === 'number' && entry.cost !== 0) {
-        pushCost({
-          timestamp: entry.timestamp,
-          sourceType: 'Pilot',
-          unitName: pilot.name,
-          description: entry.action,
-          cost: entry.cost,
-        });
-      }
-    });
-  });
-
-  // Mission costs and gains
-  missions.forEach((mission) => {
-    const missionTimestamp =
-      mission.inGameDate || mission.completedAt || mission.createdAt || force.currentDate;
-
-    const missionCost = mission.cost || 0;
-    if (missionCost !== 0) {
-      pushCost({
-        timestamp: missionTimestamp,
-        sourceType: 'Mission',
-        unitName: mission.name || 'Mission',
-        description: 'Track cost',
-        cost: missionCost,
-      });
-    }
-
-    const gain = mission.warchestGained || 0;
-    if (gain !== 0) {
-      pushGain({
-        timestamp: missionTimestamp,
-        sourceType: 'Mission',
-        unitName: mission.name || 'Mission',
-        description: 'Warchest points earned',
-        gain,
-      });
-    }
-  });
-
-  // Sort ledger by timestamp (YYYY-MM-DD) oldest first
-  ledgerEntries.sort((a, b) => {
-    const ta = a.timestamp || '';
-    const tb = b.timestamp || '';
-    return ta.localeCompare(tb);
-  });
-
-  const totalSpent = ledgerEntries.reduce((sum, e) => sum + Math.min(e.cost, 0), 0);
-  const totalGained = ledgerEntries.reduce((sum, e) => sum + Math.max(e.gain, 0), 0);
+  // Build ledger via shared helper
+  const ledgerEntries = buildLedgerEntries(force);
+  const { totalSpent, totalGained } = summariseLedger(
+    ledgerEntries,
+    currentWarchest,
+    startingWarchest,
+  );
 
   return (
     <Document>
@@ -877,7 +772,7 @@ const ForcePDF = ({ force }) => {
                   <Text style={styles.missionName}>{mission.name || 'Unnamed Mission'}</Text>
                   <Text style={styles.missionMeta}>
                     Status: {statusLabel}
-                    {missionDate ? ` | Date: ${missionDate}` : ''}
+                    {missionDate ? ` | Date: {missionDate}` : ''}
                   </Text>
                   <Text style={styles.missionMeta}>
                     Cost: {formatNumber(mission.cost || 0)} WP | Gained:{' '}
