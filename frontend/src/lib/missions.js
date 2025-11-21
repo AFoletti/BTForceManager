@@ -37,18 +37,28 @@
  */
 
 /**
+ * @typedef {Object} MissionObjective
+ * @property {string} id
+ * @property {string} title
+ * @property {string} [description]
+ * @property {number} wpReward // positive integer
+ * @property {boolean} achieved
+ */
+
+/**
  * @typedef {Object} Mission
  * @property {string} id
  * @property {string} name
  * @property {number} cost
- * @property {number} warchestGained
  * @property {string} [description]
- * @property {string} [objectives]
+ * @property {MissionObjective[]} [objectives]
  * @property {string} [recap]
  * @property {boolean} [completed]
  * @property {string[]} [assignedMechs]
  * @property {string[]} [assignedElementals]
  * @property {string} [createdAt]
+ * @property {string} [inGameDate]
+ * @property {string} [completedAt]
  */
 
 /**
@@ -66,7 +76,6 @@
  * @property {Mission[]} [missions]
  * @property {Array<Object>} [otherActionsLog]
  */
-
 
 import { findPilotForMech } from './mechs';
 
@@ -172,14 +181,30 @@ export function getAssignedElementals(force, elementalIds = []) {
 }
 
 /**
+ * Sum all achieved objective rewards for a mission.
+ *
+ * @param {Mission} mission
+ * @returns {number}
+ */
+export function getMissionObjectiveReward(mission) {
+  if (!mission || !Array.isArray(mission.objectives)) return 0;
+  return mission.objectives.reduce((sum, obj) => {
+    if (!obj || !obj.achieved) return sum;
+    const reward = typeof obj.wpReward === 'number' && obj.wpReward > 0 ? obj.wpReward : 0;
+    return sum + reward;
+  }, 0);
+}
+
+/**
  * Create a new mission and update mechs, elementals, pilots and warchest
  * according to the current form data.
  *
- * Mirrors the behaviour previously implemented inline in MissionManager.
+ * On creation, the mission cost is immediately subtracted from the Warchest
+ * and a corresponding ledger entry will be emitted.
  *
  * @param {Force} force
  * @param {Mission} formData
- * @param {string} timestamp ISO timestamp string
+ * @param {string} timestamp ISO timestamp string (in-universe date)
  * @returns {{ missions: Mission[], mechs: Mech[], elementals: Elemental[], pilots: Pilot[], currentWarchest: number }}
  */
 export function applyMissionCreation(force, formData, timestamp) {
@@ -189,6 +214,8 @@ export function applyMissionCreation(force, formData, timestamp) {
     ...formData,
     id: `mission-${Date.now()}`,
     createdAt: timestamp,
+    inGameDate: timestamp,
+    completed: false,
   };
   missions.push(newMission);
 
@@ -242,7 +269,8 @@ export function applyMissionCreation(force, formData, timestamp) {
     return pilot;
   });
 
-  const currentWarchest = force.currentWarchest - formData.cost;
+  const missionCost = typeof formData.cost === 'number' ? formData.cost : 0;
+  const currentWarchest = force.currentWarchest - missionCost;
 
   return {
     missions,
@@ -275,26 +303,34 @@ export function applyMissionUpdate(missions, missionId, formData, timestamp) {
 }
 
 /**
- * Mark a mission as completed and update the force warchest accordingly.
+ * Mark a mission as completed, set its completedAt date, update objectives and
+ * update the force warchest based on achieved objectives.
  *
  * @param {Force} force
  * @param {string} missionId
- * @param {string} [timestamp] Optional ISO timestamp; defaults to now.
+ * @param {{ objectives?: MissionObjective[], recap?: string }} completionData
+ * @param {string} timestamp ISO timestamp (in-universe date)
  * @returns {{ missions: Mission[], currentWarchest: number }}
  */
-export function applyMissionCompletion(force, missionId, timestamp) {
-  const missions = force.missions.map((mission) => {
-    if (mission.id === missionId && !mission.completed) {
-      return {
-        ...mission,
-        completed: true,
-      };
-    }
-    return mission;
+export function applyMissionCompletion(force, missionId, completionData, timestamp) {
+  let reward = 0;
+
+  const missions = (force.missions || []).map((mission) => {
+    if (mission.id !== missionId) return mission;
+
+    const updatedMission = {
+      ...mission,
+      ...completionData,
+      id: mission.id,
+      completed: true,
+      completedAt: timestamp,
+    };
+
+    reward = getMissionObjectiveReward(updatedMission);
+    return updatedMission;
   });
 
-  const mission = force.missions.find((m) => m.id === missionId);
-  const currentWarchest = force.currentWarchest + (mission?.warchestGained || 0);
+  const currentWarchest = force.currentWarchest + reward;
 
   return { missions, currentWarchest };
 }
