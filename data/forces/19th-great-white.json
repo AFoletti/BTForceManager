@@ -735,12 +735,34 @@
   ],
   "missions": [
     {
+      "id": "mission-1763627587725",
       "name": "M01 - Supply run in the Kozice Valley",
       "cost": 200,
       "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies. I should not even formulate such a thought, but I think we came here unprepared and wrongly configured.\n\nI sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
-      "objectives": "- Determine which building are the supply warehouses [100]\n- At least 50% of our forces survive until the end of Turn 10 [100]\n- Destroy or cripple 25% of the defender's force [100]",
+      "objectives": [
+        {
+          "id": "obj-m01-1",
+          "title": "Determine which buildings are the supply warehouses",
+          "description": "",
+          "wpReward": 100,
+          "achieved": false
+        },
+        {
+          "id": "obj-m01-2",
+          "title": "At least 50% of our forces survive until the end of Turn 10",
+          "description": "",
+          "wpReward": 100,
+          "achieved": false
+        },
+        {
+          "id": "obj-m01-3",
+          "title": "Destroy or cripple 25% of the defender's force",
+          "description": "",
+          "wpReward": 100,
+          "achieved": false
+        }
+      ],
       "recap": "It was a disaster. An embarrassment for our clan. And for ComStar too!\nI studied the ROMs. My warriors perofrmed way below what I am in the right to expect from them, but the level of indecent dezgra tactics used on them is chilling. ComStar ganged up in pairs, threes and even fours to isolated warriors, and pounded them to dust.\nWe barely scratched their paint.\nWe came back with nothing... nothing.\n\nAnd now we have to hurry. Elements of my trinary are chased down.\nI will fight in the rearguard to stop the tide of those swarming rats. They will learn what a Trueborn can do.",
-      "warchestGained": 0,
       "completed": true,
       "assignedMechs": [
         "mech-1763627233012",
