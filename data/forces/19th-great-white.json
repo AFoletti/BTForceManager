@@ -786,6 +786,7 @@
       "name": "M02 - Pursuit: the Shark is hunted",
       "cost": 300,
       "description": "After the disaster at the supply depot, ComStar jumped on some scouting elements of my Trinary.\nOnce again in overwhelming numbers, they however have a hard time keeping up with our superior speed and mobility.\n\nI hate to see Trueborn warriors run from a fight, but I learned something from last battle... there is little sense in accepting to fight three or four against one.\nSo I ordered my warriors to regroup. An I will fight in the rearguard, making ComStar pay!",
+      "inGameDate": "3052-05-07",
       "objectives": [
         {
           "id": "obj-m02-1",
