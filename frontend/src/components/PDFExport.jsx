@@ -694,8 +694,8 @@ const ForcePDF = ({ force }) => {
                       {e.suitsDestroyed || 0}/5 destroyed, {e.suitsDamaged || 0}/5 damaged
                     </Text>
                     <Text style={[styles.tableCell, styles.colNarrow]}>{formatNumber(e.bv || 0)}</Text>
-                    <Text style={[styles.tableCell, styles.colNarrow]}>
-                      <Text style={getStatusTagStyle(e.status)}>{e.status}</Text>
+                    <Text style={[styles.tableCell, styles.colNarrow, getStatusTagStyle(e.status)]}>
+                      {e.status}
                     </Text>
                   </View>
                 ))}
