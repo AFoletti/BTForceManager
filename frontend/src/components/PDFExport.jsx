@@ -339,7 +339,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 12,
     padding: 8,
-    border: '0.75 solid #D1D5DB',
+    borderWidth: 0.75,
+    borderStyle: 'solid',
+    borderColor: '#D1D5DB',
     backgroundColor: '#FFFFFF',
   },
   warchestHeaderRow: {
