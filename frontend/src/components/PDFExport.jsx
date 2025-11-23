@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
   warchestTableRow: {
     flexDirection: 'row',
     paddingVertical: 1,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     borderBottomColor: '#F3F4F6',
   },
