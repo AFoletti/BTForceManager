@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   tableRow: {
     flexDirection: 'row',
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     borderBottomColor: '#E5E7EB',
     paddingVertical: 3,
