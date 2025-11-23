@@ -912,8 +912,7 @@ const ForcePDF = ({ force }) => {
                   </View>
                   <Text style={styles.missionMetaLine}>
                     {missionDate && `Date: ${missionDate}  | `}
-                    Cost: {formatNumber(mission.cost || 0)} WP  |  Gained: {formatNumber(reward || 0)} WP  |  Total BV:{' '}
-                    {formatNumber(totalBV || 0)}
+                    Cost: {formatNumber(mission.cost || 0)} WP  |  Gained: {formatNumber(reward || 0)} WP  |  Total BV: {formatNumber(totalBV || 0)}
                   </Text>
 
                   {mission.description && (
