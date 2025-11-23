@@ -34,7 +34,9 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     bottom: 20,
-    border: '0.75 solid #D1D5DB',
+    borderWidth: 0.75,
+    borderStyle: 'solid',
+    borderColor: '#D1D5DB',
   },
   cornerBlock: {
     position: 'absolute',
