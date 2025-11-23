@@ -634,8 +634,8 @@ const ForcePDF = ({ force }) => {
                     <Text style={[styles.tableCell, styles.colMedium]}>{mech.weight || 0}t</Text>
                     <Text style={[styles.tableCell, styles.colMedium]}>{formatNumber(mech.bv || 0)}</Text>
                     <Text style={[styles.tableCell, styles.colMedium]}>Unassigned</Text>
-                    <Text style={[styles.tableCell, styles.colNarrow]}>
-                      <Text style={getStatusTagStyle(mech.status)}>{mech.status}</Text>
+                    <Text style={[styles.tableCell, styles.colNarrow, getStatusTagStyle(mech.status)]}>
+                      {mech.status}
                     </Text>
                   </View>
                 ))}
