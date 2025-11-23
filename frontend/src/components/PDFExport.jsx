@@ -57,7 +57,9 @@ const styles = StyleSheet.create({
     width: 11,
     height: 11,
     borderRadius: 2,
-    border: '0.5 solid #E5E7EB',
+    borderWidth: 0.5,
+    borderStyle: 'solid',
+    borderColor: '#E5E7EB',
     margin: 1.5,
   },
   hexRowOffset: {
