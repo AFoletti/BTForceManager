@@ -608,8 +608,8 @@ const ForcePDF = ({ force }) => {
                     {pilot.injuries === 6 ? 'KIA' : `${pilot.injuries || 0}/6`}
                   </Text>
                   <Text style={[styles.tableCell, styles.colNarrow]}>{formatNumber(mech.bv || 0)}</Text>
-                  <Text style={[styles.tableCell, styles.colNarrow]}>
-                    <Text style={getStatusTagStyle(mech.status)}>{mech.status}</Text>
+                  <Text style={[styles.tableCell, styles.colNarrow, getStatusTagStyle(mech.status)]}>
+                    {mech.status}
                   </Text>
                 </View>
               ))}
