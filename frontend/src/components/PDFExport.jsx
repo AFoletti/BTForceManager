@@ -130,7 +130,9 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 8,
     backgroundColor: '#F9FAFB',
-    borderLeft: '2 solid #4B5320',
+    borderLeftWidth: 2,
+    borderLeftStyle: 'solid',
+    borderLeftColor: '#4B5320',
     minWidth: 110,
   },
   coverStatLabel: {
