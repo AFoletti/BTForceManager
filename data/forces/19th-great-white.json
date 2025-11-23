@@ -2,7 +2,7 @@
   "id": "19th-the-great-white-lai-yu-s-hunters",
   "name": "19th The Great White - Lai-Yu's hunters",
   "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
-  "image": "https://i.ibb.co/HfkcQWkg/CDSharks.gif",
+  "image": "https://i.ibb.co/6R1QfYWz/CDSharks.png",
   "startingWarchest": 2000,
   "currentWarchest": 1352,
   "wpMultiplier": 5,
@@ -64,7 +64,7 @@
       "pilotId": "pilot-1763626957578",
       "bv": 2047,
       "weight": 75,
-      "image": "",
+      "image": "https://i.ibb.co/NbJkFjy/black-knight.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -88,7 +88,7 @@
       "pilotId": "pilot-1763626888125",
       "bv": 4706,
       "weight": 90,
-      "image": "",
+      "image": "https://i.ibb.co/dwG1yZs3/supernova2.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -132,7 +132,7 @@
       "pilotId": "pilot-1763626987643",
       "bv": 2750,
       "weight": 35,
-      "image": "",
+      "image": "https://i.ibb.co/rK6rdwT8/adder.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -151,7 +151,7 @@
       "pilotId": "pilot-1763626919997",
       "bv": 2512,
       "weight": 45,
-      "image": "",
+      "image": "https://i.ibb.co/ym79s6D0/grendel.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -189,7 +189,7 @@
       "pilotId": "pilot-1763626938065",
       "bv": 2930,
       "weight": 45,
-      "image": "",
+      "image": "https://i.ibb.co/JRf90PYB/shadow-cat.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -268,7 +268,7 @@
       "pilotId": "pilot-1763626976789",
       "bv": 3515,
       "weight": 50,
-      "image": "",
+      "image": "https://i.ibb.co/MDgbfpqV/nova.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -287,7 +287,7 @@
       "pilotId": "pilot-1763626966154",
       "bv": 2831,
       "weight": 70,
-      "image": "",
+      "image": "https://i.ibb.co/wqTVf01/summoner.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -329,7 +329,7 @@
       "pilotId": "pilot-1763626867889",
       "bv": 5529,
       "weight": 75,
-      "image": "",
+      "image": "https://i.ibb.co/WvVxBwnk/mad-cat.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
