@@ -534,7 +534,7 @@ const ForcePDF = ({ force }) => {
                     maxHeight: 130,
                     objectFit: 'contain',
                     borderRadius: 6,
-                    borderWidth: 0.75,
+                    borderWidth: 1,
                     borderStyle: 'solid',
                     borderColor: '#D1D5DB',
                   }}
