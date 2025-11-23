@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 12,
     padding: 8,
-    borderWidth: 0.75,
+    borderWidth: 1,
     borderStyle: 'solid',
     borderColor: '#D1D5DB',
     backgroundColor: '#FFFFFF',
