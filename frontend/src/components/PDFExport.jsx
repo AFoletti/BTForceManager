@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
   // Order of battle tables
   table: {
     width: '100%',
-    borderWidth: 0,
     marginBottom: 10,
   },
   tableHeaderRow: {
