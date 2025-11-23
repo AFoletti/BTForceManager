@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   missionEntry: {
     marginBottom: 8,
     paddingLeft: 6,
-    borderLeftWidth: 1.5,
+    borderLeftWidth: 1,
     borderLeftStyle: 'solid',
     borderLeftColor: '#9CA3AF',
   },
