@@ -39,7 +39,7 @@
       "pilotId": "pilot-1763626996858",
       "bv": 2107,
       "weight": 30,
-      "image": "",
+      "image": "https://i.ibb.co/M58hwZks/enforcer-1.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -107,7 +107,7 @@
       "pilotId": "pilot-1763627013984",
       "bv": 1897,
       "weight": 35,
-      "image": "",
+      "image": "https://i.ibb.co/rK6rdwT8/adder.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -170,7 +170,7 @@
       "pilotId": "pilot-1763627005278",
       "bv": 2736,
       "weight": 55,
-      "image": "",
+      "image": "https://i.ibb.co/0Rbpw1rF/alpha-wolf.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -225,7 +225,7 @@
       "pilotId": "pilot-1763626904247",
       "bv": 5037,
       "weight": 85,
-      "image": "",
+      "image": "https://i.ibb.co/3y9Zpw0w/tomahawk.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -359,7 +359,7 @@
       "suitsDamaged": 0,
       "bv": 590,
       "status": "Operational",
-      "image": "https://i.ibb.co/fdFCJVph/IWM20-950.png",
+      "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -392,7 +392,7 @@
       "suitsDamaged": 0,
       "bv": 590,
       "status": "Unavailable",
-      "image": "",
+      "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -425,7 +425,7 @@
       "suitsDamaged": 0,
       "bv": 590,
       "status": "Operational",
-      "image": "",
+      "image": "https://i.ibb.co/M5y1Fh2f/battlearmor-1.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -452,7 +452,7 @@
       "suitsDamaged": 0,
       "bv": 590,
       "status": "Operational",
-      "image": "",
+      "image": "https://i.ibb.co/M5y1Fh2f/battlearmor-1.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
