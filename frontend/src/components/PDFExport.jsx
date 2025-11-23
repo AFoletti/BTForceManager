@@ -288,7 +288,9 @@ const styles = StyleSheet.create({
   missionEntry: {
     marginBottom: 8,
     paddingLeft: 6,
-    borderLeft: '1.5 solid #9CA3AF',
+    borderLeftWidth: 1.5,
+    borderLeftStyle: 'solid',
+    borderLeftColor: '#9CA3AF',
   },
   missionHeaderLine: {
     flexDirection: 'row',
