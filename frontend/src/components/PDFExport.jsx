@@ -386,7 +386,9 @@ const styles = StyleSheet.create({
   warchestGainPos: { color: '#166534', fontWeight: 'bold' },
   warchestSummary: {
     marginTop: 3,
-    borderTop: '1 solid #E5E7EB',
+    borderTopWidth: 1,
+    borderTopStyle: 'solid',
+    borderTopColor: '#E5E7EB',
     paddingTop: 2,
     fontSize: 8,
     color: '#111827',
