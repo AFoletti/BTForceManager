@@ -161,29 +161,36 @@ export default function App() {
               <div className="flex-1">
                 <h2 className="text-2xl font-bold text-foreground mb-2">{selectedForce.name}</h2>
                 <p className="text-sm text-muted-foreground mb-3">{selectedForce.description}</p>
-                <div className="mt-3 flex items-center gap-4 text-sm">
-                  <div>
+                <div className="mt-3 flex items-center gap-6 text-sm">
+                  <div className="flex items-center gap-2">
                     <span className="text-muted-foreground">Current Date (in-universe):</span>
-                    <input
+                    <Input
                       type="text"
                       data-testid="current-date-input"
-                      className="ml-2 px-2 py-1 rounded border border-border bg-background font-mono text-xs w-32"
-                      value={selectedForce.currentDate || ''}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (!value) {
-                          // Do not allow deleting the date entirely; fall back to default.
-                          updateForceData({ currentDate: '3025-01-01' });
-                        } else {
-                          updateForceData({ currentDate: value });
-                        }
-                      }}
+                      className="font-mono text-xs w-32 h-8"
+                      value={editingDate ? tempDate : (selectedForce.currentDate || '')}
+                      onChange={(e) => setTempDate(e.target.value)}
+                      disabled={!editingDate}
                       placeholder="3025-01-01"
                     />
+                    {editingDate ? (
+                      <>
+                        <Button size="sm" onClick={handleSaveDate}>
+                          Save
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={handleCancelDate}>
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button size="sm" variant="outline" onClick={handleEditDate}>
+                        Edit
+                      </Button>
+                    )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-6 text-sm mt-2">
                   <div>
                     <span className="text-muted-foreground">Warchest:</span>
                     <span className="ml-2 font-mono font-semibold text-primary">
