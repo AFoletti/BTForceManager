@@ -19,6 +19,7 @@ import {
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
 import { getStatusBadgeVariant } from '../lib/constants';
+import { createSnapshot } from '../lib/snapshots';
 
 const emptyMissionForm = {
   name: '',
@@ -213,7 +214,26 @@ export default function MissionManager({ force, onUpdate }) {
       timestamp,
     );
 
-    onUpdate(result);
+    // Build the next force state (post-mission) to generate a snapshot.
+    const nextForce = {
+      ...force,
+      missions: result.missions,
+      currentWarchest: result.currentWarchest,
+    };
+
+    const snapshotLabel = `After ${missionBeingCompleted.name || 'mission'}`;
+    const snapshot = createSnapshot(nextForce, {
+      type: 'post-mission',
+      label: snapshotLabel,
+    });
+
+    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+
+    onUpdate({
+      ...result,
+      snapshots: [...existingSnapshots, snapshot],
+    });
+
     setShowCompleteDialog(false);
     setMissionBeingCompleted(null);
   };

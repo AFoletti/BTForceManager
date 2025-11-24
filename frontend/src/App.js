@@ -14,6 +14,7 @@ import AddForceDialog from './components/AddForceDialog';
 import PDFExport from './components/PDFExport';
 import LedgerTab from './components/LedgerTab';
 import NotesTab from './components/NotesTab';
+import SnapshotsTab from './components/SnapshotsTab';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
@@ -196,7 +197,7 @@ export default function App() {
       <main className="container mx-auto px-4 py-8">
         {selectedForce ? (
           <Tabs defaultValue="mechs" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-8 lg:w-auto">
+            <TabsList className="grid w-full grid-cols-9 lg:w-auto">
               <TabsTrigger value="mechs">
                 <Shield className="w-4 h-4" />
                 Mechs
@@ -224,6 +225,10 @@ export default function App() {
               <TabsTrigger value="notes" data-testid="force-notes-tab">
                 <FileText className="w-4 h-4" />
                 Notes
+              </TabsTrigger>
+              <TabsTrigger value="snapshots" data-testid="snapshots-tab">
+                <FileText className="w-4 h-4" />
+                Snapshots
               </TabsTrigger>
               <TabsTrigger value="data">
                 <Database className="w-4 h-4" />
@@ -257,6 +262,10 @@ export default function App() {
 
             <TabsContent value="notes">
               <NotesTab force={selectedForce} onUpdate={updateForceData} />
+            </TabsContent>
+
+            <TabsContent value="snapshots">
+              <SnapshotsTab force={selectedForce} />
             </TabsContent>
 
             <TabsContent value="data">
