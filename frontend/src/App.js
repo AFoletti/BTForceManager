@@ -51,6 +51,23 @@ export default function App() {
     );
   };
 
+  const handleEditDate = () => {
+    setTempDate(selectedForce?.currentDate || '');
+    setEditingDate(true);
+  };
+
+  const handleSaveDate = () => {
+    if (tempDate) {
+      updateForceData({ currentDate: tempDate });
+    }
+    setEditingDate(false);
+  };
+
+  const handleCancelDate = () => {
+    setTempDate('');
+    setEditingDate(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
