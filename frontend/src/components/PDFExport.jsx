@@ -505,6 +505,16 @@ const ForcePDF = ({ force }) => {
           </View>
         </View>
 
+        {/* Campaign Notes (first page, if present) */}
+        {force.notes && force.notes.trim().length > 0 && (
+          <View>
+            <Text style={styles.sectionHeader}>
+              █ CAMPAIGN NOTES
+            </Text>
+            <Text style={styles.missionText}>{force.notes}</Text>
+          </View>
+        )}
+
         {/* Pilot Roster Section */}
         <Text style={styles.sectionHeader} break>
           █ PILOT ROSTER
@@ -979,6 +989,7 @@ export default function PDFExport({ force }) {
       onClick={handleGeneratePDF}
       disabled={isGenerating}
       className="bg-accent text-accent-foreground hover:bg-accent/90"
+      data-testid="export-pdf-button"
     >
       {isGenerating ? 'Generating PDF...' : 'Export PDF'}
     </Button>
