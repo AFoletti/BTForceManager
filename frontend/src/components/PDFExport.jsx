@@ -411,6 +411,7 @@ const ForcePDF = ({ force }) => {
   const elementals = force.elementals || [];
   const missions = force.missions || [];
   const currentDateLabel = force.currentDate;
+  const snapshots = force.snapshots || [];
 
   // Build ledger via shared helper
   const ledgerEntries = buildLedgerEntries(force);
@@ -512,6 +513,35 @@ const ForcePDF = ({ force }) => {
               █ CAMPAIGN NOTES
             </Text>
             <Text style={styles.missionText}>{force.notes}</Text>
+          </View>
+        )}
+
+        {/* Snapshots summary (first page, after notes) */}
+        {snapshots.length > 0 && (
+          <View>
+            <Text style={styles.sectionHeader} break>
+              █ CAMPAIGN SNAPSHOTS
+            </Text>
+            {snapshots.map((snap) => (
+              <View key={snap.id} style={{ marginBottom: 4 }} wrap={false}>
+                <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#111827' }}>
+                  {snap.createdAt} – {snap.label} ({
+                    snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime'
+                  })
+                </Text>
+                <Text style={{ fontSize: 8, color: '#4B5563' }}>
+                  Mechs ready: {snap.units.mechs.ready}/{snap.units.mechs.total} (+
+                  {snap.units.mechs.destroyed} destroyed) | Elementals ready:{' '}
+                  {snap.units.elementals.ready}/{snap.units.elementals.total} (+
+                  {snap.units.elementals.destroyed} destroyed) | Pilots ready:{' '}
+                  {snap.units.pilots.ready}/{snap.units.pilots.total} (+{snap.units.pilots.kia}{' '}
+                  KIA) | Missions completed: {snap.missionsCompleted} | Warchest:{' '}
+                  {formatNumber(snap.currentWarchest)} WP (net{' '}
+                  {snap.netWarchestChange >= 0 ? '+' : ''}
+                  {formatNumber(snap.netWarchestChange)} WP)
+                </Text>
+              </View>
+            ))}
           </View>
         )}
 
