@@ -296,6 +296,46 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 - **PDFs:** `@react-pdf/renderer`.
 - **State & data:** local React state + JSON files in `data/`.
 
+
+---
+
+## 9. Testing
+
+The core game logic is covered by unit tests so that you can safely refactor or extend behaviour.
+
+### 9.1 Where tests live
+
+Tests are colocated with the domain libraries in the React source:
+
+- `frontend/src/lib/downtime.test.js` – downtime expression parser and context builder.
+- `frontend/src/lib/missions.test.js` – mission availability, BV calculation, mission lifecycle and Warchest updates.
+- `frontend/src/lib/mechs.test.js` – mech–pilot relationship helpers (`findPilotForMech`, `findMechForPilot`, `getAvailablePilotsForMech`).
+- `frontend/src/lib/ledger.test.js` – financial ledger construction (`buildLedgerEntries`) and aggregates (`summariseLedger`).
+
+You can add new tests next to additional helpers (e.g. `foo.js` → `foo.test.js`) and CRA/Jest will pick them up automatically.
+
+### 9.2 Running the tests
+
+From the `frontend/` folder:
+
+```bash
+yarn install        # first time only
+yarn test           # interactive watch mode
+yarn test --watch=false  # single run, useful for CI
+```
+
+Jest will search for `*.test.js` files under `src/`.
+
+### 9.3 Extending tests when changing behaviour
+
+Whenever you change domain logic in `frontend/src/lib/` (missions, downtime, mechs, ledger, etc.):
+
+1. Update or add corresponding tests in the matching `*.test.js` file.
+2. Run `yarn test --watch=false` and ensure everything passes.
+3. Only then rebuild the production bundle and copy `static/js/main.js` / `static/css/main.css`.
+
+This keeps the static app on GitHub Pages in sync with the tested behaviour and reduces regressions when tweaking Warchest rules, mission handling, or downtime formulas.
+
 ---
 
 ## 8. Development Workflow (Recommended)
