@@ -2,6 +2,8 @@
 // Centralises cost calculation and force updates so the component
 // stays mostly focused on UI concerns.
 
+import { DOWNTIME_ACTION_IDS } from './constants';
+
 /**
  * Build the context object used when evaluating downtime formulas.
  *
@@ -18,16 +20,196 @@ export function buildDowntimeContext(force, unit) {
   };
 }
 
+// --- Tiny arithmetic expression parser for downtime formulas ---
+
+/**
+ * Tokenise a simple arithmetic expression into numbers, identifiers, operators and parentheses.
+ * Supports: numbers (ints/decimals), identifiers (variables), + - * / and ()
+ *
+ * @param {string} expression
+ * @returns {Array<{type: string, value: string}>}
+ */
+function tokenize(expression) {
+  const tokens = [];
+  let i = 0;
+
+  while (i < expression.length) {
+    const ch = expression[i];
+
+    if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') {
+      i += 1;
+      continue;
+    }
+
+    if (/[0-9.]/.test(ch)) {
+      let num = ch;
+      i += 1;
+      while (i < expression.length && /[0-9.]/.test(expression[i])) {
+        num += expression[i];
+        i += 1;
+      }
+      tokens.push({ type: 'number', value: num });
+      continue;
+    }
+
+    if (/[A-Za-z_]/.test(ch)) {
+      let id = ch;
+      i += 1;
+      while (i < expression.length && /[A-Za-z0-9_]/.test(expression[i])) {
+        id += expression[i];
+        i += 1;
+      }
+      tokens.push({ type: 'identifier', value: id });
+      continue;
+    }
+
+    if (ch === '+' || ch === '-' || ch === '*' || ch === '/') {
+      tokens.push({ type: 'operator', value: ch });
+      i += 1;
+      continue;
+    }
+
+    if (ch === '(' || ch === ')') {
+      tokens.push({ type: 'paren', value: ch });
+      i += 1;
+      continue;
+    }
+
+    throw new Error(`Unsupported character in expression: ${ch}`);
+  }
+
+  return tokens;
+}
+
+const OP_PRECEDENCE = {
+  '+': 1,
+  '-': 1,
+  '*': 2,
+  '/': 2,
+};
+
+/**
+ * Convert tokens to Reverse Polish Notation using the shunting-yard algorithm.
+ *
+ * @param {Array<{type: string, value: string}>} tokens
+ * @returns {Array<{type: string, value: string}>}
+ */
+function toRpn(tokens) {
+  const output = [];
+  const ops = [];
+
+  tokens.forEach((token) => {
+    if (token.type === 'number' || token.type === 'identifier') {
+      output.push(token);
+    } else if (token.type === 'operator') {
+      while (ops.length > 0) {
+        const top = ops[ops.length - 1];
+        if (
+          top.type === 'operator' &&
+          OP_PRECEDENCE[top.value] >= OP_PRECEDENCE[token.value]
+        ) {
+          output.push(ops.pop());
+        } else {
+          break;
+        }
+      }
+      ops.push(token);
+    } else if (token.type === 'paren' && token.value === '(') {
+      ops.push(token);
+    } else if (token.type === 'paren' && token.value === ')') {
+      let foundLeft = false;
+      while (ops.length > 0) {
+        const top = ops.pop();
+        if (top.type === 'paren' && top.value === '(') {
+          foundLeft = true;
+          break;
+        }
+        output.push(top);
+      }
+      if (!foundLeft) {
+        throw new Error('Mismatched parentheses');
+      }
+    }
+  });
+
+  while (ops.length > 0) {
+    const top = ops.pop();
+    if (top.type === 'paren') {
+      throw new Error('Mismatched parentheses');
+    }
+    output.push(top);
+  }
+
+  return output;
+}
+
+/**
+ * Evaluate an RPN expression with a given context of variables.
+ *
+ * @param {Array<{type: string, value: string}>} rpn
+ * @param {Object} context
+ * @returns {number}
+ */
+function evalRpn(rpn, context) {
+  const stack = [];
+
+  rpn.forEach((token) => {
+    if (token.type === 'number') {
+      const n = Number(token.value);
+      if (Number.isNaN(n)) {
+        throw new Error(`Invalid number token: ${token.value}`);
+      }
+      stack.push(n);
+    } else if (token.type === 'identifier') {
+      const value = context[token.value];
+      const n = typeof value === 'number' && Number.isFinite(value) ? value : 0;
+      stack.push(n);
+    } else if (token.type === 'operator') {
+      if (stack.length < 2) {
+        throw new Error('Insufficient values in expression');
+      }
+      const b = stack.pop();
+      const a = stack.pop();
+      let result;
+      switch (token.value) {
+        case '+':
+          result = a + b;
+          break;
+        case '-':
+          result = a - b;
+          break;
+        case '*':
+          result = a * b;
+          break;
+        case '/':
+          if (b === 0) {
+            throw new Error('Division by zero');
+          }
+          result = a / b;
+          break;
+        default:
+          throw new Error(`Unknown operator: ${token.value}`);
+      }
+      stack.push(result);
+    }
+  });
+
+  if (stack.length !== 1) {
+    throw new Error('Invalid expression');
+  }
+
+  return stack[0];
+}
+
 /**
  * Evaluate a downtime formula against a limited context.
  *
- * This mirrors the previous behaviour in DowntimeOperations, including the use
- * of `eval`, but keeps it in one place and only substitutes known context keys.
- * It is assumed that downtime formulas come from trusted JSON in the repo.
+ * Formulas are simple arithmetic expressions using variables like
+ * `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier` and
+ * numbers/operators (+, -, *, /, parentheses).
  *
  * IMPORTANT: Formulas are **not** user input. They come only from
- * `data/downtime-actions.json` checked into version control. If you ever allow
- * user-defined formulas, replace this with a proper expression parser.
+ * `data/downtime-actions.json` checked into version control.
  *
  * @param {string} formula
  * @param {Object} context
@@ -35,10 +217,12 @@ export function buildDowntimeContext(force, unit) {
  */
 export function evaluateDowntimeCost(formula, context) {
   try {
+    if (typeof formula !== 'string' || formula.trim() === '') {
+      return 0;
+    }
+
     // Basic guard: allow only word characters, digits, whitespace, and
-    // arithmetic operators/parentheses. This keeps formulas simple and
-    // aligned with the documented variables (weight, suitsDamaged,
-    // suitsDestroyed, wpMultiplier).
+    // arithmetic operators/parentheses.
     const safePattern = /^[\w\d\s+\-*/().]+$/;
     if (!safePattern.test(formula)) {
       // eslint-disable-next-line no-console
@@ -46,18 +230,16 @@ export function evaluateDowntimeCost(formula, context) {
       return 0;
     }
 
-    const expression = formula.replace(/(\w+)/g, (match) =>
-      Object.prototype.hasOwnProperty.call(context, match) ? context[match] : match,
-    );
-
-    // eslint-disable-next-line no-eval
-    const rawResult = eval(expression);
+    const tokens = tokenize(formula);
+    const rpn = toRpn(tokens);
+    const rawResult = evalRpn(rpn, context || {});
 
     if (typeof rawResult !== 'number' || Number.isNaN(rawResult) || !Number.isFinite(rawResult)) {
       return 0;
     }
 
-    return Math.ceil(rawResult);
+    const rounded = Math.ceil(rawResult);
+    return rounded < 0 ? 0 : rounded;
   } catch (error) {
     // Keep behaviour consistent with the previous inline implementation.
     // eslint-disable-next-line no-console
@@ -125,9 +307,9 @@ export function applyElementalDowntimeAction(
     const updates = { activityLog };
 
     // Reset counters based on action id, mirroring previous behaviour.
-    if (actionId === 'repair-elemental') {
+    if (actionId === DOWNTIME_ACTION_IDS.REPAIR_ELEMENTAL) {
       updates.suitsDamaged = 0;
-    } else if (actionId === 'purchase-elemental') {
+    } else if (actionId === DOWNTIME_ACTION_IDS.PURCHASE_ELEMENTAL) {
       updates.suitsDestroyed = 0;
     }
 
@@ -137,27 +319,6 @@ export function applyElementalDowntimeAction(
   const currentWarchest = force.currentWarchest - cost;
 
   return { elementals, currentWarchest };
-}
-
-/**
- * Legacy helper for logging generic "other" downtime actions at force level.
- *
- * This is kept for backward compatibility with existing data files that may
- * still contain an `otherActionsLog` array, but is no longer used by the UI.
- */
-export function logOtherDowntimeAction(force, { description, cost, timestamp, inGameDate }) {
-  const otherActionsLog = [...(force.otherActionsLog || [])];
-
-  otherActionsLog.push({
-    timestamp,
-    inGameDate,
-    description,
-    cost,
-  });
-
-  const currentWarchest = force.currentWarchest - cost;
-
-  return { otherActionsLog, currentWarchest };
 }
 
 /**
@@ -193,13 +354,13 @@ export function applyPilotDowntimeAction(
     let piloting = pilot.piloting;
     let injuries = pilot.injuries;
 
-    if (actionId === 'train-gunnery') {
+    if (actionId === DOWNTIME_ACTION_IDS.TRAIN_GUNNERY) {
       const base = typeof gunnery === 'number' ? gunnery : 4;
       gunnery = Math.max(0, Math.min(8, base - 1));
-    } else if (actionId === 'train-piloting') {
+    } else if (actionId === DOWNTIME_ACTION_IDS.TRAIN_PILOTING) {
       const base = typeof piloting === 'number' ? piloting : 5;
       piloting = Math.max(0, Math.min(8, base - 1));
-    } else if (actionId === 'heal-injury') {
+    } else if (actionId === DOWNTIME_ACTION_IDS.HEAL_INJURY) {
       const base = typeof injuries === 'number' ? injuries : 0;
       injuries = Math.max(0, Math.min(6, base - 1));
     }
