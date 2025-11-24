@@ -137,24 +137,38 @@ After copying, `index.html` + `static/` are in sync with source.
   - `formatDate(date)` – localized timestamp.
   - `downloadJSON(data, filename)` – triggers a JSON file download.
 
+- `src/lib/utils.js`
+  - `cn(...classes)` – Tailwind class merging.
+  - `formatNumber(num)` – apostrophe (`'`) as thousands separator.
+  - `formatDate(date)` – localized timestamp.
+  - `downloadJSON(data, filename)` – triggers a JSON file download.
+
+- `src/lib/constants.js`
+  - `UNIT_STATUS` – central enum of unit statuses (`Operational`, `Damaged`, `Disabled`, `Destroyed`, `Repairing`, `Unavailable`).
+  - `getStatusBadgeVariant(status)` – maps a domain status to a UI badge variant used across rosters, mission editor, and PDF export.
+  - `DOWNTIME_ACTION_IDS` – central list of downtime action identifiers used by `data/downtime-actions.json` and `lib/downtime.js`.
+
 - `src/lib/missions.js`
-  - `calculateMissionTotalBV(force, mechIds, elementalIds)`.
-  - `getAssignedMechs(force, mechIds)` / `getAssignedElementals(force, elementalIds)`.
-  - `applyMissionCreation(force, formData, timestamp)` – adds mission, updates unit and pilot logs, and adjusts Warchest.
-  - `applyMissionUpdate(missions, missionId, formData, timestamp)`.
-  - `applyMissionCompletion(force, missionId, timestamp)` – marks mission completed and adjusts Warchest.
+  - `isMechAvailableForMission(force, mech)` – enforces mission-availability rules for mechs (status, pilot assigned, pilot not KIA).
+  - `isElementalAvailableForMission(elemental)` – enforces mission-availability rules for elemental points.
+  - `calculateMissionTotalBV(force, mechIds, elementalIds)` – sums BV of assigned units.
+  - `getAssignedMechs(force, mechIds)` / `getAssignedElementals(force, elementalIds)` – resolve ids to unit objects while preserving order.
+  - `getMissionObjectiveReward(mission)` – sums rewards for achieved objectives.
+  - `applyMissionCreation(force, formData, timestamp)` – adds a mission, logs assignments to mechs/elementals/pilots (via `pilotId`), and subtracts mission cost from Warchest.
+  - `applyMissionUpdate(missions, missionId, formData, timestamp)` – pure mission array updater.
+  - `applyMissionCompletion(force, missionId, completionData, timestamp)` – marks mission completed, updates objectives/recap, and adds objective rewards to Warchest.
 
 - `src/lib/downtime.js`
   - `buildDowntimeContext(force, unit)` – generates context for downtime formulas (weight, suits, WP multiplier).
-  - `evaluateDowntimeCost(formula, context)` – evaluates formula in a constrained way and returns a cost (uses `eval` in a controlled, internal-only fashion).
-  - `applyMechDowntimeAction(force, { mechId, action, cost, timestamp, lastMissionName })` – logs action to mech, changes status/unavailability, adjusts Warchest.
-  - `applyElementalDowntimeAction(force, {...})` – logs action to elemental, adjusts suits counters and Warchest.
-  - `logOtherDowntimeAction(force, { description, cost, timestamp })` – logs force-level miscellaneous actions.
+  - `evaluateDowntimeCost(formula, context)` – evaluates the formula using a tiny arithmetic expression parser (numbers, +, -, *, /, parentheses) with variables `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`.
+  - `applyMechDowntimeAction(force, { mechId, action, cost, timestamp, lastMissionName })` – logs action to mech, optionally sets status to `Unavailable`, and subtracts cost from Warchest.
+  - `applyElementalDowntimeAction(force, { elementalId, actionId, action, cost, timestamp, lastMissionName })` – logs action to elemental, applies action-specific changes (e.g. reset suits), and subtracts cost.
+  - `applyPilotDowntimeAction(force, { pilotId, actionId, action, cost, timestamp, inGameDate, lastMissionName })` – logs action to pilot, applies training/healing rules based on `DOWNTIME_ACTION_IDS`, and subtracts cost.
 
 - `src/lib/mechs.js`
-  - `findPilotForMech(force, mech)` – looks up pilot by name.
-  - `findMechForPilot(force, pilot)` – inverse lookup, used in the Pilot roster.
-  - `getAvailablePilotsForMech(force, editingMech)` – returns pilots not currently assigned to any other mech, used to populate the pilot dropdown.
+  - `findPilotForMech(force, mech)` – resolves the assigned pilot **by `pilotId`**.
+  - `findMechForPilot(force, pilot)` – inverse lookup by `pilotId`, used in the Pilot roster and PDF export.
+  - `getAvailablePilotsForMech(force, editingMech)` – returns pilots not currently assigned to any other mech (except the one being edited).
 
 ### 4.3 Feature components
 
