@@ -276,10 +276,10 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 ## 6. Conventions & Notes
 
 - **IDs:** new mechs/pilots/missions use timestamp-based IDs like `mech-<timestamp>`; they only need to be unique within the force.
-- **Status badges:** `Badge` variants are mapped via `getUnitStatusVariant` in `MissionManager` and via inline maps in roster components.
+- **Status badges & colors:** All human-readable statuses (`Operational`, `Damaged`, `Disabled`, `Destroyed`, `Repairing`, `Unavailable`) are centralised in `lib/constants.js` as `UNIT_STATUS`. Components and PDF export convert statuses to visual variants via `getStatusBadgeVariant`.
 - **Pilot–mech relationship:**
-  - Mechs store `pilot` as the pilot **name** (not ID).
-  - Helper functions in `lib/mechs` resolve pilot ↔ mech associations.
+  - Mechs store `pilotId` as a reference to the pilot `id`.
+  - Helper functions in `lib/mechs` resolve pilot ↔ mech associations purely by ID.
   - Mech pilot dropdown enforces one pilot per mech.
 - **KIA handling:**
   - Pilot with `injuries === 6` is treated as KIA.
