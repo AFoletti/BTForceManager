@@ -238,7 +238,8 @@ A typical force JSON under `data/forces/*.json` contains:
   - `pilots[]`
   - `elementals[]`
   - `missions[]`
-  - Optional logs (`otherActionsLog`, etc.).
+
+Each mech, pilot, elemental and mission can carry its own `activityLog` array; these logs, plus mission costs and objective rewards, are what drive the financial ledger and PDF export.
 
 `useForceManager` and feature components expect these properties but are resilient to missing optional fields (e.g. `activityLog`).
 
