@@ -269,7 +269,7 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 }
 ```
 
-`evaluateDowntimeCost` builds an expression by substituting known keys (`weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`) from the `context` and then evaluating it. The file is assumed to be trusted (checked into the repo).
+`evaluateDowntimeCost` evaluates formulas using a small arithmetic parser (no `eval`) over a limited context of variables: `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`. The file is assumed to be trusted (checked into the repo).
 
 ---
 
