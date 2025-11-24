@@ -3,6 +3,7 @@ import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List, Fi
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
+import { Input } from './components/ui/input';
 import { downloadJSON } from './lib/utils';
 import MechRoster from './components/MechRoster';
 import ElementalRoster from './components/ElementalRoster';
@@ -32,6 +33,8 @@ export default function App() {
   } = useForceManager();
 
   const [showAddForceDialog, setShowAddForceDialog] = useState(false);
+  const [editingDate, setEditingDate] = useState(false);
+  const [tempDate, setTempDate] = useState('');
 
   const handleExport = () => {
     if (!selectedForce) return;
