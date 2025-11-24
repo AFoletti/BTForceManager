@@ -135,6 +135,15 @@ export function normalizeForce(raw) {
   normalized.elementals = Array.isArray(normalized.elementals) ? normalized.elementals : [];
   normalized.missions = Array.isArray(normalized.missions) ? normalized.missions : [];
 
+  // Force-level notes (freeform campaign notes)
+  normalized.notes =
+    typeof normalized.notes === 'string' ? normalized.notes : '';
+
+  // Snapshots (optional, for campaign history). If not present, default to []
+  normalized.snapshots = Array.isArray(normalized.snapshots)
+    ? normalized.snapshots
+    : [];
+
   return normalized;
 }
 

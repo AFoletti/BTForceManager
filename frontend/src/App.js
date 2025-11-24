@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List } from 'lucide-react';
+import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List, FileText } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -13,6 +13,7 @@ import DataEditor from './components/DataEditor';
 import AddForceDialog from './components/AddForceDialog';
 import PDFExport from './components/PDFExport';
 import LedgerTab from './components/LedgerTab';
+import NotesTab from './components/NotesTab';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
@@ -195,7 +196,7 @@ export default function App() {
       <main className="container mx-auto px-4 py-8">
         {selectedForce ? (
           <Tabs defaultValue="mechs" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-7 lg:w-auto">
+            <TabsList className="grid w-full grid-cols-8 lg:w-auto">
               <TabsTrigger value="mechs">
                 <Shield className="w-4 h-4" />
                 Mechs
@@ -219,6 +220,10 @@ export default function App() {
               <TabsTrigger value="ledger">
                 <List className="w-4 h-4" />
                 Ledger
+              </TabsTrigger>
+              <TabsTrigger value="notes" data-testid="force-notes-tab">
+                <FileText className="w-4 h-4" />
+                Notes
               </TabsTrigger>
               <TabsTrigger value="data">
                 <Database className="w-4 h-4" />
@@ -248,6 +253,10 @@ export default function App() {
 
             <TabsContent value="ledger">
               <LedgerTab force={selectedForce} />
+            </TabsContent>
+
+            <TabsContent value="notes">
+              <NotesTab force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
             <TabsContent value="data">
