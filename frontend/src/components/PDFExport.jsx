@@ -9,6 +9,7 @@ import {
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot } from '../lib/mechs';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
+import { getStatusBadgeVariant } from '../lib/constants';
 
 // Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
@@ -364,23 +365,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const ForcePDF = ({ force }) => {
-  const getStatusBadgeStyle = (status) => {
-    if (status === 'Damaged') {
-      return [styles.unitBadge, styles.unitBadgeDamaged];
-    }
-    if (status === 'Repairing') {
-      return [styles.unitBadge, styles.unitBadgeRepairing];
-    }
-    if (status === 'Disabled' || status === 'Unavailable') {
-      return [styles.unitBadge, styles.unitBadgeDisabled];
-    }
-    if (status === 'Destroyed') {
-      return [styles.unitBadge, styles.unitBadgeDestroyed];
-    }
-    return styles.unitBadge;
-  };
+// Map UI badge variants to PDF badge styles so status visuals are centralised.
+const VARIANT_TO_STYLE = {
+  operational: styles.unitBadge,
+  damaged: [styles.unitBadge, styles.unitBadgeDamaged],
+  disabled: [styles.unitBadge, styles.unitBadgeDisabled],
+  destroyed: [styles.unitBadge, styles.unitBadgeDestroyed],
+  repairing: [styles.unitBadge, styles.unitBadgeRepairing],
+};
 
+const getStatusBadgeStyle = (status) => {
+  const variant = getStatusBadgeVariant(status);
+  const style = VARIANT_TO_STYLE[variant];
+  return style || styles.unitBadge;
+};
+
+const ForcePDF = ({ force }) => {
   // Helper to sort activity logs by timestamp (YYYY-MM-DD), oldest first
   const sortActivityLog = (log = []) => {
     return [...log].sort((a, b) => {
