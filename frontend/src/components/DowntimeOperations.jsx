@@ -83,6 +83,10 @@ export default function DowntimeOperations({ force, onUpdate }) {
     );
   }
 
+  const hasActiveMission = Array.isArray(force.missions)
+    ? force.missions.some((m) => !m.completed)
+    : false;
+
   const calculateCost = () => {
     if (!selectedUnit || !selectedAction) return 0;
 
@@ -324,236 +328,254 @@ export default function DowntimeOperations({ force, onUpdate }) {
         </div>
 
         <div className="p-6 space-y-6">
-          <div className="grid md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">Unit Type</label>
-              <Select
-                value={selectedUnitType}
-                onChange={(e) => {
-                  setSelectedUnitType(e.target.value);
-                  setSelectedUnitId('');
-                  setSelectedAction('');
-                }}
-              >
-                <option value="mech">Mech</option>
-                <option value="elemental">Elemental</option>
-                <option value="pilot">Pilot</option>
-              </Select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Select Unit</label>
-              <Select
-                value={selectedUnitId}
-                onChange={(e) => {
-                  setSelectedUnitId(e.target.value);
-                  setSelectedAction('');
-                }}
-              >
-                <option value="">-- Choose unit --</option>
-                {selectedUnitType === 'mech'
-                  ? force.mechs.map((mech) => (
-                      <option key={mech.id} value={mech.id}>
-                        {mech.name} ({mech.weight}t) - {mech.status}
-                      </option>
-                    ))
-                  : selectedUnitType === 'elemental'
-                    ? (force.elementals || []).map((elemental) => (
-                        <option key={elemental.id} value={elemental.id}>
-                          {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{
-                            elemental.suitsDamaged
-                          })
-                        </option>
-                      ))
-                    : force.pilots.map((pilot) => (
-                        <option key={pilot.id} value={pilot.id}>
-                          {pilot.name} (G:{pilot.gunnery}/P:{pilot.piloting}, Inj:{pilot.injuries})
-                        </option>
-                      ))}
-              </Select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Select Action</label>
-              <Select
-                value={selectedAction}
-                onChange={(e) => setSelectedAction(e.target.value)}
-                disabled={!selectedUnitId}
-              >
-                <option value="">-- Choose action --</option>
-                {availableActions.map((action) => (
-                  <option key={action.id} value={action.id}>
-                    {action.name} {action.makesUnavailable ? '(Unavailable)' : ''}
-                  </option>
-                ))}
-              </Select>
-            </div>
-          </div>
-
-          {selectedUnit && selectedAction && selectedAction !== 'other' && (
-            <div className="border border-border rounded-lg p-4 bg-muted/20">
-              <div className="grid md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <div className="text-sm text-muted-foreground mb-1">Unit</div>
-                  <div className="font-semibold">{selectedUnit.name}</div>
-                  {selectedUnitType === 'mech' ? (
-                    <div className="text-sm">Weight: {selectedUnit.weight} tons</div>
-                  ) : (
-                    <div className="text-sm">
-                      Suits: {selectedUnit.suitsDestroyed} destroyed,{' '}
-                      {selectedUnit.suitsDamaged} damaged
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground mb-1">Action</div>
-                  <div className="font-semibold">
-                    {availableActions.find((a) => a.id === selectedAction)?.name}
-                  </div>
-                  <div className="text-sm font-mono text-muted-foreground">
-                    Formula:{' '}
-                    {availableActions.find((a) => a.id === selectedAction)?.formula}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <div>
-                  <div className="text-2xl font-bold font-mono text-primary">{cost} WP</div>
-                  <div className="text-xs text-muted-foreground">
-                    Current Warchest: {force.currentWarchest} WP
-                  </div>
-                </div>
-
-                {availableActions.find((a) => a.id === selectedAction)?.makesUnavailable && (
-                  <div className="flex items-center gap-2 text-amber-400 text-sm">
-                    <AlertTriangle className="w-4 h-4" />
-                    Unit will be unavailable
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div className="flex justify-end gap-2">
-            <Button
-              onClick={addPlannedAction}
-              disabled={!selectedUnit || !selectedAction}
-              size="lg"
-            >
-              {selectedAction === 'other'
-                ? 'Configure Other Action'
-                : `Add to Downtime Cycle (${cost} WP)`}
-            </Button>
-          </div>
-
-          {/* Planned actions summary */}
-          <div className="border border-border rounded-lg p-4 bg-muted/10 space-y-3">
-            <div className="flex items-center justify-between">
+          {hasActiveMission ? (
+            <div className="border border-amber-500 bg-amber-500/10 text-amber-100 rounded-md p-4 text-sm flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 mt-0.5" />
               <div>
-                <h4 className="text-sm font-semibold uppercase tracking-wider">
-                  Planned Downtime Cycle
-                </h4>
-                <p className="text-xs text-muted-foreground">
-                  Actions are not applied immediately. Review the backlog, then execute the cycle
-                  to apply all changes and create a post-downtime snapshot.
+                <p className="font-semibold mb-1">Active mission detected</p>
+                <p className="text-xs">
+                  You currently have at least one mission marked as active. Complete all missions
+                  before planning or executing a downtime cycle. This keeps the campaign
+                  progression consistent: <strong>Battle → Downtime → Next Battle</strong>.
                 </p>
               </div>
-              <div className="text-right text-xs">
-                <div>
-                  Planned cost:{' '}
-                  <span className="font-mono font-semibold">
-                    {totalPlannedCost} WP
-                  </span>
-                </div>
-                <div>
-                  Projected Warchest:{' '}
-                  <span
-                    className={`font-mono font-semibold ${
-                      projectedWarchest >= 0 ? 'text-emerald-400' : 'text-destructive'
-                    }`}
-                  >
-                    {projectedWarchest} WP
-                  </span>
-                </div>
-              </div>
             </div>
+          ) : (
+            <>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Unit Type</label>
+                  <Select
+                    value={selectedUnitType}
+                    onChange={(e) => {
+                      setSelectedUnitType(e.target.value);
+                      setSelectedUnitId('');
+                      setSelectedAction('');
+                    }}
+                  >
+                    <option value="mech">Mech</option>
+                    <option value="elemental">Elemental</option>
+                    <option value="pilot">Pilot</option>
+                  </Select>
+                </div>
 
-            {plannedActions.length === 0 ? (
-              <div className="text-xs text-muted-foreground">
-                No planned actions yet. Select a unit and action above, then add it to the
-                downtime cycle.
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="data-table text-xs" data-testid="downtime-planned-table">
-                  <thead>
-                    <tr>
-                      <th className="text-left">Unit</th>
-                      <th className="text-left">Type</th>
-                      <th className="text-left">Action</th>
-                      <th className="text-left">Date</th>
-                      <th className="text-right">Cost (WP)</th>
-                      <th className="text-right">Remove</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {plannedActions.map((plan) => (
-                      <tr key={plan.id} data-testid="downtime-planned-row">
-                        <td>{plan.unitName}</td>
-                        <td className="text-muted-foreground">
-                          {plan.unitType === 'mech'
-                            ? 'Mech'
-                            : plan.unitType === 'elemental'
-                              ? 'Elemental'
-                              : 'Pilot'}
-                        </td>
-                        <td>{plan.actionName}</td>
-                        <td className="font-mono">{plan.createdAt}</td>
-                        <td className="text-right font-mono">{plan.cost}</td>
-                        <td className="text-right">
-                          <Button
-                            size="xs"
-                            variant="outline"
-                            onClick={() => removePlannedAction(plan.id)}
-                          >
-                            Remove
-                          </Button>
-                        </td>
-                      </tr>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Select Unit</label>
+                  <Select
+                    value={selectedUnitId}
+                    onChange={(e) => {
+                      setSelectedUnitId(e.target.value);
+                      setSelectedAction('');
+                    }}
+                  >
+                    <option value="">-- Choose unit --</option>
+                    {selectedUnitType === 'mech'
+                      ? force.mechs.map((mech) => (
+                          <option key={mech.id} value={mech.id}>
+                            {mech.name} ({mech.weight}t) - {mech.status}
+                          </option>
+                        ))
+                      : selectedUnitType === 'elemental'
+                        ? (force.elementals || []).map((elemental) => (
+                            <option key={elemental.id} value={elemental.id}>
+                              {elemental.name} (D:{elemental.suitsDestroyed}/Dmg:{
+                                elemental.suitsDamaged
+                              })
+                            </option>
+                          ))
+                        : force.pilots.map((pilot) => (
+                            <option key={pilot.id} value={pilot.id}>
+                              {pilot.name} (G:{pilot.gunnery}/P:{pilot.piloting}, Inj:{
+                                pilot.injuries
+                              })
+                            </option>
+                          ))}
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Select Action</label>
+                  <Select
+                    value={selectedAction}
+                    onChange={(e) => setSelectedAction(e.target.value)}
+                    disabled={!selectedUnitId}
+                  >
+                    <option value="">-- Choose action --</option>
+                    {availableActions.map((action) => (
+                      <option key={action.id} value={action.id}>
+                        {action.name} {action.makesUnavailable ? '(Unavailable)' : ''}
+                      </option>
                     ))}
-                  </tbody>
-                </table>
+                  </Select>
+                </div>
               </div>
-            )}
 
-            <div className="flex items-center justify-between pt-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={clearPlannedActions}
-                disabled={plannedActions.length === 0}
-              >
-                Clear Cycle
-              </Button>
-              <div className="flex items-center gap-3">
-                {!canAffordCycle && plannedActions.length > 0 && (
-                  <div className="text-xs text-destructive flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" />
-                    Insufficient warchest for full cycle
+              {selectedUnit && selectedAction && selectedAction !== 'other' && (
+                <div className="border border-border rounded-lg p-4 bg-muted/20">
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Unit</div>
+                      <div className="font-semibold">{selectedUnit.name}</div>
+                      {selectedUnitType === 'mech' ? (
+                        <div className="text-sm">Weight: {selectedUnit.weight} tons</div>
+                      ) : (
+                        <div className="text-sm">
+                          Suits: {selectedUnit.suitsDestroyed} destroyed,{' '}
+                          {selectedUnit.suitsDamaged} damaged
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Action</div>
+                      <div className="font-semibold">
+                        {availableActions.find((a) => a.id === selectedAction)?.name}
+                      </div>
+                      <div className="text-sm font-mono text-muted-foreground">
+                        Formula:{' '}
+                        {availableActions.find((a) => a.id === selectedAction)?.formula}
+                      </div>
+                    </div>
                   </div>
-                )}
+
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <div>
+                      <div className="text-2xl font-bold font-mono text-primary">{cost} WP</div>
+                      <div className="text-xs text-muted-foreground">
+                        Current Warchest: {force.currentWarchest} WP
+                      </div>
+                    </div>
+
+                    {availableActions.find((a) => a.id === selectedAction)?.makesUnavailable && (
+                      <div className="flex items-center gap-2 text-amber-400 text-sm">
+                        <AlertTriangle className="w-4 h-4" />
+                        Unit will be unavailable
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2">
                 <Button
-                  size="sm"
-                  onClick={executeDowntimeCycle}
-                  disabled={plannedActions.length === 0 || !canAffordCycle}
-                  data-testid="execute-downtime-cycle-button"
+                  onClick={addPlannedAction}
+                  disabled={!selectedUnit || !selectedAction}
+                  size="lg"
                 >
-                  Execute Downtime Cycle
+                  {selectedAction === 'other'
+                    ? 'Configure Other Action'
+                    : `Add to Downtime Cycle (${cost} WP)`}
                 </Button>
               </div>
-            </div>
-          </div>
+
+              {/* Planned actions summary */}
+              <div className="border border-border rounded-lg p-4 bg-muted/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-semibold uppercase tracking-wider">
+                      Planned Downtime Cycle
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      Actions are not applied immediately. Review the backlog, then execute the cycle
+                      to apply all changes and create a post-downtime snapshot.
+                    </p>
+                  </div>
+                  <div className="text-right text-xs">
+                    <div>
+                      Planned cost:{' '}
+                      <span className="font-mono font-semibold">
+                        {totalPlannedCost} WP
+                      </span>
+                    </div>
+                    <div>
+                      Projected Warchest:{' '}
+                      <span
+                        className={`font-mono font-semibold ${
+                          projectedWarchest >= 0 ? 'text-emerald-400' : 'text-destructive'
+                        }`}
+                      >
+                        {projectedWarchest} WP
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {plannedActions.length === 0 ? (
+                  <div className="text-xs text-muted-foreground">
+                    No planned actions yet. Select a unit and action above, then add it to the
+                    downtime cycle.
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="data-table text-xs" data-testid="downtime-planned-table">
+                      <thead>
+                        <tr>
+                          <th className="text-left">Unit</th>
+                          <th className="text-left">Type</th>
+                          <th className="text-left">Action</th>
+                          <th className="text-left">Date</th>
+                          <th className="text-right">Cost (WP)</th>
+                          <th className="text-right">Remove</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {plannedActions.map((plan) => (
+                          <tr key={plan.id} data-testid="downtime-planned-row">
+                            <td>{plan.unitName}</td>
+                            <td className="text-muted-foreground">
+                              {plan.unitType === 'mech'
+                                ? 'Mech'
+                                : plan.unitType === 'elemental'
+                                  ? 'Elemental'
+                                  : 'Pilot'}
+                            </td>
+                            <td>{plan.actionName}</td>
+                            <td className="font-mono">{plan.createdAt}</td>
+                            <td className="text-right font-mono">{plan.cost}</td>
+                            <td className="text-right">
+                              <Button
+                                size="xs"
+                                variant="outline"
+                                onClick={() => removePlannedAction(plan.id)}
+                              >
+                                Remove
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearPlannedActions}
+                    disabled={plannedActions.length === 0}
+                  >
+                    Clear Cycle
+                  </Button>
+                  <div className="flex items-center gap-3">
+                    {!canAffordCycle && plannedActions.length > 0 && (
+                      <div className="text-xs text-destructive flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3" />
+                        Insufficient warchest for full cycle
+                      </div>
+                    )}
+                    <Button
+                      size="sm"
+                      onClick={executeDowntimeCycle}
+                      disabled={plannedActions.length === 0 || !canAffordCycle}
+                      data-testid="execute-downtime-cycle-button"
+                    >
+                      Execute Downtime Cycle
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
