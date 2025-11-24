@@ -12,6 +12,11 @@ import {
   applyElementalDowntimeAction,
   applyPilotDowntimeAction,
 } from '../lib/downtime';
+import { createSnapshot } from '../lib/snapshots';
+
+// Planned downtime action kept in a cycle backlog until validation.
+// Actions are applied in sequence to a working copy of the force when
+// the user confirms the downtime cycle.
 
 export default function DowntimeOperations({ force, onUpdate }) {
   const [selectedUnitType, setSelectedUnitType] = useState('mech');
@@ -27,6 +32,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [elementalActions, setElementalActions] = useState([]);
   const [pilotActions, setPilotActions] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Planned actions backlog (downtime cycle)
+  const [plannedActions, setPlannedActions] = useState([]);
 
   useEffect(() => {
     fetch('./data/downtime-actions.json')
@@ -93,112 +101,152 @@ export default function DowntimeOperations({ force, onUpdate }) {
   };
 
   const cost = calculateCost();
-  const canAfford = cost <= force.currentWarchest;
 
-  const performAction = () => {
+  const addPlannedAction = () => {
+    if (!selectedUnit || !selectedAction) return;
+
+    // "Other" actions are configured via the dedicated dialog
     if (selectedAction === 'other') {
       setShowOtherActionDialog(true);
       return;
     }
 
-    if (!selectedUnit || !selectedAction || !canAfford) return;
-
-    const timestamp = force.currentDate;
-    const inGameDate = force.currentDate;
-    const lastMission = force.missions?.[force.missions.length - 1];
     const action = availableActions.find((a) => a.id === selectedAction);
-
     if (!action) return;
 
-    if (selectedUnitType === 'mech') {
-      const result = applyMechDowntimeAction(force, {
-        mechId: selectedUnitId,
-        action,
-        cost,
-        timestamp,
-        inGameDate,
-        lastMissionName: lastMission?.name || null,
-      });
-      onUpdate(result);
-    } else if (selectedUnitType === 'elemental') {
-      const result = applyElementalDowntimeAction(force, {
-        elementalId: selectedUnitId,
-        actionId: selectedAction,
-        action,
-        cost,
-        timestamp,
-        inGameDate,
-        lastMissionName: lastMission?.name || null,
-      });
-      onUpdate(result);
-    } else if (selectedUnitType === 'pilot') {
-      const result = applyPilotDowntimeAction(force, {
-        pilotId: selectedUnitId,
-        actionId: selectedAction,
-        action,
-        cost,
-        timestamp,
-        inGameDate,
-        lastMissionName: lastMission?.name || null,
-      });
-      onUpdate(result);
-    }
+    const newPlanned = {
+      id: `plan-${Date.now()}-${plannedActions.length}`,
+      unitType: selectedUnitType,
+      unitId: selectedUnitId,
+      unitName: selectedUnit.name,
+      actionId: selectedAction,
+      actionName: action.name,
+      formula: action.formula,
+      makesUnavailable: Boolean(action.makesUnavailable),
+      cost,
+      createdAt: force.currentDate,
+    };
 
+    setPlannedActions((prev) => [...prev, newPlanned]);
     setSelectedUnitId('');
     setSelectedAction('');
+  };
+
+  const totalPlannedCost = plannedActions.reduce((sum, a) => sum + (a.cost || 0), 0);
+  const projectedWarchest = force.currentWarchest - totalPlannedCost;
+
+  const canAffordCycle = projectedWarchest >= 0;
+
+  const removePlannedAction = (id) => {
+    setPlannedActions((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const clearPlannedActions = () => {
+    setPlannedActions([]);
+  };
+
+  const executeDowntimeCycle = () => {
+    if (plannedActions.length === 0) return;
+    if (!canAffordCycle) return;
+
+    // Apply all planned actions sequentially to a working copy of the force.
+    let workingForce = { ...force };
+
+    plannedActions.forEach((plan) => {
+      const timestamp = workingForce.currentDate;
+      const lastMission = workingForce.missions?.[workingForce.missions.length - 1];
+
+      if (plan.unitType === 'mech') {
+        const result = applyMechDowntimeAction(workingForce, {
+          mechId: plan.unitId,
+          action: {
+            name: plan.actionName,
+            makesUnavailable: plan.makesUnavailable,
+          },
+          cost: plan.cost,
+          timestamp,
+          lastMissionName: lastMission?.name || null,
+        });
+        workingForce = {
+          ...workingForce,
+          mechs: result.mechs,
+          currentWarchest: result.currentWarchest,
+        };
+      } else if (plan.unitType === 'elemental') {
+        const result = applyElementalDowntimeAction(workingForce, {
+          elementalId: plan.unitId,
+          actionId: plan.actionId,
+          action: {
+            name: plan.actionName,
+          },
+          cost: plan.cost,
+          timestamp,
+          lastMissionName: lastMission?.name || null,
+        });
+        workingForce = {
+          ...workingForce,
+          elementals: result.elementals,
+          currentWarchest: result.currentWarchest,
+        };
+      } else if (plan.unitType === 'pilot') {
+        const result = applyPilotDowntimeAction(workingForce, {
+          pilotId: plan.unitId,
+          actionId: plan.actionId,
+          action: {
+            name: plan.actionName,
+          },
+          cost: plan.cost,
+          timestamp,
+          lastMissionName: lastMission?.name || null,
+        });
+        workingForce = {
+          ...workingForce,
+          pilots: result.pilots,
+          currentWarchest: result.currentWarchest,
+        };
+      }
+    });
+
+    // Create a post-downtime snapshot from the resulting force state.
+    const snapshotLabel = `After downtime cycle #${(force.snapshots || []).length + 1}`;
+    const snapshot = createSnapshot(workingForce, {
+      type: 'post-downtime',
+      label: snapshotLabel,
+    });
+
+    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+
+    onUpdate({
+      mechs: workingForce.mechs,
+      pilots: workingForce.pilots,
+      elementals: workingForce.elementals,
+      currentWarchest: workingForce.currentWarchest,
+      snapshots: [...existingSnapshots, snapshot],
+    });
+
+    setPlannedActions([]);
   };
 
   const performOtherAction = () => {
     if (!otherActionData.description) return;
 
     const costValue = otherActionData.cost || 0;
-    if (costValue > force.currentWarchest) return;
+    if (!selectedUnitId) return;
 
-    const timestamp = force.currentDate;
-    const inGameDate = force.currentDate;
-    const lastMission = force.missions?.[force.missions.length - 1];
+    const newPlanned = {
+      id: `plan-${Date.now()}-${plannedActions.length}`,
+      unitType: selectedUnitType,
+      unitId: selectedUnitId,
+      unitName: selectedUnit?.name || 'Unit',
+      actionId: 'other',
+      actionName: `Other: ${otherActionData.description}`,
+      formula: 'custom',
+      makesUnavailable: false,
+      cost: costValue,
+      createdAt: force.currentDate,
+    };
 
-    const updated = { ...force, currentWarchest: force.currentWarchest - costValue };
-
-    if (selectedUnitType === 'mech' && selectedUnitId) {
-      updated.mechs = force.mechs.map((mech) => {
-        if (mech.id !== selectedUnitId) return mech;
-        const activityLog = [...(mech.activityLog || [])];
-        activityLog.push({
-          timestamp,
-          action: `Other: ${otherActionData.description} (${costValue} WP)`,
-          mission: lastMission?.name || null,
-          cost: costValue,
-        });
-        return { ...mech, activityLog };
-      });
-    } else if (selectedUnitType === 'elemental' && selectedUnitId) {
-      updated.elementals = (force.elementals || []).map((elemental) => {
-        if (elemental.id !== selectedUnitId) return elemental;
-        const activityLog = [...(elemental.activityLog || [])];
-        activityLog.push({
-          timestamp,
-          action: `Other: ${otherActionData.description} (${costValue} WP)`,
-          mission: lastMission?.name || null,
-          cost: costValue,
-        });
-        return { ...elemental, activityLog };
-      });
-    } else if (selectedUnitType === 'pilot' && selectedUnitId) {
-      updated.pilots = (force.pilots || []).map((pilot) => {
-        if (pilot.id !== selectedUnitId) return pilot;
-        const activityLog = [...(pilot.activityLog || [])];
-        activityLog.push({
-          timestamp,
-          action: `Other: ${otherActionData.description} (${costValue} WP)`,
-          mission: lastMission?.name || null,
-          cost: costValue,
-        });
-        return { ...pilot, activityLog };
-      });
-    }
-
-    onUpdate(updated);
+    setPlannedActions((prev) => [...prev, newPlanned]);
 
     setShowOtherActionDialog(false);
     setOtherActionData({ description: '', cost: 0 });
@@ -373,7 +421,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                 <div>
                   <div className="text-2xl font-bold font-mono text-primary">{cost} WP</div>
                   <div className="text-xs text-muted-foreground">
-                    Available: {force.currentWarchest} WP
+                    Current Warchest: {force.currentWarchest} WP
                   </div>
                 </div>
 
@@ -389,22 +437,123 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
           <div className="flex justify-end gap-2">
             <Button
-              onClick={performAction}
-              disabled={!selectedUnit || !selectedAction || (!canAfford && selectedAction !== 'other')}
+              onClick={addPlannedAction}
+              disabled={!selectedUnit || !selectedAction}
               size="lg"
             >
               {selectedAction === 'other'
                 ? 'Configure Other Action'
-                : `Perform Action (${cost} WP)`}
+                : `Add to Downtime Cycle (${cost} WP)`}
             </Button>
           </div>
 
-          {!canAfford && selectedAction && selectedAction !== 'other' && (
-            <div className="text-sm text-destructive flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4" />
-              Insufficient warchest points
+          {/* Planned actions summary */}
+          <div className="border border-border rounded-lg p-4 bg-muted/10 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-semibold uppercase tracking-wider">
+                  Planned Downtime Cycle
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  Actions are not applied immediately. Review the backlog, then execute the cycle
+                  to apply all changes and create a post-downtime snapshot.
+                </p>
+              </div>
+              <div className="text-right text-xs">
+                <div>
+                  Planned cost:{' '}
+                  <span className="font-mono font-semibold">
+                    {totalPlannedCost} WP
+                  </span>
+                </div>
+                <div>
+                  Projected Warchest:{' '}
+                  <span
+                    className={`font-mono font-semibold ${
+                      projectedWarchest >= 0 ? 'text-emerald-400' : 'text-destructive'
+                    }`}
+                  >
+                    {projectedWarchest} WP
+                  </span>
+                </div>
+              </div>
             </div>
-          )}
+
+            {plannedActions.length === 0 ? (
+              <div className="text-xs text-muted-foreground">
+                No planned actions yet. Select a unit and action above, then add it to the
+                downtime cycle.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="data-table text-xs" data-testid="downtime-planned-table">
+                  <thead>
+                    <tr>
+                      <th className="text-left">Unit</th>
+                      <th className="text-left">Type</th>
+                      <th className="text-left">Action</th>
+                      <th className="text-left">Date</th>
+                      <th className="text-right">Cost (WP)</th>
+                      <th className="text-right">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {plannedActions.map((plan) => (
+                      <tr key={plan.id} data-testid="downtime-planned-row">
+                        <td>{plan.unitName}</td>
+                        <td className="text-muted-foreground">
+                          {plan.unitType === 'mech'
+                            ? 'Mech'
+                            : plan.unitType === 'elemental'
+                              ? 'Elemental'
+                              : 'Pilot'}
+                        </td>
+                        <td>{plan.actionName}</td>
+                        <td className="font-mono">{plan.createdAt}</td>
+                        <td className="text-right font-mono">{plan.cost}</td>
+                        <td className="text-right">
+                          <Button
+                            size="xs"
+                            variant="outline"
+                            onClick={() => removePlannedAction(plan.id)}
+                          >
+                            Remove
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearPlannedActions}
+                disabled={plannedActions.length === 0}
+              >
+                Clear Cycle
+              </Button>
+              <div className="flex items-center gap-3">
+                {!canAffordCycle && plannedActions.length > 0 && (
+                  <div className="text-xs text-destructive flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
+                    Insufficient warchest for full cycle
+                  </div>
+                )}
+                <Button
+                  size="sm"
+                  onClick={executeDowntimeCycle}
+                  disabled={plannedActions.length === 0 || !canAffordCycle}
+                  data-testid="execute-downtime-cycle-button"
+                >
+                  Execute Downtime Cycle
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -463,10 +612,11 @@ export default function DowntimeOperations({ force, onUpdate }) {
                 disabled={
                   !otherActionData.description ||
                   otherActionData.cost < 0 ||
-                  otherActionData.cost > force.currentWarchest
+                  otherActionData.cost > force.currentWarchest ||
+                  !selectedUnitId
                 }
               >
-                Perform Action ({otherActionData.cost} WP)
+                Add to Cycle ({otherActionData.cost} WP)
               </Button>
             </div>
           </div>
