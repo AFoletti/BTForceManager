@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, Minus, Users } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { formatNumber } from '../lib/utils';
+import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 
 export default function ElementalRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -19,7 +20,7 @@ export default function ElementalRoster({ force, onUpdate }) {
     suitsDestroyed: 0,
     suitsDamaged: 0,
     bv: 0,
-    status: 'Operational',
+    status: UNIT_STATUS.OPERATIONAL,
     image: '',
     history: '',
     warchestCost: 0,
@@ -36,7 +37,7 @@ export default function ElementalRoster({ force, onUpdate }) {
         suitsDestroyed: elemental.suitsDestroyed,
         suitsDamaged: elemental.suitsDamaged,
         bv: elemental.bv,
-        status: elemental.status,
+        status: elemental.status || UNIT_STATUS.OPERATIONAL,
         image: elemental.image || '',
         history: elemental.history || '',
         warchestCost: elemental.warchestCost || 0,
@@ -51,7 +52,7 @@ export default function ElementalRoster({ force, onUpdate }) {
         suitsDestroyed: 0,
         suitsDamaged: 0,
         bv: 0,
-        status: 'Operational',
+        status: UNIT_STATUS.OPERATIONAL,
         image: '',
         history: '',
         warchestCost: 0,
@@ -62,29 +63,30 @@ export default function ElementalRoster({ force, onUpdate }) {
 
   const handleSave = () => {
     if (!formData.name || !formData.bv) {
+      // eslint-disable-next-line no-alert
       alert('Name and BV are required');
       return;
     }
 
     if (editingElemental) {
       // Update existing elemental
-      const updatedElementals = (force.elementals || []).map(e => 
-        e.id === editingElemental.id 
+      const updatedElementals = (force.elementals || []).map((e) =>
+        e.id === editingElemental.id
           ? {
               ...e,
               name: formData.name,
               commander: formData.commander,
-              gunnery: parseInt(formData.gunnery) || 3,
-              antimech: parseInt(formData.antimech) || 4,
-              suitsDestroyed: parseInt(formData.suitsDestroyed) || 0,
-              suitsDamaged: parseInt(formData.suitsDamaged) || 0,
-              bv: parseInt(formData.bv) || 0,
+              gunnery: parseInt(formData.gunnery, 10) || 3,
+              antimech: parseInt(formData.antimech, 10) || 4,
+              suitsDestroyed: parseInt(formData.suitsDestroyed, 10) || 0,
+              suitsDamaged: parseInt(formData.suitsDamaged, 10) || 0,
+              bv: parseInt(formData.bv, 10) || 0,
               status: formData.status,
               image: formData.image,
               history: formData.history,
-              warchestCost: parseInt(formData.warchestCost) || 0,
+              warchestCost: parseInt(formData.warchestCost, 10) || 0,
             }
-          : e
+          : e,
       );
       const prevCost = editingElemental.warchestCost || 0;
       const newCost = parseInt(formData.warchestCost, 10) || 0;
@@ -93,17 +95,17 @@ export default function ElementalRoster({ force, onUpdate }) {
       onUpdate({ elementals: updatedElementals, currentWarchest });
     } else {
       // Add new elemental
-      const warchestCost = parseInt(formData.warchestCost) || 0;
+      const warchestCost = parseInt(formData.warchestCost, 10) || 0;
       const timestamp = force.currentDate;
       const newElemental = {
         id: `elemental-${Date.now()}`,
         name: formData.name,
         commander: formData.commander,
-        gunnery: parseInt(formData.gunnery) || 3,
-        antimech: parseInt(formData.antimech) || 4,
+        gunnery: parseInt(formData.gunnery, 10) || 3,
+        antimech: parseInt(formData.antimech, 10) || 4,
         suitsDestroyed: 0,
         suitsDamaged: 0,
-        bv: parseInt(formData.bv) || 0,
+        bv: parseInt(formData.bv, 10) || 0,
         status: formData.status,
         image: formData.image,
         history: formData.history,
@@ -127,34 +129,22 @@ export default function ElementalRoster({ force, onUpdate }) {
   };
 
   const updateCounter = (elementalId, field, delta) => {
-    const updatedElementals = force.elementals.map(elemental => {
+    const updatedElementals = force.elementals.map((elemental) => {
       if (elemental.id === elementalId) {
         // Both destroyed and damaged suits are capped at 5
         const maxValue = 5;
         const currentValue = elemental[field];
         const newValue = Math.max(0, Math.min(maxValue, currentValue + delta));
-        
+
         return { ...elemental, [field]: newValue };
       }
       return elemental;
     });
-    
+
     onUpdate({ elementals: updatedElementals });
   };
 
-  const getStatusColor = (status) => {
-    const statusMap = {
-      'Operational': 'operational',
-      'Damaged': 'damaged',
-      'Disabled': 'disabled',
-      'Destroyed': 'destroyed',
-      'Repairing': 'repairing',
-      'Unavailable': 'disabled'
-    };
-    return statusMap[status] || 'default';
-  };
-
-  const getSuitStatusColor = (destroyed, damaged) => {
+  const getSuitStatusVariant = (destroyed, damaged) => {
     if (destroyed >= 3) return 'disabled';
     if (destroyed >= 1 || damaged >= 3) return 'damaged';
     return 'operational';
@@ -179,7 +169,7 @@ export default function ElementalRoster({ force, onUpdate }) {
           </div>
         </div>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="data-table">
           <thead>
@@ -196,15 +186,15 @@ export default function ElementalRoster({ force, onUpdate }) {
             </tr>
           </thead>
           <tbody>
-            {(!force.elementals || force.elementals.length === 0) ? (
+            {!force.elementals || force.elementals.length === 0 ? (
               <tr>
                 <td colSpan="9" className="text-center py-8 text-muted-foreground">
                   No elementals in roster. Add elementals via Data Editor.
                 </td>
               </tr>
             ) : (
-              force.elementals.map(elemental => (
-                <tr 
+              force.elementals.map((elemental) => (
+                <tr
                   key={elemental.id}
                   onClick={(e) => {
                     // Don't open dialog if clicking on suit counter buttons
@@ -217,17 +207,17 @@ export default function ElementalRoster({ force, onUpdate }) {
                   <td>
                     <div className="flex items-center gap-3">
                       {elemental.image && (
-                        <img 
-                          src={elemental.image} 
-                          alt={elemental.name} 
-                          className="max-h-10 max-w-10 rounded object-contain" 
+                        <img
+                          src={elemental.image}
+                          alt={elemental.name}
+                          className="max-h-10 max-w-10 rounded object-contain"
                         />
                       )}
                       <span className="font-medium">{elemental.name}</span>
                     </div>
                   </td>
                   <td>
-                    <Badge variant={getStatusColor(elemental.status)}>
+                    <Badge variant={getStatusBadgeVariant(elemental.status)}>
                       {elemental.status}
                     </Badge>
                   </td>
@@ -245,7 +235,12 @@ export default function ElementalRoster({ force, onUpdate }) {
                       >
                         <Minus className="w-3 h-3" />
                       </Button>
-                      <Badge variant={getSuitStatusColor(elemental.suitsDestroyed, elemental.suitsDamaged)}>
+                      <Badge
+                        variant={getSuitStatusVariant(
+                          elemental.suitsDestroyed,
+                          elemental.suitsDamaged,
+                        )}
+                      >
                         {elemental.suitsDestroyed}/5
                       </Badge>
                       <Button
@@ -270,7 +265,12 @@ export default function ElementalRoster({ force, onUpdate }) {
                       >
                         <Minus className="w-3 h-3" />
                       </Button>
-                      <Badge variant={getSuitStatusColor(elemental.suitsDestroyed, elemental.suitsDamaged)}>
+                      <Badge
+                        variant={getSuitStatusVariant(
+                          elemental.suitsDestroyed,
+                          elemental.suitsDamaged,
+                        )}
+                      >
                         {elemental.suitsDamaged}/5
                       </Badge>
                       <Button
@@ -305,7 +305,9 @@ export default function ElementalRoster({ force, onUpdate }) {
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editingElemental ? 'Edit Elemental Point' : 'Add New Elemental Point'}</DialogTitle>
+            <DialogTitle>
+              {editingElemental ? 'Edit Elemental Point' : 'Add New Elemental Point'}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
@@ -354,19 +356,20 @@ export default function ElementalRoster({ force, onUpdate }) {
                 />
               </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
-              <Input
-                type="number"
-                value={formData.warchestCost}
-                onChange={(e) => setFormData({ ...formData, warchestCost: e.target.value })}
-                placeholder="0"
-                min="0"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Cost in WP to acquire this elemental point. This will be subtracted from the current Warchest.
-              </p>
-            </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
+                <Input
+                  type="number"
+                  value={formData.warchestCost}
+                  onChange={(e) => setFormData({ ...formData, warchestCost: e.target.value })}
+                  placeholder="0"
+                  min="0"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Cost in WP to acquire this elemental point. This will be subtracted from the current
+                  Warchest.
+                </p>
+              </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">BV (Battle Value) *</label>
@@ -383,13 +386,16 @@ export default function ElementalRoster({ force, onUpdate }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Status</label>
-                <Select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
-                  <option value="Operational">Operational</option>
-                  <option value="Damaged">Damaged</option>
-                  <option value="Disabled">Disabled</option>
-                  <option value="Destroyed">Destroyed</option>
-                  <option value="Repairing">Repairing</option>
-                  <option value="Unavailable">Unavailable</option>
+                <Select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                >
+                  <option value={UNIT_STATUS.OPERATIONAL}>{UNIT_STATUS.OPERATIONAL}</option>
+                  <option value={UNIT_STATUS.DAMAGED}>{UNIT_STATUS.DAMAGED}</option>
+                  <option value={UNIT_STATUS.DISABLED}>{UNIT_STATUS.DISABLED}</option>
+                  <option value={UNIT_STATUS.DESTROYED}>{UNIT_STATUS.DESTROYED}</option>
+                  <option value={UNIT_STATUS.REPAIRING}>{UNIT_STATUS.REPAIRING}</option>
+                  <option value={UNIT_STATUS.UNAVAILABLE}>{UNIT_STATUS.UNAVAILABLE}</option>
                 </Select>
               </div>
 
