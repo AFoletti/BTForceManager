@@ -18,24 +18,7 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
-
-function getUnitStatusVariant(status) {
-  switch (status) {
-    case 'Operational':
-      return 'operational';
-    case 'Damaged':
-      return 'damaged';
-    case 'Disabled':
-    case 'Unavailable':
-      return 'disabled';
-    case 'Destroyed':
-      return 'destroyed';
-    case 'Repairing':
-      return 'repairing';
-    default:
-      return 'outline';
-  }
-}
+import { getStatusBadgeVariant } from '../lib/constants';
 
 const emptyMissionForm = {
   name: '',
@@ -488,7 +471,7 @@ export default function MissionManager({ force, onUpdate }) {
                               </div>
                               <div className="flex items-center gap-2">
                                 <Badge
-                                  variant={getUnitStatusVariant(mech.status)}
+                                  variant={getStatusBadgeVariant(mech.status)}
                                   className="text-xs"
                                 >
                                   {mech.status}
@@ -563,7 +546,7 @@ export default function MissionManager({ force, onUpdate }) {
                               </div>
                               <div className="flex items-center gap-2">
                                 <Badge
-                                  variant={getUnitStatusVariant(elemental.status)}
+                                  variant={getStatusBadgeVariant(elemental.status)}
                                   className="text-xs"
                                 >
                                   {elemental.status}

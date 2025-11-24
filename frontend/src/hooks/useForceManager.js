@@ -51,12 +51,6 @@ function findLatestInGameDate(raw) {
     });
   });
 
-  // Legacy force-level log, kept for backwards compatibility
-  (raw.otherActionsLog || []).forEach((entry) => {
-    add(entry.inGameDate);
-    add(entry.timestamp);
-  });
-
   if (candidates.length === 0) return null;
 
   let latestString = null;
@@ -140,9 +134,6 @@ export function normalizeForce(raw) {
   normalized.pilots = Array.isArray(normalized.pilots) ? normalized.pilots : [];
   normalized.elementals = Array.isArray(normalized.elementals) ? normalized.elementals : [];
   normalized.missions = Array.isArray(normalized.missions) ? normalized.missions : [];
-  normalized.otherActionsLog = Array.isArray(normalized.otherActionsLog)
-    ? normalized.otherActionsLog
-    : [];
 
   return normalized;
 }

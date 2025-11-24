@@ -137,24 +137,38 @@ After copying, `index.html` + `static/` are in sync with source.
   - `formatDate(date)` – localized timestamp.
   - `downloadJSON(data, filename)` – triggers a JSON file download.
 
+- `src/lib/utils.js`
+  - `cn(...classes)` – Tailwind class merging.
+  - `formatNumber(num)` – apostrophe (`'`) as thousands separator.
+  - `formatDate(date)` – localized timestamp.
+  - `downloadJSON(data, filename)` – triggers a JSON file download.
+
+- `src/lib/constants.js`
+  - `UNIT_STATUS` – central enum of unit statuses (`Operational`, `Damaged`, `Disabled`, `Destroyed`, `Repairing`, `Unavailable`).
+  - `getStatusBadgeVariant(status)` – maps a domain status to a UI badge variant used across rosters, mission editor, and PDF export.
+  - `DOWNTIME_ACTION_IDS` – central list of downtime action identifiers used by `data/downtime-actions.json` and `lib/downtime.js`.
+
 - `src/lib/missions.js`
-  - `calculateMissionTotalBV(force, mechIds, elementalIds)`.
-  - `getAssignedMechs(force, mechIds)` / `getAssignedElementals(force, elementalIds)`.
-  - `applyMissionCreation(force, formData, timestamp)` – adds mission, updates unit and pilot logs, and adjusts Warchest.
-  - `applyMissionUpdate(missions, missionId, formData, timestamp)`.
-  - `applyMissionCompletion(force, missionId, timestamp)` – marks mission completed and adjusts Warchest.
+  - `isMechAvailableForMission(force, mech)` – enforces mission-availability rules for mechs (status, pilot assigned, pilot not KIA).
+  - `isElementalAvailableForMission(elemental)` – enforces mission-availability rules for elemental points.
+  - `calculateMissionTotalBV(force, mechIds, elementalIds)` – sums BV of assigned units.
+  - `getAssignedMechs(force, mechIds)` / `getAssignedElementals(force, elementalIds)` – resolve ids to unit objects while preserving order.
+  - `getMissionObjectiveReward(mission)` – sums rewards for achieved objectives.
+  - `applyMissionCreation(force, formData, timestamp)` – adds a mission, logs assignments to mechs/elementals/pilots (via `pilotId`), and subtracts mission cost from Warchest.
+  - `applyMissionUpdate(missions, missionId, formData, timestamp)` – pure mission array updater.
+  - `applyMissionCompletion(force, missionId, completionData, timestamp)` – marks mission completed, updates objectives/recap, and adds objective rewards to Warchest.
 
 - `src/lib/downtime.js`
   - `buildDowntimeContext(force, unit)` – generates context for downtime formulas (weight, suits, WP multiplier).
-  - `evaluateDowntimeCost(formula, context)` – evaluates formula in a constrained way and returns a cost (uses `eval` in a controlled, internal-only fashion).
-  - `applyMechDowntimeAction(force, { mechId, action, cost, timestamp, lastMissionName })` – logs action to mech, changes status/unavailability, adjusts Warchest.
-  - `applyElementalDowntimeAction(force, {...})` – logs action to elemental, adjusts suits counters and Warchest.
-  - `logOtherDowntimeAction(force, { description, cost, timestamp })` – logs force-level miscellaneous actions.
+  - `evaluateDowntimeCost(formula, context)` – evaluates the formula using a tiny arithmetic expression parser (numbers, +, -, *, /, parentheses) with variables `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`.
+  - `applyMechDowntimeAction(force, { mechId, action, cost, timestamp, lastMissionName })` – logs action to mech, optionally sets status to `Unavailable`, and subtracts cost from Warchest.
+  - `applyElementalDowntimeAction(force, { elementalId, actionId, action, cost, timestamp, lastMissionName })` – logs action to elemental, applies action-specific changes (e.g. reset suits), and subtracts cost.
+  - `applyPilotDowntimeAction(force, { pilotId, actionId, action, cost, timestamp, inGameDate, lastMissionName })` – logs action to pilot, applies training/healing rules based on `DOWNTIME_ACTION_IDS`, and subtracts cost.
 
 - `src/lib/mechs.js`
-  - `findPilotForMech(force, mech)` – looks up pilot by name.
-  - `findMechForPilot(force, pilot)` – inverse lookup, used in the Pilot roster.
-  - `getAvailablePilotsForMech(force, editingMech)` – returns pilots not currently assigned to any other mech, used to populate the pilot dropdown.
+  - `findPilotForMech(force, mech)` – resolves the assigned pilot **by `pilotId`**.
+  - `findMechForPilot(force, pilot)` – inverse lookup by `pilotId`, used in the Pilot roster and PDF export.
+  - `getAvailablePilotsForMech(force, editingMech)` – returns pilots not currently assigned to any other mech (except the one being edited).
 
 ### 4.3 Feature components
 
@@ -224,7 +238,8 @@ A typical force JSON under `data/forces/*.json` contains:
   - `pilots[]`
   - `elementals[]`
   - `missions[]`
-  - Optional logs (`otherActionsLog`, etc.).
+
+Each mech, pilot, elemental and mission can carry its own `activityLog` array; these logs, plus mission costs and objective rewards, are what drive the financial ledger and PDF export.
 
 `useForceManager` and feature components expect these properties but are resilient to missing optional fields (e.g. `activityLog`).
 
@@ -254,17 +269,17 @@ A typical force JSON under `data/forces/*.json` contains:
 }
 ```
 
-`evaluateDowntimeCost` builds an expression by substituting known keys (`weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`) from the `context` and then evaluating it. The file is assumed to be trusted (checked into the repo).
+`evaluateDowntimeCost` evaluates formulas using a small arithmetic parser (no `eval`) over a limited context of variables: `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`. The file is assumed to be trusted (checked into the repo).
 
 ---
 
 ## 6. Conventions & Notes
 
 - **IDs:** new mechs/pilots/missions use timestamp-based IDs like `mech-<timestamp>`; they only need to be unique within the force.
-- **Status badges:** `Badge` variants are mapped via `getUnitStatusVariant` in `MissionManager` and via inline maps in roster components.
+- **Status badges & colors:** All human-readable statuses (`Operational`, `Damaged`, `Disabled`, `Destroyed`, `Repairing`, `Unavailable`) are centralised in `lib/constants.js` as `UNIT_STATUS`. Components and PDF export convert statuses to visual variants via `getStatusBadgeVariant`.
 - **Pilot–mech relationship:**
-  - Mechs store `pilot` as the pilot **name** (not ID).
-  - Helper functions in `lib/mechs` resolve pilot ↔ mech associations.
+  - Mechs store `pilotId` as a reference to the pilot `id`.
+  - Helper functions in `lib/mechs` resolve pilot ↔ mech associations purely by ID.
   - Mech pilot dropdown enforces one pilot per mech.
 - **KIA handling:**
   - Pilot with `injuries === 6` is treated as KIA.
@@ -280,6 +295,46 @@ A typical force JSON under `data/forces/*.json` contains:
 - **Icons:** `lucide-react`.
 - **PDFs:** `@react-pdf/renderer`.
 - **State & data:** local React state + JSON files in `data/`.
+
+
+---
+
+## 9. Testing
+
+The core game logic is covered by unit tests so that you can safely refactor or extend behaviour.
+
+### 9.1 Where tests live
+
+Tests are colocated with the domain libraries in the React source:
+
+- `frontend/src/lib/downtime.test.js` – downtime expression parser and context builder.
+- `frontend/src/lib/missions.test.js` – mission availability, BV calculation, mission lifecycle and Warchest updates.
+- `frontend/src/lib/mechs.test.js` – mech–pilot relationship helpers (`findPilotForMech`, `findMechForPilot`, `getAvailablePilotsForMech`).
+- `frontend/src/lib/ledger.test.js` – financial ledger construction (`buildLedgerEntries`) and aggregates (`summariseLedger`).
+
+You can add new tests next to additional helpers (e.g. `foo.js` → `foo.test.js`) and CRA/Jest will pick them up automatically.
+
+### 9.2 Running the tests
+
+From the `frontend/` folder:
+
+```bash
+yarn install        # first time only
+yarn test           # interactive watch mode
+yarn test --watch=false  # single run, useful for CI
+```
+
+Jest will search for `*.test.js` files under `src/`.
+
+### 9.3 Extending tests when changing behaviour
+
+Whenever you change domain logic in `frontend/src/lib/` (missions, downtime, mechs, ledger, etc.):
+
+1. Update or add corresponding tests in the matching `*.test.js` file.
+2. Run `yarn test --watch=false` and ensure everything passes.
+3. Only then rebuild the production bundle and copy `static/js/main.js` / `static/css/main.css`.
+
+This keeps the static app on GitHub Pages in sync with the tested behaviour and reduces regressions when tweaking Warchest rules, mission handling, or downtime formulas.
 
 ---
 

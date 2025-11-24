@@ -6,7 +6,7 @@
  * @property {string} id
  * @property {string} name
  * @property {string} [status]
- * @property {string} [pilot]
+ * @property {string} [pilotId]
  * @property {number} [bv]
  * @property {number} [weight]
  * @property {Array<Object>} [activityLog]
@@ -74,10 +74,9 @@
  * @property {Pilot[]} pilots
  * @property {Elemental[]} [elementals]
  * @property {Mission[]} [missions]
- * @property {Array<Object>} [otherActionsLog]
  */
 
-import { findPilotForMech } from './mechs';
+import { findPilotForMech, findMechForPilot } from './mechs';
 
 /**
  * Determine if a mech is available for mission assignment.
@@ -249,24 +248,23 @@ export function applyMissionCreation(force, formData, timestamp) {
     return elemental;
   });
 
-  // Log mission assignment for pilots of assigned mechs
-  const assignedMechs = force.mechs.filter((mech) =>
-    formData.assignedMechs.includes(mech.id),
-  );
-  const updatedPilots = force.pilots.map((pilot) => {
-    const pilotMech = assignedMechs.find((mech) => mech.pilot === pilot.name);
-    if (pilotMech) {
-      const activityLog = [...(pilot.activityLog || [])];
-      activityLog.push({
-        timestamp,
-        inGameDate: force.currentDate,
-        action: `Assigned to mission: ${formData.name} (piloting ${pilotMech.name})`,
-        mission: formData.name,
-        cost: 0,
-      });
-      return { ...pilot, activityLog };
+  // Log mission assignment for pilots of assigned mechs (ID-based)
+  const assignedMechIds = new Set(formData.assignedMechs || []);
+  const updatedPilots = (force.pilots || []).map((pilot) => {
+    const pilotMech = findMechForPilot(force, pilot);
+    if (!pilotMech || !assignedMechIds.has(pilotMech.id)) {
+      return pilot;
     }
-    return pilot;
+
+    const activityLog = [...(pilot.activityLog || [])];
+    activityLog.push({
+      timestamp,
+      inGameDate: force.currentDate,
+      action: `Assigned to mission: ${formData.name} (piloting ${pilotMech.name})`,
+      mission: formData.name,
+      cost: 0,
+    });
+    return { ...pilot, activityLog };
   });
 
   const missionCost = typeof formData.cost === 'number' ? formData.cost : 0;

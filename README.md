@@ -35,16 +35,23 @@ Downtime operations (repairs, purchases, training, etc.) are defined in `data/do
 
 - `mechActions` control actions available for mechs (often using mech weight and a WP multiplier).
 - `elementalActions` control actions for elemental points (often using suits destroyed/damaged and the same multiplier).
+- `pilotActions` control training/healing actions for pilots.
 
 Each action has:
 
 - An `id` and `name` (shown in the UI).
-- A `formula` string, evaluated in a limited context (e.g. `weight * wpMultiplier`).
+- A `formula` string, evaluated in a limited context using only a few variables:
+  - `weight` – mech weight in tons.
+  - `suitsDamaged` / `suitsDestroyed` – for elemental points.
+  - `wpMultiplier` – the Warchest multiplier configured in the Downtime tab.
 - Optional flags (e.g. `makesUnavailable`) that change unit state after the action.
 
-To change downtime behaviour:
+> Formulas are **not** executed with `eval`. They go through a small, safe arithmetic parser that only understands numbers, `+`, `-`, `*`, `/` and parentheses. Anything outside of that will be ignored and treated as `0`.
+
+To change downtime behaviour or add a new action:
 
 1. Edit `data/downtime-actions.json` with new or adjusted actions.
-2. Commit and push. The next page load will use the updated rules.
+2. Make sure each action has a unique `id`. Some IDs are treated specially by the app (e.g. `repair-elemental`, `purchase-elemental`, `train-gunnery`, `train-piloting`, `heal-injury`) to reset damage or change pilot skills.
+3. Commit and push. The next page load will use the updated rules.
 
 For deeper technical details (code structure, build & deploy, data contracts, etc.), see **TECHNICAL_README.md** in this repository.

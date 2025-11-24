@@ -11,7 +11,6 @@ import {
   applyMechDowntimeAction,
   applyElementalDowntimeAction,
   applyPilotDowntimeAction,
-  logOtherDowntimeAction,
 } from '../lib/downtime';
 
 export default function DowntimeOperations({ force, onUpdate }) {
@@ -152,14 +151,14 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const performOtherAction = () => {
     if (!otherActionData.description) return;
 
-    const cost = otherActionData.cost || 0;
-    if (cost > force.currentWarchest) return;
+    const costValue = otherActionData.cost || 0;
+    if (costValue > force.currentWarchest) return;
 
     const timestamp = force.currentDate;
     const inGameDate = force.currentDate;
     const lastMission = force.missions?.[force.missions.length - 1];
 
-    const updated = { ...force, currentWarchest: force.currentWarchest - cost };
+    const updated = { ...force, currentWarchest: force.currentWarchest - costValue };
 
     if (selectedUnitType === 'mech' && selectedUnitId) {
       updated.mechs = force.mechs.map((mech) => {
@@ -167,9 +166,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
         const activityLog = [...(mech.activityLog || [])];
         activityLog.push({
           timestamp,
-          action: `Other: ${otherActionData.description} (${cost} WP)`,
+          action: `Other: ${otherActionData.description} (${costValue} WP)`,
           mission: lastMission?.name || null,
-          cost,
+          cost: costValue,
         });
         return { ...mech, activityLog };
       });
@@ -179,9 +178,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
         const activityLog = [...(elemental.activityLog || [])];
         activityLog.push({
           timestamp,
-          action: `Other: ${otherActionData.description} (${cost} WP)`,
+          action: `Other: ${otherActionData.description} (${costValue} WP)`,
           mission: lastMission?.name || null,
-          cost,
+          cost: costValue,
         });
         return { ...elemental, activityLog };
       });
@@ -191,9 +190,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
         const activityLog = [...(pilot.activityLog || [])];
         activityLog.push({
           timestamp,
-          action: `Other: ${otherActionData.description} (${cost} WP)`,
+          action: `Other: ${otherActionData.description} (${costValue} WP)`,
           mission: lastMission?.name || null,
-          cost,
+          cost: costValue,
         });
         return { ...pilot, activityLog };
       });
@@ -409,8 +408,6 @@ export default function DowntimeOperations({ force, onUpdate }) {
         </div>
       </div>
 
-      {/* Other Actions Log removed: other actions are now logged directly on units */}
-
       {/* Other Action Dialog */}
       <Dialog open={showOtherActionDialog} onOpenChange={setShowOtherActionDialog}>
         <DialogContent onClose={() => setShowOtherActionDialog(false)}>
@@ -468,7 +465,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                   otherActionData.cost < 0 ||
                   otherActionData.cost > force.currentWarchest
                 }
-             >
+              >
                 Perform Action ({otherActionData.cost} WP)
               </Button>
             </div>
@@ -515,6 +512,24 @@ export default function DowntimeOperations({ force, onUpdate }) {
           <div>
             <div className="font-medium mb-2 text-primary">Elemental Actions:</div>
             {elementalActions.map((action) => (
+              <div key={action.id} className="mb-2 pl-3 border-l-2 border-muted">
+                <div className="font-medium">{action.name}</div>
+                <div className="text-xs text-muted-foreground">
+                  Formula:{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
+                </div>
+                {action.description && (
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    {action.description}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <div className="font-medium mb-2 text-primary">Pilot Actions:</div>
+            {pilotActions.map((action) => (
               <div key={action.id} className="mb-2 pl-3 border-l-2 border-muted">
                 <div className="font-medium">{action.name}</div>
                 <div className="text-xs text-muted-foreground">

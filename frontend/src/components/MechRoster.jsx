@@ -8,13 +8,14 @@ import { Badge } from './ui/badge';
 import { Shield, Plus } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech } from '../lib/mechs';
+import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 
 export default function MechRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMech, setEditingMech] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    status: 'Operational',
+    status: UNIT_STATUS.OPERATIONAL,
     pilotId: '',
     bv: 0,
     weight: 0,
@@ -28,8 +29,8 @@ export default function MechRoster({ force, onUpdate }) {
       setEditingMech(mech);
       setFormData({
         name: mech.name,
-        status: mech.status,
-        pilotId: mech.pilotId || mech.pilot || '', // Support legacy 'pilot' field
+        status: mech.status || UNIT_STATUS.OPERATIONAL,
+        pilotId: mech.pilotId || '',
         bv: mech.bv,
         weight: mech.weight,
         image: mech.image || '',
@@ -40,7 +41,7 @@ export default function MechRoster({ force, onUpdate }) {
       setEditingMech(null);
       setFormData({
         name: '',
-        status: 'Operational',
+        status: UNIT_STATUS.OPERATIONAL,
         pilotId: '',
         bv: 0,
         weight: 0,
@@ -68,8 +69,6 @@ export default function MechRoster({ force, onUpdate }) {
               name: formData.name,
               status: formData.status,
               pilotId: formData.pilotId,
-              // Remove legacy 'pilot' field if it exists
-              pilot: undefined,
               bv: parseInt(formData.bv, 10) || 0,
               weight: parseInt(formData.weight, 10) || 0,
               image: formData.image,
@@ -113,18 +112,6 @@ export default function MechRoster({ force, onUpdate }) {
     }
 
     setShowDialog(false);
-  };
-
-  const getStatusColor = (status) => {
-    const statusMap = {
-      Operational: 'operational',
-      Damaged: 'damaged',
-      Disabled: 'disabled',
-      Destroyed: 'destroyed',
-      Repairing: 'repairing',
-      Unavailable: 'disabled',
-    };
-    return statusMap[status] || 'default';
   };
 
   const availablePilots = getAvailablePilotsForMech(force, editingMech);
@@ -189,7 +176,7 @@ export default function MechRoster({ force, onUpdate }) {
                       </div>
                     </td>
                     <td>
-                      <Badge variant={getStatusColor(mech.status)}>{mech.status}</Badge>
+                      <Badge variant={getStatusBadgeVariant(mech.status)}>{mech.status}</Badge>
                     </td>
                     <td className="text-muted-foreground">
                       {!pilot
@@ -241,12 +228,12 @@ export default function MechRoster({ force, onUpdate }) {
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                 >
-                  <option value="Operational">Operational</option>
-                  <option value="Damaged">Damaged</option>
-                  <option value="Disabled">Disabled</option>
-                  <option value="Destroyed">Destroyed</option>
-                  <option value="Repairing">Repairing</option>
-                  <option value="Unavailable">Unavailable</option>
+                  <option value={UNIT_STATUS.OPERATIONAL}>{UNIT_STATUS.OPERATIONAL}</option>
+                  <option value={UNIT_STATUS.DAMAGED}>{UNIT_STATUS.DAMAGED}</option>
+                  <option value={UNIT_STATUS.DISABLED}>{UNIT_STATUS.DISABLED}</option>
+                  <option value={UNIT_STATUS.DESTROYED}>{UNIT_STATUS.DESTROYED}</option>
+                  <option value={UNIT_STATUS.REPAIRING}>{UNIT_STATUS.REPAIRING}</option>
+                  <option value={UNIT_STATUS.UNAVAILABLE}>{UNIT_STATUS.UNAVAILABLE}</option>
                 </Select>
               </div>
             </div>
@@ -281,19 +268,20 @@ export default function MechRoster({ force, onUpdate }) {
                 />
               </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
-              <Input
-                type="number"
-                value={formData.warchestCost}
-                onChange={(e) => setFormData({ ...formData, warchestCost: e.target.value })}
-                placeholder="0"
-                min="0"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Cost in WP to acquire this mech. This will be subtracted from the current Warchest.
-              </p>
-            </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
+                <Input
+                  type="number"
+                  value={formData.warchestCost}
+                  onChange={(e) => setFormData({ ...formData, warchestCost: e.target.value })}
+                  placeholder="0"
+                  min="0"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Cost in WP to acquire this mech. This will be subtracted from the current
+                  Warchest.
+                </p>
+              </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">Weight (tons) *</label>
