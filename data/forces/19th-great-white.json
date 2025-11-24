@@ -14,7 +14,7 @@
       "pilotId": "pilot-1763627036424",
       "bv": 1893,
       "weight": 35,
-      "image": "https://i.ibb.co/0Rbpw1rF/alpha-wolf.png",
+      "image": "https://i.ibb.co/6RZnq6xN/piranha.png",
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -26,8 +26,8 @@
         },
         {
           "timestamp": "3052-05-07",
-          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
-          "mission": "M02 - Pursuit: the Shark is hunted",
+          "action": "Assigned to mission: M02 - The Shark is hunted",
+          "mission": "M02 - The Shark is hunted",
           "cost": 0
         }
       ]
@@ -51,8 +51,8 @@
         },
         {
           "timestamp": "3052-05-07",
-          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
-          "mission": "M02 - Pursuit: the Shark is hunted",
+          "action": "Assigned to mission: M02 - The Shark is hunted",
+          "mission": "M02 - The Shark is hunted",
           "cost": 0
         }
       ]
@@ -75,9 +75,10 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
         }
       ]
     },
@@ -119,8 +120,8 @@
         },
         {
           "timestamp": "3052-05-07",
-          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
-          "mission": "M02 - Pursuit: the Shark is hunted",
+          "action": "Assigned to mission: M02 - The Shark is hunted",
+          "mission": "M02 - The Shark is hunted",
           "cost": 0
         }
       ]
@@ -200,21 +201,22 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
-        },
-        {
-          "timestamp": "3052-05-05",
-          "action": "Repair Mech Internal Structure performed (18 WP)",
           "mission": "M01 - Supply run in the Kozice Valley",
-          "cost": 18
+          "cost": 0
         },
         {
           "timestamp": "3052-05-05",
           "action": "Repair Mech Armor performed (9 WP)",
           "mission": "M01 - Supply run in the Kozice Valley",
           "cost": 9
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Internal Structure performed (18 WP)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 18
         }
       ]
     },
@@ -255,9 +257,10 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
         }
       ]
     },
@@ -298,15 +301,16 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
         },
         {
           "timestamp": "3052-05-05",
-          "action": "Repair Mech Internal Structure performed (28 WP)",
+          "action": "Other: Buy ammo performed (2 WP)",
           "mission": "M01 - Supply run in the Kozice Valley",
-          "cost": 28
+          "cost": 2
         },
         {
           "timestamp": "3052-05-05",
@@ -316,9 +320,9 @@
         },
         {
           "timestamp": "3052-05-05",
-          "action": "Other: Replenish ammo (2 WP)",
+          "action": "Repair Mech Internal Structure performed (28 WP)",
           "mission": "M01 - Supply run in the Kozice Valley",
-          "cost": 2
+          "cost": 28
         }
       ]
     },
@@ -341,8 +345,8 @@
         },
         {
           "timestamp": "3052-05-07",
-          "action": "Assigned to mission: M02 - Pursuit: the Shark is hunted",
-          "mission": "M02 - Pursuit: the Shark is hunted",
+          "action": "Assigned to mission: M02 - The Shark is hunted",
+          "mission": "M02 - The Shark is hunted",
           "cost": 0
         }
       ]
@@ -370,9 +374,10 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
         },
         {
           "timestamp": "3052-05-05",
@@ -388,10 +393,10 @@
       "commander": "Monika",
       "gunnery": 3,
       "antimech": 4,
-      "suitsDestroyed": 0,
+      "suitsDestroyed": 5,
       "suitsDamaged": 0,
       "bv": 590,
-      "status": "Unavailable",
+      "status": "Destroyed",
       "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
       "history": "",
       "warchestCost": 0,
@@ -403,15 +408,10 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
-        },
-        {
-          "timestamp": "3052-05-05",
-          "action": "Purchase Elemental performed (50 WP)",
           "mission": "M01 - Supply run in the Kozice Valley",
-          "cost": 50
+          "cost": 0
         }
       ]
     },
@@ -436,9 +436,10 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
         }
       ]
     },
@@ -463,9 +464,32 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-02",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
-          "mission": "M01 - Supply run in the Kozice Valley"
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "elemental-1764002860462",
+      "name": "Echo Point",
+      "commander": "Lloyd",
+      "gunnery": 3,
+      "antimech": 4,
+      "suitsDestroyed": 0,
+      "suitsDamaged": 0,
+      "bv": 590,
+      "status": "Operational",
+      "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
+      "history": "",
+      "warchestCost": 50,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-05",
+          "action": "Purchased elemental point for 50 WP",
+          "mission": null,
+          "cost": 50
         }
       ]
     }
@@ -484,6 +508,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M02 - The Shark is hunted (piloting Timber Wolf Prime)",
+          "mission": "M02 - The Shark is hunted",
           "cost": 0
         }
       ]
@@ -554,6 +585,13 @@
           "cost": 0
         },
         {
+          "timestamp": "3052-05-02",
+          "inGameDate": "3052-05-02",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Ryoken B)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
+        },
+        {
           "timestamp": "3052-05-05",
           "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley",
@@ -574,6 +612,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-02",
+          "inGameDate": "3052-05-02",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Shadow Cat A)",
+          "mission": "M01 - Supply run in the Kozice Valley",
           "cost": 0
         },
         {
@@ -610,6 +655,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-02",
+          "inGameDate": "3052-05-02",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Black Knight BL-6-KNT)",
+          "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
         }
       ]
     },
@@ -626,6 +678,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-02",
+          "inGameDate": "3052-05-02",
+          "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Summoner A)",
+          "mission": "M01 - Supply run in the Kozice Valley",
           "cost": 0
         }
       ]
@@ -678,6 +737,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M02 - The Shark is hunted (piloting Vixen)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 0
         }
       ]
     },
@@ -712,6 +778,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M02 - The Shark is hunted (piloting Puma A)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 0
         }
       ]
     },
@@ -729,41 +802,46 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M02 - The Shark is hunted (piloting Horned Owl)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 0
         }
       ]
     }
   ],
   "missions": [
     {
-      "id": "mission-1763627587725",
       "name": "M01 - Supply run in the Kozice Valley",
       "cost": 200,
-      "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies. I should not even formulate such a thought, but I think we came here unprepared and wrongly configured.\n\nI sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
-      "inGameDate": "3052-05-04",
+      "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies.\nI should not even formulate such a thought, but I think we came here unprepared and wrongly configured. I sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
       "objectives": [
         {
-          "id": "obj-m01-1",
+          "id": "obj-1764002289830-0",
           "title": "Determine which buildings are the supply warehouses",
           "description": "",
           "wpReward": 100,
           "achieved": false
         },
         {
-          "id": "obj-m01-2",
+          "id": "obj-1764002331836-1",
           "title": "At least 50% of our forces survive until the end of Turn 10",
           "description": "",
           "wpReward": 100,
           "achieved": false
         },
         {
-          "id": "obj-m01-3",
+          "id": "obj-1764002347503-2",
           "title": "Destroy or cripple 25% of the defender's force",
           "description": "",
           "wpReward": 100,
           "achieved": false
         }
       ],
-      "recap": "It was a disaster. An embarrassment for our clan. And for ComStar too!\nI studied the ROMs. My warriors perofrmed way below what I am in the right to expect from them, but the level of indecent dezgra tactics used on them is chilling. ComStar ganged up in pairs, threes and even fours to isolated warriors, and pounded them to dust.\nWe barely scratched their paint.\nWe came back with nothing... nothing.\n\nAnd now we have to hurry. Elements of my trinary are chased down.\nI will fight in the rearguard to stop the tide of those swarming rats. They will learn what a Trueborn can do.",
+      "recap": "It was a disaster. An embarrassment for our clan. And for ComStar too! I studied the ROMs. My warriors perofrmed way below what I am in the right to expect from them, but the level of indecent dezgra tactics used on them is chilling. ComStar ganged up in pairs, threes and even fours to isolated warriors, and pounded them to dust. We barely scratched their paint. We came back with nothing... nothing. And now we have to hurry. Elements of my trinary are chased down. I will fight in the rearguard to stop the tide of those swarming rats. They will learn what a Trueborn can do.",
       "completed": true,
       "assignedMechs": [
         "mech-1763627233012",
@@ -777,26 +855,26 @@
         "elemental-1763627113200",
         "elemental-1763627128898"
       ],
-      "createdAt": "3052-05-04",
-      "updatedAt": "3052-05-04"
+      "id": "mission-1764002363094",
+      "createdAt": "3052-05-02",
+      "inGameDate": "3052-05-02",
+      "completedAt": "3052-05-02"
     },
     {
-      "id": "mission-1763698333878",
-      "name": "M02 - Pursuit: the Shark is hunted",
+      "name": "M02 - The Shark is hunted",
       "cost": 300,
-      "description": "After the disaster at the supply depot, ComStar jumped on some scouting elements of my Trinary.\nOnce again in overwhelming numbers, they however have a hard time keeping up with our superior speed and mobility.\n\nI hate to see Trueborn warriors run from a fight, but I learned something from last battle... there is little sense in accepting to fight three or four against one.\nSo I ordered my warriors to regroup. An I will fight in the rearguard, making ComStar pay!",
-      "inGameDate": "3052-05-07",
+      "description": "After the disaster at the supply depot, ComStar jumped on some scouting elements of my Trinary. Once again in overwhelming numbers, they however have a hard time keeping up with our superior speed and mobility.\nI hate to see Trueborn warriors run from a fight, but I learned something from last battle... there is little sense in accepting to fight three or four against one. So I ordered my warriors to regroup. And I will fight in the rearguard myself, making ComStar pay!",
       "objectives": [
         {
-          "id": "obj-m02-1",
-          "title": "Escape: at least 50% of our force exits the zone of engagement",
+          "id": "obj-1764002999682-0",
+          "title": "At least 50% of our force exits the zone of engagement",
           "description": "",
           "wpReward": 300,
           "achieved": false
         },
         {
-          "id": "obj-m02-2",
-          "title": "We were never here: at least 75% of our force exits the zone of engagement",
+          "id": "obj-1764003026086-1",
+          "title": "At least 75% of our force exits the zone of engagement",
           "description": "",
           "wpReward": 100,
           "achieved": false
@@ -811,10 +889,1591 @@
         "mech-1763627467793"
       ],
       "assignedElementals": [],
-      "createdAt": "3052-05-07"
+      "id": "mission-1764003040656",
+      "createdAt": "3052-05-07",
+      "inGameDate": "3052-05-07"
     }
   ],
   "repairActions": [],
   "currentDate": "3052-05-07",
-  "otherActionsLog": []
+  "otherActionsLog": [],
+  "notes": "",
+  "snapshots": [
+    {
+      "id": "snapshot-1764002518351",
+      "type": "post-mission",
+      "label": "After M01 - Supply run in the Kozice Valley",
+      "createdAt": "3052-05-02",
+      "currentWarchest": 1800,
+      "startingWarchest": 2000,
+      "netWarchestChange": -200,
+      "missionsCompleted": 1,
+      "units": {
+        "mechs": {
+          "ready": 11,
+          "total": 13,
+          "destroyed": 1
+        },
+        "elementals": {
+          "ready": 3,
+          "total": 3,
+          "destroyed": 1
+        },
+        "pilots": {
+          "ready": 14,
+          "total": 14,
+          "kia": 0
+        }
+      },
+      "forceState": {
+        "id": "19th-the-great-white-lai-yu-s-hunters",
+        "name": "19th The Great White - Lai-Yu's hunters",
+        "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
+        "image": "https://i.ibb.co/6R1QfYWz/CDSharks.png",
+        "currentDate": "3052-05-02",
+        "startingWarchest": 2000,
+        "currentWarchest": 1800,
+        "wpMultiplier": 5,
+        "mechs": [
+          {
+            "id": "mech-1763627170957",
+            "name": "Horned Owl",
+            "status": "Operational",
+            "pilotId": "pilot-1763627036424",
+            "bv": 1893,
+            "weight": 35,
+            "image": "https://i.ibb.co/0Rbpw1rF/alpha-wolf.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627203001",
+            "name": "Vixen",
+            "status": "Operational",
+            "pilotId": "pilot-1763626996858",
+            "bv": 2107,
+            "weight": 30,
+            "image": "https://i.ibb.co/M58hwZks/enforcer-1.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627233012",
+            "name": "Black Knight BL-6-KNT",
+            "status": "Operational",
+            "pilotId": "pilot-1763626957578",
+            "bv": 2047,
+            "weight": 75,
+            "image": "https://i.ibb.co/NbJkFjy/black-knight.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627255877",
+            "name": "Supernova",
+            "status": "Operational",
+            "pilotId": "pilot-1763626888125",
+            "bv": 4706,
+            "weight": 90,
+            "image": "https://i.ibb.co/dwG1yZs3/supernova2.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627276791",
+            "name": "Puma A",
+            "status": "Operational",
+            "pilotId": "pilot-1763627013984",
+            "bv": 1897,
+            "weight": 35,
+            "image": "https://i.ibb.co/rK6rdwT8/adder.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627301717",
+            "name": "Puma Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763626987643",
+            "bv": 2750,
+            "weight": 35,
+            "image": "https://i.ibb.co/rK6rdwT8/adder.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627323050",
+            "name": "Grendel B",
+            "status": "Operational",
+            "pilotId": "pilot-1763626919997",
+            "bv": 2512,
+            "weight": 45,
+            "image": "https://i.ibb.co/ym79s6D0/grendel.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627347959",
+            "name": "Ryoken Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763627005278",
+            "bv": 2736,
+            "weight": 55,
+            "image": "https://i.ibb.co/0Rbpw1rF/alpha-wolf.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627370406",
+            "name": "Shadow Cat A",
+            "status": "Disabled",
+            "pilotId": "pilot-1763626938065",
+            "bv": 2930,
+            "weight": 45,
+            "image": "https://i.ibb.co/JRf90PYB/shadow-cat.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627394336",
+            "name": "Masakari C",
+            "status": "Operational",
+            "pilotId": "pilot-1763626904247",
+            "bv": 5037,
+            "weight": 85,
+            "image": "https://i.ibb.co/67QCBczY/daishi.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627412185",
+            "name": "Ryoken B",
+            "status": "Destroyed",
+            "pilotId": "pilot-1763626930209",
+            "bv": 3011,
+            "weight": 55,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627433584",
+            "name": "Black Hawk Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763626976789",
+            "bv": 3515,
+            "weight": 50,
+            "image": "https://i.ibb.co/MDgbfpqV/nova.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627451425",
+            "name": "Summoner A",
+            "status": "Disabled",
+            "pilotId": "pilot-1763626966154",
+            "bv": 2831,
+            "weight": 70,
+            "image": "https://i.ibb.co/wqTVf01/summoner.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627467793",
+            "name": "Timber Wolf Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763626867889",
+            "bv": 5529,
+            "weight": 75,
+            "image": "https://i.ibb.co/WvVxBwnk/mad-cat.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "pilots": [
+          {
+            "id": "pilot-1763626867889",
+            "name": "Star Colonel Lai-Yu",
+            "gunnery": 1,
+            "piloting": 2,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626888125",
+            "name": "Star Captain Baber",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626904247",
+            "name": "Star Captain Clayton",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626919997",
+            "name": "Zeleny",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626930209",
+            "name": "Hong-Lian",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 1,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Ryoken B)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626938065",
+            "name": "Haydar",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 3,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Shadow Cat A)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626957578",
+            "name": "Andela",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Black Knight BL-6-KNT)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626966154",
+            "name": "Zahara",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Summoner A)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626976789",
+            "name": "Wei-kang",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626987643",
+            "name": "Eskil",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626996858",
+            "name": "Ahren",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763627005278",
+            "name": "Kiral",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763627013984",
+            "name": "Brea",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763627036424",
+            "name": "Aidan",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "elementals": [
+          {
+            "id": "elemental-1763627079842",
+            "name": "Alpha Point",
+            "commander": "Lukyan",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 5,
+            "bv": 590,
+            "status": "Operational",
+            "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "elemental-1763627097383",
+            "name": "Beta Point",
+            "commander": "Monika",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 5,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Destroyed",
+            "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "elemental-1763627113200",
+            "name": "Charlie Point",
+            "commander": "Sang-Seung",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "https://i.ibb.co/M5y1Fh2f/battlearmor-1.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "elemental-1763627128898",
+            "name": "Delta Point",
+            "commander": "Svenja",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "https://i.ibb.co/M5y1Fh2f/battlearmor-1.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "missions": [
+          {
+            "name": "M01 - Supply run in the Kozice Valley",
+            "cost": 200,
+            "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies.\nI should not even formulate such a thought, but I think we came here unprepared and wrongly configured. I sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
+            "objectives": [
+              {
+                "id": "obj-1764002289830-0",
+                "title": "Determine which buildings are the supply warehouses",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              },
+              {
+                "id": "obj-1764002331836-1",
+                "title": "At least 50% of our forces survive until the end of Turn 10",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              },
+              {
+                "id": "obj-1764002347503-2",
+                "title": "Destroy or cripple 25% of the defender's force",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              }
+            ],
+            "recap": "It was a disaster. An embarrassment for our clan. And for ComStar too! I studied the ROMs. My warriors perofrmed way below what I am in the right to expect from them, but the level of indecent dezgra tactics used on them is chilling. ComStar ganged up in pairs, threes and even fours to isolated warriors, and pounded them to dust. We barely scratched their paint. We came back with nothing... nothing. And now we have to hurry. Elements of my trinary are chased down. I will fight in the rearguard to stop the tide of those swarming rats. They will learn what a Trueborn can do.",
+            "completed": true,
+            "assignedMechs": [
+              "mech-1763627233012",
+              "mech-1763627370406",
+              "mech-1763627412185",
+              "mech-1763627451425"
+            ],
+            "assignedElementals": [
+              "elemental-1763627079842",
+              "elemental-1763627097383",
+              "elemental-1763627113200",
+              "elemental-1763627128898"
+            ],
+            "id": "mission-1764002363094",
+            "createdAt": "3052-05-02",
+            "inGameDate": "3052-05-02",
+            "completedAt": "3052-05-02"
+          }
+        ]
+      }
+    },
+    {
+      "id": "snapshot-1764002799522",
+      "type": "post-downtime",
+      "label": "After downtime cycle #2",
+      "createdAt": "3052-05-05",
+      "currentWarchest": 1702,
+      "startingWarchest": 2000,
+      "netWarchestChange": -298,
+      "missionsCompleted": 1,
+      "units": {
+        "mechs": {
+          "ready": 11,
+          "total": 13,
+          "destroyed": 1
+        },
+        "elementals": {
+          "ready": 3,
+          "total": 3,
+          "destroyed": 1
+        },
+        "pilots": {
+          "ready": 14,
+          "total": 14,
+          "kia": 0
+        }
+      },
+      "forceState": {
+        "id": "19th-the-great-white-lai-yu-s-hunters",
+        "name": "19th The Great White - Lai-Yu's hunters",
+        "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
+        "image": "https://i.ibb.co/6R1QfYWz/CDSharks.png",
+        "currentDate": "3052-05-05",
+        "startingWarchest": 2000,
+        "currentWarchest": 1702,
+        "wpMultiplier": 5,
+        "mechs": [
+          {
+            "id": "mech-1763627170957",
+            "name": "Horned Owl",
+            "status": "Operational",
+            "pilotId": "pilot-1763627036424",
+            "bv": 1893,
+            "weight": 35,
+            "image": "https://i.ibb.co/0Rbpw1rF/alpha-wolf.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627203001",
+            "name": "Vixen",
+            "status": "Operational",
+            "pilotId": "pilot-1763626996858",
+            "bv": 2107,
+            "weight": 30,
+            "image": "https://i.ibb.co/M58hwZks/enforcer-1.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627233012",
+            "name": "Black Knight BL-6-KNT",
+            "status": "Operational",
+            "pilotId": "pilot-1763626957578",
+            "bv": 2047,
+            "weight": 75,
+            "image": "https://i.ibb.co/NbJkFjy/black-knight.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627255877",
+            "name": "Supernova",
+            "status": "Operational",
+            "pilotId": "pilot-1763626888125",
+            "bv": 4706,
+            "weight": 90,
+            "image": "https://i.ibb.co/dwG1yZs3/supernova2.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627276791",
+            "name": "Puma A",
+            "status": "Operational",
+            "pilotId": "pilot-1763627013984",
+            "bv": 1897,
+            "weight": 35,
+            "image": "https://i.ibb.co/rK6rdwT8/adder.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627301717",
+            "name": "Puma Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763626987643",
+            "bv": 2750,
+            "weight": 35,
+            "image": "https://i.ibb.co/rK6rdwT8/adder.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627323050",
+            "name": "Grendel B",
+            "status": "Operational",
+            "pilotId": "pilot-1763626919997",
+            "bv": 2512,
+            "weight": 45,
+            "image": "https://i.ibb.co/ym79s6D0/grendel.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627347959",
+            "name": "Ryoken Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763627005278",
+            "bv": 2736,
+            "weight": 55,
+            "image": "https://i.ibb.co/0Rbpw1rF/alpha-wolf.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627370406",
+            "name": "Shadow Cat A",
+            "status": "Unavailable",
+            "pilotId": "pilot-1763626938065",
+            "bv": 2930,
+            "weight": 45,
+            "image": "https://i.ibb.co/JRf90PYB/shadow-cat.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Armor performed (9 WP)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 9
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Internal Structure performed (18 WP)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 18
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627394336",
+            "name": "Masakari C",
+            "status": "Operational",
+            "pilotId": "pilot-1763626904247",
+            "bv": 5037,
+            "weight": 85,
+            "image": "https://i.ibb.co/67QCBczY/daishi.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627412185",
+            "name": "Ryoken B",
+            "status": "Destroyed",
+            "pilotId": "pilot-1763626930209",
+            "bv": 3011,
+            "weight": 55,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627433584",
+            "name": "Black Hawk Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763626976789",
+            "bv": 3515,
+            "weight": 50,
+            "image": "https://i.ibb.co/MDgbfpqV/nova.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627451425",
+            "name": "Summoner A",
+            "status": "Unavailable",
+            "pilotId": "pilot-1763626966154",
+            "bv": 2831,
+            "weight": 70,
+            "image": "https://i.ibb.co/wqTVf01/summoner.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Other: Buy ammo performed (2 WP)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 2
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Armor performed (14 WP)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 14
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Internal Structure performed (28 WP)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 28
+              }
+            ]
+          },
+          {
+            "id": "mech-1763627467793",
+            "name": "Timber Wolf Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1763626867889",
+            "bv": 5529,
+            "weight": 75,
+            "image": "https://i.ibb.co/WvVxBwnk/mad-cat.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "pilots": [
+          {
+            "id": "pilot-1763626867889",
+            "name": "Star Colonel Lai-Yu",
+            "gunnery": 1,
+            "piloting": 2,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626888125",
+            "name": "Star Captain Baber",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626904247",
+            "name": "Star Captain Clayton",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626919997",
+            "name": "Zeleny",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626930209",
+            "name": "Hong-Lian",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Ryoken B)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 6
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626938065",
+            "name": "Haydar",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Shadow Cat A)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 6
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 6
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (6 WP) after M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 6
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626957578",
+            "name": "Andela",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Black Knight BL-6-KNT)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626966154",
+            "name": "Zahara",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley (piloting Summoner A)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626976789",
+            "name": "Wei-kang",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626987643",
+            "name": "Eskil",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763626996858",
+            "name": "Ahren",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763627005278",
+            "name": "Kiral",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763627013984",
+            "name": "Brea",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1763627036424",
+            "name": "Aidan",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "elementals": [
+          {
+            "id": "elemental-1763627079842",
+            "name": "Alpha Point",
+            "commander": "Lukyan",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Elemental performed (3 WP)",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 3
+              }
+            ]
+          },
+          {
+            "id": "elemental-1763627097383",
+            "name": "Beta Point",
+            "commander": "Monika",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 5,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Destroyed",
+            "image": "https://i.ibb.co/HTxGsbkQ/battlearmor.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "elemental-1763627113200",
+            "name": "Charlie Point",
+            "commander": "Sang-Seung",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "https://i.ibb.co/M5y1Fh2f/battlearmor-1.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "elemental-1763627128898",
+            "name": "Delta Point",
+            "commander": "Svenja",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "https://i.ibb.co/M5y1Fh2f/battlearmor-1.png",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
+                "mission": "M01 - Supply run in the Kozice Valley",
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "missions": [
+          {
+            "name": "M01 - Supply run in the Kozice Valley",
+            "cost": 200,
+            "description": "We discovered a ComStar's supply depot and, with the landing zone under fire, we are forced to fight a Trial of Possession for the enemy's supplies.\nI should not even formulate such a thought, but I think we came here unprepared and wrongly configured. I sent a reinforced Star down there. I am sure they will win the Trial, or have the decency to die trying.",
+            "objectives": [
+              {
+                "id": "obj-1764002289830-0",
+                "title": "Determine which buildings are the supply warehouses",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              },
+              {
+                "id": "obj-1764002331836-1",
+                "title": "At least 50% of our forces survive until the end of Turn 10",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              },
+              {
+                "id": "obj-1764002347503-2",
+                "title": "Destroy or cripple 25% of the defender's force",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              }
+            ],
+            "recap": "It was a disaster. An embarrassment for our clan. And for ComStar too! I studied the ROMs. My warriors perofrmed way below what I am in the right to expect from them, but the level of indecent dezgra tactics used on them is chilling. ComStar ganged up in pairs, threes and even fours to isolated warriors, and pounded them to dust. We barely scratched their paint. We came back with nothing... nothing. And now we have to hurry. Elements of my trinary are chased down. I will fight in the rearguard to stop the tide of those swarming rats. They will learn what a Trueborn can do.",
+            "completed": true,
+            "assignedMechs": [
+              "mech-1763627233012",
+              "mech-1763627370406",
+              "mech-1763627412185",
+              "mech-1763627451425"
+            ],
+            "assignedElementals": [
+              "elemental-1763627079842",
+              "elemental-1763627097383",
+              "elemental-1763627113200",
+              "elemental-1763627128898"
+            ],
+            "id": "mission-1764002363094",
+            "createdAt": "3052-05-02",
+            "inGameDate": "3052-05-02",
+            "completedAt": "3052-05-02"
+          }
+        ]
+      }
+    }
+  ]
 }
