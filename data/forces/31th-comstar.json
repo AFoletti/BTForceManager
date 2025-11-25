@@ -1,0 +1,1011 @@
+{
+  "id": "comstar-31st-division",
+  "name": "ComStar - 31st Division",
+  "description": "OpFor for the White Shark",
+  "image": "",
+  "startingWarchest": 2000,
+  "currentWarchest": 2000,
+  "wpMultiplier": 10,
+  "otherActionsLog": [],
+  "mechs": [
+    {
+      "id": "mech-1764101387438",
+      "name": "HGN-732 Highlander",
+      "status": "Operational",
+      "pilotId": "pilot-1764101175165",
+      "bv": 2227,
+      "weight": 90,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101558310",
+      "name": "CP-11-A Cyclops",
+      "status": "Operational",
+      "pilotId": "pilot-1764101184969",
+      "bv": 1547,
+      "weight": 90,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101765966",
+      "name": "AS7-K Atlas",
+      "status": "Operational",
+      "pilotId": "pilot-1764101192112",
+      "bv": 2175,
+      "weight": 100,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101833945",
+      "name": "MAD-5CS Marauder",
+      "status": "Operational",
+      "pilotId": "pilot-1764101197863",
+      "bv": 1648,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101873977",
+      "name": "ARC-5CS Archer",
+      "status": "Operational",
+      "pilotId": "pilot-1764101204182",
+      "bv": 1609,
+      "weight": 70,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101903937",
+      "name": "WHM-6R Warhammer",
+      "status": "Operational",
+      "pilotId": "pilot-1764101210384",
+      "bv": 1299,
+      "weight": 70,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101941931",
+      "name": "ON1-M Orion",
+      "status": "Operational",
+      "pilotId": "pilot-1764101215339",
+      "bv": 1414,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101969954",
+      "name": "FLS-8K Flashman",
+      "status": "Operational",
+      "pilotId": "pilot-1764101220583",
+      "bv": 1779,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764101997595",
+      "name": "SHD-2Ht Shadow Hawk",
+      "status": "Operational",
+      "pilotId": "pilot-1764101228377",
+      "bv": 1453,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102197374",
+      "name": "GRF-1N Griffin",
+      "status": "Operational",
+      "pilotId": "pilot-1764101234302",
+      "bv": 1272,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102237506",
+      "name": "SHD-2Hb Shadow Hawk",
+      "status": "Operational",
+      "pilotId": "pilot-1764101238536",
+      "bv": 1354,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102286990",
+      "name": "HBK-5M Hunchback ",
+      "status": "Operational",
+      "pilotId": "pilot-1764101243164",
+      "bv": 1056,
+      "weight": 50,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102462713",
+      "name": "MAD-5CS Marauder II",
+      "status": "Operational",
+      "pilotId": "pilot-1764101247917",
+      "bv": 1648,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102496181",
+      "name": "CN9-A Centurion",
+      "status": "Operational",
+      "pilotId": "pilot-1764102302655",
+      "bv": 945,
+      "weight": 50,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102518349",
+      "name": "CN9-A Centurion II",
+      "status": "Operational",
+      "pilotId": "pilot-1764102309823",
+      "bv": 945,
+      "weight": 50,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102558021",
+      "name": "BJ-1 Blackjack",
+      "status": "Operational",
+      "pilotId": "pilot-1764102316506",
+      "bv": 949,
+      "weight": 45,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102583198",
+      "name": "VLK-QA Valkyrie",
+      "status": "Operational",
+      "pilotId": "pilot-1764102320922",
+      "bv": 723,
+      "weight": 30,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102641790",
+      "name": "PNT-8Z Panther",
+      "status": "Operational",
+      "pilotId": "pilot-1764102592895",
+      "bv": 741,
+      "weight": 35,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102678755",
+      "name": "THG-11E Thug",
+      "status": "Operational",
+      "pilotId": "pilot-1764102597321",
+      "bv": 1640,
+      "weight": 80,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102706981",
+      "name": "NSR-9J Nightstar",
+      "status": "Operational",
+      "pilotId": "pilot-1764102602257",
+      "bv": 2399,
+      "weight": 95,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102750690",
+      "name": "CRD-2R Crusader",
+      "status": "Operational",
+      "pilotId": "pilot-1764102607838",
+      "bv": 1533,
+      "weight": 65,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102836981",
+      "name": "LNC25-01 Lancelot",
+      "status": "Operational",
+      "pilotId": "pilot-1764102759566",
+      "bv": 1422,
+      "weight": 60,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102862692",
+      "name": "SHD-2Ht Shadow Hawk II",
+      "status": "Operational",
+      "pilotId": "pilot-1764102759566",
+      "bv": 1453,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102904545",
+      "name": "HBK-4G Hunchback",
+      "status": "Operational",
+      "pilotId": "pilot-1764102763706",
+      "bv": 1041,
+      "weight": 50,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102929382",
+      "name": "UM-R63 UrbanMech",
+      "status": "Operational",
+      "pilotId": "pilot-1764102767948",
+      "bv": 540,
+      "weight": 30,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764102950926",
+      "name": "UM-R60 UrbanMech",
+      "status": "Operational",
+      "pilotId": "pilot-1764102772636",
+      "bv": 504,
+      "weight": 30,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764103004000",
+      "name": "VLK-QA Valkyrie II",
+      "status": "Operational",
+      "pilotId": "pilot-1764102778099",
+      "bv": 723,
+      "weight": 30,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1764103040881",
+      "name": "MON-66 Mongoose",
+      "status": "Operational",
+      "pilotId": "pilot-1764103023853",
+      "bv": 758,
+      "weight": 25,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    }
+  ],
+  "elementals": [],
+  "pilots": [
+    {
+      "id": "pilot-1764101175165",
+      "name": "Pilot 1",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101184969",
+      "name": "Pilot 2",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101192112",
+      "name": "Pilot 3",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101197863",
+      "name": "Pilot 4",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101204182",
+      "name": "Pilot 5",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101210384",
+      "name": "Pilot 6",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101215339",
+      "name": "Pilot 7",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101220583",
+      "name": "Pilot 8",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101228377",
+      "name": "Pilot 9",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101234302",
+      "name": "Pilot 10",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101238536",
+      "name": "Pilot 11",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101243164",
+      "name": "Pilot 12",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101247917",
+      "name": "Pilot 13",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102302655",
+      "name": "Pilot 14",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102309823",
+      "name": "Pilot 15",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102316506",
+      "name": "Pilot 16",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102320922",
+      "name": "Pilot 17",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102592895",
+      "name": "Pilot 18",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102597321",
+      "name": "Pilot 19",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102602257",
+      "name": "Pilot 20",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102607838",
+      "name": "Pilot 21",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102759566",
+      "name": "Pilot 22",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102763706",
+      "name": "Pilot 23",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102767948",
+      "name": "Pilot 24",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102772636",
+      "name": "Pilot 25",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764102778099",
+      "name": "Pilot 26",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764103023853",
+      "name": "Pilot 27",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    }
+  ],
+  "missions": [],
+  "repairActions": [],
+  "currentDate": "3052-05-01",
+  "notes": "",
+  "snapshots": []
+}
