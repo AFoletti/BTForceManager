@@ -25,6 +25,9 @@ export default function ElementalRoster({ force, onUpdate }) {
     history: '',
     warchestCost: 0,
   });
+  const [nameFilter, setNameFilter] = useState('');
+  const [sortBy, setSortBy] = useState(null); // null = JSON order
+  const [sortDirection, setSortDirection] = useState('asc');
 
   const openDialog = (elemental = null) => {
     if (elemental) {
@@ -63,7 +66,7 @@ export default function ElementalRoster({ force, onUpdate }) {
 
   const handleSave = () => {
     if (!formData.name || !formData.bv) {
-      // eslint-disable-next-line no-alert
+       
       alert('Name and BV are required');
       return;
     }
@@ -150,6 +153,58 @@ export default function ElementalRoster({ force, onUpdate }) {
     return 'operational';
   };
 
+  const handleSortChange = (field) => {
+    if (sortBy === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const filteredAndSortedElementals = React.useMemo(() => {
+    const filtered = (force.elementals || []).filter((elemental) =>
+      elemental.name.toLowerCase().includes(nameFilter.toLowerCase()),
+    );
+
+    if (!sortBy) return filtered; // Default JSON order
+
+    const STATUS_ORDER = {
+      [UNIT_STATUS.OPERATIONAL]: 1,
+      [UNIT_STATUS.DAMAGED]: 2,
+      [UNIT_STATUS.REPAIRING]: 3,
+      [UNIT_STATUS.DISABLED]: 4,
+      [UNIT_STATUS.UNAVAILABLE]: 5,
+      [UNIT_STATUS.DESTROYED]: 6,
+    };
+
+    const sorted = [...filtered].sort((a, b) => {
+      const dir = sortDirection === 'asc' ? 1 : -1;
+
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }) * dir;
+      }
+
+      if (sortBy === 'status') {
+        const aVal = STATUS_ORDER[a.status] || 999;
+        const bVal = STATUS_ORDER[b.status] || 999;
+        if (aVal === bVal) return 0;
+        return aVal < bVal ? -1 * dir : 1 * dir;
+      }
+
+      if (sortBy === 'bv') {
+        const aVal = a.bv || 0;
+        const bVal = b.bv || 0;
+        if (aVal === bVal) return 0;
+        return aVal < bVal ? -1 * dir : 1 * dir;
+      }
+
+      return 0;
+    });
+
+    return sorted;
+  }, [force.elementals, nameFilter, sortBy, sortDirection]);
+
   return (
     <div className="tactical-panel">
       <div className="tactical-header">
@@ -159,8 +214,15 @@ export default function ElementalRoster({ force, onUpdate }) {
             Elemental Roster
           </h3>
           <div className="flex items-center gap-2">
+            <Input
+              data-testid="elemental-name-filter"
+              className="h-8 w-40"
+              placeholder="Filter by name"
+              value={nameFilter}
+              onChange={(e) => setNameFilter(e.target.value)}
+            />
             <span className="text-xs text-muted-foreground">
-              {force.elementals?.length || 0} Points
+              {filteredAndSortedElementals.length}/{force.elementals?.length || 0} Points
             </span>
             <Button size="sm" onClick={() => openDialog()}>
               <Plus className="w-4 h-4" />
@@ -174,26 +236,56 @@ export default function ElementalRoster({ force, onUpdate }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Point</th>
-              <th>Status</th>
+              <th>
+                <button
+                  type="button"
+                  data-testid="elemental-sort-name"
+                  className="flex items-center gap-1"
+                  onClick={() => handleSortChange('name')}
+                >
+                  Point
+                  {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </button>
+              </th>
+              <th>
+                <button
+                  type="button"
+                  data-testid="elemental-sort-status"
+                  className="flex items-center gap-1"
+                  onClick={() => handleSortChange('status')}
+                >
+                  Status
+                  {sortBy === 'status' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </button>
+              </th>
               <th>Commander</th>
               <th className="text-center">Gunnery</th>
               <th className="text-center">Antimech</th>
               <th className="text-center">Suits Destroyed</th>
               <th className="text-center">Suits Damaged</th>
-              <th className="text-right">BV</th>
+              <th className="text-right">
+                <button
+                  type="button"
+                  data-testid="elemental-sort-bv"
+                  className="flex items-center gap-1 ml-auto"
+                  onClick={() => handleSortChange('bv')}
+                >
+                  BV
+                  {sortBy === 'bv' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </button>
+              </th>
               <th>Recent Activity</th>
             </tr>
           </thead>
           <tbody>
-            {!force.elementals || force.elementals.length === 0 ? (
+            {!force.elementals || filteredAndSortedElementals.length === 0 ? (
               <tr>
                 <td colSpan="9" className="text-center py-8 text-muted-foreground">
-                  No elementals in roster. Add elementals via Data Editor.
+                  No elementals match the current filters.
                 </td>
               </tr>
             ) : (
-              force.elementals.map((elemental) => (
+              filteredAndSortedElementals.map((elemental) => (
                 <tr
                   key={elemental.id}
                   onClick={(e) => {

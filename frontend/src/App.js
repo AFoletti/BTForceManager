@@ -148,7 +148,7 @@ export default function App() {
 
       {/* Force Info Banner */}
       {selectedForce && (
-        <div className="border-b border-border bg-muted/20">
+        <div className="border-b border-border bg-muted/20 sticky top-16 z-30">
           <div className="container mx-auto px-4 py-6">
             <div className="flex items-start gap-6">
               {selectedForce.image && (
@@ -221,47 +221,49 @@ export default function App() {
       )}
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-4">
         {selectedForce ? (
           <Tabs defaultValue="mechs" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-9 lg:w-auto">
-              <TabsTrigger value="mechs">
-                <Shield className="w-4 h-4" />
-                Mechs
-              </TabsTrigger>
-              <TabsTrigger value="elementals">
-                <Users className="w-4 h-4" />
-                Elementals
-              </TabsTrigger>
-              <TabsTrigger value="pilots">
-                <User className="w-4 h-4" />
-                Pilots
-              </TabsTrigger>
-              <TabsTrigger value="missions">
-                <Target className="w-4 h-4" />
-                Missions
-              </TabsTrigger>
-              <TabsTrigger value="downtime">
-                <Wrench className="w-4 h-4" />
-                Downtime
-              </TabsTrigger>
-              <TabsTrigger value="ledger">
-                <List className="w-4 h-4" />
-                Ledger
-              </TabsTrigger>
-              <TabsTrigger value="notes" data-testid="force-notes-tab">
-                <FileText className="w-4 h-4" />
-                Notes
-              </TabsTrigger>
-              <TabsTrigger value="snapshots" data-testid="snapshots-tab">
-                <FileText className="w-4 h-4" />
-                Snapshots
-              </TabsTrigger>
-              <TabsTrigger value="data">
-                <Database className="w-4 h-4" />
-                Data Editor
-              </TabsTrigger>
-            </TabsList>
+            <div className="sticky top-[11rem] z-20 bg-background pt-2 pb-3 border-b border-border">
+              <TabsList className="grid w-full grid-cols-9 lg:w-auto">
+                <TabsTrigger value="mechs">
+                  <Shield className="w-4 h-4" />
+                  Mechs
+                </TabsTrigger>
+                <TabsTrigger value="elementals">
+                  <Users className="w-4 h-4" />
+                  Elementals
+                </TabsTrigger>
+                <TabsTrigger value="pilots">
+                  <User className="w-4 h-4" />
+                  Pilots
+                </TabsTrigger>
+                <TabsTrigger value="missions">
+                  <Target className="w-4 h-4" />
+                  Missions
+                </TabsTrigger>
+                <TabsTrigger value="downtime">
+                  <Wrench className="w-4 h-4" />
+                  Downtime
+                </TabsTrigger>
+                <TabsTrigger value="ledger">
+                  <List className="w-4 h-4" />
+                  Ledger
+                </TabsTrigger>
+                <TabsTrigger value="notes" data-testid="force-notes-tab">
+                  <FileText className="w-4 h-4" />
+                  Notes
+                </TabsTrigger>
+                <TabsTrigger value="snapshots" data-testid="snapshots-tab">
+                  <FileText className="w-4 h-4" />
+                  Snapshots
+                </TabsTrigger>
+                <TabsTrigger value="data">
+                  <Database className="w-4 h-4" />
+                  Data Editor
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="mechs">
               <MechRoster force={selectedForce} onUpdate={updateForceData} />

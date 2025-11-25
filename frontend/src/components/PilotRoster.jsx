@@ -18,6 +18,9 @@ export default function PilotRoster({ force, onUpdate }) {
     history: '',
     warchestCost: 0,
   });
+  const [nameFilter, setNameFilter] = useState('');
+  const [sortBy, setSortBy] = useState(null); // null = JSON order
+  const [sortDirection, setSortDirection] = useState('asc');
 
   const openDialog = (pilot = null) => {
     if (pilot) {
@@ -125,6 +128,35 @@ export default function PilotRoster({ force, onUpdate }) {
     return `${injuries}/6`;
   };
 
+  const handleSortChange = (field) => {
+    if (sortBy === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const filteredAndSortedPilots = React.useMemo(() => {
+    const filtered = force.pilots.filter((pilot) =>
+      pilot.name.toLowerCase().includes(nameFilter.toLowerCase()),
+    );
+
+    if (!sortBy) return filtered; // Default JSON order
+
+    const sorted = [...filtered].sort((a, b) => {
+      const dir = sortDirection === 'asc' ? 1 : -1;
+
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }) * dir;
+      }
+
+      return 0;
+    });
+
+    return sorted;
+  }, [force.pilots, nameFilter, sortBy, sortDirection]);
+
   return (
     <div className="tactical-panel">
       <div className="tactical-header">
@@ -134,7 +166,16 @@ export default function PilotRoster({ force, onUpdate }) {
             Pilot Roster
           </h3>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">{force.pilots.length} Pilots</span>
+            <Input
+              data-testid="pilot-name-filter"
+              className="h-8 w-40"
+              placeholder="Filter by name"
+              value={nameFilter}
+              onChange={(e) => setNameFilter(e.target.value)}
+            />
+            <span className="text-xs text-muted-foreground">
+              {filteredAndSortedPilots.length}/{force.pilots.length} Pilots
+            </span>
             <Button size="sm" onClick={() => openDialog()}>
               <Plus className="w-4 h-4" />
               Add Pilot
@@ -147,7 +188,17 @@ export default function PilotRoster({ force, onUpdate }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>
+                <button
+                  type="button"
+                  data-testid="pilot-sort-name"
+                  className="flex items-center gap-1"
+                  onClick={() => handleSortChange('name')}
+                >
+                  Name
+                  {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </button>
+              </th>
               <th>Mech</th>
               <th className="text-center">Gunnery</th>
               <th className="text-center">Piloting</th>
@@ -157,14 +208,14 @@ export default function PilotRoster({ force, onUpdate }) {
             </tr>
           </thead>
           <tbody>
-            {force.pilots.length === 0 ? (
+            {filteredAndSortedPilots.length === 0 ? (
               <tr>
                 <td colSpan="7" className="text-center py-8 text-muted-foreground">
-                  No pilots in roster. Add pilots via Data Editor.
+                  No pilots match the current filters.
                 </td>
               </tr>
             ) : (
-              force.pilots.map((pilot) => {
+              filteredAndSortedPilots.map((pilot) => {
                 const assignedMech = findMechForPilot(force, pilot);
 
                 return (

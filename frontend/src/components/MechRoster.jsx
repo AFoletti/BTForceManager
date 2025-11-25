@@ -23,6 +23,9 @@ export default function MechRoster({ force, onUpdate }) {
     history: '',
     warchestCost: 0,
   });
+  const [nameFilter, setNameFilter] = useState('');
+  const [sortBy, setSortBy] = useState(null); // null = JSON order
+  const [sortDirection, setSortDirection] = useState('asc');
 
   const openDialog = (mech = null) => {
     if (mech) {
@@ -113,6 +116,58 @@ export default function MechRoster({ force, onUpdate }) {
 
     setShowDialog(false);
   };
+  const STATUS_ORDER = {
+    [UNIT_STATUS.OPERATIONAL]: 1,
+    [UNIT_STATUS.DAMAGED]: 2,
+    [UNIT_STATUS.REPAIRING]: 3,
+    [UNIT_STATUS.DISABLED]: 4,
+    [UNIT_STATUS.UNAVAILABLE]: 5,
+    [UNIT_STATUS.DESTROYED]: 6,
+  };
+
+  const handleSortChange = (field) => {
+    if (sortBy === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const filteredAndSortedMechs = React.useMemo(() => {
+    const filtered = force.mechs.filter((mech) =>
+      mech.name.toLowerCase().includes(nameFilter.toLowerCase()),
+    );
+
+    if (!sortBy) return filtered; // Default JSON order
+
+    const sorted = [...filtered].sort((a, b) => {
+      const dir = sortDirection === 'asc' ? 1 : -1;
+
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }) * dir;
+      }
+
+      if (sortBy === 'status') {
+        const aVal = STATUS_ORDER[a.status] || 999;
+        const bVal = STATUS_ORDER[b.status] || 999;
+        if (aVal === bVal) return 0;
+        return aVal < bVal ? -1 * dir : 1 * dir;
+      }
+
+      if (sortBy === 'bv') {
+        const aVal = a.bv || 0;
+        const bVal = b.bv || 0;
+        if (aVal === bVal) return 0;
+        return aVal < bVal ? -1 * dir : 1 * dir;
+      }
+
+      return 0;
+    });
+
+    return sorted;
+  }, [force.mechs, nameFilter, sortBy, sortDirection]);
+
 
   const availablePilots = getAvailablePilotsForMech(force, editingMech);
 
@@ -125,7 +180,16 @@ export default function MechRoster({ force, onUpdate }) {
             Mech Roster
           </h3>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">{force.mechs.length} Units</span>
+            <Input
+              data-testid="mech-name-filter"
+              className="h-8 w-40"
+              placeholder="Filter by name"
+              value={nameFilter}
+              onChange={(e) => setNameFilter(e.target.value)}
+            />
+            <span className="text-xs text-muted-foreground">
+              {filteredAndSortedMechs.length}/{force.mechs.length} Units
+            </span>
             <Button size="sm" onClick={() => setShowDialog(true)}>
               <Plus className="w-4 h-4" />
               Add Mech
@@ -138,23 +202,53 @@ export default function MechRoster({ force, onUpdate }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Mech</th>
-              <th>Status</th>
+              <th>
+                <button
+                  type="button"
+                  data-testid="mech-sort-name"
+                  className="flex items-center gap-1"
+                  onClick={() => handleSortChange('name')}
+                >
+                  Mech
+                  {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </button>
+              </th>
+              <th>
+                <button
+                  type="button"
+                  data-testid="mech-sort-status"
+                  className="flex items-center gap-1"
+                  onClick={() => handleSortChange('status')}
+                >
+                  Status
+                  {sortBy === 'status' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </button>
+              </th>
               <th>Pilot</th>
-              <th className="text-right">BV</th>
+              <th className="text-right">
+                <button
+                  type="button"
+                  data-testid="mech-sort-bv"
+                  className="flex items-center gap-1 ml-auto"
+                  onClick={() => handleSortChange('bv')}
+                >
+                  BV
+                  {sortBy === 'bv' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </button>
+              </th>
               <th className="text-right">Weight</th>
               <th>Recent Activity</th>
             </tr>
           </thead>
           <tbody>
-            {force.mechs.length === 0 ? (
+            {filteredAndSortedMechs.length === 0 ? (
               <tr>
                 <td colSpan="6" className="text-center py-8 text-muted-foreground">
-                  No mechs in roster. Add mechs via Data Editor.
+                  No mechs match the current filters.
                 </td>
               </tr>
             ) : (
-              force.mechs.map((mech) => {
+              filteredAndSortedMechs.map((mech) => {
                 const pilot = findPilotForMech(force, mech);
 
                 return (
