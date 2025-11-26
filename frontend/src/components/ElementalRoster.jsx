@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Minus, Users } from 'lucide-react';
+import { Plus, Minus, Users, ArrowUp, ArrowDown } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { formatNumber } from '../lib/utils';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
@@ -12,6 +12,9 @@ import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 export default function ElementalRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingElemental, setEditingElemental] = useState(null);
+  const [filterText, setFilterText] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+
   const [formData, setFormData] = useState({
     name: '',
     commander: '',
@@ -150,22 +153,88 @@ export default function ElementalRoster({ force, onUpdate }) {
     return 'operational';
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const filteredElementals = (force.elementals || []).filter((elemental) => {
+    const searchStr = filterText.toLowerCase();
+    return (
+      elemental.name.toLowerCase().includes(searchStr) ||
+      (elemental.commander && elemental.commander.toLowerCase().includes(searchStr))
+    );
+  });
+
+  const sortedElementals = [...filteredElementals].sort((a, b) => {
+    let aValue, bValue;
+    
+    switch (sortConfig.key) {
+      case 'name':
+        aValue = a.name;
+        bValue = b.name;
+        break;
+      case 'status':
+        aValue = a.status;
+        bValue = b.status;
+        break;
+      case 'commander':
+        aValue = a.commander || '';
+        bValue = b.commander || '';
+        break;
+      case 'gunnery':
+        aValue = a.gunnery;
+        bValue = b.gunnery;
+        break;
+      case 'antimech':
+        aValue = a.antimech;
+        bValue = b.antimech;
+        break;
+      case 'bv':
+        aValue = a.bv;
+        bValue = b.bv;
+        break;
+      default:
+        return 0;
+    }
+
+    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const SortIcon = ({ column }) => {
+    if (sortConfig.key !== column) return null;
+    return sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
+  };
+
   return (
     <div className="tactical-panel">
       <div className="tactical-header">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center gap-2">
             <Users className="w-4 h-4" />
             Elemental Roster
           </h3>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
-              {force.elementals?.length || 0} Points
-            </span>
-            <Button size="sm" onClick={() => openDialog()}>
-              <Plus className="w-4 h-4" />
-              Add Elemental
-            </Button>
+          <div className="flex items-center gap-4 flex-1 justify-end">
+            <Input 
+              placeholder="Filter by name or commander..." 
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="max-w-xs h-8 text-xs"
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">
+                {force.elementals?.length || 0} Points
+              </span>
+              <Button size="sm" onClick={() => openDialog()}>
+                <Plus className="w-4 h-4" />
+                Add Elemental
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -174,26 +243,40 @@ export default function ElementalRoster({ force, onUpdate }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Point</th>
-              <th>Status</th>
-              <th>Commander</th>
-              <th className="text-center">Gunnery</th>
-              <th className="text-center">Antimech</th>
+              <th onClick={() => handleSort('name')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Point <SortIcon column="name" /></div>
+              </th>
+              <th onClick={() => handleSort('status')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Status <SortIcon column="status" /></div>
+              </th>
+              <th onClick={() => handleSort('commander')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Commander <SortIcon column="commander" /></div>
+              </th>
+              <th onClick={() => handleSort('gunnery')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-center">Gunnery <SortIcon column="gunnery" /></div>
+              </th>
+              <th onClick={() => handleSort('antimech')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-center">Antimech <SortIcon column="antimech" /></div>
+              </th>
               <th className="text-center">Suits Destroyed</th>
               <th className="text-center">Suits Damaged</th>
-              <th className="text-right">BV</th>
+              <th onClick={() => handleSort('bv')} className="text-right cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-end">BV <SortIcon column="bv" /></div>
+              </th>
               <th>Recent Activity</th>
             </tr>
           </thead>
           <tbody>
-            {!force.elementals || force.elementals.length === 0 ? (
+            {!sortedElementals || sortedElementals.length === 0 ? (
               <tr>
                 <td colSpan="9" className="text-center py-8 text-muted-foreground">
-                  No elementals in roster. Add elementals via Data Editor.
+                  {force.elementals?.length === 0 
+                    ? "No elementals in roster. Add elementals via Data Editor." 
+                    : "No elementals match your filter."}
                 </td>
               </tr>
             ) : (
-              force.elementals.map((elemental) => (
+              sortedElementals.map((elemental) => (
                 <tr
                   key={elemental.id}
                   onClick={(e) => {
