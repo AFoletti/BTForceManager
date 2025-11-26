@@ -3,13 +3,16 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Minus, User } from 'lucide-react';
+import { Plus, Minus, User, ArrowUp, ArrowDown } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { findMechForPilot } from '../lib/mechs';
 
 export default function PilotRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingPilot, setEditingPilot] = useState(null);
+  const [filterText, setFilterText] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+
   const [formData, setFormData] = useState({
     name: '',
     gunnery: 4,
@@ -125,20 +128,86 @@ export default function PilotRoster({ force, onUpdate }) {
     return `${injuries}/6`;
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const filteredPilots = force.pilots.filter((pilot) => {
+    const assignedMech = findMechForPilot(force, pilot);
+    const searchStr = filterText.toLowerCase();
+    return (
+      pilot.name.toLowerCase().includes(searchStr) ||
+      (assignedMech && assignedMech.name.toLowerCase().includes(searchStr))
+    );
+  });
+
+  const sortedPilots = [...filteredPilots].sort((a, b) => {
+    const mechA = findMechForPilot(force, a);
+    const mechB = findMechForPilot(force, b);
+    
+    let aValue, bValue;
+    
+    switch (sortConfig.key) {
+      case 'name':
+        aValue = a.name;
+        bValue = b.name;
+        break;
+      case 'mech':
+        aValue = mechA ? mechA.name : '';
+        bValue = mechB ? mechB.name : '';
+        break;
+      case 'gunnery':
+        aValue = a.gunnery;
+        bValue = b.gunnery;
+        break;
+      case 'piloting':
+        aValue = a.piloting;
+        bValue = b.piloting;
+        break;
+      case 'injuries':
+        aValue = a.injuries;
+        bValue = b.injuries;
+        break;
+      default:
+        return 0;
+    }
+
+    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const SortIcon = ({ column }) => {
+    if (sortConfig.key !== column) return null;
+    return sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
+  };
+
   return (
     <div className="tactical-panel">
       <div className="tactical-header">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center gap-2">
             <User className="w-4 h-4" />
             Pilot Roster
           </h3>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">{force.pilots.length} Pilots</span>
-            <Button size="sm" onClick={() => openDialog()}>
-              <Plus className="w-4 h-4" />
-              Add Pilot
-            </Button>
+          <div className="flex items-center gap-4 flex-1 justify-end">
+            <Input 
+              placeholder="Filter by pilot or mech..." 
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="max-w-xs h-8 text-xs"
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">{force.pilots.length} Pilots</span>
+              <Button size="sm" onClick={() => openDialog()}>
+                <Plus className="w-4 h-4" />
+                Add Pilot
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -147,24 +216,36 @@ export default function PilotRoster({ force, onUpdate }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Mech</th>
-              <th className="text-center">Gunnery</th>
-              <th className="text-center">Piloting</th>
-              <th className="text-center">Injuries</th>
+              <th onClick={() => handleSort('name')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Name <SortIcon column="name" /></div>
+              </th>
+              <th onClick={() => handleSort('mech')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Mech <SortIcon column="mech" /></div>
+              </th>
+              <th onClick={() => handleSort('gunnery')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-center">Gunnery <SortIcon column="gunnery" /></div>
+              </th>
+              <th onClick={() => handleSort('piloting')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-center">Piloting <SortIcon column="piloting" /></div>
+              </th>
+              <th onClick={() => handleSort('injuries')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-center">Injuries <SortIcon column="injuries" /></div>
+              </th>
               <th className="text-center">Actions</th>
               <th>Recent Activity</th>
             </tr>
           </thead>
           <tbody>
-            {force.pilots.length === 0 ? (
+            {sortedPilots.length === 0 ? (
               <tr>
                 <td colSpan="7" className="text-center py-8 text-muted-foreground">
-                  No pilots in roster. Add pilots via Data Editor.
+                  {force.pilots.length === 0 
+                    ? "No pilots in roster. Add pilots via Data Editor." 
+                    : "No pilots match your filter."}
                 </td>
               </tr>
             ) : (
-              force.pilots.map((pilot) => {
+              sortedPilots.map((pilot) => {
                 const assignedMech = findMechForPilot(force, pilot);
 
                 return (
@@ -259,6 +340,18 @@ export default function PilotRoster({ force, onUpdate }) {
 
               <div>
                 <label className="block text-sm font-medium mb-2">Piloting</label>
+                <Input
+                  type="number"
+                  value={formData.piloting}
+                  onChange={(e) => setFormData({ ...formData, piloting: e.target.value })}
+                  placeholder="5"
+                  min="0"
+                  max="8"
+                />
+                <p className="text-xs text-muted-foreground mt-1">0-8 (lower is better)</p>
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
               <Input
@@ -271,18 +364,6 @@ export default function PilotRoster({ force, onUpdate }) {
               <p className="text-xs text-muted-foreground mt-1">
                 Cost in WP to recruit this pilot. This will be subtracted from the current Warchest.
               </p>
-            </div>
-
-                <Input
-                  type="number"
-                  value={formData.piloting}
-                  onChange={(e) => setFormData({ ...formData, piloting: e.target.value })}
-                  placeholder="5"
-                  min="0"
-                  max="8"
-                />
-                <p className="text-xs text-muted-foreground mt-1">0-8 (lower is better)</p>
-              </div>
             </div>
 
             <div>

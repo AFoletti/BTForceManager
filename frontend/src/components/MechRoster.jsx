@@ -5,7 +5,7 @@ import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
-import { Shield, Plus } from 'lucide-react';
+import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech } from '../lib/mechs';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
@@ -13,6 +13,9 @@ import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 export default function MechRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMech, setEditingMech] = useState(null);
+  const [filterText, setFilterText] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  
   const [formData, setFormData] = useState({
     name: '',
     status: UNIT_STATUS.OPERATIONAL,
@@ -114,22 +117,89 @@ export default function MechRoster({ force, onUpdate }) {
     setShowDialog(false);
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const filteredMechs = force.mechs.filter((mech) => {
+    const pilot = findPilotForMech(force, mech);
+    const searchStr = filterText.toLowerCase();
+    return (
+      mech.name.toLowerCase().includes(searchStr) ||
+      (pilot && pilot.name.toLowerCase().includes(searchStr))
+    );
+  });
+
+  const sortedMechs = [...filteredMechs].sort((a, b) => {
+    const pilotA = findPilotForMech(force, a);
+    const pilotB = findPilotForMech(force, b);
+    
+    let aValue, bValue;
+    
+    switch (sortConfig.key) {
+      case 'name':
+        aValue = a.name;
+        bValue = b.name;
+        break;
+      case 'status':
+        aValue = a.status;
+        bValue = b.status;
+        break;
+      case 'pilot':
+        aValue = pilotA ? pilotA.name : '';
+        bValue = pilotB ? pilotB.name : '';
+        break;
+      case 'bv':
+        aValue = a.bv;
+        bValue = b.bv;
+        break;
+      case 'weight':
+        aValue = a.weight;
+        bValue = b.weight;
+        break;
+      default:
+        return 0;
+    }
+
+    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
   const availablePilots = getAvailablePilotsForMech(force, editingMech);
+
+  const SortIcon = ({ column }) => {
+    if (sortConfig.key !== column) return null;
+    return sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
+  };
 
   return (
     <div className="tactical-panel">
       <div className="tactical-header">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center gap-2">
             <Shield className="w-4 h-4" />
             Mech Roster
           </h3>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">{force.mechs.length} Units</span>
-            <Button size="sm" onClick={() => setShowDialog(true)}>
-              <Plus className="w-4 h-4" />
-              Add Mech
-            </Button>
+          
+          <div className="flex items-center gap-4 flex-1 justify-end">
+            <Input 
+              placeholder="Filter by mech or pilot..." 
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="max-w-xs h-8 text-xs"
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">{force.mechs.length} Units</span>
+              <Button size="sm" onClick={() => setShowDialog(true)}>
+                <Plus className="w-4 h-4" />
+                Add Mech
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -138,23 +208,35 @@ export default function MechRoster({ force, onUpdate }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Mech</th>
-              <th>Status</th>
-              <th>Pilot</th>
-              <th className="text-right">BV</th>
-              <th className="text-right">Weight</th>
+              <th onClick={() => handleSort('name')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Mech <SortIcon column="name" /></div>
+              </th>
+              <th onClick={() => handleSort('status')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Status <SortIcon column="status" /></div>
+              </th>
+              <th onClick={() => handleSort('pilot')} className="cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center">Pilot <SortIcon column="pilot" /></div>
+              </th>
+              <th onClick={() => handleSort('bv')} className="text-right cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-end">BV <SortIcon column="bv" /></div>
+              </th>
+              <th onClick={() => handleSort('weight')} className="text-right cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-end">Weight <SortIcon column="weight" /></div>
+              </th>
               <th>Recent Activity</th>
             </tr>
           </thead>
           <tbody>
-            {force.mechs.length === 0 ? (
+            {sortedMechs.length === 0 ? (
               <tr>
                 <td colSpan="6" className="text-center py-8 text-muted-foreground">
-                  No mechs in roster. Add mechs via Data Editor.
+                  {force.mechs.length === 0 
+                    ? "No mechs in roster. Add mechs via Data Editor." 
+                    : "No mechs match your filter."}
                 </td>
               </tr>
             ) : (
-              force.mechs.map((mech) => {
+              sortedMechs.map((mech) => {
                 const pilot = findPilotForMech(force, mech);
 
                 return (
