@@ -164,6 +164,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
         const result = applyMechDowntimeAction(workingForce, {
           mechId: plan.unitId,
           action: {
+            id: plan.actionId,
             name: plan.actionName,
             makesUnavailable: plan.makesUnavailable,
           },
