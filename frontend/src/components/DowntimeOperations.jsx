@@ -671,7 +671,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                   Formula:{' '}
                   <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
                   {action.makesUnavailable && (
-                    <span className="ml-2 text-amber-400">(Makes Unavailable)</span>
+                    <span className="ml-2 text-amber-400">(Sets status to Repairing)</span>
                   )}
                 </div>
                 {action.description && (
