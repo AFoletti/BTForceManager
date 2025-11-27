@@ -161,7 +161,7 @@ After copying, `index.html` + `static/` are in sync with source.
 - `src/lib/downtime.js`
   - `buildDowntimeContext(force, unit)` – generates context for downtime formulas (weight, suits, WP multiplier).
   - `evaluateDowntimeCost(formula, context)` – evaluates the formula using a tiny arithmetic expression parser (numbers, +, -, *, /, parentheses) with variables `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`.
-  - `applyMechDowntimeAction(force, { mechId, action, cost, timestamp, lastMissionName })` – logs action to mech, optionally sets status to `Unavailable`, and subtracts cost from Warchest.
+  - `applyMechDowntimeAction(force, { mechId, action, cost, timestamp, lastMissionName })` – logs action to mech, and for the mech internal-structure repair downtime action sets status to `Repairing` (otherwise may set it to `Unavailable`), and subtracts cost from Warchest.
   - `applyElementalDowntimeAction(force, { elementalId, actionId, action, cost, timestamp, lastMissionName })` – logs action to elemental, applies action-specific changes (e.g. reset suits), and subtracts cost.
   - `applyPilotDowntimeAction(force, { pilotId, actionId, action, cost, timestamp, inGameDate, lastMissionName })` – logs action to pilot, applies training/healing rules based on `DOWNTIME_ACTION_IDS`, and subtracts cost.
 

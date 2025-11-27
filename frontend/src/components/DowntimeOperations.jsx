@@ -164,6 +164,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
         const result = applyMechDowntimeAction(workingForce, {
           mechId: plan.unitId,
           action: {
+            id: plan.actionId,
             name: plan.actionName,
             makesUnavailable: plan.makesUnavailable,
           },
@@ -403,7 +404,8 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     <option value="">-- Choose action --</option>
                     {availableActions.map((action) => (
                       <option key={action.id} value={action.id}>
-                        {action.name} {action.makesUnavailable ? '(Unavailable)' : ''}
+                        {action.name}{' '}
+                        {action.makesUnavailable ? '(Repairing)' : ''}
                       </option>
                     ))}
                   </Select>
@@ -448,7 +450,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     {availableActions.find((a) => a.id === selectedAction)?.makesUnavailable && (
                       <div className="flex items-center gap-2 text-amber-400 text-sm">
                         <AlertTriangle className="w-4 h-4" />
-                        Unit will be unavailable
+                        Unit will be set to Repairing (not available for missions during repairs)
                       </div>
                     )}
                   </div>
@@ -669,7 +671,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                   Formula:{' '}
                   <code className="bg-muted px-1 py-0.5 rounded">{action.formula}</code>
                   {action.makesUnavailable && (
-                    <span className="ml-2 text-amber-400">(Makes Unavailable)</span>
+                    <span className="ml-2 text-amber-400">(Sets status to Repairing)</span>
                   )}
                 </div>
                 {action.description && (
