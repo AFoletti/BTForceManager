@@ -404,7 +404,8 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     <option value="">-- Choose action --</option>
                     {availableActions.map((action) => (
                       <option key={action.id} value={action.id}>
-                        {action.name} {action.makesUnavailable ? '(Unavailable)' : ''}
+                        {action.name}{' '}
+                        {action.makesUnavailable ? '(Repairing)' : ''}
                       </option>
                     ))}
                   </Select>
