@@ -32,7 +32,7 @@
       "name": "CP-11-A Cyclops",
       "status": "Operational",
       "pilotId": "pilot-1764101184969",
-      "bv": 1547,
+      "bv": 2599,
       "weight": 90,
       "image": "",
       "history": "",
@@ -70,7 +70,7 @@
       "name": "MAD-5CS Marauder",
       "status": "Operational",
       "pilotId": "pilot-1764101197863",
-      "bv": 1648,
+      "bv": 2175,
       "weight": 75,
       "image": "",
       "history": "",
@@ -184,7 +184,7 @@
       "name": "GRF-1N Griffin",
       "status": "Operational",
       "pilotId": "pilot-1764101234302",
-      "bv": 1272,
+      "bv": 2555,
       "weight": 55,
       "image": "",
       "history": "",
@@ -374,7 +374,7 @@
       "name": "NSR-9J Nightstar",
       "status": "Operational",
       "pilotId": "pilot-1764102602257",
-      "bv": 2399,
+      "bv": 3167,
       "weight": 95,
       "image": "",
       "history": "",
@@ -430,7 +430,7 @@
       "id": "mech-1764102862692",
       "name": "SHD-2Ht Shadow Hawk II",
       "status": "Operational",
-      "pilotId": "pilot-1764102759566",
+      "pilotId": "pilot-1764235574013",
       "bv": 1453,
       "weight": 55,
       "image": "",
@@ -526,7 +526,7 @@
       "name": "MON-66 Mongoose",
       "status": "Operational",
       "pilotId": "pilot-1764103023853",
-      "bv": 758,
+      "bv": 1001,
       "weight": 25,
       "image": "",
       "history": "",
@@ -545,7 +545,7 @@
   "pilots": [
     {
       "id": "pilot-1764101175165",
-      "name": "Pilot 1",
+      "name": "Adept Alptekin Korutürk",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -562,9 +562,9 @@
     },
     {
       "id": "pilot-1764101184969",
-      "name": "Pilot 2",
-      "gunnery": 4,
-      "piloting": 5,
+      "name": "Demi-Precentor Kasper Langvardt",
+      "gunnery": 2,
+      "piloting": 3,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -579,7 +579,7 @@
     },
     {
       "id": "pilot-1764101192112",
-      "name": "Pilot 3",
+      "name": "Adept Takiyah Citseko",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -596,9 +596,9 @@
     },
     {
       "id": "pilot-1764101197863",
-      "name": "Pilot 4",
-      "gunnery": 4,
-      "piloting": 5,
+      "name": "Adept II Grizela Comino",
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -613,7 +613,7 @@
     },
     {
       "id": "pilot-1764101204182",
-      "name": "Pilot 5",
+      "name": "Adept Stefan Alvheim",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -630,7 +630,7 @@
     },
     {
       "id": "pilot-1764101210384",
-      "name": "Pilot 6",
+      "name": "Adept Sebastião Tolosa",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -647,7 +647,7 @@
     },
     {
       "id": "pilot-1764101215339",
-      "name": "Pilot 7",
+      "name": "Adept Margaret Martínez",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -664,7 +664,7 @@
     },
     {
       "id": "pilot-1764101220583",
-      "name": "Pilot 8",
+      "name": "Adept Joshua Sørensen",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -681,7 +681,7 @@
     },
     {
       "id": "pilot-1764101228377",
-      "name": "Pilot 9",
+      "name": "Adept Bessie Trujillo",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -698,9 +698,9 @@
     },
     {
       "id": "pilot-1764101234302",
-      "name": "Pilot 10",
-      "gunnery": 4,
-      "piloting": 5,
+      "name": "Adept II Pat Pak",
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -715,7 +715,7 @@
     },
     {
       "id": "pilot-1764101238536",
-      "name": "Pilot 11",
+      "name": "Adept Jeff Caetani",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -732,7 +732,7 @@
     },
     {
       "id": "pilot-1764101243164",
-      "name": "Pilot 12",
+      "name": "Adept Karoline Palme",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -749,7 +749,7 @@
     },
     {
       "id": "pilot-1764101247917",
-      "name": "Pilot 13",
+      "name": "Adept Rebekka Bartolf",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -766,7 +766,7 @@
     },
     {
       "id": "pilot-1764102302655",
-      "name": "Pilot 14",
+      "name": "Adept Martina Olbrich",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -783,7 +783,7 @@
     },
     {
       "id": "pilot-1764102309823",
-      "name": "Pilot 15",
+      "name": "Adept Freddy Edwards",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -800,7 +800,7 @@
     },
     {
       "id": "pilot-1764102316506",
-      "name": "Pilot 16",
+      "name": "Adept Tritan Bernardi",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -817,7 +817,7 @@
     },
     {
       "id": "pilot-1764102320922",
-      "name": "Pilot 17",
+      "name": "Adept Corneel Marstein",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -834,7 +834,7 @@
     },
     {
       "id": "pilot-1764102592895",
-      "name": "Pilot 18",
+      "name": "Adept Ugo Zhào",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -851,7 +851,7 @@
     },
     {
       "id": "pilot-1764102597321",
-      "name": "Pilot 19",
+      "name": "Adept Callum Cardew",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -868,9 +868,9 @@
     },
     {
       "id": "pilot-1764102602257",
-      "name": "Pilot 20",
-      "gunnery": 4,
-      "piloting": 5,
+      "name": "Adept II Tim Faimon",
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -885,7 +885,7 @@
     },
     {
       "id": "pilot-1764102607838",
-      "name": "Pilot 21",
+      "name": "Adept Manideepa Naidoo",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -902,7 +902,7 @@
     },
     {
       "id": "pilot-1764102759566",
-      "name": "Pilot 22",
+      "name": "Adept Thomas Alexopoulos",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -919,7 +919,7 @@
     },
     {
       "id": "pilot-1764102763706",
-      "name": "Pilot 23",
+      "name": "Adept Chattradhara Noorzai",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -936,7 +936,7 @@
     },
     {
       "id": "pilot-1764102767948",
-      "name": "Pilot 24",
+      "name": "Adept Gunep Osmanoglu",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -953,7 +953,7 @@
     },
     {
       "id": "pilot-1764102772636",
-      "name": "Pilot 25",
+      "name": "Adept Phuong Zhou",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -970,7 +970,7 @@
     },
     {
       "id": "pilot-1764102778099",
-      "name": "Pilot 26",
+      "name": "Adept Andrea Fiesco",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
@@ -987,7 +987,24 @@
     },
     {
       "id": "pilot-1764103023853",
-      "name": "Pilot 27",
+      "name": "Adept II Abban Djadjadiningrat",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764235574013",
+      "name": "Adept Robert Dziomba",
       "gunnery": 4,
       "piloting": 5,
       "injuries": 0,
