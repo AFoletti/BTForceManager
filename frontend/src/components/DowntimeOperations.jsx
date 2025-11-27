@@ -450,7 +450,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     {availableActions.find((a) => a.id === selectedAction)?.makesUnavailable && (
                       <div className="flex items-center gap-2 text-amber-400 text-sm">
                         <AlertTriangle className="w-4 h-4" />
-                        Unit will be unavailable
+                        Unit will be set to Repairing (not available for missions during repairs)
                       </div>
                     )}
                   </div>
