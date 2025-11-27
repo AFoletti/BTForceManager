@@ -186,7 +186,7 @@
     {
       "id": "mech-1763627370406",
       "name": "Shadow Cat A",
-      "status": "Unavailable",
+      "status": "Repairing",
       "pilotId": "pilot-1763626938065",
       "bv": 2930,
       "weight": 45,
@@ -286,7 +286,7 @@
     {
       "id": "mech-1763627451425",
       "name": "Summoner A",
-      "status": "Unavailable",
+      "status": "Repairing",
       "pilotId": "pilot-1763626966154",
       "bv": 2831,
       "weight": 70,
@@ -1854,7 +1854,7 @@
           {
             "id": "mech-1763627370406",
             "name": "Shadow Cat A",
-            "status": "Unavailable",
+            "status": "Repairing",
             "pilotId": "pilot-1763626938065",
             "bv": 2930,
             "weight": 45,
@@ -1954,7 +1954,7 @@
           {
             "id": "mech-1763627451425",
             "name": "Summoner A",
-            "status": "Unavailable",
+            "status": "Repairing",
             "pilotId": "pilot-1763626966154",
             "bv": 2831,
             "weight": 70,
