@@ -12,7 +12,7 @@
       "name": "Repair Mech Internal Structure",
       "formula": "(weight*2)/wpMultiplier",
       "makesUnavailable": true,
-      "description": "Repair internal structure damage - mech unavailable during repair"
+      "description": "Repair internal structure damage - mech set to Repairing during repair"
     },
     {
       "id": "reconfigure",
