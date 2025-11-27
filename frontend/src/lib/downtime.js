@@ -2,7 +2,7 @@
 // Centralises cost calculation and force updates so the component
 // stays mostly focused on UI concerns.
 
-import { DOWNTIME_ACTION_IDS } from './constants';
+import { DOWNTIME_ACTION_IDS, UNIT_STATUS } from './constants';
 
 /**
  * Build the context object used when evaluating downtime formulas.
@@ -252,7 +252,7 @@ export function evaluateDowntimeCost(formula, context) {
  * Apply a mech downtime action to a force.
  *
  * @param {Object} force
- * @param {{ mechId: string, action: Object, cost: number, timestamp: string, lastMissionName: string | null }} params
+ * @param {{ mechId: string, action: { id?: string, name: string, makesUnavailable?: boolean }, cost: number, timestamp: string, lastMissionName: string | null }} params
  * @returns {{ mechs: Object[], currentWarchest: number }}
  */
 export function applyMechDowntimeAction(
