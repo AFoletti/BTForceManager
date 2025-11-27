@@ -270,9 +270,22 @@ export function applyMechDowntimeAction(
       cost,
     });
 
+    let nextStatus = mech.status;
+
+    // For internal structure repairs, mark the mech as "Repairing" instead of
+    // the generic "Unavailable" status, while still keeping it off the field
+    // for mission selection (mission availability only allows Operational/Damaged).
+    if (action.makesUnavailable) {
+      if (action.id === DOWNTIME_ACTION_IDS.REPAIR_STRUCTURE) {
+        nextStatus = UNIT_STATUS.REPAIRING;
+      } else {
+        nextStatus = UNIT_STATUS.UNAVAILABLE;
+      }
+    }
+
     return {
       ...mech,
-      status: action.makesUnavailable ? 'Unavailable' : mech.status,
+      status: nextStatus,
       activityLog,
     };
   });
