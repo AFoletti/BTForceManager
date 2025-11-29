@@ -1,10 +1,10 @@
 {
   "id": "comstar-31st-division",
-  "name": "ComStar - 31st Division",
+  "name": "ComStar - 31st Division 'Static Hurlers'",
   "description": "OpFor for the White Shark",
   "image": "",
   "startingWarchest": 2000,
-  "currentWarchest": 1840,
+  "currentWarchest": 1116,
   "wpMultiplier": 10,
   "otherActionsLog": [],
   "mechs": [
@@ -51,7 +51,7 @@
       "name": "AS7-K Atlas",
       "status": "Operational",
       "pilotId": "pilot-1764101192112",
-      "bv": 2175,
+      "bv": 2871,
       "weight": 100,
       "image": "",
       "history": "",
@@ -150,9 +150,9 @@
     {
       "id": "mech-1764101969954",
       "name": "FLS-8K Flashman",
-      "status": "Disabled",
+      "status": "Repairing",
       "pilotId": "pilot-1764101220583",
-      "bv": 1779,
+      "bv": 2348,
       "weight": 75,
       "image": "",
       "history": "",
@@ -169,15 +169,27 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Internal Structure performed (15 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Armor performed (8 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 8
         }
       ]
     },
     {
       "id": "mech-1764101997595",
       "name": "SHD-2Ht Shadow Hawk",
-      "status": "Disabled",
+      "status": "Repairing",
       "pilotId": "pilot-1764101228377",
-      "bv": 1453,
+      "bv": 1918,
       "weight": 55,
       "image": "",
       "history": "",
@@ -194,13 +206,25 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Internal Structure performed (11 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 11
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Armor performed (6 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 6
         }
       ]
     },
     {
       "id": "mech-1764102197374",
       "name": "GRF-1N Griffin",
-      "status": "Disabled",
+      "status": "Repairing",
       "pilotId": "pilot-1764101234302",
       "bv": 2555,
       "weight": 55,
@@ -219,6 +243,24 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Internal Structure performed (11 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 11
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Armor performed (6 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 6
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Other: Buy ammo performed (1 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 1
         }
       ]
     },
@@ -244,7 +286,7 @@
     {
       "id": "mech-1764102286990",
       "name": "HBK-5M Hunchback ",
-      "status": "Damaged",
+      "status": "Operational",
       "pilotId": "pilot-1764101243164",
       "bv": 1056,
       "weight": 50,
@@ -263,15 +305,27 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Armor performed (5 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 5
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Other: Buy ammo performed (1 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 1
         }
       ]
     },
     {
       "id": "mech-1764102462713",
       "name": "MAD-5CS Marauder II",
-      "status": "Damaged",
+      "status": "Operational",
       "pilotId": "pilot-1764101247917",
-      "bv": 1648,
+      "bv": 2175,
       "weight": 75,
       "image": "",
       "history": "",
@@ -288,6 +342,12 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Repair Mech Armor performed (8 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 8
         }
       ]
     },
@@ -333,8 +393,8 @@
       "id": "mech-1764102558021",
       "name": "BJ-1 Blackjack",
       "status": "Destroyed",
-      "pilotId": "pilot-1764102316506",
-      "bv": 949,
+      "pilotId": "",
+      "bv": 1148,
       "weight": 45,
       "image": "",
       "history": "",
@@ -435,7 +495,7 @@
       "name": "CRD-2R Crusader",
       "status": "Operational",
       "pilotId": "pilot-1764102607838",
-      "bv": 1533,
+      "bv": 1408,
       "weight": 65,
       "image": "",
       "history": "",
@@ -516,7 +576,7 @@
       "id": "mech-1764102929382",
       "name": "UM-R63 UrbanMech",
       "status": "Destroyed",
-      "pilotId": "pilot-1764102767948",
+      "pilotId": "",
       "bv": 540,
       "weight": 30,
       "image": "",
@@ -599,6 +659,44 @@
           "cost": 0
         }
       ]
+    },
+    {
+      "id": "mech-1764425939782",
+      "name": "BJ-1 Blackjack II",
+      "status": "Operational",
+      "pilotId": "pilot-1764102316506",
+      "bv": 1148,
+      "weight": 45,
+      "image": "",
+      "history": "",
+      "warchestCost": 90,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-05",
+          "action": "Purchased mech for 90 WP",
+          "mission": null,
+          "cost": 90
+        }
+      ]
+    },
+    {
+      "id": "mech-1764426225900",
+      "name": "UM-R63 UrbanMech II",
+      "status": "Operational",
+      "pilotId": "pilot-1764102767948",
+      "bv": 540,
+      "weight": 30,
+      "image": "",
+      "history": "",
+      "warchestCost": 60,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-05",
+          "action": "Purchased mech for 60 WP",
+          "mission": null,
+          "cost": 60
+        }
+      ]
     }
   ],
   "elementals": [],
@@ -640,8 +738,8 @@
     {
       "id": "pilot-1764101192112",
       "name": "Adept Takiyah Citseko",
-      "gunnery": 4,
-      "piloting": 5,
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "Dezgra",
       "warchestCost": 0,
@@ -658,6 +756,18 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting AS7-K Atlas)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
         }
       ]
     },
@@ -732,9 +842,9 @@
     {
       "id": "pilot-1764101220583",
       "name": "Adept Joshua Sørensen",
-      "gunnery": 4,
-      "piloting": 5,
-      "injuries": 1,
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -750,14 +860,32 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting FLS-8K Flashman)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
         }
       ]
     },
     {
       "id": "pilot-1764101228377",
       "name": "Adept Bessie Trujillo",
-      "gunnery": 4,
-      "piloting": 5,
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -774,14 +902,26 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting SHD-2Ht Shadow Hawk)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
         }
       ]
     },
     {
       "id": "pilot-1764101234302",
       "name": "Adept II Pat Pak",
-      "gunnery": 3,
-      "piloting": 4,
+      "gunnery": 2,
+      "piloting": 3,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -798,6 +938,18 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting GRF-1N Griffin)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
         }
       ]
     },
@@ -845,8 +997,8 @@
     {
       "id": "pilot-1764101247917",
       "name": "Adept Rebekka Bartolf",
-      "gunnery": 4,
-      "piloting": 5,
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "Dezgra",
       "warchestCost": 0,
@@ -863,6 +1015,18 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting MAD-5CS Marauder II)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
         }
       ]
     },
@@ -905,7 +1069,7 @@
       "name": "Adept Tritan Bernardi",
       "gunnery": 4,
       "piloting": 5,
-      "injuries": 6,
+      "injuries": 0,
       "history": "Dezgra",
       "warchestCost": 0,
       "activityLog": [
@@ -921,6 +1085,30 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting BJ-1 Blackjack)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
         }
       ]
     },
@@ -1055,7 +1243,7 @@
       "name": "Adept Gunep Osmanoglu",
       "gunnery": 4,
       "piloting": 5,
-      "injuries": 4,
+      "injuries": 0,
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -1071,6 +1259,30 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting UM-R63 UrbanMech)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
         }
       ]
     },
@@ -1197,10 +1409,38 @@
       "createdAt": "3052-05-02",
       "inGameDate": "3052-05-02",
       "completedAt": "3052-05-02"
+    },
+    {
+      "name": "M02 - Gotta catch them all",
+      "cost": 300,
+      "description": "",
+      "objectives": [
+        {
+          "id": "obj-1764427047466-0",
+          "title": "Prevent at least 75% of attacker's forces to exit before Turn 15",
+          "description": "",
+          "wpReward": 300,
+          "achieved": false
+        },
+        {
+          "id": "obj-1764427093736-1",
+          "title": "Destroy or Cripple 100% of the attacker's forces",
+          "description": "",
+          "wpReward": 100,
+          "achieved": false
+        }
+      ],
+      "recap": "",
+      "completed": false,
+      "assignedMechs": [],
+      "assignedElementals": [],
+      "id": "mission-1764427152189",
+      "createdAt": "3052-05-07",
+      "inGameDate": "3052-05-07"
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-02",
+  "currentDate": "3052-05-07",
   "notes": "",
   "snapshots": [
     {
@@ -2301,6 +2541,1409 @@
                 "action": "Assigned to mission: M01 - Defend the supply depot (piloting UM-R63 UrbanMech)",
                 "mission": "M01 - Defend the supply depot",
                 "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102772636",
+            "name": "Adept Phuong Zhou",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting UM-R60 UrbanMech)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102778099",
+            "name": "Adept Andrea Fiesco",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764103023853",
+            "name": "Adept II Abban Djadjadiningrat",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764235574013",
+            "name": "Adept Robert Dziomba",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "elementals": [],
+        "missions": [
+          {
+            "name": "M01 - Defend the supply depot",
+            "cost": 200,
+            "description": "",
+            "objectives": [
+              {
+                "id": "obj-1764395608233-0",
+                "title": "Brush them off",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              },
+              {
+                "id": "obj-1764395641547-1",
+                "title": "Push them back",
+                "description": "",
+                "wpReward": 100,
+                "achieved": false
+              },
+              {
+                "id": "obj-1764395655333-2",
+                "title": "Supply",
+                "description": "",
+                "wpReward": 40,
+                "achieved": true
+              }
+            ],
+            "recap": "",
+            "completed": true,
+            "assignedMechs": [
+              "mech-1764102197374",
+              "mech-1764101765966",
+              "mech-1764101969954",
+              "mech-1764102462713",
+              "mech-1764101997595",
+              "mech-1764102286990",
+              "mech-1764102904545",
+              "mech-1764102558021",
+              "mech-1764102929382",
+              "mech-1764102950926"
+            ],
+            "assignedElementals": [],
+            "id": "mission-1764395719862",
+            "createdAt": "3052-05-02",
+            "inGameDate": "3052-05-02",
+            "completedAt": "3052-05-02"
+          }
+        ]
+      }
+    },
+    {
+      "id": "snapshot-1764425874040",
+      "type": "post-downtime",
+      "label": "After downtime cycle #2",
+      "createdAt": "3052-05-05",
+      "currentWarchest": 1566,
+      "startingWarchest": 2000,
+      "netWarchestChange": -434,
+      "missionsCompleted": 1,
+      "units": {
+        "mechs": {
+          "ready": 23,
+          "total": 26,
+          "destroyed": 2
+        },
+        "elementals": {
+          "ready": 0,
+          "total": 0,
+          "destroyed": 0
+        },
+        "pilots": {
+          "ready": 28,
+          "total": 28,
+          "kia": 0
+        }
+      },
+      "forceState": {
+        "id": "comstar-31st-division",
+        "name": "ComStar - 31st Division",
+        "description": "OpFor for the White Shark",
+        "image": "",
+        "currentDate": "3052-05-05",
+        "startingWarchest": 2000,
+        "currentWarchest": 1566,
+        "wpMultiplier": 10,
+        "mechs": [
+          {
+            "id": "mech-1764101387438",
+            "name": "HGN-732 Highlander",
+            "status": "Operational",
+            "pilotId": "pilot-1764101175165",
+            "bv": 2227,
+            "weight": 90,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101558310",
+            "name": "CP-11-A Cyclops",
+            "status": "Operational",
+            "pilotId": "pilot-1764101184969",
+            "bv": 2599,
+            "weight": 90,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101765966",
+            "name": "AS7-K Atlas",
+            "status": "Operational",
+            "pilotId": "pilot-1764101192112",
+            "bv": 2175,
+            "weight": 100,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101833945",
+            "name": "MAD-5CS Marauder",
+            "status": "Operational",
+            "pilotId": "pilot-1764101197863",
+            "bv": 2175,
+            "weight": 75,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101873977",
+            "name": "ARC-5CS Archer",
+            "status": "Operational",
+            "pilotId": "pilot-1764101204182",
+            "bv": 1609,
+            "weight": 70,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101903937",
+            "name": "WHM-6R Warhammer",
+            "status": "Operational",
+            "pilotId": "pilot-1764101210384",
+            "bv": 1299,
+            "weight": 70,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101941931",
+            "name": "ON1-M Orion",
+            "status": "Operational",
+            "pilotId": "pilot-1764101215339",
+            "bv": 1414,
+            "weight": 75,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101969954",
+            "name": "FLS-8K Flashman",
+            "status": "Repairing",
+            "pilotId": "pilot-1764101220583",
+            "bv": 1779,
+            "weight": 75,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Internal Structure performed (15 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 15
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Armor performed (8 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 8
+              }
+            ]
+          },
+          {
+            "id": "mech-1764101997595",
+            "name": "SHD-2Ht Shadow Hawk",
+            "status": "Repairing",
+            "pilotId": "pilot-1764101228377",
+            "bv": 1453,
+            "weight": 55,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Internal Structure performed (11 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 11
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Armor performed (6 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 6
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102197374",
+            "name": "GRF-1N Griffin",
+            "status": "Repairing",
+            "pilotId": "pilot-1764101234302",
+            "bv": 2555,
+            "weight": 55,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Internal Structure performed (11 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 11
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Armor performed (6 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 6
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Other: Buy ammo performed (1 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 1
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102237506",
+            "name": "SHD-2Hb Shadow Hawk",
+            "status": "Operational",
+            "pilotId": "pilot-1764101238536",
+            "bv": 1354,
+            "weight": 55,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102286990",
+            "name": "HBK-5M Hunchback ",
+            "status": "Damaged",
+            "pilotId": "pilot-1764101243164",
+            "bv": 1056,
+            "weight": 50,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Armor performed (5 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 5
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Other: Buy ammo performed (1 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 1
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102462713",
+            "name": "MAD-5CS Marauder II",
+            "status": "Damaged",
+            "pilotId": "pilot-1764101247917",
+            "bv": 1648,
+            "weight": 75,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Repair Mech Armor performed (8 WP)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 8
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102496181",
+            "name": "CN9-A Centurion",
+            "status": "Operational",
+            "pilotId": "pilot-1764102302655",
+            "bv": 945,
+            "weight": 50,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102518349",
+            "name": "CN9-A Centurion II",
+            "status": "Operational",
+            "pilotId": "pilot-1764102309823",
+            "bv": 945,
+            "weight": 50,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102558021",
+            "name": "BJ-1 Blackjack",
+            "status": "Destroyed",
+            "pilotId": "pilot-1764102316506",
+            "bv": 949,
+            "weight": 45,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102583198",
+            "name": "VLK-QA Valkyrie",
+            "status": "Operational",
+            "pilotId": "pilot-1764102320922",
+            "bv": 723,
+            "weight": 30,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102641790",
+            "name": "PNT-8Z Panther",
+            "status": "Operational",
+            "pilotId": "pilot-1764102592895",
+            "bv": 741,
+            "weight": 35,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102678755",
+            "name": "THG-11E Thug",
+            "status": "Operational",
+            "pilotId": "pilot-1764102597321",
+            "bv": 1640,
+            "weight": 80,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102706981",
+            "name": "NSR-9J Nightstar",
+            "status": "Operational",
+            "pilotId": "pilot-1764102602257",
+            "bv": 3167,
+            "weight": 95,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102750690",
+            "name": "CRD-2R Crusader",
+            "status": "Operational",
+            "pilotId": "pilot-1764102607838",
+            "bv": 1533,
+            "weight": 65,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102836981",
+            "name": "LNC25-01 Lancelot",
+            "status": "Operational",
+            "pilotId": "pilot-1764102759566",
+            "bv": 1422,
+            "weight": 60,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102862692",
+            "name": "SHD-2Ht Shadow Hawk II",
+            "status": "Operational",
+            "pilotId": "pilot-1764235574013",
+            "bv": 1453,
+            "weight": 55,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102904545",
+            "name": "HBK-4G Hunchback",
+            "status": "Operational",
+            "pilotId": "pilot-1764102763706",
+            "bv": 1041,
+            "weight": 50,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102929382",
+            "name": "UM-R63 UrbanMech",
+            "status": "Destroyed",
+            "pilotId": "pilot-1764102767948",
+            "bv": 540,
+            "weight": 30,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764102950926",
+            "name": "UM-R60 UrbanMech",
+            "status": "Operational",
+            "pilotId": "pilot-1764102772636",
+            "bv": 504,
+            "weight": 30,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764103004000",
+            "name": "VLK-QA Valkyrie II",
+            "status": "Operational",
+            "pilotId": "pilot-1764102778099",
+            "bv": 723,
+            "weight": 30,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1764103040881",
+            "name": "MON-66 Mongoose",
+            "status": "Operational",
+            "pilotId": "pilot-1764103023853",
+            "bv": 1001,
+            "weight": 25,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "pilots": [
+          {
+            "id": "pilot-1764101175165",
+            "name": "Adept Alptekin Korutürk",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101184969",
+            "name": "Demi-Precentor Kasper Langvardt",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101192112",
+            "name": "Adept Takiyah Citseko",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "Dezgra",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting AS7-K Atlas)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 20
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 15
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101197863",
+            "name": "Adept II Grizela Comino",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101204182",
+            "name": "Adept Stefan Alvheim",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101210384",
+            "name": "Adept Sebastião Tolosa",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101215339",
+            "name": "Adept Margaret Martínez",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101220583",
+            "name": "Adept Joshua Sørensen",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting FLS-8K Flashman)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 20
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 15
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101228377",
+            "name": "Adept Bessie Trujillo",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting SHD-2Ht Shadow Hawk)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 20
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 15
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101234302",
+            "name": "Adept II Pat Pak",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting GRF-1N Griffin)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 20
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 15
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101238536",
+            "name": "Adept Jeff Caetani",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101243164",
+            "name": "Adept Karoline Palme",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "Dezgra",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting HBK-5M Hunchback )",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764101247917",
+            "name": "Adept Rebekka Bartolf",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "Dezgra",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting MAD-5CS Marauder II)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 20
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 15
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102302655",
+            "name": "Adept Martina Olbrich",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102309823",
+            "name": "Adept Freddy Edwards",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102316506",
+            "name": "Adept Tritan Bernardi",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "Dezgra",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting BJ-1 Blackjack)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102320922",
+            "name": "Adept Corneel Marstein",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102592895",
+            "name": "Adept Ugo Zhào",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102597321",
+            "name": "Adept Callum Cardew",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102602257",
+            "name": "Adept II Tim Faimon",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102607838",
+            "name": "Adept Manideepa Naidoo",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102759566",
+            "name": "Adept Thomas Alexopoulos",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102763706",
+            "name": "Adept Chattradhara Noorzai",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "Dezgra (+ physique)",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting HBK-4G Hunchback)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "pilot-1764102767948",
+            "name": "Adept Gunep Osmanoglu",
+            "gunnery": 4,
+            "piloting": 5,
+            "injuries": 0,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-02",
+                "inGameDate": "3052-05-02",
+                "action": "Assigned to mission: M01 - Defend the supply depot (piloting UM-R63 UrbanMech)",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+                "mission": "M01 - Defend the supply depot",
+                "cost": 3
               }
             ]
           },
