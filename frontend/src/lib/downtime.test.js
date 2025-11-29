@@ -54,7 +54,7 @@ describe('evaluateDowntimeCost', () => {
     expect(evaluateDowntimeCost('weight/wpMultiplier', ctx)).toBe(8); // 40/5 = 8
     expect(evaluateDowntimeCost('(weight*2)/wpMultiplier', ctx)).toBe(16); // 80/5 = 16
     expect(evaluateDowntimeCost('(weight/4)/wpMultiplier', ctx)).toBe(2); // 10/5 = 2
-    expect(evaluateDowntimeCost('(suitsDamaged*2.5)/wpMultiplier', ctx)).toBe(2); // 5/5 = 1 -> ceil = 1, but 2.5*2=5; 5/5=1
+    expect(evaluateDowntimeCost('(suitsDamaged*2.5)/wpMultiplier', ctx)).toBe(1); // 5/5 = 1
     expect(evaluateDowntimeCost('(suitsDestroyed*50)/wpMultiplier', ctx)).toBe(30); // 150/5 = 30
     expect(evaluateDowntimeCost('200/wpMultiplier', ctx)).toBe(40);
     expect(evaluateDowntimeCost('150/wpMultiplier', ctx)).toBe(30);
