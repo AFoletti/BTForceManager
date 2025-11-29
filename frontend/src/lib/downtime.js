@@ -272,6 +272,11 @@ export function applyMechDowntimeAction(
 
     let nextStatus = mech.status;
 
+    // If repairing armor on a Damaged mech, set it to Operational.
+    if (action.id === DOWNTIME_ACTION_IDS.REPAIR_ARMOR && mech.status === UNIT_STATUS.DAMAGED) {
+      nextStatus = UNIT_STATUS.OPERATIONAL;
+    }
+
     // For internal structure repairs, mark the mech as "Repairing" instead of
     // the generic "Unavailable" status, while still keeping it off the field
     // for mission selection (mission availability only allows Operational/Damaged).
