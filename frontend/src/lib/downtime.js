@@ -41,7 +41,9 @@ function tokenize(expression) {
       continue;
     }
 
-    if (/[0-9.]/.test(ch)) {
+    // Match numbers (including decimals starting with .)
+    // Ensure a dot is followed by a digit to be considered a number
+    if (/[0-9]/.test(ch) || (ch === '.' && i + 1 < expression.length && /[0-9]/.test(expression[i + 1]))) {
       let num = ch;
       i += 1;
       while (i < expression.length && /[0-9.]/.test(expression[i])) {
@@ -226,7 +228,7 @@ export function evaluateDowntimeCost(formula, context) {
     const safePattern = /^[\w\d\s+\-*/().]+$/;
     if (!safePattern.test(formula)) {
       // eslint-disable-next-line no-console
-      console.warn('Downtime formula contains unsupported characters:', formula);
+      // console.warn('Downtime formula contains unsupported characters:', formula);
       return 0;
     }
 
@@ -243,7 +245,7 @@ export function evaluateDowntimeCost(formula, context) {
   } catch (error) {
     // Keep behaviour consistent with the previous inline implementation.
     // eslint-disable-next-line no-console
-    console.error('Downtime formula evaluation error:', error);
+    // console.error('Downtime formula evaluation error:', error);
     return 0;
   }
 }
@@ -271,6 +273,11 @@ export function applyMechDowntimeAction(
     });
 
     let nextStatus = mech.status;
+
+    // If repairing armor on a Damaged mech, set it to Operational.
+    if (action.id === DOWNTIME_ACTION_IDS.REPAIR_ARMOR && mech.status === UNIT_STATUS.DAMAGED) {
+      nextStatus = UNIT_STATUS.OPERATIONAL;
+    }
 
     // For internal structure repairs, mark the mech as "Repairing" instead of
     // the generic "Unavailable" status, while still keeping it off the field

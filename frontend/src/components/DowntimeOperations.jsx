@@ -13,6 +13,7 @@ import {
   applyPilotDowntimeAction,
 } from '../lib/downtime';
 import { createSnapshot } from '../lib/snapshots';
+import { UNIT_STATUS } from '../lib/constants';
 
 // Planned downtime action kept in a cycle backlog until validation.
 // Actions are applied in sequence to a working copy of the force when
@@ -371,11 +372,13 @@ export default function DowntimeOperations({ force, onUpdate }) {
                   >
                     <option value="">-- Choose unit --</option>
                     {selectedUnitType === 'mech'
-                      ? force.mechs.map((mech) => (
-                          <option key={mech.id} value={mech.id}>
-                            {mech.name} ({mech.weight}t) - {mech.status}
-                          </option>
-                        ))
+                      ? force.mechs
+                          .filter((m) => m.status !== UNIT_STATUS.DESTROYED)
+                          .map((mech) => (
+                            <option key={mech.id} value={mech.id}>
+                              {mech.name} ({mech.weight}t) - {mech.status}
+                            </option>
+                          ))
                       : selectedUnitType === 'elemental'
                         ? (force.elementals || []).map((elemental) => (
                             <option key={elemental.id} value={elemental.id}>
