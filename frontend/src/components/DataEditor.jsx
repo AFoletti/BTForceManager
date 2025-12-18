@@ -6,6 +6,12 @@ import { downloadJSON } from '../lib/utils';
 
 export default function DataEditor({ force, onUpdate }) {
   const [forceJSON, setForceJSON] = useState(JSON.stringify(force, null, 2));
+
+  // Keep editor content in sync when the selected force changes or updates.
+  // This prevents editing stale JSON when switching forces.
+  React.useEffect(() => {
+    setForceJSON(JSON.stringify(force, null, 2));
+  }, [force]);
   const [error, setError] = useState('');
 
   const handleSave = () => {
