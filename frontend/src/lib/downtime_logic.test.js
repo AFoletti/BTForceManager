@@ -73,25 +73,24 @@ describe('applyMechDowntimeAction', () => {
 
   it('does not change status if action is not REPAIR_ARMOR', () => {
     const force = {
-      mechs: [
-        { id: 'm1', status: UNIT_STATUS.DAMAGED, activityLog: [] }
-      ],
-      currentWarchest: 100
+      mechs: [{ id: 'm1', status: UNIT_STATUS.DAMAGED, activityLog: [] }],
+      currentWarchest: 100,
     };
+
     const action = {
       id: 'other-action',
       name: 'Other',
-      makesUnavailable: false
+      makesUnavailable: false,
     };
-    
+
     const result = applyMechDowntimeAction(force, {
       mechId: 'm1',
       action,
       cost: 10,
       timestamp: 'now',
-      lastMissionName: 'mission'
+      lastMissionName: 'mission',
     });
-    
+
     expect(result.mechs[0].status).toBe(UNIT_STATUS.DAMAGED);
   });
 });
