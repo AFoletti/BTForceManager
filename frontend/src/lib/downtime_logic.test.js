@@ -4,25 +4,24 @@ import { UNIT_STATUS, DOWNTIME_ACTION_IDS } from './constants';
 describe('applyMechDowntimeAction', () => {
   it('sets status to OPERATIONAL when repairing armor on a DAMAGED mech', () => {
     const force = {
-      mechs: [
-        { id: 'm1', status: UNIT_STATUS.DAMAGED, activityLog: [] }
-      ],
-      currentWarchest: 100
+      mechs: [{ id: 'm1', status: UNIT_STATUS.DAMAGED, activityLog: [] }],
+      currentWarchest: 100,
     };
+
     const action = {
       id: DOWNTIME_ACTION_IDS.REPAIR_ARMOR,
       name: 'Repair Armor',
-      makesUnavailable: false
+      makesUnavailable: false,
     };
-    
+
     const result = applyMechDowntimeAction(force, {
       mechId: 'm1',
       action,
       cost: 10,
       timestamp: 'now',
-      lastMissionName: 'mission'
+      lastMissionName: 'mission',
     });
-    
+
     expect(result.mechs[0].status).toBe(UNIT_STATUS.OPERATIONAL);
   });
 
