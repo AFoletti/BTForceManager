@@ -26,28 +26,50 @@ describe('applyMechDowntimeAction', () => {
     expect(result.mechs[0].status).toBe(UNIT_STATUS.OPERATIONAL);
   });
 
-  it('does not change status if mech is not DAMAGED', () => {
+  it('does not change status when repairing armor on a mech that is already OPERATIONAL', () => {
     const force = {
-      mechs: [
-        { id: 'm1', status: UNIT_STATUS.OPERATIONAL, activityLog: [] }
-      ],
-      currentWarchest: 100
+      mechs: [{ id: 'm1', status: UNIT_STATUS.OPERATIONAL, activityLog: [] }],
+      currentWarchest: 100,
     };
+
     const action = {
       id: DOWNTIME_ACTION_IDS.REPAIR_ARMOR,
       name: 'Repair Armor',
-      makesUnavailable: false
+      makesUnavailable: false,
     };
-    
+
     const result = applyMechDowntimeAction(force, {
       mechId: 'm1',
       action,
       cost: 10,
       timestamp: 'now',
-      lastMissionName: 'mission'
+      lastMissionName: 'mission',
     });
-    
+
     expect(result.mechs[0].status).toBe(UNIT_STATUS.OPERATIONAL);
+  });
+
+  it('does not change status when repairing armor on a DISABLED mech', () => {
+    const force = {
+      mechs: [{ id: 'm1', status: UNIT_STATUS.DISABLED, activityLog: [] }],
+      currentWarchest: 100,
+    };
+
+    const action = {
+      id: DOWNTIME_ACTION_IDS.REPAIR_ARMOR,
+      name: 'Repair Armor',
+      makesUnavailable: false,
+    };
+
+    const result = applyMechDowntimeAction(force, {
+      mechId: 'm1',
+      action,
+      cost: 10,
+      timestamp: 'now',
+      lastMissionName: 'mission',
+    });
+
+    expect(result.mechs[0].status).toBe(UNIT_STATUS.DISABLED);
   });
 
   it('does not change status if action is not REPAIR_ARMOR', () => {
