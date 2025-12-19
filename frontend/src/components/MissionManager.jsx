@@ -173,7 +173,7 @@ export default function MissionManager({ force, onUpdate }) {
       currentWarchest: result.currentWarchest,
     };
 
-    const snapshotLabel = `After creating mission: ${payload.name || 'Unnamed mission'}`;
+    const snapshotLabel = `Prior to mission: ${payload.name || 'Unnamed mission'}`;
     const snapshot = createSnapshot(nextForce, {
       type: 'post-mission',
       label: snapshotLabel,
