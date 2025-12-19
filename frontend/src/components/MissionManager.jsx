@@ -204,6 +204,52 @@ export default function MissionManager({ force, onUpdate }) {
       achieved: Boolean(obj.achieved),
     }));
 
+    // Build initial post-mission state for deployed units:
+    // - Mechs assigned to the mission
+    // - Elementals assigned to the mission
+    // - Pilots piloting assigned mechs
+    const assignedMechs = getAssignedMechs(force, mission.assignedMechs || []);
+    const assignedElementals = getAssignedElementals(force, mission.assignedElementals || []);
+
+    const mechState = {};
+    assignedMechs.forEach((mech) => {
+      mechState[mech.id] = {
+        status: mech.status || UNIT_STATUS.OPERATIONAL,
+      };
+    });
+
+    const elementalState = {};
+    assignedElementals.forEach((elemental) => {
+      elementalState[elemental.id] = {
+        status: elemental.status || UNIT_STATUS.OPERATIONAL,
+        suitsDamaged:
+          typeof elemental.suitsDamaged === 'number' && elemental.suitsDamaged >= 0
+            ? elemental.suitsDamaged
+            : 0,
+        suitsDestroyed:
+          typeof elemental.suitsDestroyed === 'number' && elemental.suitsDestroyed >= 0
+            ? elemental.suitsDestroyed
+            : 0,
+      };
+    });
+
+    const pilotState = {};
+    assignedMechs.forEach((mech) => {
+      const pilot = findPilotForMech(force, mech);
+      if (pilot) {
+        pilotState[pilot.id] = {
+          injuries:
+            typeof pilot.injuries === 'number' && pilot.injuries >= 0 ? pilot.injuries : 0,
+        };
+      }
+    });
+
+    setPostMissionUnitState({
+      mechs: mechState,
+      elementals: elementalState,
+      pilots: pilotState,
+    });
+
     setMissionBeingCompleted(mission);
     setCompletionObjectives(objectives);
     setCompletionRecap(mission.recap || '');
