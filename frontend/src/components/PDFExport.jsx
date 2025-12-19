@@ -440,19 +440,10 @@ const buildStatusCountsForSnapshot = (snap, key) => {
     return unitsSummary.byStatus;
   }
 
-  const forceUnits = snap.forceState && Array.isArray(snap.forceState[key]) ? snap.forceState[key] : [];
-
   const counts = STATUS_ORDER.reduce((acc, status) => {
     acc[status] = 0;
     return acc;
   }, {});
-
-  forceUnits.forEach((unit) => {
-    const status = unit.status || UNIT_STATUS.OPERATIONAL;
-    if (STATUS_ORDER.includes(status)) {
-      counts[status] += 1;
-    }
-  });
 
   return counts;
 };
