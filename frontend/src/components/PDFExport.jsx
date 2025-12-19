@@ -363,6 +363,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#999',
   },
+});
 
 const STATUS_ORDER = [
   UNIT_STATUS.OPERATIONAL,
