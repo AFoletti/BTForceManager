@@ -20,7 +20,6 @@ import { UNIT_STATUS } from './constants';
  * @property {number} netWarchestChange
  * @property {number} missionsCompleted
  * @property {SnapshotUnitsSummary} units
- * @property {Object} forceState       // trimmed copy of the force at that point in time
  */
 
 const STATUS_ORDER = [
