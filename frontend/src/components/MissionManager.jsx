@@ -1106,8 +1106,6 @@ export default function MissionManager({ force, onUpdate }) {
   );
 }
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Review Objectives</label>
                     {completionObjectives.length === 0 ? (
                       <p className="text-xs text-muted-foreground">
                         This mission has no structured objectives. You can still complete it, but no
