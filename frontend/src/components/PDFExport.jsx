@@ -409,8 +409,6 @@ const buildStatusCountsForSnapshot = (snap, key) => {
 const formatStatusDistributionLine = (byStatus) =>
   STATUS_ORDER.map((status) => `${STATUS_LABELS[status]}: ${byStatus[status] || 0}`).join(' / ');
 
-});
-
 // Map UI badge variants to PDF badge styles so status visuals are centralised.
 const VARIANT_TO_STYLE = {
   operational: styles.unitBadge,
