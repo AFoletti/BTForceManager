@@ -1074,7 +1074,7 @@ export default function MissionManager({ force, onUpdate }) {
                 )}
               </div>
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                 <span>
                   Total reward from achieved objectives:{' '}
                   <span className="font-mono text-emerald-400">
@@ -1362,7 +1362,7 @@ export default function MissionManager({ force, onUpdate }) {
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                     <span>
                       Total reward from achieved objectives:{' '}
                       <span className="font-mono text-emerald-400">
@@ -1761,7 +1761,7 @@ export default function MissionManager({ force, onUpdate }) {
                 )}
               </div>
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                 <span>
                   Total reward from achieved objectives:{' '}
                   <span className="font-mono text-emerald-400">
