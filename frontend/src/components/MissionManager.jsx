@@ -41,6 +41,11 @@ export default function MissionManager({ force, onUpdate }) {
   const [missionBeingCompleted, setMissionBeingCompleted] = useState(null);
   const [completionObjectives, setCompletionObjectives] = useState([]);
   const [completionRecap, setCompletionRecap] = useState('');
+  const [postMissionUnitState, setPostMissionUnitState] = useState({
+    mechs: {},
+    elementals: {},
+    pilots: {},
+  });
 
   const normaliseObjectives = (rawObjectives) => {
     if (Array.isArray(rawObjectives)) return rawObjectives;
