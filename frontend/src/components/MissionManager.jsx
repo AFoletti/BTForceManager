@@ -1106,63 +1106,6 @@ export default function MissionManager({ force, onUpdate }) {
   );
 }
 
-                    {completionObjectives.length === 0 ? (
-                      <p className="text-xs text-muted-foreground">
-                        This mission has no structured objectives. You can still complete it, but no
-                        Warchest reward will be granted.
-                      </p>
-                    ) : (
-                      <div className="space-y-2">
-                        {completionObjectives.map((obj, index) => (
-                          <label
-                            key={obj.id}
-                            className="flex items-start gap-2 p-2 rounded hover:bg-muted/30 cursor-pointer text-sm"
-                          >
-                            <input
-                              type="checkbox"
-                              className="mt-1"
-                              checked={obj.achieved}
-                              onChange={() => toggleCompletionObjective(index)}
-                            />
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">{obj.title || 'Objective'}</span>
-                                {obj.wpReward > 0 && (
-                                  <span className="text-xs font-mono text-emerald-400">
-                                    +{formatNumber(obj.wpReward)} WP
-                                  </span>
-                                )}
-                              </div>
-                              {obj.description && (
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                  {obj.description}
-                                </p>
-                              )}
-                            </div>
-                          </label>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">After Action Report</label>
-                    <Textarea
-                      value={completionRecap}
-                      onChange={(e) => setCompletionRecap(e.target.value)}
-                      placeholder="What happened during the mission..."
-                      rows={4}
-                    />
-                  </div>
-
-                  {/* Post-mission unit outcomes */}
-                  <div className="space-y-3">
-                    <h4 className="text-sm font-semibold">Post-mission outcomes</h4>
-
-                    {/* Deployed Mechs */}
-                    {missionBeingCompleted.assignedMechs &&
-                      missionBeingCompleted.assignedMechs.length > 0 && (
-                        <div className="border border-border rounded p-3 bg-muted/10">
                           <div className="text-xs font-semibold mb-2">Mechs</div>
                           <div className="space-y-1">
                             {getAssignedMechs(force, missionBeingCompleted.assignedMechs).map(
