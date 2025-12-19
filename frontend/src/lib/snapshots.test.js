@@ -49,15 +49,25 @@ describe('createSnapshot', () => {
       label: 'After test mission',
     });
 
-    // Mechs: destroyed = 1, totalMinusDestroyed = 3, ready = Operational or Damaged (2)
-    expect(snapshot.units.mechs).toEqual({ ready: 2, total: 3, destroyed: 1 });
+    // Mechs status distribution
+    expect(snapshot.units.mechs.byStatus).toEqual({
+      Operational: 1,
+      Damaged: 2,
+      Disabled: 0,
+      Repairing: 0,
+      Unavailable: 1,
+      Destroyed: 1,
+    });
 
-    // Elementals: destroyed = status Destroyed or suitsDestroyed >= 6 => 2, totalMinusDestroyed = 2,
-    // ready = Operational/Damaged and suitsDestroyed < 6 => 2
-    expect(snapshot.units.elementals).toEqual({ ready: 2, total: 2, destroyed: 2 });
-
-    // Pilots: KIA injuries === 6 => 1, totalMinusKia = 2, ready = injuries !== 6 => 2
-    expect(snapshot.units.pilots).toEqual({ ready: 2, total: 2, kia: 1 });
+    // Elementals status distribution
+    expect(snapshot.units.elementals.byStatus).toEqual({
+      Operational: 1,
+      Damaged: 3,
+      Disabled: 0,
+      Repairing: 0,
+      Unavailable: 0,
+      Destroyed: 0,
+    });
 
     // Warchest and net change
     expect(snapshot.currentWarchest).toBe(850);
