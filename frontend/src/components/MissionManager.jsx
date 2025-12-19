@@ -280,8 +280,51 @@ export default function MissionManager({ force, onUpdate }) {
       recap: completionRecap,
     };
 
+    // Apply post-mission unit state edits to mechs, elementals and pilots
+    const updatedMechs = force.mechs.map((mech) => {
+      const edited = postMissionUnitState.mechs[mech.id];
+      if (!edited) return mech;
+      return {
+        ...mech,
+        status: edited.status,
+      };
+    });
+
+    const updatedElementals = (force.elementals || []).map((elemental) => {
+      const edited = postMissionUnitState.elementals[elemental.id];
+      if (!edited) return elemental;
+      return {
+        ...elemental,
+        status: edited.status,
+        suitsDamaged: Number.isFinite(edited.suitsDamaged)
+          ? Math.max(0, Math.min(6, edited.suitsDamaged))
+          : 0,
+        suitsDestroyed: Number.isFinite(edited.suitsDestroyed)
+          ? Math.max(0, Math.min(6, edited.suitsDestroyed))
+          : 0,
+      };
+    });
+
+    const updatedPilots = (force.pilots || []).map((pilot) => {
+      const edited = postMissionUnitState.pilots[pilot.id];
+      if (!edited) return pilot;
+      return {
+        ...pilot,
+        injuries: Number.isFinite(edited.injuries)
+          ? Math.max(0, Math.min(6, edited.injuries))
+          : 0,
+      };
+    });
+
+    const forceAfterBattle = {
+      ...force,
+      mechs: updatedMechs,
+      elementals: updatedElementals,
+      pilots: updatedPilots,
+    };
+
     const result = applyMissionCompletion(
-      force,
+      forceAfterBattle,
       missionBeingCompleted.id,
       completionData,
       timestamp,
@@ -289,7 +332,7 @@ export default function MissionManager({ force, onUpdate }) {
 
     // Build the next force state (post-mission) to generate a snapshot.
     const nextForce = {
-      ...force,
+      ...forceAfterBattle,
       missions: result.missions,
       currentWarchest: result.currentWarchest,
     };
@@ -304,6 +347,9 @@ export default function MissionManager({ force, onUpdate }) {
 
     onUpdate({
       ...result,
+      mechs: updatedMechs,
+      elementals: updatedElementals,
+      pilots: updatedPilots,
       snapshots: [...existingSnapshots, snapshot],
     });
 
