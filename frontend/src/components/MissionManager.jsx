@@ -185,9 +185,11 @@ export default function MissionManager({ force, onUpdate }) {
     });
 
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const nextDate = advanceDateString(force.currentDate);
 
     onUpdate({
       ...result,
+      currentDate: nextDate,
       snapshots: [...existingSnapshots, snapshot],
     });
 
@@ -344,12 +346,14 @@ export default function MissionManager({ force, onUpdate }) {
     });
 
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const nextDate = advanceDateString(force.currentDate);
 
     onUpdate({
       ...result,
       mechs: updatedMechs,
       elementals: updatedElementals,
       pilots: updatedPilots,
+      currentDate: nextDate,
       snapshots: [...existingSnapshots, snapshot],
     });
 
