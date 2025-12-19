@@ -163,7 +163,29 @@ export default function MissionManager({ force, onUpdate }) {
     }
 
     const result = applyMissionCreation(force, payload, timestamp);
-    onUpdate(result);
+
+    const nextForce = {
+      ...force,
+      mechs: result.mechs,
+      pilots: result.pilots,
+      elementals: result.elementals,
+      missions: result.missions,
+      currentWarchest: result.currentWarchest,
+    };
+
+    const snapshotLabel = `After creating mission: ${payload.name || 'Unnamed mission'}`;
+    const snapshot = createSnapshot(nextForce, {
+      type: 'post-mission',
+      label: snapshotLabel,
+    });
+
+    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+
+    onUpdate({
+      ...result,
+      snapshots: [...existingSnapshots, snapshot],
+    });
+
     setShowDialog(false);
   };
 
