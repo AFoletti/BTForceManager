@@ -66,3 +66,7 @@ frontend/node_modules/.cache/default-development/6.pack
 *.env
 *.env.*
 -e 
+-e 
+# Environment files
+*.env
+*.env.*
