@@ -50,8 +50,7 @@ export default function SnapshotsTab({ force }) {
                 <th className="text-left">Date</th>
                 <th className="text-left">Label</th>
                 <th className="text-left">Type</th>
-                <th className="text-left">Mechs (status dist.)</th>
-                <th className="text-left">Elementals (status dist.)</th>
+                <th className="text-left">Status (M/E)</th>
                 <th className="text-left">Missions</th>
                 <th className="text-right">Warchest</th>
                 <th className="text-right">Net Δ WP</th>
