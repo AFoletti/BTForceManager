@@ -175,7 +175,7 @@ export default function MissionManager({ force, onUpdate }) {
 
     const snapshotLabel = `Prior to mission: ${payload.name || 'Unnamed mission'}`;
     const snapshot = createSnapshot(nextForce, {
-      type: 'post-mission',
+      type: 'pre-mission',
       label: snapshotLabel,
     });
 
