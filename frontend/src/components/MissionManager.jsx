@@ -18,8 +18,8 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
-import { getStatusBadgeVariant } from '../lib/constants';
-import { createSnapshot } from '../lib/snapshots';
+import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
+import { createSnapshot, advanceDateString } from '../lib/snapshots';
 
 const emptyMissionForm = {
   name: '',
@@ -41,6 +41,11 @@ export default function MissionManager({ force, onUpdate }) {
   const [missionBeingCompleted, setMissionBeingCompleted] = useState(null);
   const [completionObjectives, setCompletionObjectives] = useState([]);
   const [completionRecap, setCompletionRecap] = useState('');
+  const [postMissionUnitState, setPostMissionUnitState] = useState({
+    mechs: {},
+    elementals: {},
+    pilots: {},
+  });
 
   const normaliseObjectives = (rawObjectives) => {
     if (Array.isArray(rawObjectives)) return rawObjectives;
@@ -180,9 +185,11 @@ export default function MissionManager({ force, onUpdate }) {
     });
 
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const nextDate = advanceDateString(force.currentDate);
 
     onUpdate({
       ...result,
+      currentDate: nextDate,
       snapshots: [...existingSnapshots, snapshot],
     });
 
@@ -198,6 +205,52 @@ export default function MissionManager({ force, onUpdate }) {
           : 0,
       achieved: Boolean(obj.achieved),
     }));
+
+    // Build initial post-mission state for deployed units:
+    // - Mechs assigned to the mission
+    // - Elementals assigned to the mission
+    // - Pilots piloting assigned mechs
+    const assignedMechs = getAssignedMechs(force, mission.assignedMechs || []);
+    const assignedElementals = getAssignedElementals(force, mission.assignedElementals || []);
+
+    const mechState = {};
+    assignedMechs.forEach((mech) => {
+      mechState[mech.id] = {
+        status: mech.status || UNIT_STATUS.OPERATIONAL,
+      };
+    });
+
+    const elementalState = {};
+    assignedElementals.forEach((elemental) => {
+      elementalState[elemental.id] = {
+        status: elemental.status || UNIT_STATUS.OPERATIONAL,
+        suitsDamaged:
+          typeof elemental.suitsDamaged === 'number' && elemental.suitsDamaged >= 0
+            ? elemental.suitsDamaged
+            : 0,
+        suitsDestroyed:
+          typeof elemental.suitsDestroyed === 'number' && elemental.suitsDestroyed >= 0
+            ? elemental.suitsDestroyed
+            : 0,
+      };
+    });
+
+    const pilotState = {};
+    assignedMechs.forEach((mech) => {
+      const pilot = findPilotForMech(force, mech);
+      if (pilot) {
+        pilotState[pilot.id] = {
+          injuries:
+            typeof pilot.injuries === 'number' && pilot.injuries >= 0 ? pilot.injuries : 0,
+        };
+      }
+    });
+
+    setPostMissionUnitState({
+      mechs: mechState,
+      elementals: elementalState,
+      pilots: pilotState,
+    });
 
     setMissionBeingCompleted(mission);
     setCompletionObjectives(objectives);
@@ -229,8 +282,51 @@ export default function MissionManager({ force, onUpdate }) {
       recap: completionRecap,
     };
 
+    // Apply post-mission unit state edits to mechs, elementals and pilots
+    const updatedMechs = force.mechs.map((mech) => {
+      const edited = postMissionUnitState.mechs[mech.id];
+      if (!edited) return mech;
+      return {
+        ...mech,
+        status: edited.status,
+      };
+    });
+
+    const updatedElementals = (force.elementals || []).map((elemental) => {
+      const edited = postMissionUnitState.elementals[elemental.id];
+      if (!edited) return elemental;
+      return {
+        ...elemental,
+        status: edited.status,
+        suitsDamaged: Number.isFinite(edited.suitsDamaged)
+          ? Math.max(0, Math.min(6, edited.suitsDamaged))
+          : 0,
+        suitsDestroyed: Number.isFinite(edited.suitsDestroyed)
+          ? Math.max(0, Math.min(6, edited.suitsDestroyed))
+          : 0,
+      };
+    });
+
+    const updatedPilots = (force.pilots || []).map((pilot) => {
+      const edited = postMissionUnitState.pilots[pilot.id];
+      if (!edited) return pilot;
+      return {
+        ...pilot,
+        injuries: Number.isFinite(edited.injuries)
+          ? Math.max(0, Math.min(6, edited.injuries))
+          : 0,
+      };
+    });
+
+    const forceAfterBattle = {
+      ...force,
+      mechs: updatedMechs,
+      elementals: updatedElementals,
+      pilots: updatedPilots,
+    };
+
     const result = applyMissionCompletion(
-      force,
+      forceAfterBattle,
       missionBeingCompleted.id,
       completionData,
       timestamp,
@@ -238,7 +334,7 @@ export default function MissionManager({ force, onUpdate }) {
 
     // Build the next force state (post-mission) to generate a snapshot.
     const nextForce = {
-      ...force,
+      ...forceAfterBattle,
       missions: result.missions,
       currentWarchest: result.currentWarchest,
     };
@@ -250,9 +346,14 @@ export default function MissionManager({ force, onUpdate }) {
     });
 
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const nextDate = advanceDateString(force.currentDate);
 
     onUpdate({
       ...result,
+      mechs: updatedMechs,
+      elementals: updatedElementals,
+      pilots: updatedPilots,
+      currentDate: nextDate,
       snapshots: [...existingSnapshots, snapshot],
     });
 
@@ -774,11 +875,215 @@ export default function MissionManager({ force, onUpdate }) {
                 />
               </div>
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              {/* Post-mission unit outcomes */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold">Post-mission outcomes</h4>
+
+                {/* Deployed Mechs */}
+                {missionBeingCompleted.assignedMechs &&
+                  missionBeingCompleted.assignedMechs.length > 0 && (
+                    <div className="border border-border rounded p-3 bg-muted/10">
+                      <div className="text-xs font-semibold mb-2">Mechs</div>
+                      <div className="space-y-1">
+                        {getAssignedMechs(force, missionBeingCompleted.assignedMechs).map(
+                          (mech) => {
+                            const state = postMissionUnitState.mechs[mech.id];
+                            if (!state) return null;
+                            return (
+                              <div
+                                key={mech.id}
+                                className="flex items-center justify-between gap-2 text-xs"
+                              >
+                                <span className="font-medium">{mech.name}</span>
+                                <select
+                                  className="border border-border rounded px-1 py-0.5 bg-background text-xs"
+                                  value={state.status}
+                                  onChange={(e) =>
+                                    setPostMissionUnitState((prev) => ({
+                                      ...prev,
+                                      mechs: {
+                                        ...prev.mechs,
+                                        [mech.id]: {
+                                          ...prev.mechs[mech.id],
+                                          status: e.target.value,
+                                        },
+                                      },
+                                    }))
+                                  }
+                                >
+                                  {[UNIT_STATUS.OPERATIONAL, UNIT_STATUS.DAMAGED, UNIT_STATUS.DISABLED, UNIT_STATUS.DESTROYED].map(
+                                    (status) => (
+                                      <option key={status} value={status}>
+                                        {status}
+                                      </option>
+                                    ),
+                                  )}
+                                </select>
+                              </div>
+                            );
+                          },
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                {/* Deployed Elementals */}
+                {missionBeingCompleted.assignedElementals &&
+                  missionBeingCompleted.assignedElementals.length > 0 && (
+                    <div className="border border-border rounded p-3 bg-muted/10">
+                      <div className="text-xs font-semibold mb-2">Elementals</div>
+                      <div className="space-y-1">
+                        {getAssignedElementals(
+                          force,
+                          missionBeingCompleted.assignedElementals,
+                        ).map((elemental) => {
+                          const state = postMissionUnitState.elementals[elemental.id];
+                          if (!state) return null;
+                          return (
+                            <div
+                              key={elemental.id}
+                              className="grid grid-cols-1 md:grid-cols-4 items-center gap-2 text-xs"
+                            >
+                              <span className="font-medium col-span-1">{elemental.name}</span>
+                              <select
+                                className="border border-border rounded px-1 py-0.5 bg-background text-xs col-span-1"
+                                value={state.status}
+                                onChange={(e) =>
+                                  setPostMissionUnitState((prev) => ({
+                                    ...prev,
+                                    elementals: {
+                                      ...prev.elementals,
+                                      [elemental.id]: {
+                                        ...prev.elementals[elemental.id],
+                                        status: e.target.value,
+                                      },
+                                    },
+                                  }))
+                                }
+                              >
+                                {[UNIT_STATUS.OPERATIONAL, UNIT_STATUS.DAMAGED, UNIT_STATUS.DISABLED, UNIT_STATUS.DESTROYED].map(
+                                  (status) => (
+                                    <option key={status} value={status}>
+                                      {status}
+                                    </option>
+                                  ),
+                                )}
+                              </select>
+                              <div className="flex items-center gap-1">
+                                <span className="text-[11px] text-muted-foreground">
+                                  Suits Damaged
+                                </span>
+                                <Input
+                                  type="number"
+                                  className="h-7 w-16 text-xs"
+                                  value={state.suitsDamaged}
+                                  min={0}
+                                  max={6}
+                                  onChange={(e) => {
+                                    const value = parseInt(e.target.value, 10);
+                                    setPostMissionUnitState((prev) => ({
+                                      ...prev,
+                                      elementals: {
+                                        ...prev.elementals,
+                                        [elemental.id]: {
+                                          ...prev.elementals[elemental.id],
+                                          suitsDamaged: Number.isNaN(value)
+                                            ? 0
+                                            : Math.max(0, Math.min(6, value)),
+                                        },
+                                      },
+                                    }));
+                                  }}
+                                />
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <span className="text-[11px] text-muted-foreground">
+                                  Suits Destroyed
+                                </span>
+                                <Input
+                                  type="number"
+                                  className="h-7 w-16 text-xs"
+                                  value={state.suitsDestroyed}
+                                  min={0}
+                                  max={6}
+                                  onChange={(e) => {
+                                    const value = parseInt(e.target.value, 10);
+                                    setPostMissionUnitState((prev) => ({
+                                      ...prev,
+                                      elementals: {
+                                        ...prev.elementals,
+                                        [elemental.id]: {
+                                          ...prev.elementals[elemental.id],
+                                          suitsDestroyed: Number.isNaN(value)
+                                            ? 0
+                                            : Math.max(0, Math.min(6, value)),
+                                        },
+                                      },
+                                    }));
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                {/* Deployed Pilots */}
+                {Object.keys(postMissionUnitState.pilots).length > 0 && (
+                  <div className="border border-border rounded p-3 bg-muted/10">
+                    <div className="text-xs font-semibold mb-2">Pilots</div>
+                    <div className="space-y-1">
+                      {(force.pilots || [])
+                        .filter((pilot) => postMissionUnitState.pilots[pilot.id])
+                        .map((pilot) => {
+                          const state = postMissionUnitState.pilots[pilot.id];
+                          return (
+                            <div
+                              key={pilot.id}
+                              className="flex items-center justify-between gap-2 text-xs"
+                            >
+                              <span className="font-medium">{pilot.name}</span>
+                              <div className="flex items-center gap-1">
+                                <span className="text-[11px] text-muted-foreground">Injuries</span>
+                                <Input
+                                  type="number"
+                                  className="h-7 w-16 text-xs"
+                                  value={state.injuries}
+                                  min={0}
+                                  max={6}
+                                  onChange={(e) => {
+                                    const value = parseInt(e.target.value, 10);
+                                    setPostMissionUnitState((prev) => ({
+                                      ...prev,
+                                      pilots: {
+                                        ...prev.pilots,
+                                        [pilot.id]: {
+                                          ...prev.pilots[pilot.id],
+                                          injuries: Number.isNaN(value)
+                                            ? 0
+                                            : Math.max(0, Math.min(6, value)),
+                                        },
+                                      },
+                                    }));
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
                 <span>
                   Total reward from achieved objectives:{' '}
                   <span className="font-mono text-emerald-400">
-                    +{formatNumber(
+                    +
+                    {formatNumber(
                       completionObjectives.reduce(
                         (sum, obj) =>
                           obj.achieved && obj.wpReward > 0 ? sum + obj.wpReward : sum,

@@ -12,7 +12,7 @@ import {
   applyElementalDowntimeAction,
   applyPilotDowntimeAction,
 } from '../lib/downtime';
-import { createSnapshot } from '../lib/snapshots';
+import { createSnapshot, advanceDateString } from '../lib/snapshots';
 import { UNIT_STATUS } from '../lib/constants';
 
 // Planned downtime action kept in a cycle backlog until validation.
@@ -236,11 +236,14 @@ export default function DowntimeOperations({ force, onUpdate }) {
       nextSnapshots = [...existingSnapshots, snapshot];
     }
 
+    const nextDate = advanceDateString(force.currentDate);
+
     onUpdate({
       mechs: workingForce.mechs,
       pilots: workingForce.pilots,
       elementals: workingForce.elementals,
       currentWarchest: workingForce.currentWarchest,
+      currentDate: nextDate,
       snapshots: nextSnapshots,
     });
 

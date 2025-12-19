@@ -326,11 +326,21 @@ export function applyElementalDowntimeAction(
 
     const updates = { activityLog };
 
-    // Reset counters based on action id, mirroring previous behaviour.
+    // Reset counters and adjust status based on action id.
     if (actionId === DOWNTIME_ACTION_IDS.REPAIR_ELEMENTAL) {
+      const hadDestroyedSuits = (elemental.suitsDestroyed || 0) > 0;
       updates.suitsDamaged = 0;
+
+      // If the point was simply damaged (no destroyed suits) and we fully
+      // repair the damage, the point returns to Operational.
+      if (elemental.status === UNIT_STATUS.DAMAGED && !hadDestroyedSuits) {
+        updates.status = UNIT_STATUS.OPERATIONAL;
+      }
     } else if (actionId === DOWNTIME_ACTION_IDS.PURCHASE_ELEMENTAL) {
+      // Purchasing new suits brings the point into a "Repairing" state while
+      // they are being integrated, and clears destroyed suits for that point.
       updates.suitsDestroyed = 0;
+      updates.status = UNIT_STATUS.REPAIRING;
     }
 
     return { ...elemental, ...updates };
