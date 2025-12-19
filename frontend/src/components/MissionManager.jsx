@@ -18,7 +18,7 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
-import { getStatusBadgeVariant } from '../lib/constants';
+import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot } from '../lib/snapshots';
 
 const emptyMissionForm = {
