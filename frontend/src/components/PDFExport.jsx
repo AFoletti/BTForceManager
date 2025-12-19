@@ -353,6 +353,57 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: '#111827',
   },
+  // Snapshot status table
+  snapshotRow: {
+    marginTop: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  snapshotStatusTable: {
+    flexDirection: 'column',
+    flexGrow: 1,
+  },
+  snapshotStatusHeaderRow: {
+    flexDirection: 'row',
+    marginBottom: 1,
+  },
+  snapshotStatusHeaderLabel: {
+    width: 12,
+    fontSize: 7,
+    color: '#6B7280',
+  },
+  snapshotStatusHeaderCell: {
+    flexGrow: 1,
+    fontSize: 7,
+    textAlign: 'center',
+    color: '#6B7280',
+  },
+  snapshotStatusRow: {
+    flexDirection: 'row',
+    marginBottom: 1,
+  },
+  snapshotStatusRowLabel: {
+    width: 12,
+    fontSize: 7,
+    fontWeight: 'bold',
+    color: '#6B7280',
+  },
+  snapshotStatusCell: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  snapshotStatusValue: {
+    fontSize: 7,
+    fontWeight: 'bold',
+  },
+  snapshotMetaCol: {
+    marginLeft: 8,
+    justifyContent: 'center',
+  },
+  snapshotMetaText: {
+    fontSize: 8,
+    color: '#4B5563',
+  },
   // Footer
   pageNumber: {
     position: 'absolute',
