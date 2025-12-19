@@ -16,6 +16,7 @@ import PDFExport from './components/PDFExport';
 import LedgerTab from './components/LedgerTab';
 import NotesTab from './components/NotesTab';
 import SnapshotsTab from './components/SnapshotsTab';
+import { UNIT_STATUS } from './lib/constants';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
@@ -32,9 +33,38 @@ export default function App() {
     error,
   } = useForceManager();
 
+  const STATUS_ORDER = [
+    UNIT_STATUS.OPERATIONAL,
+    UNIT_STATUS.DAMAGED,
+    UNIT_STATUS.DISABLED,
+    UNIT_STATUS.REPAIRING,
+    UNIT_STATUS.UNAVAILABLE,
+    UNIT_STATUS.DESTROYED,
+  ];
+
+  const getStatusCounts = (units = []) => {
+    const counts = STATUS_ORDER.reduce((acc, status) => {
+      acc[status] = 0;
+      return acc;
+    }, {});
+
+    units.forEach((unit) => {
+      const status = unit.status || UNIT_STATUS.OPERATIONAL;
+      if (STATUS_ORDER.includes(status)) {
+        counts[status] += 1;
+      }
+    });
+
+    return counts;
+  };
+
+
   const [showAddForceDialog, setShowAddForceDialog] = useState(false);
   const [editingDate, setEditingDate] = useState(false);
   const [tempDate, setTempDate] = useState('');
+
+  const mechStatusCounts = selectedForce ? getStatusCounts(selectedForce.mechs || []) : null;
+  const elementalStatusCounts = selectedForce ? getStatusCounts(selectedForce.elementals || []) : null;
 
   const handleExport = () => {
     if (!selectedForce) return;
@@ -196,28 +226,86 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-6 text-sm mt-2">
-                      <div>
+                    <div className="flex flex-col gap-1 text-xs mt-2">
+                      <div className="flex flex-wrap items-center gap-3">
                         <span className="text-muted-foreground">Warchest:</span>
-                        <span className="ml-2 font-mono font-semibold text-primary">
+                        <span className="font-mono font-semibold text-primary">
                           {selectedForce.currentWarchest} WP
                         </span>
-                      </div>
-                      <div>
                         <span className="text-muted-foreground">Starting:</span>
-                        <span className="ml-2 font-mono">{selectedForce.startingWarchest} WP</span>
+                        <span className="font-mono">{selectedForce.startingWarchest} WP</span>
                       </div>
-                      <div>
-                        <span className="text-muted-foreground">Mechs:</span>
-                        <span className="ml-2 font-mono">{selectedForce.mechs.length}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Elementals:</span>
-                        <span className="ml-2 font-mono">{selectedForce.elementals?.length || 0}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Pilots:</span>
-                        <span className="ml-2 font-mono">{selectedForce.pilots.length}</span>
+
+                      <div className="mt-1 overflow-x-auto">
+                        <table className="text-xs">
+                          <thead>
+                            <tr>
+                              <th className="pr-2 text-left text-muted-foreground" />
+                              {STATUS_ORDER.map((status) => (
+                                <th
+                                  key={status}
+                                  className="px-1 text-center text-muted-foreground"
+                                >
+                                  {status}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr data-testid="mech-status-summary">
+                              <td className="pr-2 font-semibold">Mechs:</td>
+                              {STATUS_ORDER.map((status) => (
+                                <td
+                                  key={status}
+                                  className="px-1 text-center"
+                                >
+                                  <span
+                                    className={`font-bold ${
+                                      status === UNIT_STATUS.OPERATIONAL
+                                        ? 'text-green-600'
+                                        : status === UNIT_STATUS.DAMAGED
+                                          ? 'text-amber-600'
+                                          : status === UNIT_STATUS.REPAIRING
+                                            ? 'text-blue-600'
+                                            : status === UNIT_STATUS.DESTROYED
+                                              ? 'text-red-700'
+                                              : 'text-red-600'
+                                    }`}
+                                    data-testid={`mech-status-${status.toLowerCase()}-count`}
+                                  >
+                                    {mechStatusCounts ? mechStatusCounts[status] : 0}
+                                  </span>
+                                </td>
+                              ))}
+                            </tr>
+                            <tr data-testid="elemental-status-summary">
+                              <td className="pr-2 font-semibold">Elementals:</td>
+                              {STATUS_ORDER.map((status) => (
+                                <td
+                                  key={status}
+                                  className="px-1 text-center"
+                                >
+                                  <span
+                                    className={`font-bold ${
+                                      status === UNIT_STATUS.OPERATIONAL
+                                        ? 'text-green-600'
+                                        : status === UNIT_STATUS.DAMAGED
+                                          ? 'text-amber-600'
+                                          : status === UNIT_STATUS.REPAIRING
+                                            ? 'text-blue-600'
+                                            : status === UNIT_STATUS.DESTROYED
+                                              ? 'text-red-700'
+                                              : 'text-red-600'
+                                    }`}
+                                    data-testid={`elemental-status-${status.toLowerCase()}-count`}
+                                  >
+                                    {elementalStatusCounts ? elementalStatusCounts[status] : 0}
+                                  </span>
+                                </td>
+                              ))}
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>

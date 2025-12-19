@@ -213,21 +213,35 @@ export default function DowntimeOperations({ force, onUpdate }) {
       }
     });
 
-    // Create a post-downtime snapshot from the resulting force state.
-    const snapshotLabel = `After downtime cycle #${(force.snapshots || []).length + 1}`;
+    // Create or update a post-downtime snapshot from the resulting force state.
+    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+
+    // Find the index of the last post-downtime snapshot, if any.
+    const lastDowntimeIndex = [...existingSnapshots]
+      .map((s, idx) => ({ s, idx }))
+      .filter(({ s }) => s.type === 'post-downtime')
+      .map(({ idx }) => idx)
+      .pop();
+
+    const snapshotLabel = 'After downtime cycle';
     const snapshot = createSnapshot(workingForce, {
       type: 'post-downtime',
       label: snapshotLabel,
     });
 
-    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    let nextSnapshots;
+    if (typeof lastDowntimeIndex === 'number') {
+      nextSnapshots = existingSnapshots.map((s, idx) => (idx === lastDowntimeIndex ? snapshot : s));
+    } else {
+      nextSnapshots = [...existingSnapshots, snapshot];
+    }
 
     onUpdate({
       mechs: workingForce.mechs,
       pilots: workingForce.pilots,
       elementals: workingForce.elementals,
       currentWarchest: workingForce.currentWarchest,
-      snapshots: [...existingSnapshots, snapshot],
+      snapshots: nextSnapshots,
     });
 
     setPlannedActions([]);

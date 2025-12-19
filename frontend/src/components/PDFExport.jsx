@@ -9,7 +9,7 @@ import {
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot } from '../lib/mechs';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
-import { getStatusBadgeVariant } from '../lib/constants';
+import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 
 // Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
@@ -353,6 +353,57 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: '#111827',
   },
+  // Snapshot status table
+  snapshotRow: {
+    marginTop: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  snapshotStatusTable: {
+    flexDirection: 'column',
+    flexGrow: 1,
+  },
+  snapshotStatusHeaderRow: {
+    flexDirection: 'row',
+    marginBottom: 1,
+  },
+  snapshotStatusHeaderLabel: {
+    width: 12,
+    fontSize: 7,
+    color: '#6B7280',
+  },
+  snapshotStatusHeaderCell: {
+    flexGrow: 1,
+    fontSize: 7,
+    textAlign: 'center',
+    color: '#6B7280',
+  },
+  snapshotStatusRow: {
+    flexDirection: 'row',
+    marginBottom: 1,
+  },
+  snapshotStatusRowLabel: {
+    width: 12,
+    fontSize: 7,
+    fontWeight: 'bold',
+    color: '#6B7280',
+  },
+  snapshotStatusCell: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  snapshotStatusValue: {
+    fontSize: 7,
+    fontWeight: 'bold',
+  },
+  snapshotMetaCol: {
+    marginLeft: 8,
+    justifyContent: 'center',
+  },
+  snapshotMetaText: {
+    fontSize: 8,
+    color: '#4B5563',
+  },
   // Footer
   pageNumber: {
     position: 'absolute',
@@ -364,6 +415,41 @@ const styles = StyleSheet.create({
     color: '#999',
   },
 });
+
+const STATUS_ORDER = [
+  UNIT_STATUS.OPERATIONAL,
+  UNIT_STATUS.DAMAGED,
+  UNIT_STATUS.DISABLED,
+  UNIT_STATUS.REPAIRING,
+  UNIT_STATUS.UNAVAILABLE,
+  UNIT_STATUS.DESTROYED,
+];
+
+const STATUS_LABELS = {
+  [UNIT_STATUS.OPERATIONAL]: 'OP',
+  [UNIT_STATUS.DAMAGED]: 'DMG',
+  [UNIT_STATUS.DISABLED]: 'DSBL',
+  [UNIT_STATUS.REPAIRING]: 'REP',
+  [UNIT_STATUS.UNAVAILABLE]: 'UNAV',
+  [UNIT_STATUS.DESTROYED]: 'DEST',
+};
+
+const buildStatusCountsForSnapshot = (snap, key) => {
+  const unitsSummary = snap.units && snap.units[key];
+  if (unitsSummary && unitsSummary.byStatus) {
+    return unitsSummary.byStatus;
+  }
+
+  const counts = STATUS_ORDER.reduce((acc, status) => {
+    acc[status] = 0;
+    return acc;
+  }, {});
+
+  return counts;
+};
+
+const formatStatusDistributionLine = (byStatus) =>
+  STATUS_ORDER.map((status) => `${STATUS_LABELS[status]}: ${byStatus[status] || 0}`).join(' / ');
 
 // Map UI badge variants to PDF badge styles so status visuals are centralised.
 const VARIANT_TO_STYLE = {
@@ -522,26 +608,99 @@ const ForcePDF = ({ force }) => {
             <Text style={styles.sectionHeader} break>
               █ CAMPAIGN SNAPSHOTS
             </Text>
-            {snapshots.map((snap) => (
-              <View key={snap.id} style={{ marginBottom: 4 }} wrap={false}>
-                <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#111827' }}>
-                  {snap.createdAt} – {snap.label} ({
-                    snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime'
-                  })
-                </Text>
-                <Text style={{ fontSize: 8, color: '#4B5563' }}>
-                  Mechs ready: {snap.units.mechs.ready}/{snap.units.mechs.total} (+
-                  {snap.units.mechs.destroyed} destroyed) | Elementals ready:{' '}
-                  {snap.units.elementals.ready}/{snap.units.elementals.total} (+
-                  {snap.units.elementals.destroyed} destroyed) | Pilots ready:{' '}
-                  {snap.units.pilots.ready}/{snap.units.pilots.total} (+{snap.units.pilots.kia}{' '}
-                  KIA) | Missions completed: {snap.missionsCompleted} | Warchest:{' '}
-                  {formatNumber(snap.currentWarchest)} WP (net{' '}
-                  {snap.netWarchestChange >= 0 ? '+' : ''}
-                  {formatNumber(snap.netWarchestChange)} WP)
-                </Text>
-              </View>
-            ))}
+            {snapshots.map((snap) => {
+              const mechStatus = buildStatusCountsForSnapshot(snap, 'mechs');
+              const elementalStatus = buildStatusCountsForSnapshot(snap, 'elementals');
+
+              return (
+                <View key={snap.id} style={{ marginBottom: 6 }} wrap={false}>
+                  <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#111827' }}>
+                    {snap.createdAt} – {snap.label} ({
+                      snap.type === 'pre-mission'
+                        ? 'Pre-Mission'
+                        : snap.type === 'post-mission'
+                          ? 'Post-Mission'
+                          : 'Post-Downtime'
+                    })
+                  </Text>
+
+                  <View style={styles.snapshotRow}>
+                    <View style={styles.snapshotStatusTable}>
+                      <View style={styles.snapshotStatusHeaderRow}>
+                        <Text style={styles.snapshotStatusHeaderLabel} />
+                        {STATUS_ORDER.map((status) => (
+                          <View key={status} style={styles.snapshotStatusHeaderCell}>
+                            <Text style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
+                          </View>
+                        ))}
+                      </View>
+
+                      <View style={styles.snapshotStatusRow}>
+                        <Text style={styles.snapshotStatusRowLabel}>M:</Text>
+                        {STATUS_ORDER.map((status) => (
+                          <View key={status} style={styles.snapshotStatusCell}>
+                            <Text
+                              style={[
+                                styles.snapshotStatusValue,
+                                status === UNIT_STATUS.OPERATIONAL
+                                  ? { color: '#16A34A' }
+                                  : status === UNIT_STATUS.DAMAGED
+                                    ? { color: '#F59E0B' }
+                                    : status === UNIT_STATUS.REPAIRING
+                                      ? { color: '#3B82F6' }
+                                      : status === UNIT_STATUS.DESTROYED
+                                        ? { color: '#B91C1C' }
+                                        : { color: '#DC2626' },
+                              ]}
+                            >
+                              {mechStatus[status] || 0}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+
+                      <View style={styles.snapshotStatusRow}>
+                        <Text style={styles.snapshotStatusRowLabel}>E:</Text>
+                        {STATUS_ORDER.map((status) => (
+                          <View key={status} style={styles.snapshotStatusCell}>
+                            <Text
+                              style={[
+                                styles.snapshotStatusValue,
+                                status === UNIT_STATUS.OPERATIONAL
+                                  ? { color: '#16A34A' }
+                                  : status === UNIT_STATUS.DAMAGED
+                                    ? { color: '#F59E0B' }
+                                    : status === UNIT_STATUS.REPAIRING
+                                      ? { color: '#3B82F6' }
+                                      : status === UNIT_STATUS.DESTROYED
+                                        ? { color: '#B91C1C' }
+                                        : { color: '#DC2626' },
+                              ]}
+                            >
+                              {elementalStatus[status] || 0}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                    </View>
+
+                    <View style={styles.snapshotMetaCol}>
+                      <Text style={styles.snapshotMetaText}>
+                        Missions completed: {snap.missionsCompleted}
+                      </Text>
+                      <Text style={styles.snapshotMetaText}>
+                        Warchest: {formatNumber(snap.currentWarchest)} WP
+                      </Text>
+                      <Text style={styles.snapshotMetaText}>
+                        Net Δ WP:{' '}
+                        {snap.netWarchestChange >= 0 ? '+' : ''}
+                        {formatNumber(snap.netWarchestChange)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
           </View>
         )}
 

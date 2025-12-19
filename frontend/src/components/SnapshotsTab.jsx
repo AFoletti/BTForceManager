@@ -1,5 +1,24 @@
 import React from 'react';
 import { formatNumber } from '../lib/utils';
+import { UNIT_STATUS } from '../lib/constants';
+
+const STATUS_ORDER = [
+  UNIT_STATUS.OPERATIONAL,
+  UNIT_STATUS.DAMAGED,
+  UNIT_STATUS.DISABLED,
+  UNIT_STATUS.REPAIRING,
+  UNIT_STATUS.UNAVAILABLE,
+  UNIT_STATUS.DESTROYED,
+];
+
+const STATUS_LABELS = {
+  [UNIT_STATUS.OPERATIONAL]: 'OP',
+  [UNIT_STATUS.DAMAGED]: 'DMG',
+  [UNIT_STATUS.DISABLED]: 'DSBL',
+  [UNIT_STATUS.REPAIRING]: 'REP',
+  [UNIT_STATUS.UNAVAILABLE]: 'UNAV',
+  [UNIT_STATUS.DESTROYED]: 'DEST',
+};
 
 export default function SnapshotsTab({ force }) {
   const snapshots = force?.snapshots || [];
@@ -31,9 +50,7 @@ export default function SnapshotsTab({ force }) {
                 <th className="text-left">Date</th>
                 <th className="text-left">Label</th>
                 <th className="text-left">Type</th>
-                <th className="text-left">Readiness (Mechs)</th>
-                <th className="text-left">Readiness (Elementals)</th>
-                <th className="text-left">Readiness (Pilots)</th>
+                <th className="text-left">Status (M/E)</th>
                 <th className="text-left">Missions</th>
                 <th className="text-right">Warchest</th>
                 <th className="text-right">Net Δ WP</th>
@@ -45,25 +62,69 @@ export default function SnapshotsTab({ force }) {
                   <td className="font-mono text-xs">{snap.createdAt}</td>
                   <td className="text-sm font-medium">{snap.label}</td>
                   <td className="text-xs text-muted-foreground">
-                    {snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime'}
+                    {snap.type === 'pre-mission'
+                      ? 'Pre-Mission'
+                      : snap.type === 'post-mission'
+                        ? 'Post-Mission'
+                        : 'Post-Downtime'}
                   </td>
-                  <td className="text-xs">
-                    {snap.units.mechs.ready}/{snap.units.mechs.total}{' '}
-                    <span className="text-muted-foreground">
-                      (+{snap.units.mechs.destroyed} destroyed)
-                    </span>
-                  </td>
-                  <td className="text-xs">
-                    {snap.units.elementals.ready}/{snap.units.elementals.total}{' '}
-                    <span className="text-muted-foreground">
-                      (+{snap.units.elementals.destroyed} destroyed)
-                    </span>
-                  </td>
-                  <td className="text-xs">
-                    {snap.units.pilots.ready}/{snap.units.pilots.total}{' '}
-                    <span className="text-muted-foreground">
-                      (+{snap.units.pilots.kia} KIA)
-                    </span>
+                  <td className="text-xs align-top">
+                    <table className="text-[10px]">
+                      <tbody>
+                        <tr data-testid="snapshot-mechs-summary">
+                          <td className="pr-1 font-semibold text-muted-foreground">M:</td>
+                          {STATUS_ORDER.map((status) => (
+                            <td key={status} className="px-0.5 text-center">
+                              <span className="block text-[9px] text-muted-foreground">
+                                {STATUS_LABELS[status]}
+                              </span>
+                              <span
+                                className={`font-bold ${
+                                  status === UNIT_STATUS.OPERATIONAL
+                                    ? 'text-green-600'
+                                    : status === UNIT_STATUS.DAMAGED
+                                      ? 'text-amber-600'
+                                      : status === UNIT_STATUS.REPAIRING
+                                        ? 'text-blue-600'
+                                        : status === UNIT_STATUS.DESTROYED
+                                          ? 'text-red-700'
+                                          : 'text-red-600'
+                                }`}
+                                data-testid={`snapshot-mechs-${status.toLowerCase()}-count`}
+                              >
+                                {snap.units.mechs.byStatus[status] || 0}
+                              </span>
+                            </td>
+                          ))}
+                        </tr>
+                        <tr data-testid="snapshot-elementals-summary">
+                          <td className="pr-1 font-semibold text-muted-foreground">E:</td>
+                          {STATUS_ORDER.map((status) => (
+                            <td key={status} className="px-0.5 text-center">
+                              <span className="block text-[9px] text-muted-foreground">
+                                {STATUS_LABELS[status]}
+                              </span>
+                              <span
+                                className={`font-bold ${
+                                  status === UNIT_STATUS.OPERATIONAL
+                                    ? 'text-green-600'
+                                    : status === UNIT_STATUS.DAMAGED
+                                      ? 'text-amber-600'
+                                      : status === UNIT_STATUS.REPAIRING
+                                        ? 'text-blue-600'
+                                        : status === UNIT_STATUS.DESTROYED
+                                          ? 'text-red-700'
+                                          : 'text-red-600'
+                                }`}
+                                data-testid={`snapshot-elementals-${status.toLowerCase()}-count`}
+                              >
+                                {snap.units.elementals.byStatus[status] || 0}
+                              </span>
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
                   </td>
                   <td className="text-xs text-muted-foreground">
                     {snap.missionsCompleted} completed
