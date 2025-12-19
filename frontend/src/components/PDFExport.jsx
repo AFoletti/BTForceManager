@@ -9,7 +9,7 @@ import {
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot } from '../lib/mechs';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
-import { getStatusBadgeVariant } from '../lib/constants';
+import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 
 // Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
@@ -363,6 +363,51 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#999',
   },
+
+const STATUS_ORDER = [
+  UNIT_STATUS.OPERATIONAL,
+  UNIT_STATUS.DAMAGED,
+  UNIT_STATUS.DISABLED,
+  UNIT_STATUS.REPAIRING,
+  UNIT_STATUS.UNAVAILABLE,
+  UNIT_STATUS.DESTROYED,
+];
+
+const STATUS_LABELS = {
+  [UNIT_STATUS.OPERATIONAL]: 'OP',
+  [UNIT_STATUS.DAMAGED]: 'DMG',
+  [UNIT_STATUS.DISABLED]: 'DSBL',
+  [UNIT_STATUS.REPAIRING]: 'REP',
+  [UNIT_STATUS.UNAVAILABLE]: 'UNAV',
+  [UNIT_STATUS.DESTROYED]: 'DEST',
+};
+
+const buildStatusCountsForSnapshot = (snap, key) => {
+  const unitsSummary = snap.units && snap.units[key];
+  if (unitsSummary && unitsSummary.byStatus) {
+    return unitsSummary.byStatus;
+  }
+
+  const forceUnits = snap.forceState && Array.isArray(snap.forceState[key]) ? snap.forceState[key] : [];
+
+  const counts = STATUS_ORDER.reduce((acc, status) => {
+    acc[status] = 0;
+    return acc;
+  }, {});
+
+  forceUnits.forEach((unit) => {
+    const status = unit.status || UNIT_STATUS.OPERATIONAL;
+    if (STATUS_ORDER.includes(status)) {
+      counts[status] += 1;
+    }
+  });
+
+  return counts;
+};
+
+const formatStatusDistributionLine = (byStatus) =>
+  STATUS_ORDER.map((status) => `${STATUS_LABELS[status]}: ${byStatus[status] || 0}`).join(' / ');
+
 });
 
 // Map UI badge variants to PDF badge styles so status visuals are centralised.
