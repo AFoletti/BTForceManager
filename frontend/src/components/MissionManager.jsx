@@ -19,7 +19,7 @@ import {
 } from '../lib/missions';
 import { findPilotForMech } from '../lib/mechs';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
-import { createSnapshot } from '../lib/snapshots';
+import { createSnapshot, advanceDateString } from '../lib/snapshots';
 
 const emptyMissionForm = {
   name: '',
