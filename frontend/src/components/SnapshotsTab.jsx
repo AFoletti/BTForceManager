@@ -1,5 +1,24 @@
 import React from 'react';
 import { formatNumber } from '../lib/utils';
+import { UNIT_STATUS } from '../lib/constants';
+
+const STATUS_ORDER = [
+  UNIT_STATUS.OPERATIONAL,
+  UNIT_STATUS.DAMAGED,
+  UNIT_STATUS.DISABLED,
+  UNIT_STATUS.REPAIRING,
+  UNIT_STATUS.UNAVAILABLE,
+  UNIT_STATUS.DESTROYED,
+];
+
+const STATUS_LABELS = {
+  [UNIT_STATUS.OPERATIONAL]: 'OP',
+  [UNIT_STATUS.DAMAGED]: 'DMG',
+  [UNIT_STATUS.DISABLED]: 'DSBL',
+  [UNIT_STATUS.REPAIRING]: 'REP',
+  [UNIT_STATUS.UNAVAILABLE]: 'UNAV',
+  [UNIT_STATUS.DESTROYED]: 'DEST',
+};
 
 export default function SnapshotsTab({ force }) {
   const snapshots = force?.snapshots || [];
