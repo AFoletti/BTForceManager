@@ -94,20 +94,6 @@ export function createSnapshot(force, { type, label }) {
         byStatus: elementalStatusCounts,
       },
     },
-    forceState: {
-      id: force.id,
-      name: force.name,
-      description: force.description,
-      image: force.image,
-      currentDate: force.currentDate,
-      startingWarchest: force.startingWarchest,
-      currentWarchest: force.currentWarchest,
-      wpMultiplier: force.wpMultiplier,
-      mechs: force.mechs,
-      pilots: force.pilots,
-      elementals: force.elementals,
-      missions: force.missions,
-    },
   };
 
   return snapshot;
