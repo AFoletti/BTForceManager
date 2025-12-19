@@ -236,42 +236,76 @@ export default function App() {
                         <span className="font-mono">{selectedForce.startingWarchest} WP</span>
                       </div>
 
-                      <div
-                        className="flex flex-wrap items-center gap-1"
-                        data-testid="mech-status-summary"
-                      >
-                        <span className="font-semibold mr-1">Mechs:</span>
-                        {STATUS_ORDER.map((status) => (
-                          <span
-                            key={status}
-                            className="flex items-center gap-1 mr-2"
-                            data-testid={`mech-status-${status.toLowerCase()}-count`}
-                          >
-                            <span className="text-muted-foreground">{status}:</span>
-                            <span className="font-mono">
-                              {(selectedForce.mechs || []).filter((mech) => (mech.status || UNIT_STATUS.OPERATIONAL) === status).length}
-                            </span>
-                          </span>
-                        ))}
-                      </div>
-
-                      <div
-                        className="flex flex-wrap items-center gap-1"
-                        data-testid="elemental-status-summary"
-                      >
-                        <span className="font-semibold mr-1">Elementals:</span>
-                        {STATUS_ORDER.map((status) => (
-                          <span
-                            key={status}
-                            className="flex items-center gap-1 mr-2"
-                            data-testid={`elemental-status-${status.toLowerCase()}-count`}
-                          >
-                            <span className="text-muted-foreground">{status}:</span>
-                            <span className="font-mono">
-                              {(selectedForce.elementals || []).filter((elemental) => (elemental.status || UNIT_STATUS.OPERATIONAL) === status).length}
-                            </span>
-                          </span>
-                        ))}
+                      <div className="mt-1 overflow-x-auto">
+                        <table className="text-xs">
+                          <thead>
+                            <tr>
+                              <th className="pr-2 text-left text-muted-foreground" />
+                              {STATUS_ORDER.map((status) => (
+                                <th
+                                  key={status}
+                                  className="px-1 text-center text-muted-foreground"
+                                >
+                                  {status}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr data-testid="mech-status-summary">
+                              <td className="pr-2 font-semibold">Mechs:</td>
+                              {STATUS_ORDER.map((status) => (
+                                <td
+                                  key={status}
+                                  className="px-1 text-center"
+                                >
+                                  <span
+                                    className={`font-bold ${
+                                      status === UNIT_STATUS.OPERATIONAL
+                                        ? 'text-green-600'
+                                        : status === UNIT_STATUS.DAMAGED
+                                          ? 'text-amber-600'
+                                          : status === UNIT_STATUS.REPAIRING
+                                            ? 'text-blue-600'
+                                            : status === UNIT_STATUS.DESTROYED
+                                              ? 'text-red-700'
+                                              : 'text-red-600'
+                                    }`}
+                                    data-testid={`mech-status-${status.toLowerCase()}-count`}
+                                  >
+                                    {mechStatusCounts ? mechStatusCounts[status] : 0}
+                                  </span>
+                                </td>
+                              ))}
+                            </tr>
+                            <tr data-testid="elemental-status-summary">
+                              <td className="pr-2 font-semibold">Elementals:</td>
+                              {STATUS_ORDER.map((status) => (
+                                <td
+                                  key={status}
+                                  className="px-1 text-center"
+                                >
+                                  <span
+                                    className={`font-bold ${
+                                      status === UNIT_STATUS.OPERATIONAL
+                                        ? 'text-green-600'
+                                        : status === UNIT_STATUS.DAMAGED
+                                          ? 'text-amber-600'
+                                          : status === UNIT_STATUS.REPAIRING
+                                            ? 'text-blue-600'
+                                            : status === UNIT_STATUS.DESTROYED
+                                              ? 'text-red-700'
+                                              : 'text-red-600'
+                                    }`}
+                                    data-testid={`elemental-status-${status.toLowerCase()}-count`}
+                                  >
+                                    {elementalStatusCounts ? elementalStatusCounts[status] : 0}
+                                  </span>
+                                </td>
+                              ))}
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
