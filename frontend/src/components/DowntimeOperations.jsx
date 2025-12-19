@@ -12,7 +12,7 @@ import {
   applyElementalDowntimeAction,
   applyPilotDowntimeAction,
 } from '../lib/downtime';
-import { createSnapshot } from '../lib/snapshots';
+import { createSnapshot, advanceDateString } from '../lib/snapshots';
 import { UNIT_STATUS } from '../lib/constants';
 
 // Planned downtime action kept in a cycle backlog until validation.
