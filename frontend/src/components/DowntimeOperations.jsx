@@ -236,11 +236,14 @@ export default function DowntimeOperations({ force, onUpdate }) {
       nextSnapshots = [...existingSnapshots, snapshot];
     }
 
+    const nextDate = advanceDateString(force.currentDate);
+
     onUpdate({
       mechs: workingForce.mechs,
       pilots: workingForce.pilots,
       elementals: workingForce.elementals,
       currentWarchest: workingForce.currentWarchest,
+      currentDate: nextDate,
       snapshots: nextSnapshots,
     });
 
