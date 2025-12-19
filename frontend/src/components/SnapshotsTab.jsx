@@ -62,7 +62,11 @@ export default function SnapshotsTab({ force }) {
                   <td className="font-mono text-xs">{snap.createdAt}</td>
                   <td className="text-sm font-medium">{snap.label}</td>
                   <td className="text-xs text-muted-foreground">
-                    {snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime'}
+                    {snap.type === 'pre-mission'
+                      ? 'Pre-Mission'
+                      : snap.type === 'post-mission'
+                        ? 'Post-Mission'
+                        : 'Post-Downtime'}
                   </td>
                   <td className="text-xs align-top">
                     <table className="text-[10px]">
