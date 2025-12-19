@@ -64,24 +64,6 @@ export default function SnapshotsTab({ force }) {
                   <td className="text-xs text-muted-foreground">
                     {snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime'}
                   </td>
-                  <td className="text-xs">
-                    {snap.units.mechs.ready}/{snap.units.mechs.total}{' '}
-                    <span className="text-muted-foreground">
-                      (+{snap.units.mechs.destroyed} destroyed)
-                    </span>
-                  </td>
-                  <td className="text-xs">
-                    {snap.units.elementals.ready}/{snap.units.elementals.total}{' '}
-                    <span className="text-muted-foreground">
-                      (+{snap.units.elementals.destroyed} destroyed)
-                    </span>
-                  </td>
-                  <td className="text-xs">
-                    {snap.units.pilots.ready}/{snap.units.pilots.total}{' '}
-                    <span className="text-muted-foreground">
-                      (+{snap.units.pilots.kia} KIA)
-                    </span>
-                  </td>
                   <td className="text-xs align-top">
                     <table className="text-[10px]">
                       <tbody>
