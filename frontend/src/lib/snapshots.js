@@ -12,7 +12,7 @@ import { UNIT_STATUS } from './constants';
 /**
  * @typedef {Object} Snapshot
  * @property {string} id
- * @property {('post-mission'|'post-downtime')} type
+ * @property {('pre-mission'|'post-mission'|'post-downtime')} type
  * @property {string} label
  * @property {string} createdAt        // in-universe date, typically force.currentDate
  * @property {number} currentWarchest
@@ -58,7 +58,7 @@ const buildStatusCounts = (units = []) => {
  * intentionally omitted from the snapshot summary.
  *
  * @param {Object} force Normalised force object
- * @param {{ type: 'post-mission' | 'post-downtime', label: string }} options
+ * @param {{ type: 'pre-mission' | 'post-mission' | 'post-downtime', label: string }} options
  * @returns {Snapshot}
  */
 export function createSnapshot(force, { type, label }) {
