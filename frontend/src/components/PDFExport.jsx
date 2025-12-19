@@ -616,7 +616,11 @@ const ForcePDF = ({ force }) => {
                 <View key={snap.id} style={{ marginBottom: 6 }} wrap={false}>
                   <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#111827' }}>
                     {snap.createdAt} – {snap.label} ({
-                      snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime'
+                      snap.type === 'pre-mission'
+                        ? 'Pre-Mission'
+                        : snap.type === 'post-mission'
+                          ? 'Post-Mission'
+                          : 'Post-Downtime'
                     })
                   </Text>
 
