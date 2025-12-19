@@ -1,11 +1,12 @@
 // Snapshot helpers for capturing campaign state at key moments
 // (e.g. after mission completion, after a downtime cycle).
 
+import { UNIT_STATUS } from './constants';
+
 /**
  * @typedef {Object} SnapshotUnitsSummary
- * @property {{ ready: number, total: number, destroyed: number }} mechs
- * @property {{ ready: number, total: number, destroyed: number }} elementals
- * @property {{ ready: number, total: number, kia: number }} pilots
+ * @property {{ byStatus: Record<string, number> }} mechs
+ * @property {{ byStatus: Record<string, number> }} elementals
  */
 
 /**
@@ -22,17 +23,40 @@
  * @property {Object} forceState       // trimmed copy of the force at that point in time
  */
 
+const STATUS_ORDER = [
+  UNIT_STATUS.OPERATIONAL,
+  UNIT_STATUS.DAMAGED,
+  UNIT_STATUS.DISABLED,
+  UNIT_STATUS.REPAIRING,
+  UNIT_STATUS.UNAVAILABLE,
+  UNIT_STATUS.DESTROYED,
+];
+
+const buildStatusCounts = (units = []) => {
+  const counts = STATUS_ORDER.reduce((acc, status) => {
+    acc[status] = 0;
+    return acc;
+  }, {});
+
+  units.forEach((unit) => {
+    const status = unit.status || UNIT_STATUS.OPERATIONAL;
+    if (STATUS_ORDER.includes(status)) {
+      counts[status] += 1;
+    }
+  });
+
+  return counts;
+};
+
+
 /**
- * Create a snapshot of the given force, capturing high-level readiness and
+ * Create a snapshot of the given force, capturing high-level status and
  * financial state along with a trimmed copy of the force.
  *
- * Ready-for-action definition:
- * - Mechs: status Operational or Damaged (and not Destroyed).
- * - Elementals: status Operational or Damaged and suitsDestroyed < 6.
- * - Pilots: injuries !== 6 (i.e. not KIA).
- *
- * Totals exclude destroyed/KIA where appropriate so the snapshot shows
- * `<ready> / <total minus destroyed> (+ destroyed/KIA)`.
+ * For units, we store the distribution of statuses at the time of snapshot
+ * creation, mirroring the force summary banner (Operational, Damaged,
+ * Disabled, Repairing, Unavailable, Destroyed). Pilot-level information is
+ * intentionally omitted from the snapshot summary.
  *
  * @param {Object} force Normalised force object
  * @param {{ type: 'post-mission' | 'post-downtime', label: string }} options
@@ -40,36 +64,11 @@
  */
 export function createSnapshot(force, { type, label }) {
   const mechs = force.mechs || [];
-  const pilots = force.pilots || [];
   const elementals = force.elementals || [];
   const missions = force.missions || [];
 
-  // Mechs
-  const mechDestroyedCount = mechs.filter((m) => m.status === 'Destroyed').length;
-  const mechTotalMinusDestroyed = mechs.length - mechDestroyedCount;
-  const mechReadyCount = mechs.filter((m) => {
-    if (m.status === 'Destroyed') return false;
-    return m.status === 'Operational' || m.status === 'Damaged';
-  }).length;
-
-  // Elementals: consider a point "destroyed" when status is Destroyed or
-  // all suits are destroyed (>= 6). Ready when Operational/Damaged and
-  // suitsDestroyed < 6.
-  const elemDestroyedCount = elementals.filter((e) => {
-    const suitsDestroyed = typeof e.suitsDestroyed === 'number' ? e.suitsDestroyed : 0;
-    return e.status === 'Destroyed' || suitsDestroyed >= 6;
-  }).length;
-  const elemTotalMinusDestroyed = elementals.length - elemDestroyedCount;
-  const elemReadyCount = elementals.filter((e) => {
-    const suitsDestroyed = typeof e.suitsDestroyed === 'number' ? e.suitsDestroyed : 0;
-    if (e.status === 'Destroyed' || suitsDestroyed >= 6) return false;
-    return e.status === 'Operational' || e.status === 'Damaged';
-  }).length;
-
-  // Pilots: KIA when injuries === 6; ready otherwise.
-  const pilotKiaCount = pilots.filter((p) => p.injuries === 6).length;
-  const pilotTotalMinusKia = pilots.length - pilotKiaCount;
-  const pilotReadyCount = pilots.filter((p) => p.injuries !== 6).length;
+  const mechStatusCounts = buildStatusCounts(mechs);
+  const elementalStatusCounts = buildStatusCounts(elementals);
 
   const currentWarchest = typeof force.currentWarchest === 'number' ? force.currentWarchest : 0;
   const startingWarchest = typeof force.startingWarchest === 'number' ? force.startingWarchest : 0;
@@ -90,19 +89,10 @@ export function createSnapshot(force, { type, label }) {
     missionsCompleted,
     units: {
       mechs: {
-        ready: mechReadyCount,
-        total: mechTotalMinusDestroyed,
-        destroyed: mechDestroyedCount,
+        byStatus: mechStatusCounts,
       },
       elementals: {
-        ready: elemReadyCount,
-        total: elemTotalMinusDestroyed,
-        destroyed: elemDestroyedCount,
-      },
-      pilots: {
-        ready: pilotReadyCount,
-        total: pilotTotalMinusKia,
-        kia: pilotKiaCount,
+        byStatus: elementalStatusCounts,
       },
     },
     forceState: {
