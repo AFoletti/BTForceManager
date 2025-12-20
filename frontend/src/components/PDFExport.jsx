@@ -1007,7 +1007,7 @@ const ForcePDF = ({ force }) => {
                     <Text style={styles.missionSectionTitle}>Assigned Mechs:</Text>
                     {assignedMechObjects.map((m) => (
                       <Text key={m.id} style={styles.missionUnits}>
-                        • {m.name} ({formatNumber(m.bv || 0)} BV, {m.status || 'Unknown'})
+                        • {m.name} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.status || 'Unknown'})
                       </Text>
                     ))}
                   </View>
