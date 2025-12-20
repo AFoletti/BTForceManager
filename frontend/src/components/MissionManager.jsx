@@ -620,7 +620,7 @@ export default function MissionManager({ force, onUpdate }) {
                                   {mech.status}
                                 </Badge>
                                 <span className="text-xs font-mono text-muted-foreground">
-                                  {formatNumber(mech.bv)} BV
+                                  {formatNumber(getMechAdjustedBV(force, mech))} BV
                                 </span>
                               </div>
                             </div>
