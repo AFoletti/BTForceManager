@@ -76,7 +76,7 @@
  * @property {Mission[]} [missions]
  */
 
-import { findPilotForMech, findMechForPilot } from './mechs';
+import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from './mechs';
 
 /**
  * Determine if a mech is available for mission assignment.
