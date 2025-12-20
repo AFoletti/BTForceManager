@@ -131,6 +131,7 @@ export function isElementalAvailableForMission(elemental) {
 
 /**
  * Calculate the total BV of a mission assignment.
+ * Uses adjusted BV for mechs (based on pilot skills).
  *
  * @param {Force} force
  * @param {string[]} mechIds
@@ -140,7 +141,8 @@ export function isElementalAvailableForMission(elemental) {
 export function calculateMissionTotalBV(force, mechIds, elementalIds = []) {
   const mechBV = mechIds.reduce((total, mechId) => {
     const mech = force.mechs.find((m) => m.id === mechId);
-    return total + (mech?.bv || 0);
+    if (!mech) return total;
+    return total + getMechAdjustedBV(force, mech);
   }, 0);
 
   const elementals = force.elementals || [];
