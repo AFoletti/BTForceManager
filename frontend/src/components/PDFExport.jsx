@@ -914,7 +914,7 @@ const ForcePDF = ({ force }) => {
                         </View>
                         <View style={styles.unitStatItem}>
                           <Text style={styles.unitStatLabel}>BV:</Text>
-                          <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
+                          <Text style={styles.unitStatValue}>{formatNumber(getMechAdjustedBV(force, mech))}</Text>
                         </View>
                         <View style={styles.unitStatItem}>
                           <Text style={styles.unitStatLabel}>Weight:</Text>
