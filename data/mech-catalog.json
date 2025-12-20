@@ -1,10 +1,81 @@
 {
   "metadata": {
-    "lastUpdated": "2025-12-20T14:56:41.861633+00:00",
+    "lastUpdated": "2025-12-20T14:57:26.709106+00:00",
     "sourceCommit": "0ebdbcc18d2d08aa2ae56a900e01d66411ac456b",
     "sourceRepo": "IsaBison/helm-core-fragment",
-    "totalUnits": 0,
+    "totalUnits": 7,
     "unitsWithBV": 0
   },
-  "mechs": []
+  "mechs": [
+    {
+      "mulId": 8449,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "A",
+      "name": "Ryoken III (Skinwalker) A",
+      "sourceFile": "(Ryoken III) Skinwalker A.mtf"
+    },
+    {
+      "mulId": 8450,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "B",
+      "name": "Ryoken III (Skinwalker) B",
+      "sourceFile": "(Ryoken III) Skinwalker B.mtf"
+    },
+    {
+      "mulId": 8451,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "C",
+      "name": "Ryoken III (Skinwalker) C",
+      "sourceFile": "(Ryoken III) Skinwalker C.mtf"
+    },
+    {
+      "mulId": 8452,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "D",
+      "name": "Ryoken III (Skinwalker) D",
+      "sourceFile": "(Ryoken III) Skinwalker D.mtf"
+    },
+    {
+      "mulId": 8453,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "E",
+      "name": "Ryoken III (Skinwalker) E",
+      "sourceFile": "(Ryoken III) Skinwalker E.mtf"
+    },
+    {
+      "mulId": 8454,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "F",
+      "name": "Ryoken III (Skinwalker) F",
+      "sourceFile": "(Ryoken III) Skinwalker F.mtf"
+    },
+    {
+      "mulId": 8448,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "Prime",
+      "name": "Ryoken III (Skinwalker) Prime",
+      "sourceFile": "(Ryoken III) Skinwalker Prime.mtf"
+    }
+  ]
 }
