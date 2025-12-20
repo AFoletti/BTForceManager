@@ -269,7 +269,7 @@ export default function MechRoster({ force, onUpdate }) {
                           ? `${pilot.name} - KIA`
                           : `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                     </td>
-                    <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
+                    <td className="text-right font-mono">{formatNumber(getMechAdjustedBV(force, mech))}</td>
                     <td className="text-right font-mono">{mech.weight}t</td>
                     <td className="text-xs text-muted-foreground">
                       {mech.activityLog && mech.activityLog.length > 0 ? (
