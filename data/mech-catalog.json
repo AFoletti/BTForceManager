@@ -1,12 +1,122 @@
 {
   "metadata": {
-    "lastUpdated": "2025-12-20T15:00:10.508996+00:00",
+    "lastUpdated": "2025-12-20T15:00:57.648902+00:00",
     "sourceCommit": "0ebdbcc18d2d08aa2ae56a900e01d66411ac456b",
     "sourceRepo": "IsaBison/helm-core-fragment",
-    "totalUnits": 7,
-    "unitsWithBV": 7
+    "totalUnits": 17,
+    "unitsWithBV": 17
   },
   "mechs": [
+    {
+      "mulId": 9510,
+      "techbase": "Inner Sphere",
+      "era": 3103,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-4Ur",
+      "name": "Albatross ALB-4Ur",
+      "sourceFile": "Albatross ALB-4Ur.mtf",
+      "bv": 1893
+    },
+    {
+      "mulId": 9511,
+      "techbase": "Inner Sphere",
+      "era": 3091,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-5U",
+      "name": "Albatross ALB-5U",
+      "sourceFile": "Albatross ALB-5U.mtf",
+      "bv": 1885
+    },
+    {
+      "mulId": 9509,
+      "techbase": "Inner Sphere",
+      "era": 3070,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-5W",
+      "name": "Albatross ALB-5W",
+      "sourceFile": "Albatross ALB-5W.mtf",
+      "bv": 2370
+    },
+    {
+      "mulId": 9507,
+      "techbase": "Inner Sphere",
+      "era": 3118,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-6U",
+      "name": "Albatross ALB-6U",
+      "sourceFile": "Albatross ALB-6U.mtf",
+      "bv": 2162
+    },
+    {
+      "mulId": 9508,
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3148,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "C 'Sooty Albatross'",
+      "name": "Albatross C 'Sooty Albatross'",
+      "sourceFile": "Albatross C 'Sooty Albatross'.mtf",
+      "bv": 2885
+    },
+    {
+      "mulId": 8441,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "A",
+      "name": "Alpha Wolf A",
+      "sourceFile": "Alpha Wolf A.mtf",
+      "bv": 3359
+    },
+    {
+      "mulId": 8442,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "B",
+      "name": "Alpha Wolf B",
+      "sourceFile": "Alpha Wolf B.mtf",
+      "bv": 2672
+    },
+    {
+      "mulId": 8443,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "C",
+      "name": "Alpha Wolf C",
+      "sourceFile": "Alpha Wolf C.mtf",
+      "bv": 2535
+    },
+    {
+      "mulId": 8440,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "Prime",
+      "name": "Alpha Wolf Prime",
+      "sourceFile": "Alpha Wolf Prime.mtf",
+      "bv": 2966
+    },
+    {
+      "mulId": 8386,
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3134,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-5W",
+      "name": "Annihilator ANH-5W",
+      "sourceFile": "Annihilator ANH-5W.mtf",
+      "bv": 2595
+    },
     {
       "mulId": 8449,
       "techbase": "Clan",
