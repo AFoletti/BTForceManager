@@ -456,7 +456,7 @@ export default function MissionManager({ force, onUpdate }) {
                                 <div className="flex flex-wrap gap-2">
                                   {getAssignedMechs(force, mission.assignedMechs).map((mech) => (
                                     <Badge key={mech.id} variant="secondary" className="text-xs">
-                                      {mech.name} ({formatNumber(mech.bv)} BV)
+                                      {mech.name} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
                                     </Badge>
                                   ))}
                                 </div>
