@@ -22,11 +22,26 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
   useEffect(() => {
     const loadCatalog = async () => {
       try {
-        const response = await fetch(`${process.env.PUBLIC_URL}/data/mech-catalog.json`);
-        if (response.ok) {
-          const data = await response.json();
-          setCatalog(data.mechs || []);
+        // Try multiple paths to support both development and production
+        const paths = [
+          './data/mech-catalog.json',
+          '/data/mech-catalog.json',
+          `${process.env.PUBLIC_URL}/data/mech-catalog.json`,
+        ];
+        
+        for (const path of paths) {
+          try {
+            const response = await fetch(path);
+            if (response.ok) {
+              const data = await response.json();
+              setCatalog(data.mechs || []);
+              return;
+            }
+          } catch {
+            // Try next path
+          }
         }
+        console.warn('Could not load mech catalog from any path');
       } catch (error) {
         console.warn('Could not load mech catalog:', error);
       } finally {
