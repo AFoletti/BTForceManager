@@ -277,7 +277,9 @@ def main():
     if last_commit and not args.full:
         if last_commit == current_commit:
             log("No new commits since last run - nothing to do")
-            log(f"Done! Total mechs: {len(existing_mechs)}, with BV: {sum(1 for m in existing_mechs.values() if m.get('bv'))}")
+            total_mechs = len(existing.get('mechs', [])) if existing else 0
+            mechs_with_bv = sum(1 for m in existing.get('mechs', []) if m.get('bv')) if existing else 0
+            log(f"Done! Total mechs: {total_mechs}, with BV: {mechs_with_bv}")
             return
         
         log(f"Checking for changes since {last_commit[:8]}...")
