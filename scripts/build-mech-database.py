@@ -197,7 +197,6 @@ def parse_mtf_content(content):
 
 def query_mul_for_bv(mul_id):
     """Query MUL API to get BV for a specific unit ID."""
-    # MUL doesn't have a direct ID lookup, so we'll scrape from details page
     url = f"http://masterunitlist.info/Unit/Details/{mul_id}"
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "BTForceManager-MechCatalog")
@@ -206,15 +205,13 @@ def query_mul_for_bv(mul_id):
         with urllib.request.urlopen(req, timeout=30) as resp:
             html = resp.read().decode("utf-8", errors="replace")
             
-            # Parse BV from the HTML - look for pattern like <dt>Battle Value</dt>\s*<dd>610</dd>
+            # Parse BV from the HTML - look for pattern <dt>Battle Value</dt> followed by <dd>NUMBER</dd>
+            # The number must be digits only (not "BattleMech - OmniMech" or similar text)
             match = re.search(r'<dt>Battle Value</dt>\s*<dd>(\d+)</dd>', html)
             if match:
-                return int(match.group(1))
-            
-            # Alternative: look for BattleValue in any format
-            match = re.search(r'Battle\s*Value[^>]*>\s*(\d+)', html, re.IGNORECASE)
-            if match:
-                return int(match.group(1))
+                bv = int(match.group(1))
+                if bv > 0:  # Skip zero BV entries
+                    return bv
                 
     except urllib.error.HTTPError as e:
         log(f"MUL API error for ID {mul_id}: {e.code}")
