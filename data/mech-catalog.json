@@ -1,0 +1,209 @@
+{
+  "metadata": {
+    "lastUpdated": "2025-12-20T15:19:03.515544+00:00",
+    "sourceCommit": "0ebdbcc18d2d08aa2ae56a900e01d66411ac456b",
+    "sourceRepo": "IsaBison/helm-core-fragment",
+    "totalUnits": 20,
+    "unitsWithBV": 9
+  },
+  "mechs": [
+    {
+      "techbase": "Inner Sphere",
+      "era": 3078,
+      "tonnage": 45,
+      "chassis": "'Gestalt'",
+      "model": "D2X-G",
+      "name": "'Gestalt' D2X-G",
+      "sourceFile": "'Gestalt' D2X-G.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3108,
+      "tonnage": 50,
+      "chassis": "Agrotera",
+      "model": "AGT-1A",
+      "name": "Agrotera AGT-1A",
+      "sourceFile": "Agrotera AGT-1A.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3058,
+      "tonnage": 90,
+      "chassis": "Akuma",
+      "model": "AKU-1X",
+      "name": "Akuma AKU-1X",
+      "sourceFile": "Akuma AKU-1X.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3064,
+      "tonnage": 90,
+      "chassis": "Akuma",
+      "model": "AKU-1XJ",
+      "name": "Akuma AKU-1XJ",
+      "sourceFile": "Akuma AKU-1XJ.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3071,
+      "tonnage": 90,
+      "chassis": "Akuma",
+      "model": "AKU-2X",
+      "name": "Akuma AKU-2X",
+      "sourceFile": "Akuma AKU-2X.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3077,
+      "tonnage": 90,
+      "chassis": "Akuma",
+      "model": "AKU-2XC",
+      "name": "Akuma AKU-2XC",
+      "sourceFile": "Akuma AKU-2XC.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3083,
+      "tonnage": 90,
+      "chassis": "Akuma",
+      "model": "AKU-2XK",
+      "name": "Akuma AKU-2XK",
+      "sourceFile": "Akuma AKU-2XK.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3053,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-3U",
+      "name": "Albatross ALB-3U",
+      "sourceFile": "Albatross ALB-3U.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3076,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-3Ur",
+      "name": "Albatross ALB-3Ur",
+      "sourceFile": "Albatross ALB-3Ur.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3063,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-4U",
+      "name": "Albatross ALB-4U",
+      "sourceFile": "Albatross ALB-4U.mtf"
+    },
+    {
+      "mulId": 9510,
+      "techbase": "Inner Sphere",
+      "era": 3103,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-4Ur",
+      "name": "Albatross ALB-4Ur",
+      "sourceFile": "Albatross ALB-4Ur.mtf",
+      "bv": 1893
+    },
+    {
+      "mulId": 9511,
+      "techbase": "Inner Sphere",
+      "era": 3091,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-5U",
+      "name": "Albatross ALB-5U",
+      "sourceFile": "Albatross ALB-5U.mtf",
+      "bv": 1885
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3073,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-5W (Dantalion)",
+      "name": "Albatross ALB-5W (Dantalion)",
+      "sourceFile": "Albatross ALB-5W Dantalion.mtf"
+    },
+    {
+      "mulId": 8449,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "A",
+      "name": "Ryoken III (Skinwalker) A",
+      "sourceFile": "(Ryoken III) Skinwalker A.mtf",
+      "bv": 3500
+    },
+    {
+      "mulId": 8450,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "B",
+      "name": "Ryoken III (Skinwalker) B",
+      "sourceFile": "(Ryoken III) Skinwalker B.mtf",
+      "bv": 2851
+    },
+    {
+      "mulId": 8451,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "C",
+      "name": "Ryoken III (Skinwalker) C",
+      "sourceFile": "(Ryoken III) Skinwalker C.mtf",
+      "bv": 3175
+    },
+    {
+      "mulId": 8452,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "D",
+      "name": "Ryoken III (Skinwalker) D",
+      "sourceFile": "(Ryoken III) Skinwalker D.mtf",
+      "bv": 2545
+    },
+    {
+      "mulId": 8453,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "E",
+      "name": "Ryoken III (Skinwalker) E",
+      "sourceFile": "(Ryoken III) Skinwalker E.mtf",
+      "bv": 3102
+    },
+    {
+      "mulId": 8454,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "F",
+      "name": "Ryoken III (Skinwalker) F",
+      "sourceFile": "(Ryoken III) Skinwalker F.mtf",
+      "bv": 3704
+    },
+    {
+      "mulId": 8448,
+      "techbase": "Clan",
+      "era": 3147,
+      "tonnage": 55,
+      "chassis": "Ryoken III (Skinwalker)",
+      "model": "Prime",
+      "name": "Ryoken III (Skinwalker) Prime",
+      "sourceFile": "(Ryoken III) Skinwalker Prime.mtf",
+      "bv": 2809
+    }
+  ]
+}
