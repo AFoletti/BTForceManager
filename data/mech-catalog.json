@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "lastUpdated": "2025-12-20T15:19:03.515544+00:00",
+    "lastUpdated": "2025-12-20T16:13:26.990720+00:00",
     "sourceCommit": "0ebdbcc18d2d08aa2ae56a900e01d66411ac456b",
     "sourceRepo": "IsaBison/helm-core-fragment",
-    "totalUnits": 20,
-    "unitsWithBV": 9
+    "totalUnits": 200,
+    "unitsWithBV": 32
   },
   "mechs": [
     {
@@ -120,6 +120,17 @@
       "bv": 1885
     },
     {
+      "mulId": 9509,
+      "techbase": "Inner Sphere",
+      "era": 3070,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-5W",
+      "name": "Albatross ALB-5W",
+      "sourceFile": "Albatross ALB-5W.mtf",
+      "bv": 2370
+    },
+    {
       "techbase": "Inner Sphere",
       "era": 3073,
       "tonnage": 95,
@@ -127,6 +138,1661 @@
       "model": "ALB-5W (Dantalion)",
       "name": "Albatross ALB-5W (Dantalion)",
       "sourceFile": "Albatross ALB-5W Dantalion.mtf"
+    },
+    {
+      "mulId": 9507,
+      "techbase": "Inner Sphere",
+      "era": 3118,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "ALB-6U",
+      "name": "Albatross ALB-6U",
+      "sourceFile": "Albatross ALB-6U.mtf",
+      "bv": 2162
+    },
+    {
+      "mulId": 9508,
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3148,
+      "tonnage": 95,
+      "chassis": "Albatross",
+      "model": "C 'Sooty Albatross'",
+      "name": "Albatross C 'Sooty Albatross'",
+      "sourceFile": "Albatross C 'Sooty Albatross'.mtf",
+      "bv": 2885
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2573,
+      "tonnage": 55,
+      "chassis": "Alfar",
+      "model": "AL-A1",
+      "name": "Alfar AL-A1",
+      "sourceFile": "Alfar AL-A1.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2573,
+      "tonnage": 55,
+      "chassis": "Alfar",
+      "model": "AL-D1 'Dokkalfar'",
+      "name": "Alfar AL-D1 'Dokkalfar'",
+      "sourceFile": "Alfar AL-D1 Dokkalfar.mtf"
+    },
+    {
+      "mulId": 8441,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "A",
+      "name": "Alpha Wolf A",
+      "sourceFile": "Alpha Wolf A.mtf",
+      "bv": 3359
+    },
+    {
+      "mulId": 8442,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "B",
+      "name": "Alpha Wolf B",
+      "sourceFile": "Alpha Wolf B.mtf",
+      "bv": 2672
+    },
+    {
+      "mulId": 8443,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "C",
+      "name": "Alpha Wolf C",
+      "sourceFile": "Alpha Wolf C.mtf",
+      "bv": 2535
+    },
+    {
+      "mulId": 8440,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 90,
+      "chassis": "Alpha Wolf",
+      "model": "Prime",
+      "name": "Alpha Wolf Prime",
+      "sourceFile": "Alpha Wolf Prime.mtf",
+      "bv": 2966
+    },
+    {
+      "techbase": "Clan",
+      "era": 3149,
+      "tonnage": 100,
+      "chassis": "Amarok",
+      "model": "(Standard)",
+      "name": "Amarok (Standard)",
+      "sourceFile": "Amarok (Standard).mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3150,
+      "tonnage": 100,
+      "chassis": "Amarok",
+      "model": "2",
+      "name": "Amarok 2",
+      "sourceFile": "Amarok 2.mtf"
+    },
+    {
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3150,
+      "tonnage": 100,
+      "chassis": "Amarok",
+      "model": "3",
+      "name": "Amarok 3",
+      "sourceFile": "Amarok 3.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3009,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-1A",
+      "name": "Annihilator ANH-1A",
+      "sourceFile": "Annihilator ANH-1A.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3028,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-1E",
+      "name": "Annihilator ANH-1E",
+      "sourceFile": "Annihilator ANH-1E.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2823,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-1G",
+      "name": "Annihilator ANH-1G",
+      "sourceFile": "Annihilator ANH-1G.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2779,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-1X",
+      "name": "Annihilator ANH-1X",
+      "sourceFile": "Annihilator ANH-1X.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3048,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-2A",
+      "name": "Annihilator ANH-2A",
+      "sourceFile": "Annihilator ANH-2A.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3074,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-2AX",
+      "name": "Annihilator ANH-2AX",
+      "sourceFile": "Annihilator ANH-2AX.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3068,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-3A",
+      "name": "Annihilator ANH-3A",
+      "sourceFile": "Annihilator ANH-3A.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-4A",
+      "name": "Annihilator ANH-4A",
+      "sourceFile": "Annihilator ANH-4A.mtf"
+    },
+    {
+      "mulId": 8386,
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3134,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "ANH-5W",
+      "name": "Annihilator ANH-5W",
+      "sourceFile": "Annihilator ANH-5W.mtf",
+      "bv": 2595
+    },
+    {
+      "techbase": "Clan",
+      "era": 2848,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "C",
+      "name": "Annihilator C",
+      "sourceFile": "Annihilator C.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 2844,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "C 'Gausszilla'",
+      "name": "Annihilator C 'Gausszilla'",
+      "sourceFile": "Annihilator Bryan Gausszilla.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 2850,
+      "tonnage": 100,
+      "chassis": "Annihilator",
+      "model": "C 2",
+      "name": "Annihilator C 2",
+      "sourceFile": "Annihilator C2.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3117,
+      "tonnage": 45,
+      "chassis": "Antlion",
+      "model": "LK-3D",
+      "name": "Antlion LK-3D",
+      "sourceFile": "Antlion LK-3D.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3063,
+      "tonnage": 30,
+      "chassis": "Anubis",
+      "model": "ABS-3L",
+      "name": "Anubis ABS-3L",
+      "sourceFile": "Anubis ABS-3L.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3081,
+      "tonnage": 30,
+      "chassis": "Anubis",
+      "model": "ABS-3MC",
+      "name": "Anubis ABS-3MC",
+      "sourceFile": "Anubis ABS-3MC.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3064,
+      "tonnage": 30,
+      "chassis": "Anubis",
+      "model": "ABS-3R",
+      "name": "Anubis ABS-3R",
+      "sourceFile": "Anubis ABS-3R.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3067,
+      "tonnage": 30,
+      "chassis": "Anubis",
+      "model": "ABS-3T",
+      "name": "Anubis ABS-3T",
+      "sourceFile": "Anubis ABS-3T.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3082,
+      "tonnage": 30,
+      "chassis": "Anubis",
+      "model": "ABS-4C",
+      "name": "Anubis ABS-4C",
+      "sourceFile": "Anubis ABS-4C.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3121,
+      "tonnage": 30,
+      "chassis": "Anubis",
+      "model": "ABS-5Y",
+      "name": "Anubis ABS-5Y",
+      "sourceFile": "Anubis ABS-5Y.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3124,
+      "tonnage": 30,
+      "chassis": "Anubis",
+      "model": "ABS-5Z",
+      "name": "Anubis ABS-5Z",
+      "sourceFile": "Anubis ABS-5Z.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3055,
+      "tonnage": 60,
+      "chassis": "Anvil",
+      "model": "ANV-3M",
+      "name": "Anvil ANV-3M",
+      "sourceFile": "Anvil ANV-3M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3067,
+      "tonnage": 60,
+      "chassis": "Anvil",
+      "model": "ANV-3R",
+      "name": "Anvil ANV-3R",
+      "sourceFile": "Anvil ANV-3R.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3057,
+      "tonnage": 60,
+      "chassis": "Anvil",
+      "model": "ANV-5M",
+      "name": "Anvil ANV-5M",
+      "sourceFile": "Anvil ANV-5M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3067,
+      "tonnage": 60,
+      "chassis": "Anvil",
+      "model": "ANV-5Q",
+      "name": "Anvil ANV-5Q",
+      "sourceFile": "Anvil ANV-5Q.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3058,
+      "tonnage": 60,
+      "chassis": "Anvil",
+      "model": "ANV-6M",
+      "name": "Anvil ANV-6M",
+      "sourceFile": "Anvil ANV-6M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3060,
+      "tonnage": 60,
+      "chassis": "Anvil",
+      "model": "ANV-8M",
+      "name": "Anvil ANV-8M",
+      "sourceFile": "Anvil ANV-8M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3098,
+      "tonnage": 60,
+      "chassis": "Anzu",
+      "model": "ZU-G60",
+      "name": "Anzu ZU-G60",
+      "sourceFile": "Anzu ZU-G60.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3106,
+      "tonnage": 60,
+      "chassis": "Anzu",
+      "model": "ZU-J70",
+      "name": "Anzu ZU-J70",
+      "sourceFile": "Anzu ZU-J70.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3054,
+      "tonnage": 55,
+      "chassis": "Apollo",
+      "model": "APL-1M",
+      "name": "Apollo APL-1M",
+      "sourceFile": "Apollo APL-1M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3056,
+      "tonnage": 55,
+      "chassis": "Apollo",
+      "model": "APL-1R",
+      "name": "Apollo APL-1R",
+      "sourceFile": "Apollo APL-1R.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3056,
+      "tonnage": 55,
+      "chassis": "Apollo",
+      "model": "APL-2S",
+      "name": "Apollo APL-2S",
+      "sourceFile": "Apollo APL-2S.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3057,
+      "tonnage": 55,
+      "chassis": "Apollo",
+      "model": "APL-3T",
+      "name": "Apollo APL-3T",
+      "sourceFile": "Apollo APL-3T.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3083,
+      "tonnage": 55,
+      "chassis": "Apollo",
+      "model": "APL-4M",
+      "name": "Apollo APL-4M",
+      "sourceFile": "Apollo APL-4M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3065,
+      "tonnage": 50,
+      "chassis": "Aquagladius",
+      "model": "AQS-3",
+      "name": "Aquagladius AQS-3",
+      "sourceFile": "Aquagladius AQS-3.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3066,
+      "tonnage": 50,
+      "chassis": "Aquagladius",
+      "model": "AQS-4",
+      "name": "Aquagladius AQS-4",
+      "sourceFile": "Aquagladius AQS-4.mtf"
+    },
+    {
+      "mulId": 8108,
+      "techbase": "Inner Sphere",
+      "era": 3090,
+      "tonnage": 50,
+      "chassis": "Aquagladius",
+      "model": "AQS-5 MAM",
+      "name": "Aquagladius AQS-5 MAM",
+      "sourceFile": "Aquagladius AQS-5 MAM.mtf",
+      "bv": 1946
+    },
+    {
+      "techbase": "Clan",
+      "era": 3087,
+      "tonnage": 40,
+      "chassis": "Arana MilitiaMech",
+      "model": "ARA-S-1",
+      "name": "Arana MilitiaMech ARA-S-1",
+      "sourceFile": "Arana MilitiaMech ARA-S-1.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3087,
+      "tonnage": 40,
+      "chassis": "Arana MilitiaMech",
+      "model": "ARA-S-1",
+      "name": "Arana MilitiaMech ARA-S-1",
+      "sourceFile": "Arana MilitiaMek ARA-S-1.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3077,
+      "tonnage": 25,
+      "chassis": "Arbalest",
+      "model": "(Standard)",
+      "name": "Arbalest (Standard)",
+      "sourceFile": "Arbalest.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3079,
+      "tonnage": 25,
+      "chassis": "Arbalest",
+      "model": "2",
+      "name": "Arbalest 2",
+      "sourceFile": "Arbalest 2.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3081,
+      "tonnage": 25,
+      "chassis": "Arbalest",
+      "model": "3",
+      "name": "Arbalest 3",
+      "sourceFile": "Arbalest 3.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3063,
+      "tonnage": 35,
+      "chassis": "Arbiter SecurityMech",
+      "model": "ARB-001",
+      "name": "Arbiter SecurityMech ARB-001",
+      "sourceFile": "Arbiter ARB-001.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3061,
+      "tonnage": 65,
+      "chassis": "Arcas",
+      "model": "(Standard)",
+      "name": "Arcas (Standard)",
+      "sourceFile": "Arcas.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3061,
+      "tonnage": 65,
+      "chassis": "Arcas",
+      "model": "2",
+      "name": "Arcas 2",
+      "sourceFile": "Arcas 2.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3078,
+      "tonnage": 65,
+      "chassis": "Arcas",
+      "model": "3",
+      "name": "Arcas 3",
+      "sourceFile": "Arcas 3.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3072,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-O (Berith)",
+      "name": "Archangel C-ANG-O (Berith)",
+      "sourceFile": "Archangel C-ANG-O Berith.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-O Invictus",
+      "name": "Archangel C-ANG-O Invictus",
+      "sourceFile": "Archangel C-ANG-O Invictus.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-OA Dominus",
+      "name": "Archangel C-ANG-OA Dominus",
+      "sourceFile": "Archangel C-ANG-OA Dominus.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-OB Infernus",
+      "name": "Archangel C-ANG-OB Infernus",
+      "sourceFile": "Archangel C-ANG-OB Infernus.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-OC Comminus",
+      "name": "Archangel C-ANG-OC Comminus",
+      "sourceFile": "Archangel C-ANG-OC Comminus.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-OD Luminos",
+      "name": "Archangel C-ANG-OD Luminos",
+      "sourceFile": "Archangel C-ANG-OD Luminos.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3072,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-OE Eminus",
+      "name": "Archangel C-ANG-OE Eminus",
+      "sourceFile": "Archangel C-ANG-OE Eminus.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3075,
+      "tonnage": 100,
+      "chassis": "Archangel",
+      "model": "C-ANG-OS Caelestis",
+      "name": "Archangel C-ANG-OS Caelestis",
+      "sourceFile": "Archangel C-ANG-OS Caelestis.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3055,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "(Wolf)",
+      "name": "Archer (Wolf)",
+      "sourceFile": "Archer (Wolf).mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2458,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-1A",
+      "name": "Archer ARC-1A",
+      "sourceFile": "Archer ARC-1A.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2856,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-2K",
+      "name": "Archer ARC-2K",
+      "sourceFile": "Archer ARC-2K.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2474,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-2R",
+      "name": "Archer ARC-2R",
+      "sourceFile": "Archer ARC-2R.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2752,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-2Rb",
+      "name": "Archer ARC-2Rb",
+      "sourceFile": "Archer ARC-2Rb.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2915,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-2S",
+      "name": "Archer ARC-2S",
+      "sourceFile": "Archer ARC-2S.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3010,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-2W",
+      "name": "Archer ARC-2W",
+      "sourceFile": "Archer ARC-2W.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3049,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-4M",
+      "name": "Archer ARC-4M",
+      "sourceFile": "Archer ARC-4M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3086,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-4M2",
+      "name": "Archer ARC-4M2",
+      "sourceFile": "Archer ARC-4M2.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3052,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-5CS",
+      "name": "Archer ARC-5CS",
+      "sourceFile": "Archer ARC-5CS.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-5R",
+      "name": "Archer ARC-5R",
+      "sourceFile": "Archer ARC-5R.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-5S",
+      "name": "Archer ARC-5S",
+      "sourceFile": "Archer ARC-5S.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-5W",
+      "name": "Archer ARC-5W",
+      "sourceFile": "Archer ARC-5W.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3067,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-6S",
+      "name": "Archer ARC-6S",
+      "sourceFile": "Archer ARC-6S.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3067,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-6W",
+      "name": "Archer ARC-6W",
+      "sourceFile": "Archer ARC-6W.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3119,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-7C",
+      "name": "Archer ARC-7C",
+      "sourceFile": "Archer ARC-7C.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3067,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-7L",
+      "name": "Archer ARC-7L",
+      "sourceFile": "Archer ARC-7L.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3070,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-7S",
+      "name": "Archer ARC-7S",
+      "sourceFile": "Archer ARC-7S.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3067,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-8M",
+      "name": "Archer ARC-8M",
+      "sourceFile": "Archer ARC-8M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3071,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-9K",
+      "name": "Archer ARC-9K",
+      "sourceFile": "Archer ARC-9K.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3089,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-9KC",
+      "name": "Archer ARC-9KC",
+      "sourceFile": "Archer ARC-9KC.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3076,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-9M",
+      "name": "Archer ARC-9M",
+      "sourceFile": "Archer ARC-9M.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3134,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-9R",
+      "name": "Archer ARC-9R",
+      "sourceFile": "Archer ARC-9R.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3078,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "ARC-9W",
+      "name": "Archer ARC-9W",
+      "sourceFile": "Archer ARC-9W.mtf"
+    },
+    {
+      "mulId": 90,
+      "techbase": "Mixed (IS Chassis)",
+      "era": 2824,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "C",
+      "name": "Archer C",
+      "sourceFile": "Archer C.mtf",
+      "bv": 1811
+    },
+    {
+      "techbase": "Clan",
+      "era": 3065,
+      "mulId": 8387,
+      "tonnage": 70,
+      "chassis": "Archer",
+      "model": "C 2",
+      "name": "Archer C 2",
+      "sourceFile": "Archer C 2.mtf",
+      "bv": 2167
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3059,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1",
+      "name": "Arctic Fox AF1",
+      "sourceFile": "Arctic Fox AF1.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3059,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1A",
+      "name": "Arctic Fox AF1A",
+      "sourceFile": "Arctic Fox AF1A.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3059,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1B",
+      "name": "Arctic Fox AF1B",
+      "sourceFile": "Arctic Fox AF1B.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3059,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1C",
+      "name": "Arctic Fox AF1C",
+      "sourceFile": "Arctic Fox AF1C.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3059,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1D",
+      "name": "Arctic Fox AF1D",
+      "sourceFile": "Arctic Fox AF1D.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1E",
+      "name": "Arctic Fox AF1E",
+      "sourceFile": "Arctic Fox AF1E.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3072,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1F",
+      "name": "Arctic Fox AF1F",
+      "sourceFile": "Arctic Fox AF1F.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3072,
+      "tonnage": 30,
+      "chassis": "Arctic Fox",
+      "model": "AF1U",
+      "name": "Arctic Fox AF1U",
+      "sourceFile": "Arctic Fox AF1U.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3059,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf",
+      "model": "(Standard)",
+      "name": "Arctic Wolf (Standard)",
+      "sourceFile": "Arctic Wolf.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3060,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf",
+      "model": "2",
+      "name": "Arctic Wolf 2",
+      "sourceFile": "Arctic Wolf 2.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3067,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf",
+      "model": "A",
+      "name": "Arctic Wolf A",
+      "sourceFile": "Arctic Wolf A.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3085,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf II",
+      "model": "A",
+      "name": "Arctic Wolf II A",
+      "sourceFile": "Arctic Wolf II A.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3085,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf II",
+      "model": "B",
+      "name": "Arctic Wolf II B",
+      "sourceFile": "Arctic Wolf II B.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3085,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf II",
+      "model": "C",
+      "name": "Arctic Wolf II C",
+      "sourceFile": "Arctic Wolf II C.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3085,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf II",
+      "model": "Prime",
+      "name": "Arctic Wolf II Prime",
+      "sourceFile": "Arctic Wolf II Prime.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3070,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf",
+      "model": "J",
+      "name": "Arctic Wolf J",
+      "sourceFile": "Arctic Wolf J.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 3067,
+      "tonnage": 40,
+      "chassis": "Arctic Wolf",
+      "model": "Prime",
+      "name": "Arctic Wolf Prime",
+      "sourceFile": "Arctic Wolf Prime.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3136,
+      "tonnage": 135,
+      "chassis": "Ares",
+      "model": "ARS-V1 Zeus",
+      "name": "Ares ARS-V1 Zeus",
+      "sourceFile": "Ares ARS-V1 Zeus.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3136,
+      "tonnage": 135,
+      "chassis": "Ares",
+      "model": "ARS-V1A Hera",
+      "name": "Ares ARS-V1A Hera",
+      "sourceFile": "Ares ARS-V1 Hera.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3136,
+      "tonnage": 135,
+      "chassis": "Ares",
+      "model": "ARS-V1B Hades",
+      "name": "Ares ARS-V1B Hades",
+      "sourceFile": "Ares ARS-V1 Hades.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3136,
+      "tonnage": 135,
+      "chassis": "Ares",
+      "model": "ARS-V1C Aphrodite",
+      "name": "Ares ARS-V1C Aphrodite",
+      "sourceFile": "Ares ARS-V1 Aphrodite.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3136,
+      "tonnage": 135,
+      "chassis": "Ares",
+      "model": "ARS-V1D Hephaestus",
+      "name": "Ares ARS-V1D Hephaestus",
+      "sourceFile": "Ares ARS-V1 Hephaestus.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3062,
+      "tonnage": 60,
+      "chassis": "Argus",
+      "model": "AGS-2D",
+      "name": "Argus AGS-2D",
+      "sourceFile": "Argus AGS-2D.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3062,
+      "tonnage": 60,
+      "chassis": "Argus",
+      "model": "AGS-4D",
+      "name": "Argus AGS-4D",
+      "sourceFile": "Argus AGS-4D.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3071,
+      "tonnage": 60,
+      "chassis": "Argus",
+      "model": "AGS-5D",
+      "name": "Argus AGS-5D",
+      "sourceFile": "Argus AGS-5D.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3078,
+      "tonnage": 60,
+      "chassis": "Argus",
+      "model": "AGS-6F",
+      "name": "Argus AGS-6F",
+      "sourceFile": "Argus AGS-6F.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3074,
+      "tonnage": 60,
+      "chassis": "Argus",
+      "model": "AGS-8DX",
+      "name": "Argus AGS-8DX",
+      "sourceFile": "Argus AGS-8DX.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3066,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "'Servitor'",
+      "name": "Assassin 'Servitor'",
+      "sourceFile": "Assassin Servitor.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3024,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "ASN-101",
+      "name": "Assassin ASN-101",
+      "sourceFile": "Assassin ASN-101.mtf"
+    },
+    {
+      "mulId": 9395,
+      "techbase": "Inner Sphere",
+      "era": 3140,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "ASN-109",
+      "name": "Assassin ASN-109",
+      "sourceFile": "Assassin ASN-109.mtf",
+      "bv": 1158
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2676,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "ASN-21",
+      "name": "Assassin ASN-21",
+      "sourceFile": "Assassin ASN-21.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "ASN-23",
+      "name": "Assassin ASN-23",
+      "sourceFile": "Assassin ASN-23.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3062,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "ASN-30",
+      "name": "Assassin ASN-30",
+      "sourceFile": "Assassin ASN-30.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3066,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "ASN-30 (Alice)",
+      "name": "Assassin ASN-30 (Alice)",
+      "sourceFile": "Assassin Alice.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3068,
+      "tonnage": 40,
+      "chassis": "Assassin",
+      "model": "ASN-99",
+      "name": "Assassin ASN-99",
+      "sourceFile": "Assassin ASN-99.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3081,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-00 (Jurn)",
+      "name": "Atlas AS7-00 (Jurn)",
+      "sourceFile": "Atlas AS-700 Jurn.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2954,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-A",
+      "name": "Atlas AS7-A",
+      "sourceFile": "Atlas AS7-A.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-C",
+      "name": "Atlas AS7-C",
+      "sourceFile": "Atlas AS7-C.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-CM",
+      "name": "Atlas AS7-CM",
+      "sourceFile": "Atlas AS7-CM.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2755,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-D",
+      "name": "Atlas AS7-D",
+      "sourceFile": "Atlas AS7-D.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3028,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-D (Danielle)",
+      "name": "Atlas AS7-D (Danielle)",
+      "sourceFile": "Atlas AS7-D (Danielle).mtf"
+    },
+    {
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 3050,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-D(C)",
+      "name": "Atlas AS7-D(C)",
+      "sourceFile": "Atlas AS7-D(C).mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2776,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-D-DC",
+      "name": "Atlas AS7-D-DC",
+      "sourceFile": "Atlas AS7-D-DC.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3070,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-Dr",
+      "name": "Atlas AS7-Dr",
+      "sourceFile": "Atlas AS7-Dr.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3049,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-K",
+      "name": "Atlas AS7-K",
+      "sourceFile": "Atlas AS7-K.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-K-DC",
+      "name": "Atlas AS7-K-DC",
+      "sourceFile": "Atlas AS7-K-DC.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3082,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-K2",
+      "name": "Atlas AS7-K2",
+      "sourceFile": "Atlas AS7-K2.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3082,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-K2 (Jedra)",
+      "name": "Atlas AS7-K2 (Jedra)",
+      "sourceFile": "Atlas AS7-K2 (Jedra).mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3083,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-K3",
+      "name": "Atlas AS7-K3",
+      "sourceFile": "Atlas AS7-K3.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3098,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-K4",
+      "name": "Atlas AS7-K4",
+      "sourceFile": "Atlas AS7-K4.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2892,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-RS",
+      "name": "Atlas AS7-RS",
+      "sourceFile": "Atlas AS7-RS.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3050,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-S",
+      "name": "Atlas AS7-S",
+      "sourceFile": "Atlas AS7-S.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3061,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-S2",
+      "name": "Atlas AS7-S2",
+      "sourceFile": "Atlas AS7-S2.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3062,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-S3",
+      "name": "Atlas AS7-S3",
+      "sourceFile": "Atlas AS7-S3.mtf"
+    },
+    {
+      "mulId": 8437,
+      "techbase": "Inner Sphere",
+      "era": 3064,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-S3-DC",
+      "name": "Atlas AS7-S3-DC",
+      "sourceFile": "Atlas AS7-S3-DC.mtf",
+      "bv": 2276
+    },
+    {
+      "mulId": 8436,
+      "techbase": "Inner Sphere",
+      "era": 3109,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-S4",
+      "name": "Atlas AS7-S4",
+      "sourceFile": "Atlas AS7-S4.mtf",
+      "bv": 2568
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3025,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS7-WGS (Samsonov)",
+      "name": "Atlas AS7-WGS (Samsonov)",
+      "sourceFile": "Atlas AS7-WGS Samsonov.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3074,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS8-D",
+      "name": "Atlas AS8-D",
+      "sourceFile": "Atlas AS8-D.mtf"
+    },
+    {
+      "mulId": 8435,
+      "techbase": "Inner Sphere",
+      "era": 3140,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS8-K",
+      "name": "Atlas AS8-K",
+      "sourceFile": "Atlas AS8-K.mtf",
+      "bv": 2668
+    },
+    {
+      "mulId": 8434,
+      "techbase": "Inner Sphere",
+      "era": 3140,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS8-KE",
+      "name": "Atlas AS8-KE",
+      "sourceFile": "Atlas AS8-KE.mtf",
+      "bv": 2658
+    },
+    {
+      "mulId": 8433,
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3138,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "AS8-S",
+      "name": "Atlas AS8-S",
+      "sourceFile": "Atlas AS8-S.mtf",
+      "bv": 2789
+    },
+    {
+      "mulId": 3750,
+      "techbase": "Mixed (Clan Chassis)",
+      "era": 2830,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "C",
+      "name": "Atlas C",
+      "sourceFile": "Atlas C.mtf",
+      "bv": 2340
+    },
+    {
+      "mulId": 8431,
+      "techbase": "Clan",
+      "era": 2840,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "C 2",
+      "name": "Atlas C 2",
+      "sourceFile": "Atlas C 2.mtf",
+      "bv": 2736
+    },
+    {
+      "mulId": 8432,
+      "techbase": "Clan",
+      "era": 2842,
+      "tonnage": 100,
+      "chassis": "Atlas",
+      "model": "C 3",
+      "name": "Atlas C 3",
+      "sourceFile": "Atlas C 3.mtf",
+      "bv": 2606
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2765,
+      "tonnage": 100,
+      "chassis": "Atlas II",
+      "model": "AS7-D-H",
+      "name": "Atlas II AS7-D-H",
+      "sourceFile": "Atlas II AS7-D-H.mtf"
+    },
+    {
+      "techbase": "Clan",
+      "era": 2834,
+      "tonnage": 100,
+      "chassis": "Atlas II",
+      "model": "AS7-D-H (Kerensky)",
+      "name": "Atlas II AS7-D-H (Kerensky)",
+      "sourceFile": "Atlas II AS7-D-H (Kerensky).mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 2780,
+      "tonnage": 100,
+      "chassis": "Atlas II",
+      "model": "AS7-D-H2",
+      "name": "Atlas II AS7-D-H2",
+      "sourceFile": "Atlas II AS7-D-H2.mtf"
+    },
+    {
+      "chassis": "Atlas II",
+      "model": "AS7-D-HT",
+      "mulId": 7618,
+      "techbase": "Inner Sphere",
+      "era": 2780,
+      "tonnage": 100,
+      "name": "Atlas II AS7-D-HT",
+      "sourceFile": "Atlas II AS7-D-HT.mtf",
+      "bv": 2205
+    },
+    {
+      "mulId": 8459,
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3139,
+      "tonnage": 100,
+      "chassis": "Atlas II",
+      "model": "AS7-DK-H",
+      "name": "Atlas II AS7-DK-H",
+      "sourceFile": "Atlas II AS7-DK-H.mtf",
+      "bv": 2599
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3110,
+      "tonnage": 100,
+      "chassis": "Atlas III",
+      "model": "AS7-D2",
+      "name": "Atlas III AS7-D2",
+      "sourceFile": "Atlas III AS7-D2.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3137,
+      "tonnage": 100,
+      "chassis": "Atlas III",
+      "model": "AS7-D3",
+      "name": "Atlas III AS7-D3",
+      "sourceFile": "Atlas III AS7-D3.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3133,
+      "tonnage": 50,
+      "chassis": "Avalanche",
+      "model": "AVL-1O",
+      "name": "Avalanche AVL-1O",
+      "sourceFile": "Avalanche AVL-1O.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3133,
+      "tonnage": 50,
+      "chassis": "Avalanche",
+      "model": "AVL-1OA",
+      "name": "Avalanche AVL-1OA",
+      "sourceFile": "Avalanche AVL-1OA.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3133,
+      "tonnage": 50,
+      "chassis": "Avalanche",
+      "model": "AVL-1OB",
+      "name": "Avalanche AVL-1OB",
+      "sourceFile": "Avalanche AVL-1OB.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3133,
+      "tonnage": 50,
+      "chassis": "Avalanche",
+      "model": "AVL-1OC",
+      "name": "Avalanche AVL-1OC",
+      "sourceFile": "Avalanche AVL-1OC.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3133,
+      "tonnage": 50,
+      "chassis": "Avalanche",
+      "model": "AVL-1ON",
+      "name": "Avalanche AVL-1ON",
+      "sourceFile": "Avalanche AVL-1ON.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3133,
+      "tonnage": 50,
+      "chassis": "Avalanche",
+      "model": "AVL-1OR",
+      "name": "Avalanche AVL-1OR",
+      "sourceFile": "Avalanche AVL-1OR.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3056,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-O",
+      "name": "Avatar AV1-O",
+      "sourceFile": "Avatar AV1-O.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3056,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OA",
+      "name": "Avatar AV1-OA",
+      "sourceFile": "Avatar AV1-OA.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3056,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OB",
+      "name": "Avatar AV1-OB",
+      "sourceFile": "Avatar AV1-OB.mtf"
+    },
+    {
+      "chassis": "Avatar",
+      "model": "AV1-OBLO",
+      "mulId": 7634,
+      "techbase": "Inner Sphere",
+      "era": 3127,
+      "tonnage": 70,
+      "name": "Avatar AV1-OBLO",
+      "sourceFile": "Avatar AV1-OBLO.mtf",
+      "bv": 1550
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3056,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OC",
+      "name": "Avatar AV1-OC",
+      "sourceFile": "Avatar AV1-OC.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3060,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OD",
+      "name": "Avatar AV1-OD",
+      "sourceFile": "Avatar AV1-OD.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3062,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OE",
+      "name": "Avatar AV1-OE",
+      "sourceFile": "Avatar AV1-OE.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3064,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OF",
+      "name": "Avatar AV1-OF",
+      "sourceFile": "Avatar AV1-OF.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3056,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OG",
+      "name": "Avatar AV1-OG",
+      "sourceFile": "Avatar AV1-OG.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3069,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OH",
+      "name": "Avatar AV1-OH",
+      "sourceFile": "Avatar AV1-OH.mtf"
+    },
+    {
+      "techbase": "Inner Sphere",
+      "era": 3078,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OI",
+      "name": "Avatar AV1-OI",
+      "sourceFile": "Avatar AV1-OI.mtf"
+    },
+    {
+      "techbase": "Mixed (IS Chassis)",
+      "era": 3099,
+      "tonnage": 70,
+      "chassis": "Avatar",
+      "model": "AV1-OJ",
+      "name": "Avatar AV1-OJ",
+      "sourceFile": "Avatar AV1-OJ.mtf"
     },
     {
       "mulId": 8449,
