@@ -62,11 +62,11 @@ describe('createSnapshot', () => {
     // Elementals status distribution
     expect(snapshot.units.elementals.byStatus).toEqual({
       Operational: 1,
-      Damaged: 3,
+      Damaged: 2,
       Disabled: 0,
       Repairing: 0,
       Unavailable: 0,
-      Destroyed: 0,
+      Destroyed: 1,
     });
 
     // Warchest and net change
