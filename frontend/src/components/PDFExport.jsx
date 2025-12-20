@@ -7,7 +7,7 @@ import {
   getAssignedElementals,
   getMissionObjectiveReward,
 } from '../lib/missions';
-import { findPilotForMech, findMechForPilot } from '../lib/mechs';
+import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from '../lib/mechs';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 
