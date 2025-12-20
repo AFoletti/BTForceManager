@@ -206,10 +206,11 @@ def query_mul_for_bv(mul_id):
             html = resp.read().decode("utf-8", errors="replace")
             
             # Parse BV from the HTML - look for pattern <dt>Battle Value</dt> followed by <dd>NUMBER</dd>
-            # The number must be digits only (not "BattleMech - OmniMech" or similar text)
-            match = re.search(r'<dt>Battle Value</dt>\s*<dd>(\d+)</dd>', html)
+            # Number may have commas (e.g., "1,893")
+            match = re.search(r'<dt>Battle Value</dt>\s*<dd>([\d,]+)</dd>', html)
             if match:
-                bv = int(match.group(1))
+                bv_str = match.group(1).replace(",", "")
+                bv = int(bv_str)
                 if bv > 0:  # Skip zero BV entries
                     return bv
                 
