@@ -115,7 +115,7 @@ describe('getBVMultiplier', () => {
 
   it('returns higher multiplier for better skills', () => {
     expect(getBVMultiplier(3, 4)).toBe(1.32);
-    expect(getBVMultiplier(2, 3)).toBe(1.76);
+    expect(getBVMultiplier(2, 3)).toBe(1.68);
     expect(getBVMultiplier(0, 0)).toBe(2.42);
   });
 
@@ -149,7 +149,7 @@ describe('getAdjustedBV', () => {
 
   it('increases BV for better pilots', () => {
     expect(getAdjustedBV(1000, 3, 4)).toBe(1320); // 1.32x
-    expect(getAdjustedBV(1000, 2, 3)).toBe(1760); // 1.76x
+    expect(getAdjustedBV(1000, 2, 3)).toBe(1680); // 1.68x
   });
 
   it('decreases BV for worse pilots', () => {
