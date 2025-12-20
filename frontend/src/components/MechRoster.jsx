@@ -298,11 +298,32 @@ export default function MechRoster({ force, onUpdate }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Mech Name *</label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g., Atlas AS7-D"
-                />
+                {editingMech ? (
+                  <Input
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="e.g., Atlas AS7-D"
+                  />
+                ) : (
+                  <MechAutocomplete
+                    value={formData.name}
+                    onChange={(name) => setFormData({ ...formData, name })}
+                    onSelect={(mechData) => {
+                      setFormData({
+                        ...formData,
+                        name: mechData.name,
+                        bv: mechData.bv || formData.bv,
+                        weight: mechData.weight || formData.weight,
+                      });
+                    }}
+                    placeholder="Search mech catalog..."
+                  />
+                )}
+                {!editingMech && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Type at least 2 characters to search. Select a mech to auto-fill BV and weight.
+                  </p>
+                )}
               </div>
 
               <div>
