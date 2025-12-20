@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
 import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
-import { findPilotForMech, getAvailablePilotsForMech } from '../lib/mechs';
+import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import MechAutocomplete from './MechAutocomplete';
 
