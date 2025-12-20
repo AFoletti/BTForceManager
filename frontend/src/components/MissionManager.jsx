@@ -17,7 +17,7 @@ import {
   isElementalAvailableForMission,
   getMissionObjectiveReward,
 } from '../lib/missions';
-import { findPilotForMech } from '../lib/mechs';
+import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString } from '../lib/snapshots';
 
@@ -456,7 +456,7 @@ export default function MissionManager({ force, onUpdate }) {
                                 <div className="flex flex-wrap gap-2">
                                   {getAssignedMechs(force, mission.assignedMechs).map((mech) => (
                                     <Badge key={mech.id} variant="secondary" className="text-xs">
-                                      {mech.name} ({formatNumber(mech.bv)} BV)
+                                      {mech.name} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
                                     </Badge>
                                   ))}
                                 </div>
@@ -620,7 +620,7 @@ export default function MissionManager({ force, onUpdate }) {
                                   {mech.status}
                                 </Badge>
                                 <span className="text-xs font-mono text-muted-foreground">
-                                  {formatNumber(mech.bv)} BV
+                                  {formatNumber(getMechAdjustedBV(force, mech))} BV
                                 </span>
                               </div>
                             </div>

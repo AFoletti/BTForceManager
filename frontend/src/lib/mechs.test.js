@@ -1,4 +1,4 @@
-import { findPilotForMech, findMechForPilot, getAvailablePilotsForMech } from './mechs';
+import { findPilotForMech, findMechForPilot, getAvailablePilotsForMech, getBVMultiplier, getAdjustedBV, getMechAdjustedBV } from './mechs';
 
 const makePilot = (overrides = {}) => ({
   id: 'pilot-1',
@@ -14,6 +14,7 @@ const makeMech = (overrides = {}) => ({
   name: 'Test Mech',
   status: 'Operational',
   pilotId: null,
+  bv: 1000,
   ...overrides,
 });
 
@@ -104,5 +105,84 @@ describe('getAvailablePilotsForMech', () => {
 
     const availableForMech2 = getAvailablePilotsForMech(force, mech2);
     expect(availableForMech2.map((p) => p.id).sort()).toEqual(['p2']);
+  });
+});
+
+describe('getBVMultiplier', () => {
+  it('returns 1.0 for base skills (4/5)', () => {
+    expect(getBVMultiplier(4, 5)).toBe(1.0);
+  });
+
+  it('returns higher multiplier for better skills', () => {
+    expect(getBVMultiplier(3, 4)).toBe(1.32);
+    expect(getBVMultiplier(2, 3)).toBe(1.68);
+    expect(getBVMultiplier(0, 0)).toBe(2.42);
+  });
+
+  it('returns lower multiplier for worse skills', () => {
+    expect(getBVMultiplier(5, 6)).toBe(0.90);
+    expect(getBVMultiplier(6, 7)).toBe(0.81);
+    expect(getBVMultiplier(8, 8)).toBe(0.68);
+  });
+
+  it('clamps out-of-range values', () => {
+    expect(getBVMultiplier(-1, 5)).toBe(getBVMultiplier(0, 5));
+    expect(getBVMultiplier(4, 10)).toBe(getBVMultiplier(4, 8));
+  });
+});
+
+describe('getAdjustedBV', () => {
+  it('returns base BV when no pilot skills provided', () => {
+    expect(getAdjustedBV(1000, null, null)).toBe(1000);
+    expect(getAdjustedBV(1000, null, 5)).toBe(1000);
+    expect(getAdjustedBV(1000, 4, null)).toBe(1000);
+  });
+
+  it('returns 0 when base BV is 0 or null', () => {
+    expect(getAdjustedBV(0, 4, 5)).toBe(0);
+    expect(getAdjustedBV(null, 4, 5)).toBe(0);
+  });
+
+  it('returns base BV for 4/5 pilot', () => {
+    expect(getAdjustedBV(1000, 4, 5)).toBe(1000);
+  });
+
+  it('increases BV for better pilots', () => {
+    expect(getAdjustedBV(1000, 3, 4)).toBe(1320); // 1.32x
+    expect(getAdjustedBV(1000, 2, 3)).toBe(1680); // 1.68x
+  });
+
+  it('decreases BV for worse pilots', () => {
+    expect(getAdjustedBV(1000, 5, 6)).toBe(900); // 0.90x
+    expect(getAdjustedBV(1000, 6, 7)).toBe(810); // 0.81x
+  });
+
+  it('rounds to nearest integer', () => {
+    expect(getAdjustedBV(1500, 3, 4)).toBe(1980); // 1500 * 1.32 = 1980
+    expect(getAdjustedBV(1337, 4, 5)).toBe(1337); // 1337 * 1.0 = 1337
+  });
+});
+
+describe('getMechAdjustedBV', () => {
+  it('returns base BV when mech has no pilot', () => {
+    const mech = makeMech({ bv: 1500, pilotId: null });
+    const force = makeForce({ mechs: [mech], pilots: [] });
+    
+    expect(getMechAdjustedBV(force, mech)).toBe(1500);
+  });
+
+  it('returns adjusted BV based on assigned pilot', () => {
+    const pilot = makePilot({ id: 'p1', gunnery: 3, piloting: 4 });
+    const mech = makeMech({ bv: 1000, pilotId: 'p1' });
+    const force = makeForce({ mechs: [mech], pilots: [pilot] });
+    
+    expect(getMechAdjustedBV(force, mech)).toBe(1320); // 1.32x
+  });
+
+  it('returns 0 for mech with no BV', () => {
+    const mech = makeMech({ bv: 0, pilotId: null });
+    const force = makeForce({ mechs: [mech], pilots: [] });
+    
+    expect(getMechAdjustedBV(force, mech)).toBe(0);
   });
 });

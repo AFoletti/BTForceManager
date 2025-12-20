@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
 import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
-import { findPilotForMech, getAvailablePilotsForMech } from '../lib/mechs';
+import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import MechAutocomplete from './MechAutocomplete';
 
@@ -155,8 +155,9 @@ export default function MechRoster({ force, onUpdate }) {
         bValue = pilotB ? pilotB.name : '';
         break;
       case 'bv':
-        aValue = a.bv;
-        bValue = b.bv;
+        // Sort by adjusted BV
+        aValue = getMechAdjustedBV(force, a);
+        bValue = getMechAdjustedBV(force, b);
         break;
       case 'weight':
         aValue = a.weight;
@@ -268,7 +269,7 @@ export default function MechRoster({ force, onUpdate }) {
                           ? `${pilot.name} - KIA`
                           : `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                     </td>
-                    <td className="text-right font-mono">{formatNumber(mech.bv)}</td>
+                    <td className="text-right font-mono">{formatNumber(getMechAdjustedBV(force, mech))}</td>
                     <td className="text-right font-mono">{mech.weight}t</td>
                     <td className="text-xs text-muted-foreground">
                       {mech.activityLog && mech.activityLog.length > 0 ? (

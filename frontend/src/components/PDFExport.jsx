@@ -7,7 +7,7 @@ import {
   getAssignedElementals,
   getMissionObjectiveReward,
 } from '../lib/missions';
-import { findPilotForMech, findMechForPilot } from '../lib/mechs';
+import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from '../lib/mechs';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 
@@ -914,7 +914,7 @@ const ForcePDF = ({ force }) => {
                         </View>
                         <View style={styles.unitStatItem}>
                           <Text style={styles.unitStatLabel}>BV:</Text>
-                          <Text style={styles.unitStatValue}>{formatNumber(mech.bv || 0)}</Text>
+                          <Text style={styles.unitStatValue}>{formatNumber(getMechAdjustedBV(force, mech))}</Text>
                         </View>
                         <View style={styles.unitStatItem}>
                           <Text style={styles.unitStatLabel}>Weight:</Text>
@@ -1007,7 +1007,7 @@ const ForcePDF = ({ force }) => {
                     <Text style={styles.missionSectionTitle}>Assigned Mechs:</Text>
                     {assignedMechObjects.map((m) => (
                       <Text key={m.id} style={styles.missionUnits}>
-                        • {m.name} ({formatNumber(m.bv || 0)} BV, {m.status || 'Unknown'})
+                        • {m.name} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.status || 'Unknown'})
                       </Text>
                     ))}
                   </View>
