@@ -114,10 +114,17 @@ def download_mtf_file(path):
 
 
 def parse_mtf_content(content):
-    """Parse MTF file content and extract relevant fields."""
-    data = {}
+    """Parse MTF file content and extract relevant fields.
     
-    for line in content.split("\n"):
+    Handles two MTF formats:
+    - New format: chassis:Name, model:Variant, mul id:1234
+    - Old format: Version:1.1, then chassis on line 2, model on line 3
+    """
+    data = {}
+    lines = content.split("\n")
+    
+    # First pass: look for key:value pairs (new format)
+    for line in lines:
         line = line.strip()
         if ":" in line:
             key, _, value = line.partition(":")
@@ -138,6 +145,46 @@ def parse_mtf_content(content):
                     data["tonnage"] = int(value)
                 except ValueError:
                     pass
+            elif key == "techbase":
+                data["techbase"] = value
+            elif key == "era":
+                try:
+                    data["era"] = int(value)
+                except ValueError:
+                    pass
+    
+    # Second pass: handle old format (Version on line 1, chassis on line 2, model on line 3)
+    if "chassis" not in data and len(lines) >= 3:
+        line1 = lines[0].strip() if len(lines) > 0 else ""
+        line2 = lines[1].strip() if len(lines) > 1 else ""
+        line3 = lines[2].strip() if len(lines) > 2 else ""
+        
+        # Check if line 1 is "Version:X.X" (old format indicator)
+        if line1.lower().startswith("version:") or (line2 and ":" not in line2):
+            # Old format: line 2 is chassis, line 3 is model
+            if line1.lower().startswith("version:"):
+                chassis_line = line2
+                model_line = line3
+            else:
+                # No version line, chassis is line 1
+                chassis_line = lines[0].strip() if lines else ""
+                model_line = lines[1].strip() if len(lines) > 1 else ""
+            
+            if chassis_line and ":" not in chassis_line:
+                data["chassis"] = chassis_line
+            if model_line and ":" not in model_line:
+                data["model"] = model_line
+        
+        # Also scan for Mass in old format (Mass:90 or mass:90)
+        if "tonnage" not in data:
+            for line in lines:
+                line = line.strip()
+                if line.lower().startswith("mass:"):
+                    try:
+                        data["tonnage"] = int(line.split(":")[1].strip())
+                    except (ValueError, IndexError):
+                        pass
+                    break
     
     # Build full name
     if "chassis" in data and "model" in data:
