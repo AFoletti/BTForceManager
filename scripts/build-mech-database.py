@@ -360,10 +360,8 @@ def main():
     final_mechs = {}
     
     # First, add existing mechs (keyed by sourceFile)
-    for mech in existing_mechs.values():
-        source_file = mech.get("sourceFile")
-        if source_file:
-            final_mechs[source_file] = mech
+    for source_file, mech in existing_by_file.items():
+        final_mechs[source_file] = mech
     
     # Then, update/add new mechs
     for mech in new_mechs:
