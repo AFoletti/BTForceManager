@@ -17,7 +17,7 @@ import {
   isElementalAvailableForMission,
   getMissionObjectiveReward,
 } from '../lib/missions';
-import { findPilotForMech } from '../lib/mechs';
+import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString } from '../lib/snapshots';
 
