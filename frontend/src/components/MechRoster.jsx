@@ -155,8 +155,9 @@ export default function MechRoster({ force, onUpdate }) {
         bValue = pilotB ? pilotB.name : '';
         break;
       case 'bv':
-        aValue = a.bv;
-        bValue = b.bv;
+        // Sort by adjusted BV
+        aValue = getMechAdjustedBV(force, a);
+        bValue = getMechAdjustedBV(force, b);
         break;
       case 'weight':
         aValue = a.weight;
