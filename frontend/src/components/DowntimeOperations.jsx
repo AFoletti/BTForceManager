@@ -216,12 +216,11 @@ export default function DowntimeOperations({ force, onUpdate }) {
     // Create or update a post-downtime snapshot from the resulting force state.
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
 
-    // Find the index of the last post-downtime snapshot, if any.
-    const lastDowntimeIndex = [...existingSnapshots]
-      .map((s, idx) => ({ s, idx }))
-      .filter(({ s }) => s.type === 'post-downtime')
-      .map(({ idx }) => idx)
-      .pop();
+    // Only overwrite the last snapshot if it is a post-downtime snapshot.
+    // If a mission was completed since the last downtime, a new snapshot should be created.
+    const lastSnapshotIndex = existingSnapshots.length - 1;
+    const lastSnapshot = existingSnapshots[lastSnapshotIndex];
+    const shouldOverwrite = lastSnapshot && lastSnapshot.type === 'post-downtime';
 
     const snapshotLabel = 'After downtime cycle';
     const snapshot = createSnapshot(workingForce, {
@@ -230,8 +229,8 @@ export default function DowntimeOperations({ force, onUpdate }) {
     });
 
     let nextSnapshots;
-    if (typeof lastDowntimeIndex === 'number') {
-      nextSnapshots = existingSnapshots.map((s, idx) => (idx === lastDowntimeIndex ? snapshot : s));
+    if (shouldOverwrite) {
+      nextSnapshots = existingSnapshots.map((s, idx) => (idx === lastSnapshotIndex ? snapshot : s));
     } else {
       nextSnapshots = [...existingSnapshots, snapshot];
     }
