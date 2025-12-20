@@ -9,6 +9,7 @@ import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech } from '../lib/mechs';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
+import MechAutocomplete from './MechAutocomplete';
 
 export default function MechRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
