@@ -251,15 +251,20 @@ def main():
     
     # Load existing catalog
     existing = None if args.full else load_existing_catalog()
-    existing_mechs = {}
+    existing_mechs = {}  # Keyed by mulId for BV lookup
+    existing_by_file = {}  # Keyed by sourceFile for merge
     last_commit = None
     
     if existing:
         last_commit = existing.get("metadata", {}).get("sourceCommit")
         for mech in existing.get("mechs", []):
-            if "mulId" in mech:
+            # Index by mulId for BV cache lookup
+            if mech.get("mulId"):
                 existing_mechs[mech["mulId"]] = mech
-        log(f"Loaded existing catalog with {len(existing_mechs)} mechs, last commit: {last_commit[:8] if last_commit else 'N/A'}")
+            # Index by sourceFile for merge
+            if mech.get("sourceFile"):
+                existing_by_file[mech["sourceFile"]] = mech
+        log(f"Loaded existing catalog with {len(existing.get('mechs', []))} mechs, last commit: {last_commit[:8] if last_commit else 'N/A'}")
     
     # Get current commit
     current_commit = get_current_commit_sha()
