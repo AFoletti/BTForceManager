@@ -1,4 +1,4 @@
-import { findPilotForMech, findMechForPilot, getAvailablePilotsForMech } from './mechs';
+import { findPilotForMech, findMechForPilot, getAvailablePilotsForMech, getBVMultiplier, getAdjustedBV, getMechAdjustedBV } from './mechs';
 
 const makePilot = (overrides = {}) => ({
   id: 'pilot-1',
@@ -14,6 +14,7 @@ const makeMech = (overrides = {}) => ({
   name: 'Test Mech',
   status: 'Operational',
   pilotId: null,
+  bv: 1000,
   ...overrides,
 });
 
