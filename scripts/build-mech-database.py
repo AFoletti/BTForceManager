@@ -313,19 +313,20 @@ def main():
         
         mech_data["sourceFile"] = os.path.basename(path)
         
-        # Check if we already have BV for this mech
+        # Check if we already have BV for this mech (only if it has MUL ID)
         mul_id = mech_data.get("mulId")
-        if mul_id and mul_id in existing_mechs:
-            existing_bv = existing_mechs[mul_id].get("bv")
-            if existing_bv:
-                mech_data["bv"] = existing_bv
-                log(f"  {mech_data['name']} - using cached BV: {existing_bv}")
+        if mul_id:
+            if mul_id in existing_mechs:
+                existing_bv = existing_mechs[mul_id].get("bv")
+                if existing_bv:
+                    mech_data["bv"] = existing_bv
+                    log(f"  {mech_data['name']} - using cached BV: {existing_bv}")
+                else:
+                    mechs_needing_bv.append(mech_data)
             else:
                 mechs_needing_bv.append(mech_data)
-        elif mul_id:
-            mechs_needing_bv.append(mech_data)
         else:
-            log(f"  {mech_data['name']} - no MUL ID found")
+            log(f"  {mech_data['name']} - no MUL ID (will include without BV)")
         
         new_mechs.append(mech_data)
         
@@ -350,11 +351,20 @@ def main():
             time.sleep(REQUEST_DELAY)
     
     # Merge with existing data
-    final_mechs = dict(existing_mechs)  # Start with existing
+    # Use sourceFile as the unique key for all mechs (works for both with and without MUL ID)
+    final_mechs = {}
+    
+    # First, add existing mechs (keyed by sourceFile)
+    for mech in existing_mechs.values():
+        source_file = mech.get("sourceFile")
+        if source_file:
+            final_mechs[source_file] = mech
+    
+    # Then, update/add new mechs
     for mech in new_mechs:
-        mul_id = mech.get("mulId")
-        if mul_id:
-            final_mechs[mul_id] = mech
+        source_file = mech.get("sourceFile")
+        if source_file:
+            final_mechs[source_file] = mech
     
     # Convert back to list and sort by name
     mechs_list = sorted(final_mechs.values(), key=lambda m: m.get("name", ""))
