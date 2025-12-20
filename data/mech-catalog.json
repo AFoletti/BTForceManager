@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "lastUpdated": "2025-12-20T14:57:26.709106+00:00",
+    "lastUpdated": "2025-12-20T15:00:10.508996+00:00",
     "sourceCommit": "0ebdbcc18d2d08aa2ae56a900e01d66411ac456b",
     "sourceRepo": "IsaBison/helm-core-fragment",
     "totalUnits": 7,
-    "unitsWithBV": 0
+    "unitsWithBV": 7
   },
   "mechs": [
     {
@@ -15,7 +15,8 @@
       "chassis": "Ryoken III (Skinwalker)",
       "model": "A",
       "name": "Ryoken III (Skinwalker) A",
-      "sourceFile": "(Ryoken III) Skinwalker A.mtf"
+      "sourceFile": "(Ryoken III) Skinwalker A.mtf",
+      "bv": 3500
     },
     {
       "mulId": 8450,
@@ -25,7 +26,8 @@
       "chassis": "Ryoken III (Skinwalker)",
       "model": "B",
       "name": "Ryoken III (Skinwalker) B",
-      "sourceFile": "(Ryoken III) Skinwalker B.mtf"
+      "sourceFile": "(Ryoken III) Skinwalker B.mtf",
+      "bv": 2851
     },
     {
       "mulId": 8451,
@@ -35,7 +37,8 @@
       "chassis": "Ryoken III (Skinwalker)",
       "model": "C",
       "name": "Ryoken III (Skinwalker) C",
-      "sourceFile": "(Ryoken III) Skinwalker C.mtf"
+      "sourceFile": "(Ryoken III) Skinwalker C.mtf",
+      "bv": 3175
     },
     {
       "mulId": 8452,
@@ -45,7 +48,8 @@
       "chassis": "Ryoken III (Skinwalker)",
       "model": "D",
       "name": "Ryoken III (Skinwalker) D",
-      "sourceFile": "(Ryoken III) Skinwalker D.mtf"
+      "sourceFile": "(Ryoken III) Skinwalker D.mtf",
+      "bv": 2545
     },
     {
       "mulId": 8453,
@@ -55,7 +59,8 @@
       "chassis": "Ryoken III (Skinwalker)",
       "model": "E",
       "name": "Ryoken III (Skinwalker) E",
-      "sourceFile": "(Ryoken III) Skinwalker E.mtf"
+      "sourceFile": "(Ryoken III) Skinwalker E.mtf",
+      "bv": 3102
     },
     {
       "mulId": 8454,
@@ -65,7 +70,8 @@
       "chassis": "Ryoken III (Skinwalker)",
       "model": "F",
       "name": "Ryoken III (Skinwalker) F",
-      "sourceFile": "(Ryoken III) Skinwalker F.mtf"
+      "sourceFile": "(Ryoken III) Skinwalker F.mtf",
+      "bv": 3704
     },
     {
       "mulId": 8448,
@@ -75,7 +81,8 @@
       "chassis": "Ryoken III (Skinwalker)",
       "model": "Prime",
       "name": "Ryoken III (Skinwalker) Prime",
-      "sourceFile": "(Ryoken III) Skinwalker Prime.mtf"
+      "sourceFile": "(Ryoken III) Skinwalker Prime.mtf",
+      "bv": 2809
     }
   ]
 }
