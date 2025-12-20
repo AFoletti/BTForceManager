@@ -269,7 +269,12 @@ def main():
     log(f"Current helm-core-fragment commit: {current_commit[:8]}")
     
     # Determine which files to process
-    if last_commit and last_commit != current_commit and not args.full:
+    if last_commit and not args.full:
+        if last_commit == current_commit:
+            log("No new commits since last run - nothing to do")
+            log(f"Done! Total mechs: {len(existing_mechs)}, with BV: {sum(1 for m in existing_mechs.values() if m.get('bv'))}")
+            return
+        
         log(f"Checking for changes since {last_commit[:8]}...")
         mtf_files = get_changed_files(last_commit, current_commit)
         if mtf_files is None:
