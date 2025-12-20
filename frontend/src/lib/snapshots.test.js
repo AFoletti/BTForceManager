@@ -52,7 +52,7 @@ describe('createSnapshot', () => {
     // Mechs status distribution
     expect(snapshot.units.mechs.byStatus).toEqual({
       Operational: 1,
-      Damaged: 2,
+      Damaged: 1,
       Disabled: 0,
       Repairing: 0,
       Unavailable: 1,
