@@ -120,9 +120,9 @@ describe('getBVMultiplier', () => {
   });
 
   it('returns lower multiplier for worse skills', () => {
-    expect(getBVMultiplier(5, 6)).toBe(0.90);
-    expect(getBVMultiplier(6, 7)).toBe(0.81);
-    expect(getBVMultiplier(8, 8)).toBe(0.68);
+    expect(getBVMultiplier(5, 6)).toBe(0.86);
+    expect(getBVMultiplier(6, 7)).toBe(0.77);
+    expect(getBVMultiplier(8, 8)).toBe(0.64);
   });
 
   it('clamps out-of-range values', () => {
@@ -153,8 +153,8 @@ describe('getAdjustedBV', () => {
   });
 
   it('decreases BV for worse pilots', () => {
-    expect(getAdjustedBV(1000, 5, 6)).toBe(900); // 0.90x
-    expect(getAdjustedBV(1000, 6, 7)).toBe(810); // 0.81x
+    expect(getAdjustedBV(1000, 5, 6)).toBe(860); // 0.90x
+    expect(getAdjustedBV(1000, 6, 7)).toBe(770); // 0.81x
   });
 
   it('rounds to nearest integer', () => {
