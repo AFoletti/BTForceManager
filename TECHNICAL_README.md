@@ -47,6 +47,7 @@ You only need this folder if you want to change the app behaviour or styling and
 ├── package.json              # Optional helper for local static serving
 ├── data/
 │   ├── downtime-actions.json # Downtime/repair definitions
+│   ├── mech-catalog.json     # Mech database for autocomplete
 │   └── forces/
 │       ├── manifest.json     # List of force JSON files
 │       └── *.json            # Individual forces
@@ -55,6 +56,11 @@ You only need this folder if you want to change the app behaviour or styling and
 │   │   └── main.css          # Compiled Tailwind CSS
 │   └── js/
 │       └── main.js           # Compiled React bundle
+├── scripts/
+│   └── build-mech-database.py  # Mech catalog builder script
+├── .github/
+│   └── workflows/
+│       └── update-mech-catalog.yml  # GitHub Action to refresh mech catalog
 └── frontend/                 # Source app (React + Tailwind)
     ├── package.json
     ├── tailwind.config.js
