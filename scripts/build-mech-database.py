@@ -348,7 +348,7 @@ def main():
         "metadata": {
             "lastUpdated": datetime.now(timezone.utc).isoformat(),
             "sourceCommit": current_commit,
-            "sourceRepo": HELM_REPO,
+            "sourceRepo": SOURCE_REPO,
             "totalUnits": len(mechs_list),
             "unitsWithBV": sum(1 for m in mechs_list if m.get("bv"))
         },
