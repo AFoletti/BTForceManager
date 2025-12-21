@@ -2,7 +2,7 @@
 """
 Build Mech Database Script
 
-Fetches mech data from helm-core-fragment MTF files and enriches with BV from MUL API.
+Fetches mech data from MegaMek mm-data MTF files and enriches with BV from MUL API.
 Supports incremental updates by tracking the last processed commit SHA.
 
 Usage:
@@ -25,9 +25,9 @@ import urllib.error
 from datetime import datetime, timezone
 
 # Configuration
-HELM_REPO = "IsaBison/helm-core-fragment"
-HELM_BRANCH = "master"
-MTF_PATH = "mtf/meks"
+SOURCE_REPO = "MegaMek/mm-data"
+SOURCE_BRANCH = "main"
+MTF_PATH = "data/mekfiles/meks"
 OUTPUT_FILE = "data/mech-catalog.json"
 MUL_API_BASE = "http://masterunitlist.info/Unit/QuickList"
 REQUEST_DELAY = 1.0  # seconds between MUL API requests
