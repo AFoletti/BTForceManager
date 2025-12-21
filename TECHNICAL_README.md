@@ -225,6 +225,8 @@ After copying, `index.html` + `static/` are in sync with source.
           - Status is `Operational` or `Damaged`, **and**
           - `suitsDestroyed <= 4`.
       - Selector lists mechs and elementals side-by-side using a 2-column grid.
+      - Mech BV shown is adjusted BV based on assigned pilot.
+  - Total mission BV is calculated using adjusted BV for mechs.
   - Uses `lib/missions` helpers for creation, update, and completion side effects.
 
 - `components/DowntimeOperations.jsx`
