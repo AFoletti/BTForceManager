@@ -1,0 +1,63 @@
+name: Build Frontend
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'frontend/src/**'
+      - 'frontend/package.json'
+      - 'frontend/tailwind.config.js'
+
+# Grant write permissions to the GITHUB_TOKEN for committing changes
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+      
+      - name: Install dependencies
+        working-directory: frontend
+        run: yarn install --frozen-lockfile
+      
+      - name: Run tests
+        working-directory: frontend
+        run: yarn test --watchAll=false
+      
+      - name: Build production bundle
+        working-directory: frontend
+        run: yarn build
+      
+      - name: Copy built files to static
+        run: |
+          cp frontend/build/static/js/main*.js static/js/main.js
+          cp frontend/build/static/css/main*.css static/css/main.css
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet static/js/main.js static/css/main.css 2>/dev/null; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add static/js/main.js static/css/main.css
+          git commit -m "Build frontend bundle"
+          git push
