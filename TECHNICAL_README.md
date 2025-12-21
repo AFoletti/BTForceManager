@@ -324,7 +324,7 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 
 The catalog is built by `scripts/build-mech-database.py` which:
 
-1. Fetches MTF files from the [helm-core-fragment](https://github.com/IsaBison/helm-core-fragment) repository.
+1. Fetches MTF files from the [MegaMek mm-data](https://github.com/MegaMek/mm-data) repository.
 2. Parses chassis, model, tonnage, techbase, era, and MUL ID from each file.
 3. Queries [masterunitlist.info](http://masterunitlist.info) for BV values (using the MUL ID).
 4. Supports incremental updates by tracking the last processed commit SHA.
