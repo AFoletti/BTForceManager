@@ -2,11 +2,6 @@ name: Build Frontend
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'frontend/src/**'
-      - 'frontend/package.json'
-      - 'frontend/tailwind.config.js'
 
 # Grant write permissions to the GITHUB_TOKEN for committing changes
 permissions:
@@ -37,6 +32,8 @@ jobs:
       
       - name: Build production bundle
         working-directory: frontend
+        env:
+          CI: false
         run: yarn build
       
       - name: Copy built files to static
