@@ -1,1 +1,285 @@
-
+{
+  "metadata": {
+    "lastUpdated": "2025-12-21T14:26:31.410457+00:00",
+    "source": "MekBay CSV + MegaMek mm-data",
+    "totalUnits": 25,
+    "unitsWithTonnage": 24,
+    "unitsWithBV": 25
+  },
+  "mechs": [
+    {
+      "name": "'Gestalt' D2X-G",
+      "chassis": "'Gestalt'",
+      "model": "D2X-G",
+      "bv": 2329,
+      "mulId": 4209,
+      "year": 3078,
+      "techbase": "Inner Sphere",
+      "role": "Striker",
+      "tonnage": 45
+    },
+    {
+      "name": "'Wing' Wraith TR4",
+      "chassis": "'Wing' Wraith",
+      "model": "TR4",
+      "bv": 1548,
+      "mulId": null,
+      "year": 3150,
+      "techbase": "Inner Sphere",
+      "role": "None",
+      "tonnage": 55
+    },
+    {
+      "name": "'Wing' Wraith TR4-X",
+      "chassis": "'Wing' Wraith",
+      "model": "TR4-X",
+      "bv": 1311,
+      "mulId": null,
+      "year": 3150,
+      "techbase": "Inner Sphere",
+      "role": "None",
+      "tonnage": 55
+    },
+    {
+      "name": "'Wing' Wraith TR6",
+      "chassis": "'Wing' Wraith",
+      "model": "TR6",
+      "bv": 1581,
+      "mulId": null,
+      "year": 3150,
+      "techbase": "Inner Sphere",
+      "role": "None",
+      "tonnage": 55
+    },
+    {
+      "name": "'Wing' Wraith TR7",
+      "chassis": "'Wing' Wraith",
+      "model": "TR7",
+      "bv": 2113,
+      "mulId": null,
+      "year": 3150,
+      "techbase": "Mixed",
+      "role": "None",
+      "tonnage": 55
+    },
+    {
+      "name": "Agrotera AGT-1A",
+      "chassis": "Agrotera",
+      "model": "AGT-1A",
+      "bv": 1578,
+      "mulId": 6459,
+      "year": 3108,
+      "techbase": "Inner Sphere",
+      "role": "Striker",
+      "tonnage": 50
+    },
+    {
+      "name": "Agrotera AGT-UA 'Ariel'",
+      "chassis": "Agrotera",
+      "model": "AGT-UA 'Ariel'",
+      "bv": 1917,
+      "mulId": 8365,
+      "year": 3137,
+      "techbase": "Mixed",
+      "role": "Striker",
+      "tonnage": 50
+    },
+    {
+      "name": "Akuma AKU-1X",
+      "chassis": "Akuma",
+      "model": "AKU-1X",
+      "bv": 1959,
+      "mulId": 3691,
+      "year": 3058,
+      "techbase": "Inner Sphere",
+      "role": "Juggernaut",
+      "tonnage": 90
+    },
+    {
+      "name": "Akuma AKU-1XJ",
+      "chassis": "Akuma",
+      "model": "AKU-1XJ",
+      "bv": 2203,
+      "mulId": 3692,
+      "year": 3064,
+      "techbase": "Inner Sphere",
+      "role": "Juggernaut",
+      "tonnage": 90
+    },
+    {
+      "name": "Akuma AKU-2X",
+      "chassis": "Akuma",
+      "model": "AKU-2X",
+      "bv": 2122,
+      "mulId": 5713,
+      "year": 3071,
+      "techbase": "Inner Sphere",
+      "role": "Juggernaut",
+      "tonnage": 90
+    },
+    {
+      "name": "Akuma AKU-2XC",
+      "chassis": "Akuma",
+      "model": "AKU-2XC",
+      "bv": 2134,
+      "mulId": 22,
+      "year": 3077,
+      "techbase": "Inner Sphere",
+      "role": "Juggernaut",
+      "tonnage": 90
+    },
+    {
+      "name": "Akuma AKU-2XK",
+      "chassis": "Akuma",
+      "model": "AKU-2XK",
+      "bv": 2170,
+      "mulId": 5714,
+      "year": 3083,
+      "techbase": "Inner Sphere",
+      "role": "Juggernaut",
+      "tonnage": 90
+    },
+    {
+      "name": "Albatross ALB-3U",
+      "chassis": "Albatross",
+      "model": "ALB-3U",
+      "bv": 1668,
+      "mulId": 27,
+      "year": 3053,
+      "techbase": "Inner Sphere",
+      "role": "Brawler",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross ALB-3Ur",
+      "chassis": "Albatross",
+      "model": "ALB-3Ur",
+      "bv": 1902,
+      "mulId": 28,
+      "year": 3076,
+      "techbase": "Inner Sphere",
+      "role": "Brawler",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross ALB-4U",
+      "chassis": "Albatross",
+      "model": "ALB-4U",
+      "bv": 1907,
+      "mulId": 29,
+      "year": 3063,
+      "techbase": "Inner Sphere",
+      "role": "Brawler",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross ALB-4Ur",
+      "chassis": "Albatross",
+      "model": "ALB-4Ur",
+      "bv": 1893,
+      "mulId": 9510,
+      "year": 3103,
+      "techbase": "Inner Sphere",
+      "role": "None",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross ALB-5U",
+      "chassis": "Albatross",
+      "model": "ALB-5U",
+      "bv": 1885,
+      "mulId": 9511,
+      "year": 3091,
+      "techbase": "Inner Sphere",
+      "role": "None",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross ALB-5W",
+      "chassis": "Albatross",
+      "model": "ALB-5W",
+      "bv": 2370,
+      "mulId": 9509,
+      "year": 3070,
+      "techbase": "Inner Sphere",
+      "role": "None",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross ALB-5W (Dantalion)",
+      "chassis": "Albatross",
+      "model": "ALB-5W (Dantalion)",
+      "bv": 2296,
+      "mulId": 30,
+      "year": 3073,
+      "techbase": "Inner Sphere",
+      "role": "Brawler",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross ALB-6U",
+      "chassis": "Albatross",
+      "model": "ALB-6U",
+      "bv": 2162,
+      "mulId": 9507,
+      "year": 3118,
+      "techbase": "Inner Sphere",
+      "role": "None",
+      "tonnage": 95
+    },
+    {
+      "name": "Albatross C 'Sooty Albatross'",
+      "chassis": "Albatross",
+      "model": "C 'Sooty Albatross'",
+      "bv": 2790,
+      "mulId": 9508,
+      "year": 3148,
+      "techbase": "Mixed",
+      "role": "None",
+      "tonnage": 95
+    },
+    {
+      "name": "Alfar AL-A1",
+      "chassis": "Alfar",
+      "model": "AL-A1",
+      "bv": 1447,
+      "mulId": 3694,
+      "year": 2573,
+      "techbase": "Inner Sphere",
+      "role": "Skirmisher",
+      "tonnage": 55
+    },
+    {
+      "name": "Alfar AL-D1 'D\u00f6kk\u00e1lfar'",
+      "chassis": "Alfar",
+      "model": "AL-D1 'D\u00f6kk\u00e1lfar'",
+      "bv": 1458,
+      "mulId": 3693,
+      "year": 2573,
+      "techbase": "Inner Sphere",
+      "role": "Sniper"
+    },
+    {
+      "name": "Alpha Wolf A",
+      "chassis": "Alpha Wolf",
+      "model": "A",
+      "bv": 3435,
+      "mulId": 8441,
+      "year": 3150,
+      "techbase": "Mixed",
+      "role": "Brawler",
+      "tonnage": 90
+    },
+    {
+      "name": "Alpha Wolf Prime",
+      "chassis": "Alpha Wolf",
+      "model": "Prime",
+      "bv": 2966,
+      "mulId": 8440,
+      "year": 3150,
+      "techbase": "Mixed",
+      "role": "Sniper",
+      "tonnage": 90
+    }
+  ]
+}
