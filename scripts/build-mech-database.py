@@ -2,17 +2,17 @@
 """
 Build Mech Database Script
 
-Fetches mech data from MegaMek mm-data MTF files and enriches with BV from MUL API.
-Supports incremental updates by tracking the last processed commit SHA.
+Uses MekBay CSV export as primary source for mech data (names, BV, etc.),
+then enriches with tonnage from MegaMek mm-data MTF files.
 
 Usage:
-    python build-mech-database.py [--limit N] [--full]
+    python build-mech-database.py [--limit N]
     
 Options:
     --limit N   Process only N mechs (for testing)
-    --full      Force full rebuild, ignore existing data
 """
 
+import csv
 import json
 import os
 import re
@@ -25,12 +25,12 @@ import urllib.error
 from datetime import datetime, timezone
 
 # Configuration
-SOURCE_REPO = "MegaMek/mm-data"
-SOURCE_BRANCH = "main"
-MTF_PATH = "data/mekfiles/meks"
+CSV_FILE = "data/mek_catalog.csv"
 OUTPUT_FILE = "data/mech-catalog.json"
-MUL_API_BASE = "http://masterunitlist.info/Unit/QuickList"
-REQUEST_DELAY = 1.0  # seconds between MUL API requests
+MM_DATA_REPO = "MegaMek/mm-data"
+MM_DATA_BRANCH = "main"
+MTF_PATH = "data/mekfiles/meks"
+REQUEST_DELAY = 0.05  # seconds between mm-data file downloads
 
 
 def log(msg):
@@ -45,7 +45,6 @@ def github_api_get(endpoint):
     req.add_header("Accept", "application/vnd.github.v3+json")
     req.add_header("User-Agent", "BTForceManager-MechCatalog")
     
-    # Use token if available (for higher rate limits)
     token = os.environ.get("GITHUB_TOKEN")
     if token:
         req.add_header("Authorization", f"token {token}")
@@ -58,50 +57,60 @@ def github_api_get(endpoint):
         return None
 
 
-def get_current_commit_sha():
-    """Get the current HEAD commit SHA of the source repository."""
-    data = github_api_get(f"/repos/{SOURCE_REPO}/commits/{SOURCE_BRANCH}")
-    if data:
-        return data["sha"]
-    return None
+def normalize_name(name):
+    """Normalize a mech name for matching."""
+    # Remove various quote styles, underscores, and parentheses
+    n = re.sub(r"['\"`_()]", "", name.lower())
+    n = re.sub(r"\s+", " ", n).strip()
+    return n
 
 
-def get_changed_files(base_sha, head_sha):
-    """Get list of changed .mtf files between two commits."""
-    data = github_api_get(f"/repos/{SOURCE_REPO}/compare/{base_sha}...{head_sha}")
+def load_mm_data_index():
+    """Load the index of all MTF files from mm-data repository."""
+    log("Loading mm-data file index...")
+    data = github_api_get(f"/repos/{MM_DATA_REPO}/git/trees/{MM_DATA_BRANCH}?recursive=1")
     if not data:
-        return None
+        return {}, {}
     
-    changed_mtf = []
-    for file in data.get("files", []):
-        filename = file.get("filename", "")
-        status = file.get("status", "")
-        if filename.startswith(MTF_PATH) and filename.endswith(".mtf"):
-            if status in ("added", "modified"):
-                changed_mtf.append(filename)
+    mtf_files = {}  # normalized name -> original name
+    mtf_paths = {}  # normalized name -> full path
     
-    return changed_mtf
-
-
-def get_all_mtf_files():
-    """Get list of all .mtf files in the repository."""
-    # Use Git tree API to get all files at once
-    data = github_api_get(f"/repos/{SOURCE_REPO}/git/trees/{SOURCE_BRANCH}?recursive=1")
-    if not data:
-        return []
-    
-    mtf_files = []
-    for item in data.get("tree", []):
-        path = item.get("path", "")
+    for f in data.get("tree", []):
+        path = f["path"]
         if path.startswith(MTF_PATH) and path.endswith(".mtf"):
-            mtf_files.append(path)
+            name = os.path.basename(path).replace(".mtf", "")
+            
+            # Store exact match
+            mtf_files[name.lower()] = name
+            mtf_paths[name.lower()] = path
+            
+            # Store normalized match
+            normalized = normalize_name(name)
+            if normalized not in mtf_files:
+                mtf_files[normalized] = name
+                mtf_paths[normalized] = path
     
-    return mtf_files
+    log(f"Indexed {len(mtf_paths)} MTF files")
+    return mtf_files, mtf_paths
+
+
+def find_mtf_path(full_name, mtf_files, mtf_paths):
+    """Find the MTF file path for a given mech name."""
+    # Try exact match
+    if full_name.lower() in mtf_paths:
+        return mtf_paths[full_name.lower()]
+    
+    # Try normalized match
+    normalized = normalize_name(full_name)
+    if normalized in mtf_paths:
+        return mtf_paths[normalized]
+    
+    return None
 
 
 def download_mtf_file(path):
     """Download a single MTF file content."""
-    url = f"https://raw.githubusercontent.com/{SOURCE_REPO}/{SOURCE_BRANCH}/{urllib.parse.quote(path)}"
+    url = f"https://raw.githubusercontent.com/{MM_DATA_REPO}/{MM_DATA_BRANCH}/{urllib.parse.quote(path)}"
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "BTForceManager-MechCatalog")
     
@@ -109,97 +118,73 @@ def download_mtf_file(path):
         with urllib.request.urlopen(req, timeout=30) as resp:
             return resp.read().decode("utf-8", errors="replace")
     except urllib.error.HTTPError as e:
-        log(f"Failed to download {path}: {e.code}")
         return None
 
 
-def parse_mtf_content(content):
-    """Parse MTF file content and extract relevant fields.
-    
-    Handles MTF format with key:value pairs (chassis, model, mul id, mass, etc.)
-    Skips comment lines starting with #.
-    """
-    data = {}
-    lines = content.split("\n")
-    
-    # Parse key:value pairs, skipping comments
-    for line in lines:
+def parse_tonnage_from_mtf(content):
+    """Extract tonnage (mass) from MTF file content."""
+    for line in content.split("\n"):
         line = line.strip()
-        # Skip empty lines and comments
-        if not line or line.startswith("#"):
+        if line.startswith("#"):
             continue
-        if ":" in line:
-            key, _, value = line.partition(":")
-            key = key.strip().lower()
-            value = value.strip()
-            
-            if key == "chassis":
-                data["chassis"] = value
-            elif key == "model":
-                data["model"] = value
-            elif key == "mul id":
-                try:
-                    data["mulId"] = int(value)
-                except ValueError:
-                    pass
-            elif key == "mass":
-                try:
-                    data["tonnage"] = int(value)
-                except ValueError:
-                    pass
-            elif key == "techbase":
-                data["techbase"] = value
-            elif key == "era":
-                try:
-                    data["era"] = int(value)
-                except ValueError:
-                    pass
-    
-    # Build full name
-    if "chassis" in data and "model" in data:
-        data["name"] = f"{data['chassis']} {data['model']}"
-    elif "chassis" in data:
-        data["name"] = data["chassis"]
-    
-    return data
-
-
-def query_mul_for_bv(mul_id):
-    """Query MUL API to get BV for a specific unit ID."""
-    url = f"http://masterunitlist.info/Unit/Details/{mul_id}"
-    req = urllib.request.Request(url)
-    req.add_header("User-Agent", "BTForceManager-MechCatalog")
-    
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            html = resp.read().decode("utf-8", errors="replace")
-            
-            # Parse BV from the HTML - look for pattern <dt>Battle Value</dt> followed by <dd>NUMBER</dd>
-            # Number may have commas (e.g., "1,893")
-            match = re.search(r'<dt>Battle Value</dt>\s*<dd>([\d,]+)</dd>', html)
-            if match:
-                bv_str = match.group(1).replace(",", "")
-                bv = int(bv_str)
-                if bv > 0:  # Skip zero BV entries
-                    return bv
-                
-    except urllib.error.HTTPError as e:
-        log(f"MUL API error for ID {mul_id}: {e.code}")
-    except Exception as e:
-        log(f"Error querying MUL for ID {mul_id}: {e}")
-    
+        if line.lower().startswith("mass:"):
+            try:
+                return int(line.split(":")[1].strip())
+            except (ValueError, IndexError):
+                pass
     return None
 
 
-def load_existing_catalog():
-    """Load existing mech catalog if it exists."""
-    if os.path.exists(OUTPUT_FILE):
-        try:
-            with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, IOError) as e:
-            log(f"Warning: Could not load existing catalog: {e}")
-    return None
+def load_csv_data(csv_file, limit=0):
+    """Load mech data from MekBay CSV export."""
+    mechs = []
+    
+    with open(csv_file, "r", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        for i, row in enumerate(reader):
+            if limit > 0 and i >= limit:
+                break
+            
+            chassis = row.get("chassis", "").strip()
+            model = row.get("model", "").strip()
+            
+            if not chassis:
+                continue
+            
+            full_name = f"{chassis} {model}".strip()
+            
+            # Parse BV
+            try:
+                bv = int(row.get("BV", 0))
+            except ValueError:
+                bv = 0
+            
+            # Parse MUL ID
+            try:
+                mul_id = int(row.get("mul_id", 0)) or None
+            except ValueError:
+                mul_id = None
+            
+            # Parse year
+            try:
+                year = int(row.get("year", 0)) or None
+            except ValueError:
+                year = None
+            
+            mech = {
+                "name": full_name,
+                "chassis": chassis,
+                "model": model,
+                "bv": bv,
+                "mulId": mul_id,
+                "year": year,
+                "techbase": row.get("techBase", "").strip() or None,
+                "role": row.get("role", "").strip() or None,
+            }
+            
+            mechs.append(mech)
+    
+    return mechs
 
 
 def save_catalog(catalog):
@@ -211,154 +196,68 @@ def save_catalog(catalog):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Build mech database from helm-core-fragment")
+    parser = argparse.ArgumentParser(description="Build mech database from MekBay CSV + mm-data")
     parser.add_argument("--limit", type=int, default=0, help="Limit number of mechs to process (0 = all)")
-    parser.add_argument("--full", action="store_true", help="Force full rebuild")
     args = parser.parse_args()
     
     log("Starting mech database build...")
     
-    # Load existing catalog
-    existing = None if args.full else load_existing_catalog()
-    existing_mechs = {}  # Keyed by mulId for BV lookup
-    existing_by_file = {}  # Keyed by sourceFile for merge
-    last_commit = None
+    # Load CSV data
+    log(f"Loading CSV from {CSV_FILE}...")
+    mechs = load_csv_data(CSV_FILE, args.limit)
+    log(f"Loaded {len(mechs)} mechs from CSV")
     
-    if existing:
-        last_commit = existing.get("metadata", {}).get("sourceCommit")
-        for mech in existing.get("mechs", []):
-            # Index by mulId for BV cache lookup
-            if mech.get("mulId"):
-                existing_mechs[mech["mulId"]] = mech
-            # Index by sourceFile for merge
-            if mech.get("sourceFile"):
-                existing_by_file[mech["sourceFile"]] = mech
-        log(f"Loaded existing catalog with {len(existing.get('mechs', []))} mechs, last commit: {last_commit[:8] if last_commit else 'N/A'}")
+    # Load mm-data index
+    mtf_files, mtf_paths = load_mm_data_index()
     
-    # Get current commit
-    current_commit = get_current_commit_sha()
-    if not current_commit:
-        log("ERROR: Could not get current commit SHA")
-        sys.exit(1)
-    log(f"Current {SOURCE_REPO} commit: {current_commit[:8]}")
+    # Enrich with tonnage from mm-data
+    log("Enriching with tonnage from mm-data...")
+    matched = 0
+    unmatched = 0
     
-    # Determine which files to process
-    if last_commit and not args.full:
-        if last_commit == current_commit:
-            log("No new commits since last run - nothing to do")
-            total_mechs = len(existing.get('mechs', [])) if existing else 0
-            mechs_with_bv = sum(1 for m in existing.get('mechs', []) if m.get('bv')) if existing else 0
-            log(f"Done! Total mechs: {total_mechs}, with BV: {mechs_with_bv}")
-            return
+    for i, mech in enumerate(mechs):
+        if (i + 1) % 500 == 0:
+            log(f"  Progress: {i + 1}/{len(mechs)}")
         
-        log(f"Checking for changes since {last_commit[:8]}...")
-        mtf_files = get_changed_files(last_commit, current_commit)
-        if mtf_files is None:
-            log("Could not get diff, falling back to full scan")
-            mtf_files = get_all_mtf_files()
-        elif len(mtf_files) == 0:
-            log("No MTF files changed since last run")
-            mtf_files = []
-        else:
-            log(f"Found {len(mtf_files)} changed MTF files")
-    else:
-        log("Performing full scan of all MTF files...")
-        mtf_files = get_all_mtf_files()
-        log(f"Found {len(mtf_files)} total MTF files")
-    
-    # Apply limit if specified
-    if args.limit > 0 and len(mtf_files) > args.limit:
-        log(f"Limiting to {args.limit} files (--limit)")
-        mtf_files = mtf_files[:args.limit]
-    
-    # Process MTF files
-    new_mechs = []
-    mechs_needing_bv = []
-    
-    for i, path in enumerate(mtf_files):
-        log(f"Processing [{i+1}/{len(mtf_files)}]: {os.path.basename(path)}")
+        path = find_mtf_path(mech["name"], mtf_files, mtf_paths)
         
-        content = download_mtf_file(path)
-        if not content:
-            continue
-        
-        mech_data = parse_mtf_content(content)
-        if not mech_data.get("name"):
-            log(f"  Skipping - no chassis/model found")
-            continue
-        
-        mech_data["sourceFile"] = os.path.basename(path)
-        
-        # Check if we already have BV for this mech (only if it has MUL ID)
-        mul_id = mech_data.get("mulId")
-        if mul_id:
-            if mul_id in existing_mechs:
-                existing_bv = existing_mechs[mul_id].get("bv")
-                if existing_bv:
-                    mech_data["bv"] = existing_bv
-                    log(f"  {mech_data['name']} - using cached BV: {existing_bv}")
+        if path:
+            content = download_mtf_file(path)
+            if content:
+                tonnage = parse_tonnage_from_mtf(content)
+                if tonnage:
+                    mech["tonnage"] = tonnage
+                    matched += 1
                 else:
-                    mechs_needing_bv.append(mech_data)
+                    unmatched += 1
             else:
-                mechs_needing_bv.append(mech_data)
-        else:
-            log(f"  {mech_data['name']} - no MUL ID (will include without BV)")
-        
-        new_mechs.append(mech_data)
-        
-        # Small delay to be nice to GitHub
-        time.sleep(0.1)
-    
-    # Query MUL API for BV on mechs that need it
-    if mechs_needing_bv:
-        log(f"Querying MUL API for {len(mechs_needing_bv)} mechs...")
-        for i, mech in enumerate(mechs_needing_bv):
-            mul_id = mech.get("mulId")
-            log(f"  [{i+1}/{len(mechs_needing_bv)}] {mech['name']} (MUL ID: {mul_id})...")
+                unmatched += 1
             
-            bv = query_mul_for_bv(mul_id)
-            if bv:
-                mech["bv"] = bv
-                log(f"    BV: {bv}")
-            else:
-                log(f"    BV: not found")
-            
-            # Rate limiting delay
             time.sleep(REQUEST_DELAY)
+        else:
+            unmatched += 1
     
-    # Merge with existing data
-    # Use sourceFile as the unique key for all mechs (works for both with and without MUL ID)
-    final_mechs = {}
+    log(f"Tonnage matched: {matched}/{len(mechs)} ({100*matched//len(mechs)}%)")
     
-    # First, add existing mechs (keyed by sourceFile)
-    for source_file, mech in existing_by_file.items():
-        final_mechs[source_file] = mech
+    # Sort by name
+    mechs.sort(key=lambda m: m.get("name", ""))
     
-    # Then, update/add new mechs
-    for mech in new_mechs:
-        source_file = mech.get("sourceFile")
-        if source_file:
-            final_mechs[source_file] = mech
-    
-    # Convert back to list and sort by name
-    mechs_list = sorted(final_mechs.values(), key=lambda m: m.get("name", ""))
-    
-    # Build final catalog
+    # Build catalog
     catalog = {
         "metadata": {
             "lastUpdated": datetime.now(timezone.utc).isoformat(),
-            "sourceCommit": current_commit,
-            "sourceRepo": SOURCE_REPO,
-            "totalUnits": len(mechs_list),
-            "unitsWithBV": sum(1 for m in mechs_list if m.get("bv"))
+            "source": "MekBay CSV + MegaMek mm-data",
+            "totalUnits": len(mechs),
+            "unitsWithTonnage": sum(1 for m in mechs if m.get("tonnage")),
+            "unitsWithBV": sum(1 for m in mechs if m.get("bv"))
         },
-        "mechs": mechs_list
+        "mechs": mechs
     }
     
     # Save
     save_catalog(catalog)
     
-    log(f"Done! Total mechs: {len(mechs_list)}, with BV: {catalog['metadata']['unitsWithBV']}")
+    log(f"Done! Total: {len(mechs)}, with tonnage: {catalog['metadata']['unitsWithTonnage']}, with BV: {catalog['metadata']['unitsWithBV']}")
 
 
 if __name__ == "__main__":
