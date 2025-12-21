@@ -176,6 +176,9 @@ After copying, `index.html` + `static/` are in sync with source.
   - `findPilotForMech(force, mech)` – resolves the assigned pilot **by `pilotId`**.
   - `findMechForPilot(force, pilot)` – inverse lookup by `pilotId`, used in the Pilot roster and PDF export.
   - `getAvailablePilotsForMech(force, editingMech)` – returns pilots not currently assigned to any other mech (except the one being edited).
+  - `getBVMultiplier(gunnery, piloting)` – returns the BV skill multiplier for a G/P combination from the standard BattleTech table (9×9 grid, G0-8 × P0-8).
+  - `getAdjustedBV(baseBV, gunnery, piloting)` – calculates adjusted BV by applying the skill multiplier, rounded to the nearest integer.
+  - `getMechAdjustedBV(force, mech)` – convenience function that looks up the assigned pilot and returns the mech's adjusted BV (or base BV if no pilot).
 
 ### 4.3 Feature components
 
