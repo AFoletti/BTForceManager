@@ -47,7 +47,8 @@ You only need this folder if you want to change the app behaviour or styling and
 ├── package.json              # Optional helper for local static serving
 ├── data/
 │   ├── downtime-actions.json # Downtime/repair definitions
-│   ├── mech-catalog.json     # Mech database for autocomplete
+│   ├── mek_catalog.csv       # Master mech list from MekBay (source)
+│   ├── mech-catalog.json     # Mech database for autocomplete (generated)
 │   └── forces/
 │       ├── manifest.json     # List of force JSON files
 │       └── *.json            # Individual forces
