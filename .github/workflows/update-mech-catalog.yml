@@ -3,11 +3,6 @@ name: Update Mech Catalog
 on:
   workflow_dispatch:
     inputs:
-      full_rebuild:
-        description: 'Force full rebuild (ignore cached data)'
-        required: false
-        default: 'false'
-        type: boolean
       limit:
         description: 'Limit number of mechs to process (0 = all)'
         required: false
@@ -36,9 +31,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ARGS=""
-          if [ "${{ inputs.full_rebuild }}" == "true" ]; then
-            ARGS="$ARGS --full"
-          fi
           if [ "${{ inputs.limit }}" != "0" ]; then
             ARGS="$ARGS --limit ${{ inputs.limit }}"
           fi
@@ -59,5 +51,5 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add data/mech-catalog.json
-          git commit -m "Update mech catalog from helm-core-fragment"
+          git commit -m "Update mech catalog from MekBay CSV"
           git push
