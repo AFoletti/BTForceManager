@@ -240,6 +240,7 @@ After copying, `index.html` + `static/` are in sync with source.
 
 - `components/PDFExport.jsx`
   - Generates a multi-page PDF/print view of the current force.
+  - Mech BV values are adjusted based on pilot skills.
 
 - `components/ui/*`
   - Buttons, inputs, selects, dialog, tabs, badges, etc., using Tailwind.
