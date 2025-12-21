@@ -352,6 +352,11 @@ Or use the **Update Mech Catalog** GitHub Action for automated updates.
 - **KIA handling:**
   - Pilot with `injuries === 6` is treated as KIA.
   - Mech roster and mission editor both label such pilots as `Name - KIA`.
+- **Adjusted BV:**
+  - Mechs store base BV (for a 4/5 pilot).
+  - Display and calculations use adjusted BV = base BV × skill multiplier.
+  - Multipliers range from 2.42× (0/0) to 0.68× (8/8), with 1.0× at 4/5.
+  - Mechs without pilots display base BV.
 
 ---
 
