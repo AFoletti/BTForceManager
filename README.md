@@ -20,7 +20,7 @@ Adjusted BV is shown in the Mech Roster, Mission Manager, and PDF Export. The st
 
 ## Adding Mechs
 
-When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV) sourced from the MegaMek project. Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
+When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV) sourced from [MekBay](https://next.mekbay.com). Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
 
 You can also type a custom mech name if it's not in the catalog.
 
