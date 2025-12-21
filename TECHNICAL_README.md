@@ -183,13 +183,22 @@ After copying, `index.html` + `static/` are in sync with source.
 ### 4.3 Feature components
 
 - `components/MechRoster.jsx`
-  - Table of mechs with status, pilot, BV, weight, and last activity.
+  - Table of mechs with status, pilot, adjusted BV, weight, and last activity.
+  - BV column displays adjusted BV based on pilot skills (base BV × skill multiplier).
   - Pilot column shows:
     - `Missing Pilot` when unassigned.
     - `Name - KIA` when injuries = 6.
     - `Name - G:x / P:y` otherwise.
   - Add/edit dialog:
+    - **Mech autocomplete**: when adding a new mech, a searchable dropdown filters the mech catalog (`data/mech-catalog.json`) and auto-fills name, weight, and base BV.
     - Pilot is chosen from a dropdown listing only available pilots (preventing duplicates).
+
+- `components/MechAutocomplete.jsx`
+  - Searchable dropdown for selecting mechs from the catalog.
+  - Loads `data/mech-catalog.json` on mount.
+  - Filters by name, chassis, or model (minimum 2 characters).
+  - Keyboard navigation (↑/↓/Enter/Escape).
+  - Shows tonnage and BV in dropdown items.
 
 - `components/PilotRoster.jsx`
   - Tracks pilot gunnery, piloting, injuries (0–6 with 6 = KIA).
