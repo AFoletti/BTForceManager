@@ -19,7 +19,8 @@ The live app is a pure static site:
   - `data/forces/manifest.json` – list of force JSON files.
   - `data/forces/*.json` – individual force definitions.
   - `data/downtime-actions.json` – definitions for downtime/repair actions.
-  - `data/mech-catalog.json` – mech database for autocomplete (name, tonnage, BV).
+  - `data/mek_catalog.csv` – master mech list from MekBay (source for catalog).
+  - `data/mech-catalog.json` – mech database for autocomplete (generated from CSV + mm-data).
 - `.nojekyll` – ensures GitHub Pages serves `/static` as-is.
 
 There is **no backend** and no database. All state is in memory and/or JSON.
@@ -47,7 +48,8 @@ You only need this folder if you want to change the app behaviour or styling and
 ├── package.json              # Optional helper for local static serving
 ├── data/
 │   ├── downtime-actions.json # Downtime/repair definitions
-│   ├── mech-catalog.json     # Mech database for autocomplete
+│   ├── mek_catalog.csv       # Master mech list from MekBay (source)
+│   ├── mech-catalog.json     # Mech database for autocomplete (generated)
 │   └── forces/
 │       ├── manifest.json     # List of force JSON files
 │       └── *.json            # Individual forces
@@ -295,16 +297,26 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 
 ### 5.3 Mech catalog
 
-`data/mech-catalog.json` contains mech data for the autocomplete feature:
+The mech catalog provides autocomplete data when adding mechs. It combines two sources:
+
+1. **MekBay CSV** (`data/mek_catalog.csv`) – Master list with accurate BV values, exported from:
+   ```
+   https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true
+   ```
+   Provides: chassis, model, BV, year, techbase, role, MUL ID.
+
+2. **MegaMek mm-data** – Tonnage fetched from [mm-data repository](https://github.com/MegaMek/mm-data) MTF files.
+
+The generated `data/mech-catalog.json` looks like:
 
 ```json
 {
   "metadata": {
     "lastUpdated": "2025-01-15T10:30:00Z",
-    "sourceCommit": "abc123...",
-    "sourceRepo": "IsaBison/helm-core-fragment",
-    "totalUnits": 850,
-    "unitsWithBV": 750
+    "source": "MekBay CSV + MegaMek mm-data",
+    "totalUnits": 3858,
+    "unitsWithTonnage": 3700,
+    "unitsWithBV": 3858
   },
   "mechs": [
     {
@@ -312,11 +324,11 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
       "chassis": "Atlas",
       "model": "AS7-D",
       "tonnage": 100,
-      "mulId": 140,
       "bv": 1897,
+      "mulId": 140,
+      "year": 2755,
       "techbase": "Inner Sphere",
-      "era": 2755,
-      "sourceFile": "Atlas AS7-D.mtf"
+      "role": "Juggernaut"
     }
   ]
 }
@@ -324,20 +336,21 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 
 The catalog is built by `scripts/build-mech-database.py` which:
 
-1. Fetches MTF files from the [MegaMek mm-data](https://github.com/MegaMek/mm-data) repository.
-2. Parses chassis, model, tonnage, techbase, era, and MUL ID from each file.
-3. Queries [masterunitlist.info](http://masterunitlist.info) for BV values (using the MUL ID).
-4. Supports incremental updates by tracking the last processed commit SHA.
+1. Reads the MekBay CSV for mech names, BV, year, techbase, role, and MUL ID.
+2. Matches each mech to an MTF file in mm-data (by normalized name).
+3. Fetches tonnage from the matched MTF file.
+4. Outputs the combined data to `data/mech-catalog.json`.
 
 Run manually:
 
 ```bash
-python scripts/build-mech-database.py           # incremental update
-python scripts/build-mech-database.py --full    # full rebuild
-python scripts/build-mech-database.py --limit 10  # test with 10 mechs
+python scripts/build-mech-database.py            # process all mechs
+python scripts/build-mech-database.py --limit 10 # test with 10 mechs
 ```
 
-Or use the **Update Mech Catalog** GitHub Action for automated updates.
+Or use the **Update Mech Catalog** GitHub Action to rebuild and commit the catalog.
+
+To update the master mech list, re-export the CSV from MekBay and save to `data/mek_catalog.csv`.
 
 ---
 
