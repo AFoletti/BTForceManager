@@ -19,6 +19,7 @@ The live app is a pure static site:
   - `data/forces/manifest.json` – list of force JSON files.
   - `data/forces/*.json` – individual force definitions.
   - `data/downtime-actions.json` – definitions for downtime/repair actions.
+  - `data/mech-catalog.json` – mech database for autocomplete (name, tonnage, BV).
 - `.nojekyll` – ensures GitHub Pages serves `/static` as-is.
 
 There is **no backend** and no database. All state is in memory and/or JSON.
@@ -46,6 +47,7 @@ You only need this folder if you want to change the app behaviour or styling and
 ├── package.json              # Optional helper for local static serving
 ├── data/
 │   ├── downtime-actions.json # Downtime/repair definitions
+│   ├── mech-catalog.json     # Mech database for autocomplete
 │   └── forces/
 │       ├── manifest.json     # List of force JSON files
 │       └── *.json            # Individual forces
@@ -54,6 +56,11 @@ You only need this folder if you want to change the app behaviour or styling and
 │   │   └── main.css          # Compiled Tailwind CSS
 │   └── js/
 │       └── main.js           # Compiled React bundle
+├── scripts/
+│   └── build-mech-database.py  # Mech catalog builder script
+├── .github/
+│   └── workflows/
+│       └── update-mech-catalog.yml  # GitHub Action to refresh mech catalog
 └── frontend/                 # Source app (React + Tailwind)
     ├── package.json
     ├── tailwind.config.js
@@ -169,17 +176,29 @@ After copying, `index.html` + `static/` are in sync with source.
   - `findPilotForMech(force, mech)` – resolves the assigned pilot **by `pilotId`**.
   - `findMechForPilot(force, pilot)` – inverse lookup by `pilotId`, used in the Pilot roster and PDF export.
   - `getAvailablePilotsForMech(force, editingMech)` – returns pilots not currently assigned to any other mech (except the one being edited).
+  - `getBVMultiplier(gunnery, piloting)` – returns the BV skill multiplier for a G/P combination from the standard BattleTech table (9×9 grid, G0-8 × P0-8).
+  - `getAdjustedBV(baseBV, gunnery, piloting)` – calculates adjusted BV by applying the skill multiplier, rounded to the nearest integer.
+  - `getMechAdjustedBV(force, mech)` – convenience function that looks up the assigned pilot and returns the mech's adjusted BV (or base BV if no pilot).
 
 ### 4.3 Feature components
 
 - `components/MechRoster.jsx`
-  - Table of mechs with status, pilot, BV, weight, and last activity.
+  - Table of mechs with status, pilot, adjusted BV, weight, and last activity.
+  - BV column displays adjusted BV based on pilot skills (base BV × skill multiplier).
   - Pilot column shows:
     - `Missing Pilot` when unassigned.
     - `Name - KIA` when injuries = 6.
     - `Name - G:x / P:y` otherwise.
   - Add/edit dialog:
+    - **Mech autocomplete**: when adding a new mech, a searchable dropdown filters the mech catalog (`data/mech-catalog.json`) and auto-fills name, weight, and base BV.
     - Pilot is chosen from a dropdown listing only available pilots (preventing duplicates).
+
+- `components/MechAutocomplete.jsx`
+  - Searchable dropdown for selecting mechs from the catalog.
+  - Loads `data/mech-catalog.json` on mount.
+  - Filters by name, chassis, or model (minimum 2 characters).
+  - Keyboard navigation (↑/↓/Enter/Escape).
+  - Shows tonnage and BV in dropdown items.
 
 - `components/PilotRoster.jsx`
   - Tracks pilot gunnery, piloting, injuries (0–6 with 6 = KIA).
@@ -206,6 +225,8 @@ After copying, `index.html` + `static/` are in sync with source.
           - Status is `Operational` or `Damaged`, **and**
           - `suitsDestroyed <= 4`.
       - Selector lists mechs and elementals side-by-side using a 2-column grid.
+      - Mech BV shown is adjusted BV based on assigned pilot.
+  - Total mission BV is calculated using adjusted BV for mechs.
   - Uses `lib/missions` helpers for creation, update, and completion side effects.
 
 - `components/DowntimeOperations.jsx`
@@ -219,6 +240,7 @@ After copying, `index.html` + `static/` are in sync with source.
 
 - `components/PDFExport.jsx`
   - Generates a multi-page PDF/print view of the current force.
+  - Mech BV values are adjusted based on pilot skills.
 
 - `components/ui/*`
   - Buttons, inputs, selects, dialog, tabs, badges, etc., using Tailwind.
@@ -271,6 +293,52 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 
 `evaluateDowntimeCost` evaluates formulas using a small arithmetic parser (no `eval`) over a limited context of variables: `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`. The file is assumed to be trusted (checked into the repo).
 
+### 5.3 Mech catalog
+
+`data/mech-catalog.json` contains mech data for the autocomplete feature:
+
+```json
+{
+  "metadata": {
+    "lastUpdated": "2025-01-15T10:30:00Z",
+    "sourceCommit": "abc123...",
+    "sourceRepo": "IsaBison/helm-core-fragment",
+    "totalUnits": 850,
+    "unitsWithBV": 750
+  },
+  "mechs": [
+    {
+      "name": "Atlas AS7-D",
+      "chassis": "Atlas",
+      "model": "AS7-D",
+      "tonnage": 100,
+      "mulId": 140,
+      "bv": 1897,
+      "techbase": "Inner Sphere",
+      "era": 2755,
+      "sourceFile": "Atlas AS7-D.mtf"
+    }
+  ]
+}
+```
+
+The catalog is built by `scripts/build-mech-database.py` which:
+
+1. Fetches MTF files from the [helm-core-fragment](https://github.com/IsaBison/helm-core-fragment) repository.
+2. Parses chassis, model, tonnage, techbase, era, and MUL ID from each file.
+3. Queries [masterunitlist.info](http://masterunitlist.info) for BV values (using the MUL ID).
+4. Supports incremental updates by tracking the last processed commit SHA.
+
+Run manually:
+
+```bash
+python scripts/build-mech-database.py           # incremental update
+python scripts/build-mech-database.py --full    # full rebuild
+python scripts/build-mech-database.py --limit 10  # test with 10 mechs
+```
+
+Or use the **Update Mech Catalog** GitHub Action for automated updates.
+
 ---
 
 ## 6. Conventions & Notes
@@ -284,6 +352,11 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 - **KIA handling:**
   - Pilot with `injuries === 6` is treated as KIA.
   - Mech roster and mission editor both label such pilots as `Name - KIA`.
+- **Adjusted BV:**
+  - Mechs store base BV (for a 4/5 pilot).
+  - Display and calculations use adjusted BV = base BV × skill multiplier.
+  - Multipliers range from 2.42× (0/0) to 0.68× (8/8), with 1.0× at 4/5.
+  - Mechs without pilots display base BV.
 
 ---
 
@@ -309,7 +382,7 @@ Tests are colocated with the domain libraries in the React source:
 
 - `frontend/src/lib/downtime.test.js` – downtime expression parser and context builder.
 - `frontend/src/lib/missions.test.js` – mission availability, BV calculation, mission lifecycle and Warchest updates.
-- `frontend/src/lib/mechs.test.js` – mech–pilot relationship helpers (`findPilotForMech`, `findMechForPilot`, `getAvailablePilotsForMech`).
+- `frontend/src/lib/mechs.test.js` – mech–pilot relationship helpers and BV multiplier/adjustment functions.
 - `frontend/src/lib/ledger.test.js` – financial ledger construction (`buildLedgerEntries`) and aggregates (`summariseLedger`).
 
 You can add new tests next to additional helpers (e.g. `foo.js` → `foo.test.js`) and CRA/Jest will pick them up automatically.

@@ -6,6 +6,26 @@ The app runs entirely in the browser, backed only by JSON files in the `data/` f
 
 ---
 
+## Battle Value (BV)
+
+The app uses **adjusted BV** throughout, calculated from the mech's base BV and the assigned pilot's skills:
+
+- **Base BV** is the value for a standard 4/5 (Gunnery/Piloting) pilot.
+- **Adjusted BV** applies a multiplier based on the pilot's actual skills (better pilots increase BV, worse pilots decrease it).
+- Mechs without an assigned pilot display their base BV.
+
+Adjusted BV is shown in the Mech Roster, Mission Manager, and PDF Export. The standard BattleTech skill multiplier table is used (ranging from 2.42× for 0/0 elite pilots down to 0.68× for 8/8 green pilots).
+
+---
+
+## Adding Mechs
+
+When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV) sourced from the MegaMek project. Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
+
+You can also type a custom mech name if it's not in the catalog.
+
+---
+
 ## Managing Forces & Downtime
 
 ### Adding or editing forces
@@ -55,3 +75,15 @@ To change downtime behaviour or add a new action:
 3. Commit and push. The next page load will use the updated rules.
 
 For deeper technical details (code structure, build & deploy, data contracts, etc.), see **TECHNICAL_README.md** in this repository.
+
+---
+
+## Updating the Mech Catalog
+
+The mech catalog (`data/mech-catalog.json`) is built from the [helm-core-fragment](https://github.com/IsaBison/helm-core-fragment) MegaMek unit repository. A GitHub Action can refresh this data:
+
+1. Go to **Actions** → **Update Mech Catalog**.
+2. Click **Run workflow**.
+3. Optionally set `limit` to process only N mechs (for testing), or enable `full_rebuild` to ignore cached data.
+
+The action fetches MTF files, extracts mech info (name, tonnage, MUL ID), queries [masterunitlist.info](http://masterunitlist.info) for BV values, and commits the updated catalog. Incremental runs only process files changed since the last run.
