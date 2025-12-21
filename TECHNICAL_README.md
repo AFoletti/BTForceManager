@@ -293,6 +293,52 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 
 `evaluateDowntimeCost` evaluates formulas using a small arithmetic parser (no `eval`) over a limited context of variables: `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier`. The file is assumed to be trusted (checked into the repo).
 
+### 5.3 Mech catalog
+
+`data/mech-catalog.json` contains mech data for the autocomplete feature:
+
+```json
+{
+  "metadata": {
+    "lastUpdated": "2025-01-15T10:30:00Z",
+    "sourceCommit": "abc123...",
+    "sourceRepo": "IsaBison/helm-core-fragment",
+    "totalUnits": 850,
+    "unitsWithBV": 750
+  },
+  "mechs": [
+    {
+      "name": "Atlas AS7-D",
+      "chassis": "Atlas",
+      "model": "AS7-D",
+      "tonnage": 100,
+      "mulId": 140,
+      "bv": 1897,
+      "techbase": "Inner Sphere",
+      "era": 2755,
+      "sourceFile": "Atlas AS7-D.mtf"
+    }
+  ]
+}
+```
+
+The catalog is built by `scripts/build-mech-database.py` which:
+
+1. Fetches MTF files from the [helm-core-fragment](https://github.com/IsaBison/helm-core-fragment) repository.
+2. Parses chassis, model, tonnage, techbase, era, and MUL ID from each file.
+3. Queries [masterunitlist.info](http://masterunitlist.info) for BV values (using the MUL ID).
+4. Supports incremental updates by tracking the last processed commit SHA.
+
+Run manually:
+
+```bash
+python scripts/build-mech-database.py           # incremental update
+python scripts/build-mech-database.py --full    # full rebuild
+python scripts/build-mech-database.py --limit 10  # test with 10 mechs
+```
+
+Or use the **Update Mech Catalog** GitHub Action for automated updates.
+
 ---
 
 ## 6. Conventions & Notes
