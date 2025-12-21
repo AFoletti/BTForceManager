@@ -6,6 +6,26 @@ The app runs entirely in the browser, backed only by JSON files in the `data/` f
 
 ---
 
+## Battle Value (BV)
+
+The app uses **adjusted BV** throughout, calculated from the mech's base BV and the assigned pilot's skills:
+
+- **Base BV** is the value for a standard 4/5 (Gunnery/Piloting) pilot.
+- **Adjusted BV** applies a multiplier based on the pilot's actual skills (better pilots increase BV, worse pilots decrease it).
+- Mechs without an assigned pilot display their base BV.
+
+Adjusted BV is shown in the Mech Roster, Mission Manager, and PDF Export. The standard BattleTech skill multiplier table is used (ranging from 2.42× for 0/0 elite pilots down to 0.68× for 8/8 green pilots).
+
+---
+
+## Adding Mechs
+
+When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV) sourced from the MegaMek project. Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
+
+You can also type a custom mech name if it's not in the catalog.
+
+---
+
 ## Managing Forces & Downtime
 
 ### Adding or editing forces
