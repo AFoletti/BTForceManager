@@ -19,6 +19,7 @@ The live app is a pure static site:
   - `data/forces/manifest.json` – list of force JSON files.
   - `data/forces/*.json` – individual force definitions.
   - `data/downtime-actions.json` – definitions for downtime/repair actions.
+  - `data/mech-catalog.json` – mech database for autocomplete (name, tonnage, BV).
 - `.nojekyll` – ensures GitHub Pages serves `/static` as-is.
 
 There is **no backend** and no database. All state is in memory and/or JSON.
