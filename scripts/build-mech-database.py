@@ -59,8 +59,8 @@ def github_api_get(endpoint):
 
 
 def get_current_commit_sha():
-    """Get the current HEAD commit SHA of helm-core-fragment."""
-    data = github_api_get(f"/repos/{HELM_REPO}/commits/{HELM_BRANCH}")
+    """Get the current HEAD commit SHA of the source repository."""
+    data = github_api_get(f"/repos/{SOURCE_REPO}/commits/{SOURCE_BRANCH}")
     if data:
         return data["sha"]
     return None
@@ -68,7 +68,7 @@ def get_current_commit_sha():
 
 def get_changed_files(base_sha, head_sha):
     """Get list of changed .mtf files between two commits."""
-    data = github_api_get(f"/repos/{HELM_REPO}/compare/{base_sha}...{head_sha}")
+    data = github_api_get(f"/repos/{SOURCE_REPO}/compare/{base_sha}...{head_sha}")
     if not data:
         return None
     
@@ -86,7 +86,7 @@ def get_changed_files(base_sha, head_sha):
 def get_all_mtf_files():
     """Get list of all .mtf files in the repository."""
     # Use Git tree API to get all files at once
-    data = github_api_get(f"/repos/{HELM_REPO}/git/trees/{HELM_BRANCH}?recursive=1")
+    data = github_api_get(f"/repos/{SOURCE_REPO}/git/trees/{SOURCE_BRANCH}?recursive=1")
     if not data:
         return []
     
@@ -101,7 +101,7 @@ def get_all_mtf_files():
 
 def download_mtf_file(path):
     """Download a single MTF file content."""
-    url = f"https://raw.githubusercontent.com/{HELM_REPO}/{HELM_BRANCH}/{urllib.parse.quote(path)}"
+    url = f"https://raw.githubusercontent.com/{SOURCE_REPO}/{SOURCE_BRANCH}/{urllib.parse.quote(path)}"
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "BTForceManager-MechCatalog")
     
