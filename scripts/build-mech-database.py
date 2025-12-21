@@ -240,7 +240,7 @@ def main():
     if not current_commit:
         log("ERROR: Could not get current commit SHA")
         sys.exit(1)
-    log(f"Current helm-core-fragment commit: {current_commit[:8]}")
+    log(f"Current {SOURCE_REPO} commit: {current_commit[:8]}")
     
     # Determine which files to process
     if last_commit and not args.full:
