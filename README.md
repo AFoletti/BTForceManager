@@ -80,7 +80,7 @@ For deeper technical details (code structure, build & deploy, data contracts, et
 
 ## Updating the Mech Catalog
 
-The mech catalog (`data/mech-catalog.json`) is built from the [helm-core-fragment](https://github.com/IsaBison/helm-core-fragment) MegaMek unit repository. A GitHub Action can refresh this data:
+The mech catalog (`data/mech-catalog.json`) is built from the [MegaMek mm-data](https://github.com/MegaMek/mm-data) repository. A GitHub Action can refresh this data:
 
 1. Go to **Actions** → **Update Mech Catalog**.
 2. Click **Run workflow**.

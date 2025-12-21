@@ -2,7 +2,7 @@
 """
 Build Mech Database Script
 
-Fetches mech data from helm-core-fragment MTF files and enriches with BV from MUL API.
+Fetches mech data from MegaMek mm-data MTF files and enriches with BV from MUL API.
 Supports incremental updates by tracking the last processed commit SHA.
 
 Usage:
@@ -25,9 +25,9 @@ import urllib.error
 from datetime import datetime, timezone
 
 # Configuration
-HELM_REPO = "IsaBison/helm-core-fragment"
-HELM_BRANCH = "master"
-MTF_PATH = "mtf/meks"
+SOURCE_REPO = "MegaMek/mm-data"
+SOURCE_BRANCH = "main"
+MTF_PATH = "data/mekfiles/meks"
 OUTPUT_FILE = "data/mech-catalog.json"
 MUL_API_BASE = "http://masterunitlist.info/Unit/QuickList"
 REQUEST_DELAY = 1.0  # seconds between MUL API requests
@@ -59,8 +59,8 @@ def github_api_get(endpoint):
 
 
 def get_current_commit_sha():
-    """Get the current HEAD commit SHA of helm-core-fragment."""
-    data = github_api_get(f"/repos/{HELM_REPO}/commits/{HELM_BRANCH}")
+    """Get the current HEAD commit SHA of the source repository."""
+    data = github_api_get(f"/repos/{SOURCE_REPO}/commits/{SOURCE_BRANCH}")
     if data:
         return data["sha"]
     return None
@@ -68,7 +68,7 @@ def get_current_commit_sha():
 
 def get_changed_files(base_sha, head_sha):
     """Get list of changed .mtf files between two commits."""
-    data = github_api_get(f"/repos/{HELM_REPO}/compare/{base_sha}...{head_sha}")
+    data = github_api_get(f"/repos/{SOURCE_REPO}/compare/{base_sha}...{head_sha}")
     if not data:
         return None
     
@@ -86,7 +86,7 @@ def get_changed_files(base_sha, head_sha):
 def get_all_mtf_files():
     """Get list of all .mtf files in the repository."""
     # Use Git tree API to get all files at once
-    data = github_api_get(f"/repos/{HELM_REPO}/git/trees/{HELM_BRANCH}?recursive=1")
+    data = github_api_get(f"/repos/{SOURCE_REPO}/git/trees/{SOURCE_BRANCH}?recursive=1")
     if not data:
         return []
     
@@ -101,7 +101,7 @@ def get_all_mtf_files():
 
 def download_mtf_file(path):
     """Download a single MTF file content."""
-    url = f"https://raw.githubusercontent.com/{HELM_REPO}/{HELM_BRANCH}/{urllib.parse.quote(path)}"
+    url = f"https://raw.githubusercontent.com/{SOURCE_REPO}/{SOURCE_BRANCH}/{urllib.parse.quote(path)}"
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "BTForceManager-MechCatalog")
     
@@ -116,16 +116,18 @@ def download_mtf_file(path):
 def parse_mtf_content(content):
     """Parse MTF file content and extract relevant fields.
     
-    Handles two MTF formats:
-    - New format: chassis:Name, model:Variant, mul id:1234
-    - Old format: Version:1.1, then chassis on line 2, model on line 3
+    Handles MTF format with key:value pairs (chassis, model, mul id, mass, etc.)
+    Skips comment lines starting with #.
     """
     data = {}
     lines = content.split("\n")
     
-    # First pass: look for key:value pairs (new format)
+    # Parse key:value pairs, skipping comments
     for line in lines:
         line = line.strip()
+        # Skip empty lines and comments
+        if not line or line.startswith("#"):
+            continue
         if ":" in line:
             key, _, value = line.partition(":")
             key = key.strip().lower()
@@ -152,39 +154,6 @@ def parse_mtf_content(content):
                     data["era"] = int(value)
                 except ValueError:
                     pass
-    
-    # Second pass: handle old format (Version on line 1, chassis on line 2, model on line 3)
-    if "chassis" not in data and len(lines) >= 3:
-        line1 = lines[0].strip() if len(lines) > 0 else ""
-        line2 = lines[1].strip() if len(lines) > 1 else ""
-        line3 = lines[2].strip() if len(lines) > 2 else ""
-        
-        # Check if line 1 is "Version:X.X" (old format indicator)
-        if line1.lower().startswith("version:") or (line2 and ":" not in line2):
-            # Old format: line 2 is chassis, line 3 is model
-            if line1.lower().startswith("version:"):
-                chassis_line = line2
-                model_line = line3
-            else:
-                # No version line, chassis is line 1
-                chassis_line = lines[0].strip() if lines else ""
-                model_line = lines[1].strip() if len(lines) > 1 else ""
-            
-            if chassis_line and ":" not in chassis_line:
-                data["chassis"] = chassis_line
-            if model_line and ":" not in model_line:
-                data["model"] = model_line
-        
-        # Also scan for Mass in old format (Mass:90 or mass:90)
-        if "tonnage" not in data:
-            for line in lines:
-                line = line.strip()
-                if line.lower().startswith("mass:"):
-                    try:
-                        data["tonnage"] = int(line.split(":")[1].strip())
-                    except (ValueError, IndexError):
-                        pass
-                    break
     
     # Build full name
     if "chassis" in data and "model" in data:
@@ -271,7 +240,7 @@ def main():
     if not current_commit:
         log("ERROR: Could not get current commit SHA")
         sys.exit(1)
-    log(f"Current helm-core-fragment commit: {current_commit[:8]}")
+    log(f"Current {SOURCE_REPO} commit: {current_commit[:8]}")
     
     # Determine which files to process
     if last_commit and not args.full:
@@ -379,7 +348,7 @@ def main():
         "metadata": {
             "lastUpdated": datetime.now(timezone.utc).isoformat(),
             "sourceCommit": current_commit,
-            "sourceRepo": HELM_REPO,
+            "sourceRepo": SOURCE_REPO,
             "totalUnits": len(mechs_list),
             "unitsWithBV": sum(1 for m in mechs_list if m.get("bv"))
         },
