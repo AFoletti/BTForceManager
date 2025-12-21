@@ -382,7 +382,7 @@ Tests are colocated with the domain libraries in the React source:
 
 - `frontend/src/lib/downtime.test.js` – downtime expression parser and context builder.
 - `frontend/src/lib/missions.test.js` – mission availability, BV calculation, mission lifecycle and Warchest updates.
-- `frontend/src/lib/mechs.test.js` – mech–pilot relationship helpers (`findPilotForMech`, `findMechForPilot`, `getAvailablePilotsForMech`).
+- `frontend/src/lib/mechs.test.js` – mech–pilot relationship helpers and BV multiplier/adjustment functions.
 - `frontend/src/lib/ledger.test.js` – financial ledger construction (`buildLedgerEntries`) and aggregates (`summariseLedger`).
 
 You can add new tests next to additional helpers (e.g. `foo.js` → `foo.test.js`) and CRA/Jest will pick them up automatically.
