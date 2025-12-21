@@ -75,3 +75,15 @@ To change downtime behaviour or add a new action:
 3. Commit and push. The next page load will use the updated rules.
 
 For deeper technical details (code structure, build & deploy, data contracts, etc.), see **TECHNICAL_README.md** in this repository.
+
+---
+
+## Updating the Mech Catalog
+
+The mech catalog (`data/mech-catalog.json`) is built from the [helm-core-fragment](https://github.com/IsaBison/helm-core-fragment) MegaMek unit repository. A GitHub Action can refresh this data:
+
+1. Go to **Actions** → **Update Mech Catalog**.
+2. Click **Run workflow**.
+3. Optionally set `limit` to process only N mechs (for testing), or enable `full_rebuild` to ignore cached data.
+
+The action fetches MTF files, extracts mech info (name, tonnage, MUL ID), queries [masterunitlist.info](http://masterunitlist.info) for BV values, and commits the updated catalog. Incremental runs only process files changed since the last run.
