@@ -67,6 +67,36 @@ export default function App() {
   const mechStatusCounts = selectedForce ? getStatusCounts(selectedForce.mechs || []) : null;
   const elementalStatusCounts = selectedForce ? getStatusCounts(selectedForce.elementals || []) : null;
 
+  // Calculate total BV (base) and adjusted BV for the force
+  const calculateForceBV = () => {
+    if (!selectedForce) return { baseBV: 0, adjustedBV: 0 };
+    
+    const mechs = selectedForce.mechs || [];
+    const elementals = selectedForce.elementals || [];
+    
+    // Sum base BV for mechs (excluding destroyed)
+    const mechBaseBV = mechs
+      .filter(m => m.status !== UNIT_STATUS.DESTROYED)
+      .reduce((sum, mech) => sum + (mech.bv || 0), 0);
+    
+    // Sum adjusted BV for mechs (excluding destroyed)
+    const mechAdjustedBV = mechs
+      .filter(m => m.status !== UNIT_STATUS.DESTROYED)
+      .reduce((sum, mech) => sum + getMechAdjustedBV(selectedForce, mech), 0);
+    
+    // Sum BV for elementals (excluding destroyed)
+    const elementalBV = elementals
+      .filter(e => e.status !== UNIT_STATUS.DESTROYED)
+      .reduce((sum, e) => sum + (e.bv || 0), 0);
+    
+    return {
+      baseBV: mechBaseBV + elementalBV,
+      adjustedBV: mechAdjustedBV + elementalBV
+    };
+  };
+
+  const forceBV = calculateForceBV();
+
   const handleExport = () => {
     if (!selectedForce) return;
     const forceData = exportForce(selectedForceId);
