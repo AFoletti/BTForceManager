@@ -199,10 +199,10 @@
     },
     {
       "id": "mech-1764102197374",
-      "name": "Griffin GRF-1N",
+      "name": "Griffin GRF-3M",
       "status": "Operational",
       "pilotId": "pilot-1764101234302",
-      "bv": 1272,
+      "bv": 1521,
       "weight": 55,
       "image": "",
       "history": "",
@@ -331,10 +331,10 @@
     },
     {
       "id": "mech-1764102558021",
-      "name": "Blackjack BJ-1",
+      "name": "Blackjack BJ-2",
       "status": "Operational",
       "pilotId": "pilot-1764102316506",
-      "bv": 949,
+      "bv": 1148,
       "weight": 45,
       "image": "",
       "history": "",
@@ -432,10 +432,10 @@
     },
     {
       "id": "mech-1764102750690",
-      "name": "Crusader CRD-2R",
+      "name": "Crusader CRD-5M",
       "status": "Operational",
       "pilotId": "pilot-1764102607838",
-      "bv": 1533,
+      "bv": 1408,
       "weight": 65,
       "image": "",
       "history": "",
@@ -1235,6 +1235,6 @@
       }
     }
   ],
-  "originalBaseBV": 36797,
-  "originalAdjustedBV": 39794
+  "originalBaseBV": 37120,
+  "originalAdjustedBV": 40197
 }
