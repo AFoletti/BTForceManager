@@ -62,6 +62,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -157,6 +163,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -176,6 +188,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -194,6 +212,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -233,6 +257,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -251,6 +281,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -308,6 +344,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -461,6 +503,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -480,6 +528,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -498,6 +552,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -580,8 +640,8 @@
     {
       "id": "pilot-1764101192112",
       "name": "Adept Takiyah Citseko",
-      "gunnery": 3,
-      "piloting": 4,
+      "gunnery": 4,
+      "piloting": 5,
       "injuries": 0,
       "history": "Dezgra",
       "warchestCost": 0,
@@ -590,6 +650,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Atlas AS7-K)",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -665,8 +732,8 @@
     {
       "id": "pilot-1764101220583",
       "name": "Adept Joshua Sørensen",
-      "gunnery": 3,
-      "piloting": 4,
+      "gunnery": 4,
+      "piloting": 5,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -675,6 +742,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Flashman FLS-8K)",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -682,6 +756,30 @@
     {
       "id": "pilot-1764101228377",
       "name": "Adept Bessie Trujillo",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Shadow Hawk SHD-2Ht)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1764101234302",
+      "name": "Adept II Pat Pak",
       "gunnery": 3,
       "piloting": 4,
       "injuries": 0,
@@ -693,22 +791,12 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
-        }
-      ]
-    },
-    {
-      "id": "pilot-1764101234302",
-      "name": "Adept II Pat Pak",
-      "gunnery": 2,
-      "piloting": 3,
-      "injuries": 0,
-      "history": "",
-      "warchestCost": 0,
-      "activityLog": [
+        },
         {
           "timestamp": "3052-05-01",
-          "action": "Hired pilot for 0 WP",
-          "mission": null,
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Griffin GRF-1N)",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -744,14 +832,21 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Hunchback HBK-5M)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
     {
       "id": "pilot-1764101247917",
       "name": "Adept Rebekka Bartolf",
-      "gunnery": 3,
-      "piloting": 4,
+      "gunnery": 4,
+      "piloting": 5,
       "injuries": 0,
       "history": "Dezgra",
       "warchestCost": 0,
@@ -760,6 +855,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Marauder MAD-5CS)",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -811,6 +913,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Blackjack BJ-1)",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -931,6 +1040,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting Hunchback HBK-4G)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -948,6 +1064,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting UrbanMech UM-R63)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 0
         }
       ]
     },
@@ -964,6 +1087,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-01",
+          "inGameDate": "3052-05-01",
+          "action": "Assigned to mission: M01 - Defend the supply depot (piloting UrbanMech UM-R60)",
+          "mission": "M01 - Defend the supply depot",
           "cost": 0
         }
       ]
@@ -1027,21 +1157,21 @@
       "description": "",
       "objectives": [
         {
-          "id": "obj-1766355220931-0",
+          "id": "obj-1766381501891-0",
           "title": "Brush them off",
           "description": "",
           "wpReward": 100,
           "achieved": false
         },
         {
-          "id": "obj-1766355221653-1",
+          "id": "obj-1766381502487-1",
           "title": "Push them back",
           "description": "",
           "wpReward": 100,
           "achieved": false
         },
         {
-          "id": "obj-1766355222187-2",
+          "id": "obj-1766381502827-2",
           "title": "Supply",
           "description": "",
           "wpReward": 40,
@@ -1051,19 +1181,19 @@
       "recap": "",
       "completed": false,
       "assignedMechs": [
-        "mech-1764102197374",
         "mech-1764101765966",
-        "mech-1764101969954",
-        "mech-1764102462713",
         "mech-1764101997595",
-        "mech-1764102286990",
-        "mech-1764102904545",
+        "mech-1764102197374",
+        "mech-1764102462713",
         "mech-1764102558021",
         "mech-1764102929382",
-        "mech-1764102950926"
+        "mech-1764102950926",
+        "mech-1764101969954",
+        "mech-1764102286990",
+        "mech-1764102904545"
       ],
       "assignedElementals": [],
-      "id": "mission-1766355319611",
+      "id": "mission-1766381634712",
       "createdAt": "3052-05-01",
       "inGameDate": "3052-05-01"
     }
@@ -1073,7 +1203,7 @@
   "notes": "",
   "snapshots": [
     {
-      "id": "snapshot-1766355319611",
+      "id": "snapshot-1766381634713",
       "type": "pre-mission",
       "label": "Prior to mission: M01 - Defend the supply depot",
       "createdAt": "3052-05-01",
@@ -1104,5 +1234,7 @@
         }
       }
     }
-  ]
+  ],
+  "originalBaseBV": 36797,
+  "originalAdjustedBV": 39794
 }
