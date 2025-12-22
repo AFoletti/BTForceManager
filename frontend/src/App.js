@@ -265,6 +265,10 @@ export default function App() {
                         </span>
                         <span className="text-muted-foreground">Starting:</span>
                         <span className="font-mono">{selectedForce.startingWarchest} WP</span>
+                        <span className="text-muted-foreground ml-4">Base BV:</span>
+                        <span className="font-mono">{formatNumber(forceBV.baseBV)}</span>
+                        <span className="text-muted-foreground">Adjusted BV:</span>
+                        <span className="font-mono font-semibold text-primary">{formatNumber(forceBV.adjustedBV)}</span>
                       </div>
 
                       <div className="mt-1 overflow-x-auto">
