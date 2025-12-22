@@ -1060,5 +1060,7 @@
         }
       }
     }
-  ]
+  ],
+  "originalBaseBV": 32282,
+  "originalAdjustedBV": 45861
 }
