@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
-import { downloadJSON } from './lib/utils';
+import { downloadJSON, formatNumber } from './lib/utils';
 import MechRoster from './components/MechRoster';
 import ElementalRoster from './components/ElementalRoster';
 import PilotRoster from './components/PilotRoster';
@@ -17,6 +17,7 @@ import LedgerTab from './components/LedgerTab';
 import NotesTab from './components/NotesTab';
 import SnapshotsTab from './components/SnapshotsTab';
 import { UNIT_STATUS } from './lib/constants';
+import { getMechAdjustedBV } from './lib/mechs';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
