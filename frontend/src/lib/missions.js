@@ -275,13 +275,29 @@ export function applyMissionCreation(force, formData, timestamp) {
   const missionCost = typeof formData.cost === 'number' ? formData.cost : 0;
   const currentWarchest = force.currentWarchest - missionCost;
 
-  return {
+  const result = {
     missions,
     mechs: updatedMechs,
     elementals: updatedElementals,
     pilots: updatedPilots,
     currentWarchest,
   };
+
+  // Calculate and store original BV if this is the first mission
+  if (isFirstMission) {
+    const mechs = force.mechs || [];
+    
+    // Calculate base BV (sum of all mechs' base BV)
+    const originalBaseBV = mechs.reduce((sum, mech) => sum + (mech.bv || 0), 0);
+    
+    // Calculate adjusted BV (sum of all mechs' adjusted BV based on pilot skills)
+    const originalAdjustedBV = mechs.reduce((sum, mech) => sum + getMechAdjustedBV(force, mech), 0);
+    
+    result.originalBaseBV = originalBaseBV;
+    result.originalAdjustedBV = originalAdjustedBV;
+  }
+
+  return result;
 }
 
 /**
