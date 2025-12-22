@@ -203,13 +203,16 @@ export function getMissionObjectiveReward(mission) {
  * On creation, the mission cost is immediately subtracted from the Warchest
  * and a corresponding ledger entry will be emitted.
  *
+ * If this is the first mission, the original BV values are calculated and stored.
+ *
  * @param {Force} force
  * @param {Mission} formData
  * @param {string} timestamp ISO timestamp string (in-universe date)
- * @returns {{ missions: Mission[], mechs: Mech[], elementals: Elemental[], pilots: Pilot[], currentWarchest: number }}
+ * @returns {{ missions: Mission[], mechs: Mech[], elementals: Elemental[], pilots: Pilot[], currentWarchest: number, originalBaseBV?: number, originalAdjustedBV?: number }}
  */
 export function applyMissionCreation(force, formData, timestamp) {
   const missions = [...(force.missions || [])];
+  const isFirstMission = missions.length === 0 && force.originalBaseBV === undefined;
 
   const newMission = {
     ...formData,
