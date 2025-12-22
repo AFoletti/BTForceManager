@@ -269,6 +269,12 @@ export default function App() {
                         <span className="font-mono">{formatNumber(forceBV.baseBV)}</span>
                         <span className="text-muted-foreground">Adjusted BV:</span>
                         <span className="font-mono font-semibold text-primary">{formatNumber(forceBV.adjustedBV)}</span>
+                        {selectedForce.originalBaseBV !== undefined && (
+                          <>
+                            <span className="text-muted-foreground ml-4">(Original BV:</span>
+                            <span className="font-mono">{formatNumber(selectedForce.originalBaseBV)}/{formatNumber(selectedForce.originalAdjustedBV)})</span>
+                          </>
+                        )}
                       </div>
 
                       <div className="mt-1 overflow-x-auto">
