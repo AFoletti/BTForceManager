@@ -203,13 +203,16 @@ export function getMissionObjectiveReward(mission) {
  * On creation, the mission cost is immediately subtracted from the Warchest
  * and a corresponding ledger entry will be emitted.
  *
+ * If this is the first mission, the original BV values are calculated and stored.
+ *
  * @param {Force} force
  * @param {Mission} formData
  * @param {string} timestamp ISO timestamp string (in-universe date)
- * @returns {{ missions: Mission[], mechs: Mech[], elementals: Elemental[], pilots: Pilot[], currentWarchest: number }}
+ * @returns {{ missions: Mission[], mechs: Mech[], elementals: Elemental[], pilots: Pilot[], currentWarchest: number, originalBaseBV?: number, originalAdjustedBV?: number }}
  */
 export function applyMissionCreation(force, formData, timestamp) {
   const missions = [...(force.missions || [])];
+  const isFirstMission = missions.length === 0 && force.originalBaseBV === undefined;
 
   const newMission = {
     ...formData,
@@ -272,13 +275,29 @@ export function applyMissionCreation(force, formData, timestamp) {
   const missionCost = typeof formData.cost === 'number' ? formData.cost : 0;
   const currentWarchest = force.currentWarchest - missionCost;
 
-  return {
+  const result = {
     missions,
     mechs: updatedMechs,
     elementals: updatedElementals,
     pilots: updatedPilots,
     currentWarchest,
   };
+
+  // Calculate and store original BV if this is the first mission
+  if (isFirstMission) {
+    const mechs = force.mechs || [];
+    
+    // Calculate base BV (sum of all mechs' base BV)
+    const originalBaseBV = mechs.reduce((sum, mech) => sum + (mech.bv || 0), 0);
+    
+    // Calculate adjusted BV (sum of all mechs' adjusted BV based on pilot skills)
+    const originalAdjustedBV = mechs.reduce((sum, mech) => sum + getMechAdjustedBV(force, mech), 0);
+    
+    result.originalBaseBV = originalBaseBV;
+    result.originalAdjustedBV = originalAdjustedBV;
+  }
+
+  return result;
 }
 
 /**

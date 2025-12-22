@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
-import { downloadJSON } from './lib/utils';
+import { downloadJSON, formatNumber } from './lib/utils';
 import MechRoster from './components/MechRoster';
 import ElementalRoster from './components/ElementalRoster';
 import PilotRoster from './components/PilotRoster';
@@ -17,6 +17,7 @@ import LedgerTab from './components/LedgerTab';
 import NotesTab from './components/NotesTab';
 import SnapshotsTab from './components/SnapshotsTab';
 import { UNIT_STATUS } from './lib/constants';
+import { getMechAdjustedBV } from './lib/mechs';
 import { useForceManager } from './hooks/useForceManager';
 import './index.css';
 
@@ -65,6 +66,36 @@ export default function App() {
 
   const mechStatusCounts = selectedForce ? getStatusCounts(selectedForce.mechs || []) : null;
   const elementalStatusCounts = selectedForce ? getStatusCounts(selectedForce.elementals || []) : null;
+
+  // Calculate total BV (base) and adjusted BV for the force
+  const calculateForceBV = () => {
+    if (!selectedForce) return { baseBV: 0, adjustedBV: 0 };
+    
+    const mechs = selectedForce.mechs || [];
+    const elementals = selectedForce.elementals || [];
+    
+    // Sum base BV for mechs (excluding destroyed)
+    const mechBaseBV = mechs
+      .filter(m => m.status !== UNIT_STATUS.DESTROYED)
+      .reduce((sum, mech) => sum + (mech.bv || 0), 0);
+    
+    // Sum adjusted BV for mechs (excluding destroyed)
+    const mechAdjustedBV = mechs
+      .filter(m => m.status !== UNIT_STATUS.DESTROYED)
+      .reduce((sum, mech) => sum + getMechAdjustedBV(selectedForce, mech), 0);
+    
+    // Sum BV for elementals (excluding destroyed)
+    const elementalBV = elementals
+      .filter(e => e.status !== UNIT_STATUS.DESTROYED)
+      .reduce((sum, e) => sum + (e.bv || 0), 0);
+    
+    return {
+      baseBV: mechBaseBV + elementalBV,
+      adjustedBV: mechAdjustedBV + elementalBV
+    };
+  };
+
+  const forceBV = calculateForceBV();
 
   const handleExport = () => {
     if (!selectedForce) return;
@@ -234,6 +265,16 @@ export default function App() {
                         </span>
                         <span className="text-muted-foreground">Starting:</span>
                         <span className="font-mono">{selectedForce.startingWarchest} WP</span>
+                        <span className="text-muted-foreground ml-4">Base BV:</span>
+                        <span className="font-mono">{formatNumber(forceBV.baseBV)}</span>
+                        <span className="text-muted-foreground">Adjusted BV:</span>
+                        <span className="font-mono font-semibold text-primary">{formatNumber(forceBV.adjustedBV)}</span>
+                        {selectedForce.originalBaseBV !== undefined && (
+                          <>
+                            <span className="text-muted-foreground ml-4">(Original BV:</span>
+                            <span className="font-mono">{formatNumber(selectedForce.originalBaseBV)}/{formatNumber(selectedForce.originalAdjustedBV)})</span>
+                          </>
+                        )}
                       </div>
 
                       <div className="mt-1 overflow-x-auto">
