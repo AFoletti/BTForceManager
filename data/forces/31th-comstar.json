@@ -4,7 +4,7 @@
   "description": "OpFor for the White Shark",
   "image": "",
   "startingWarchest": 2000,
-  "currentWarchest": 1545,
+  "currentWarchest": 1245,
   "wpMultiplier": 10,
   "otherActionsLog": [],
   "mechs": [
@@ -1557,7 +1557,7 @@
     },
     {
       "name": "M02 - Pursuit",
-      "cost": 0,
+      "cost": 300,
       "description": "",
       "objectives": [
         {
@@ -1698,9 +1698,9 @@
       "type": "pre-mission",
       "label": "Prior to mission: M02 - Pursuit",
       "createdAt": "3052-05-04",
-      "currentWarchest": 1616,
+      "currentWarchest": 1316,
       "startingWarchest": 2000,
-      "netWarchestChange": -384,
+      "netWarchestChange": -684,
       "missionsCompleted": 1,
       "units": {
         "mechs": {
@@ -1730,9 +1730,9 @@
       "type": "post-mission",
       "label": "After M02 - Pursuit",
       "createdAt": "3052-05-05",
-      "currentWarchest": 1616,
+      "currentWarchest": 1316,
       "startingWarchest": 2000,
-      "netWarchestChange": -384,
+      "netWarchestChange": -684,
       "missionsCompleted": 2,
       "units": {
         "mechs": {
@@ -1762,9 +1762,9 @@
       "type": "post-downtime",
       "label": "After downtime cycle",
       "createdAt": "3052-05-06",
-      "currentWarchest": 1545,
+      "currentWarchest": 1245,
       "startingWarchest": 2000,
-      "netWarchestChange": -455,
+      "netWarchestChange": -755,
       "missionsCompleted": 2,
       "units": {
         "mechs": {
