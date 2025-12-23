@@ -4,7 +4,7 @@
   "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
   "image": "https://i.ibb.co/6R1QfYWz/CDSharks.png",
   "startingWarchest": 2000,
-  "currentWarchest": 1307,
+  "currentWarchest": 907,
   "wpMultiplier": 5,
   "mechs": [
     {
@@ -110,6 +110,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -147,6 +153,12 @@
           "action": "Other: Buy ammo performed (2 WP)",
           "mission": "M02 - The Shark is hunted",
           "cost": 2
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -165,6 +177,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
           "cost": 0
         }
       ]
@@ -260,6 +278,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -303,6 +327,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
           "cost": 0
         }
       ]
@@ -464,6 +494,12 @@
           "action": "Repair Elemental performed (2 WP)",
           "mission": "M01 - Supply run in the Kozice Valley",
           "cost": 2
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -520,6 +556,12 @@
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -547,6 +589,12 @@
           "timestamp": "3052-05-01",
           "action": "Assigned to mission: M01 - Supply run in the Kozice Valley",
           "mission": "M01 - Supply run in the Kozice Valley",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback",
+          "mission": "M03 - Pushback",
           "cost": 0
         }
       ]
@@ -612,6 +660,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback (piloting Supernova)",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -628,6 +683,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback (piloting Masakari (Warhawk) C)",
+          "mission": "M03 - Pushback",
           "cost": 0
         }
       ]
@@ -783,6 +845,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback (piloting Black Hawk (Nova) Prime)",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -799,6 +868,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback (piloting Puma (Adder) Prime)",
+          "mission": "M03 - Pushback",
           "cost": 0
         }
       ]
@@ -871,6 +947,13 @@
           "action": "Heal 1 Injury performed (6 WP) after M02 - The Shark is hunted",
           "mission": "M02 - The Shark is hunted",
           "cost": 6
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 - Pushback (piloting Puma (Adder) A)",
+          "mission": "M03 - Pushback",
+          "cost": 0
         }
       ]
     },
@@ -985,10 +1068,55 @@
       "createdAt": "3052-05-04",
       "inGameDate": "3052-05-04",
       "completedAt": "3052-05-05"
+    },
+    {
+      "name": "M03 - Pushback",
+      "cost": 400,
+      "description": "This could be doable, except that I have too little time . 8 turns are not enough to destroy so much of a force that will count a dozen Mechs or so.\nMy only hope is that my heavy hitters finally hit how they are meant to hit and a bit of luck. Bringing 3 Elemental points will not help that much in terms of hitting hard, but I will use them to have a second Mech with the Weapon Specialist SPA.\n\nTo summarize, my hopes are on the Masakari and Supernova. Zellbrigen will once again play an important role.",
+      "objectives": [
+        {
+          "id": "obj-1766475380270-0",
+          "title": "Gutted",
+          "description": "Destroy or cripple at least 75% within 8 turns",
+          "wpReward": 200,
+          "achieved": false
+        },
+        {
+          "id": "obj-1766475380916-1",
+          "title": "Crush",
+          "description": "Destroy or cripple 100% within 8 turns",
+          "wpReward": 400,
+          "achieved": false
+        },
+        {
+          "id": "obj-1766475381409-2",
+          "title": "Cut off the Head",
+          "description": "Destroy or cripple the commander",
+          "wpReward": 150,
+          "achieved": false
+        }
+      ],
+      "recap": "",
+      "completed": false,
+      "assignedMechs": [
+        "mech-1763627255877",
+        "mech-1763627276791",
+        "mech-1763627301717",
+        "mech-1763627394336",
+        "mech-1763627433584"
+      ],
+      "assignedElementals": [
+        "elemental-1763627079842",
+        "elemental-1763627113200",
+        "elemental-1763627128898"
+      ],
+      "id": "mission-1766475453329",
+      "createdAt": "3052-05-07",
+      "inGameDate": "3052-05-07"
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-07",
+  "currentDate": "3052-05-08",
   "otherActionsLog": [],
   "notes": "",
   "snapshots": [
@@ -1169,6 +1297,38 @@
             "Disabled": 0,
             "Repairing": 4,
             "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 3,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 1,
+            "Destroyed": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "snapshot-1766475453329",
+      "type": "pre-mission",
+      "label": "Prior to mission: M03 - Pushback",
+      "createdAt": "3052-05-07",
+      "currentWarchest": 907,
+      "startingWarchest": 2000,
+      "netWarchestChange": -1093,
+      "missionsCompleted": 2,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 8,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 4,
+            "Unavailable": 2,
             "Destroyed": 2
           }
         },
