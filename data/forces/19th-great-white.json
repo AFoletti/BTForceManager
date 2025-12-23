@@ -4,14 +4,14 @@
   "description": "Star Colonel Lai-Yu's reinforced Trinary during the Battle of Tukayyid",
   "image": "https://i.ibb.co/6R1QfYWz/CDSharks.png",
   "startingWarchest": 2000,
-  "currentWarchest": 1753,
+  "currentWarchest": 1307,
   "wpMultiplier": 5,
   "mechs": [
     {
       "id": "mech-1763627170957",
       "name": "Peregrine (Horned Owl)",
       "status": "Destroyed",
-      "pilotId": "pilot-1763627036424",
+      "pilotId": "",
       "bv": 1434,
       "weight": 35,
       "image": "https://i.ibb.co/6RZnq6xN/piranha.png",
@@ -35,7 +35,7 @@
     {
       "id": "mech-1763627203001",
       "name": "Vixen (Incubus)",
-      "status": "Disabled",
+      "status": "Repairing",
       "pilotId": "pilot-1763626996858",
       "bv": 1596,
       "weight": 30,
@@ -54,6 +54,18 @@
           "action": "Assigned to mission: M02 - The Shark is hunted",
           "mission": "M02 - The Shark is hunted",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Internal Structure performed (12 WP)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 12
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Armor performed (6 WP)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 6
         }
       ]
     },
@@ -104,7 +116,7 @@
     {
       "id": "mech-1763627276791",
       "name": "Puma (Adder) A",
-      "status": "Damaged",
+      "status": "Operational",
       "pilotId": "pilot-1763627013984",
       "bv": 1437,
       "weight": 35,
@@ -123,6 +135,18 @@
           "action": "Assigned to mission: M02 - The Shark is hunted",
           "mission": "M02 - The Shark is hunted",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Armor performed (7 WP)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 7
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Other: Buy ammo performed (2 WP)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 2
         }
       ]
     },
@@ -243,7 +267,7 @@
       "id": "mech-1763627412185",
       "name": "Ryoken (Stormcrow) B",
       "status": "Destroyed",
-      "pilotId": "pilot-1763626930209",
+      "pilotId": "",
       "bv": 2281,
       "weight": 55,
       "image": "https://i.ibb.co/0Rbpw1rF/alpha-wolf.png",
@@ -329,7 +353,7 @@
     {
       "id": "mech-1763627467793",
       "name": "Mad Cat (Timber Wolf) Prime",
-      "status": "Disabled",
+      "status": "Repairing",
       "pilotId": "pilot-1763626867889",
       "bv": 2737,
       "weight": 75,
@@ -348,6 +372,62 @@
           "action": "Assigned to mission: M02 - The Shark is hunted",
           "mission": "M02 - The Shark is hunted",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Internal Structure performed (30 WP)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 30
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Armor performed (15 WP)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 15
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Other: Buy ammo performed (2 WP)",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 2
+        }
+      ]
+    },
+    {
+      "id": "mech-1766474485451",
+      "name": "Goshawk (Vapor Eagle)",
+      "status": "Unavailable",
+      "pilotId": "pilot-1763626930209",
+      "bv": 2368,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "warchestCost": 220,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-07",
+          "action": "Purchased mech for 220 WP",
+          "mission": null,
+          "cost": 220
+        }
+      ]
+    },
+    {
+      "id": "mech-1766474584151",
+      "name": "Peregrine (Horned Owl)",
+      "status": "Unavailable",
+      "pilotId": "pilot-1763627036424",
+      "bv": 1434,
+      "weight": 35,
+      "image": "",
+      "history": "",
+      "warchestCost": 140,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-07",
+          "action": "Purchased mech for 140 WP",
+          "mission": null,
+          "cost": 140
         }
       ]
     }
@@ -769,7 +849,7 @@
       "name": "Brea",
       "gunnery": 3,
       "piloting": 4,
-      "injuries": 1,
+      "injuries": 0,
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -785,6 +865,12 @@
           "action": "Assigned to mission: M02 - The Shark is hunted (piloting Puma (Adder) A)",
           "mission": "M02 - The Shark is hunted",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Heal 1 Injury performed (6 WP) after M02 - The Shark is hunted",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 6
         }
       ]
     },
@@ -793,7 +879,7 @@
       "name": "Aidan",
       "gunnery": 3,
       "piloting": 4,
-      "injuries": 1,
+      "injuries": 0,
       "history": "",
       "warchestCost": 0,
       "activityLog": [
@@ -809,6 +895,12 @@
           "action": "Assigned to mission: M02 - The Shark is hunted (piloting Peregrine (Horned Owl))",
           "mission": "M02 - The Shark is hunted",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Heal 1 Injury performed (6 WP) after M02 - The Shark is hunted",
+          "mission": "M02 - The Shark is hunted",
+          "cost": 6
         }
       ]
     }
@@ -896,7 +988,7 @@
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-06",
+  "currentDate": "3052-05-07",
   "otherActionsLog": [],
   "notes": "",
   "snapshots": [
@@ -1059,8 +1151,38 @@
           }
         }
       }
+    },
+    {
+      "id": "snapshot-1766473694852",
+      "type": "post-downtime",
+      "label": "After downtime cycle",
+      "createdAt": "3052-05-06",
+      "currentWarchest": 1667,
+      "startingWarchest": 2000,
+      "netWarchestChange": -333,
+      "missionsCompleted": 2,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 8,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 4,
+            "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 3,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 1,
+            "Destroyed": 1
+          }
+        }
+      }
     }
-  ],
-  "originalBaseBV": 38282,
-  "originalAdjustedBV": 45861
+  ]
 }
