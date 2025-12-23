@@ -4,7 +4,7 @@
   "description": "OpFor for the White Shark",
   "image": "",
   "startingWarchest": 2000,
-  "currentWarchest": 1245,
+  "currentWarchest": 845,
   "wpMultiplier": 10,
   "otherActionsLog": [],
   "mechs": [
@@ -24,6 +24,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -42,6 +48,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -68,6 +80,12 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -86,6 +104,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -143,6 +167,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -167,6 +197,12 @@
           "timestamp": "3052-05-04",
           "action": "Assigned to mission: M02 - Pursuit",
           "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -353,6 +389,12 @@
           "action": "Other: Buy ammo performed (1 WP)",
           "mission": "M01 - Defend the supply depot",
           "cost": 1
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -389,6 +431,12 @@
           "timestamp": "3052-05-04",
           "action": "Assigned to mission: M02 - Pursuit",
           "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -553,6 +601,12 @@
           "action": "Repair Mech Armor performed (10 WP)",
           "mission": "M02 - Pursuit",
           "cost": 10
+        },
+        {
+          "timestamp": "3052-05-07",
+          "action": "Assigned to mission: M03",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -735,7 +789,7 @@
     {
       "id": "mech-1766467939672",
       "name": "UrbanMech UM-R63",
-      "status": "Operational",
+      "status": "Unavailable",
       "pilotId": "pilot-1764102767948",
       "bv": 540,
       "weight": 30,
@@ -754,7 +808,7 @@
     {
       "id": "mech-1766467976083",
       "name": "Blackjack BJ-2",
-      "status": "Operational",
+      "status": "Unavailable",
       "pilotId": "pilot-1764102316506",
       "bv": 1148,
       "weight": 45,
@@ -787,6 +841,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Highlander HGN-732)",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -803,6 +864,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Cyclops CP-11-A)",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -840,6 +908,13 @@
           "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 15
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Atlas AS7-K)",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -856,6 +931,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Marauder MAD-5CS)",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -904,6 +986,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Warhammer WHM-6R)",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -927,6 +1016,13 @@
           "inGameDate": "3052-05-04",
           "action": "Assigned to mission: M02 - Pursuit (piloting Orion ON1-M)",
           "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Orion ON1-M)",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -1096,6 +1192,13 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting Hunchback HBK-5M)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Hunchback HBK-5M)",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -1138,6 +1241,13 @@
           "inGameDate": "3052-05-04",
           "action": "Assigned to mission: M02 - Pursuit (piloting Marauder MAD-5CS)",
           "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Marauder MAD-5CS)",
+          "mission": "M03",
           "cost": 0
         }
       ]
@@ -1315,6 +1425,13 @@
           "action": "Train Gunnery performed (20 WP) after M02 - Pursuit",
           "mission": "M02 - Pursuit",
           "cost": 20
+        },
+        {
+          "timestamp": "3052-05-07",
+          "inGameDate": "3052-05-07",
+          "action": "Assigned to mission: M03 (piloting Nightstar NSR-9J)",
+          "mission": "M03",
+          "cost": 0
         }
       ]
     },
@@ -1591,10 +1708,55 @@
       "createdAt": "3052-05-04",
       "inGameDate": "3052-05-04",
       "completedAt": "3052-05-05"
+    },
+    {
+      "name": "M03",
+      "cost": 400,
+      "description": "",
+      "objectives": [
+        {
+          "id": "obj-1766475662094-0",
+          "title": "Hold the Ground",
+          "description": "",
+          "wpReward": 200,
+          "achieved": false
+        },
+        {
+          "id": "obj-1766475663565-1",
+          "title": "Make them hurt",
+          "description": "",
+          "wpReward": 400,
+          "achieved": false
+        },
+        {
+          "id": "obj-1766475664184-2",
+          "title": "Lead them to Victory",
+          "description": "",
+          "wpReward": 150,
+          "achieved": false
+        }
+      ],
+      "recap": "",
+      "completed": false,
+      "assignedMechs": [
+        "mech-1764101387438",
+        "mech-1764101558310",
+        "mech-1764101765966",
+        "mech-1764101833945",
+        "mech-1764101903937",
+        "mech-1764101941931",
+        "mech-1764102706981",
+        "mech-1764102286990",
+        "mech-1764102462713"
+      ],
+      "assignedElementals": [],
+      "id": "mission-1766475763133",
+      "createdAt": "3052-05-07",
+      "inGameDate": "3052-05-07"
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-07",
+  "currentDate": "3052-05-08",
   "notes": "",
   "snapshots": [
     {
@@ -1765,6 +1927,38 @@
       "currentWarchest": 1245,
       "startingWarchest": 2000,
       "netWarchestChange": -755,
+      "missionsCompleted": 2,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 24,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 4,
+            "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 0,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "snapshot-1766475763133",
+      "type": "pre-mission",
+      "label": "Prior to mission: M03",
+      "createdAt": "3052-05-07",
+      "currentWarchest": 845,
+      "startingWarchest": 2000,
+      "netWarchestChange": -1155,
       "missionsCompleted": 2,
       "units": {
         "mechs": {
