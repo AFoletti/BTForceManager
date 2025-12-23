@@ -4,7 +4,7 @@
   "description": "OpFor for the White Shark",
   "image": "",
   "startingWarchest": 2000,
-  "currentWarchest": 1800,
+  "currentWarchest": 1545,
   "wpMultiplier": 10,
   "otherActionsLog": [],
   "mechs": [
@@ -93,7 +93,7 @@
     {
       "id": "mech-1764101873977",
       "name": "Archer ARC-5CS",
-      "status": "Operational",
+      "status": "Repairing",
       "pilotId": "pilot-1764101204182",
       "bv": 1609,
       "weight": 70,
@@ -106,6 +106,24 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Internal Structure performed (14 WP)",
+          "mission": "M02 - Pursuit",
+          "cost": 14
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Armor performed (7 WP)",
+          "mission": "M02 - Pursuit",
+          "cost": 7
         }
       ]
     },
@@ -144,13 +162,19 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 0
         }
       ]
     },
     {
       "id": "mech-1764101969954",
       "name": "Flashman FLS-8K",
-      "status": "Operational",
+      "status": "Repairing",
       "pilotId": "pilot-1764101220583",
       "bv": 1779,
       "weight": 75,
@@ -169,13 +193,25 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Internal Structure performed (15 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Armor performed (8 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 8
         }
       ]
     },
     {
       "id": "mech-1764101997595",
       "name": "Shadow Hawk SHD-2Ht",
-      "status": "Operational",
+      "status": "Repairing",
       "pilotId": "pilot-1764101228377",
       "bv": 1453,
       "weight": 55,
@@ -194,13 +230,25 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Internal Structure performed (11 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 11
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Armor performed (6 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 6
         }
       ]
     },
     {
       "id": "mech-1764102197374",
       "name": "Griffin GRF-3M",
-      "status": "Operational",
+      "status": "Repairing",
       "pilotId": "pilot-1764101234302",
       "bv": 1521,
       "weight": 55,
@@ -219,6 +267,24 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Internal Structure performed (11 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 11
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Armor performed (6 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 6
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Other: Buy ammo performed (1 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 1
         }
       ]
     },
@@ -238,6 +304,18 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Armor performed (6 WP)",
+          "mission": "M02 - Pursuit",
+          "cost": 6
         }
       ]
     },
@@ -263,6 +341,18 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Armor performed (5 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 5
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Other: Buy ammo performed (1 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 1
         }
       ]
     },
@@ -288,6 +378,18 @@
           "action": "Assigned to mission: M01 - Defend the supply depot",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Repair Mech Armor performed (8 WP)",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 8
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 0
         }
       ]
     },
@@ -307,6 +409,18 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Armor performed (5 WP)",
+          "mission": "M02 - Pursuit",
+          "cost": 5
         }
       ]
     },
@@ -332,8 +446,8 @@
     {
       "id": "mech-1764102558021",
       "name": "Blackjack BJ-2",
-      "status": "Operational",
-      "pilotId": "pilot-1764102316506",
+      "status": "Destroyed",
+      "pilotId": "",
       "bv": 1148,
       "weight": 45,
       "image": "",
@@ -427,6 +541,18 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Repair Mech Armor performed (10 WP)",
+          "mission": "M02 - Pursuit",
+          "cost": 10
         }
       ]
     },
@@ -515,8 +641,8 @@
     {
       "id": "mech-1764102929382",
       "name": "UrbanMech UM-R63",
-      "status": "Operational",
-      "pilotId": "pilot-1764102767948",
+      "status": "Destroyed",
+      "pilotId": "",
       "bv": 540,
       "weight": 30,
       "image": "",
@@ -578,6 +704,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 0
         }
       ]
     },
@@ -597,6 +729,44 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1766467939672",
+      "name": "UrbanMech UM-R63",
+      "status": "Operational",
+      "pilotId": "pilot-1764102767948",
+      "bv": 540,
+      "weight": 30,
+      "image": "",
+      "history": "",
+      "warchestCost": 60,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-04",
+          "action": "Purchased mech for 60 WP",
+          "mission": null,
+          "cost": 60
+        }
+      ]
+    },
+    {
+      "id": "mech-1766467976083",
+      "name": "Blackjack BJ-2",
+      "status": "Operational",
+      "pilotId": "pilot-1764102316506",
+      "bv": 1148,
+      "weight": 45,
+      "image": "",
+      "history": "",
+      "warchestCost": 90,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-04",
+          "action": "Purchased mech for 90 WP",
+          "mission": null,
+          "cost": 90
         }
       ]
     }
@@ -640,8 +810,8 @@
     {
       "id": "pilot-1764101192112",
       "name": "Adept Takiyah Citseko",
-      "gunnery": 4,
-      "piloting": 5,
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "Dezgra",
       "warchestCost": 0,
@@ -658,6 +828,18 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting Atlas AS7-K)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
         }
       ]
     },
@@ -692,6 +874,19 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "inGameDate": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit (piloting Archer ARC-5CS)",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Heal 1 Injury performed (3 WP) after M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 3
         }
       ]
     },
@@ -726,14 +921,21 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "inGameDate": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit (piloting Orion ON1-M)",
+          "mission": "M02 - Pursuit",
+          "cost": 0
         }
       ]
     },
     {
       "id": "pilot-1764101220583",
       "name": "Adept Joshua Sørensen",
-      "gunnery": 4,
-      "piloting": 5,
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -750,14 +952,32 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting Flashman FLS-8K)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
         }
       ]
     },
     {
       "id": "pilot-1764101228377",
       "name": "Adept Bessie Trujillo",
-      "gunnery": 4,
-      "piloting": 5,
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -774,14 +994,26 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting Shadow Hawk SHD-2Ht)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
         }
       ]
     },
     {
       "id": "pilot-1764101234302",
       "name": "Adept II Pat Pak",
-      "gunnery": 3,
-      "piloting": 4,
+      "gunnery": 2,
+      "piloting": 3,
       "injuries": 0,
       "history": "",
       "warchestCost": 0,
@@ -798,6 +1030,18 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting Griffin GRF-1N)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
         }
       ]
     },
@@ -815,6 +1059,19 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "inGameDate": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit (piloting Shadow Hawk SHD-2Hb)",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Heal 1 Injury performed (3 WP) after M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 3
         }
       ]
     },
@@ -845,8 +1102,8 @@
     {
       "id": "pilot-1764101247917",
       "name": "Adept Rebekka Bartolf",
-      "gunnery": 4,
-      "piloting": 5,
+      "gunnery": 3,
+      "piloting": 4,
       "injuries": 0,
       "history": "Dezgra",
       "warchestCost": 0,
@@ -862,6 +1119,25 @@
           "inGameDate": "3052-05-01",
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting Marauder MAD-5CS)",
           "mission": "M01 - Defend the supply depot",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Gunnery performed (20 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 20
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Train Piloting performed (15 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 15
+        },
+        {
+          "timestamp": "3052-05-04",
+          "inGameDate": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit (piloting Marauder MAD-5CS)",
+          "mission": "M02 - Pursuit",
           "cost": 0
         }
       ]
@@ -880,6 +1156,19 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "inGameDate": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit (piloting Centurion CN9-A)",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Heal 1 Injury performed (3 WP) after M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 3
         }
       ]
     },
@@ -921,6 +1210,30 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting Blackjack BJ-1)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
         }
       ]
     },
@@ -978,7 +1291,7 @@
     {
       "id": "pilot-1764102602257",
       "name": "Adept II Tim Faimon",
-      "gunnery": 3,
+      "gunnery": 2,
       "piloting": 4,
       "injuries": 0,
       "history": "",
@@ -989,6 +1302,19 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "inGameDate": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit (piloting Nightstar NSR-9J)",
+          "mission": "M02 - Pursuit",
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-06",
+          "action": "Train Gunnery performed (20 WP) after M02 - Pursuit",
+          "mission": "M02 - Pursuit",
+          "cost": 20
         }
       ]
     },
@@ -1071,6 +1397,30 @@
           "action": "Assigned to mission: M01 - Defend the supply depot (piloting UrbanMech UM-R63)",
           "mission": "M01 - Defend the supply depot",
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
+        },
+        {
+          "timestamp": "3052-05-03",
+          "action": "Heal 1 Injury performed (3 WP) after M01 - Defend the supply depot",
+          "mission": "M01 - Defend the supply depot",
+          "cost": 3
         }
       ]
     },
@@ -1111,6 +1461,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "inGameDate": "3052-05-04",
+          "action": "Assigned to mission: M02 - Pursuit (piloting Valkyrie VLK-QA)",
+          "mission": "M02 - Pursuit",
           "cost": 0
         }
       ]
@@ -1161,25 +1518,25 @@
           "title": "Brush them off",
           "description": "",
           "wpReward": 100,
-          "achieved": false
+          "achieved": true
         },
         {
           "id": "obj-1766381502487-1",
           "title": "Push them back",
           "description": "",
           "wpReward": 100,
-          "achieved": false
+          "achieved": true
         },
         {
           "id": "obj-1766381502827-2",
           "title": "Supply",
           "description": "",
           "wpReward": 40,
-          "achieved": false
+          "achieved": true
         }
       ],
       "recap": "",
-      "completed": false,
+      "completed": true,
       "assignedMechs": [
         "mech-1764101765966",
         "mech-1764101997595",
@@ -1195,11 +1552,49 @@
       "assignedElementals": [],
       "id": "mission-1766381634712",
       "createdAt": "3052-05-01",
-      "inGameDate": "3052-05-01"
+      "inGameDate": "3052-05-01",
+      "completedAt": "3052-05-02"
+    },
+    {
+      "name": "M02 - Pursuit",
+      "cost": 0,
+      "description": "",
+      "objectives": [
+        {
+          "id": "obj-1766468045748-0",
+          "title": "Prevention",
+          "description": "",
+          "wpReward": 300,
+          "achieved": false
+        },
+        {
+          "id": "obj-1766468047044-1",
+          "title": "No Quarter",
+          "description": "",
+          "wpReward": 100,
+          "achieved": false
+        }
+      ],
+      "recap": "",
+      "completed": true,
+      "assignedMechs": [
+        "mech-1764102706981",
+        "mech-1764102462713",
+        "mech-1764101941931",
+        "mech-1764101873977",
+        "mech-1764102237506",
+        "mech-1764102496181",
+        "mech-1764103004000"
+      ],
+      "assignedElementals": [],
+      "id": "mission-1766468161572",
+      "createdAt": "3052-05-04",
+      "inGameDate": "3052-05-04",
+      "completedAt": "3052-05-05"
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-02",
+  "currentDate": "3052-05-07",
   "notes": "",
   "snapshots": [
     {
@@ -1233,8 +1628,166 @@
           }
         }
       }
+    },
+    {
+      "id": "snapshot-1766466534011",
+      "type": "post-mission",
+      "label": "After M01 - Defend the supply depot",
+      "createdAt": "3052-05-02",
+      "currentWarchest": 2040,
+      "startingWarchest": 2000,
+      "netWarchestChange": 40,
+      "missionsCompleted": 1,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 21,
+            "Damaged": 2,
+            "Disabled": 3,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 0,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "snapshot-1766467808233",
+      "type": "post-downtime",
+      "label": "After downtime cycle",
+      "createdAt": "3052-05-03",
+      "currentWarchest": 1766,
+      "startingWarchest": 2000,
+      "netWarchestChange": -234,
+      "missionsCompleted": 1,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 23,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 3,
+            "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 0,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "snapshot-1766468161572",
+      "type": "pre-mission",
+      "label": "Prior to mission: M02 - Pursuit",
+      "createdAt": "3052-05-04",
+      "currentWarchest": 1616,
+      "startingWarchest": 2000,
+      "netWarchestChange": -384,
+      "missionsCompleted": 1,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 25,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 3,
+            "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 0,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "snapshot-1766468260558",
+      "type": "post-mission",
+      "label": "After M02 - Pursuit",
+      "createdAt": "3052-05-05",
+      "currentWarchest": 1616,
+      "startingWarchest": 2000,
+      "netWarchestChange": -384,
+      "missionsCompleted": 2,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 21,
+            "Damaged": 3,
+            "Disabled": 1,
+            "Repairing": 3,
+            "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 0,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "snapshot-1766468465792",
+      "type": "post-downtime",
+      "label": "After downtime cycle",
+      "createdAt": "3052-05-06",
+      "currentWarchest": 1545,
+      "startingWarchest": 2000,
+      "netWarchestChange": -455,
+      "missionsCompleted": 2,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 24,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 4,
+            "Unavailable": 0,
+            "Destroyed": 2
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 0,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        }
+      }
     }
-  ],
-  "originalBaseBV": 37120,
-  "originalAdjustedBV": 40197
+  ]
 }
