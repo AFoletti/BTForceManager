@@ -18,6 +18,7 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
+import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString } from '../lib/snapshots';
 
@@ -454,11 +455,15 @@ export default function MissionManager({ force, onUpdate }) {
                               <div>
                                 <div className="text-xs text-muted-foreground mb-1">Mechs:</div>
                                 <div className="flex flex-wrap gap-2">
-                                  {getAssignedMechs(force, mission.assignedMechs).map((mech) => (
-                                    <Badge key={mech.id} variant="secondary" className="text-xs">
-                                      {mech.name} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
-                                    </Badge>
-                                  ))}
+                                  {getAssignedMechs(force, mission.assignedMechs).map((mech) => {
+                                    const pilot = findPilotForMech(force, mech);
+                                    return (
+                                      <Badge key={mech.id} variant="secondary" className="text-xs">
+                                        {mech.name}
+                                        {pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
+                                      </Badge>
+                                    );
+                                  })}
                                 </div>
                               </div>
                             )}
@@ -608,8 +613,8 @@ export default function MissionManager({ force, onUpdate }) {
                                   {!pilot
                                     ? 'Pilot: Missing Pilot'
                                     : pilot.injuries === 6
-                                      ? `Pilot: ${pilot.name} - KIA`
-                                      : `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
+                                      ? `Pilot: ${getPilotDisplayName(pilot)} - KIA`
+                                      : `Pilot: ${getPilotDisplayName(pilot)} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                                 </div>
                               </div>
                               <div className="flex items-center gap-2">

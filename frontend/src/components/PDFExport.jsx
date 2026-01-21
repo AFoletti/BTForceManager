@@ -8,6 +8,7 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from '../lib/mechs';
+import { getPilotDisplayName } from '../lib/pilots';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 
@@ -716,7 +717,7 @@ const ForcePDF = ({ force }) => {
               return (
                 <View key={pilot.id} style={[styles.unitCard, styles.rosterItem]} wrap={false}>
                   <View style={styles.unitHeader}>
-                    <Text style={styles.unitName}>{pilot.name}</Text>
+                    <Text style={styles.unitName}>{getPilotDisplayName(pilot)}</Text>
                     <Text
                       style={
                         pilot.injuries === 6
@@ -877,9 +878,9 @@ const ForcePDF = ({ force }) => {
               let pilotDisplay = 'Missing Pilot';
               if (pilot) {
                 if (pilot.injuries === 6) {
-                  pilotDisplay = `${pilot.name} - KIA`;
+                  pilotDisplay = `${getPilotDisplayName(pilot)} - KIA`;
                 } else {
-                  pilotDisplay = `${pilot.name} - G:${pilot.gunnery || 0} / P:${
+                  pilotDisplay = `${getPilotDisplayName(pilot)} - G:${pilot.gunnery || 0} / P:${
                     pilot.piloting || 0
                   }`;
                 }
@@ -1005,11 +1006,14 @@ const ForcePDF = ({ force }) => {
                 {assignedMechObjects.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Assigned Mechs:</Text>
-                    {assignedMechObjects.map((m) => (
-                      <Text key={m.id} style={styles.missionUnits}>
-                        • {m.name} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.status || 'Unknown'})
-                      </Text>
-                    ))}
+                    {assignedMechObjects.map((m) => {
+                      const pilot = findPilotForMech(force, m);
+                      return (
+                        <Text key={m.id} style={styles.missionUnits}>
+                          • {m.name}{pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.status || 'Unknown'})
+                        </Text>
+                      );
+                    })}
                   </View>
                 )}
 

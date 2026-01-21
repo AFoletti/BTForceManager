@@ -31,3 +31,13 @@ export function adjustInjuries(current, delta) {
   const next = base + delta;
   return Math.max(0, Math.min(6, next));
 }
+
+/**
+ * Return a pilot name label used across UI/PDF.
+ * Adds the (D) marker when the pilot is marked as Dezgra.
+ */
+export function getPilotDisplayName(pilot) {
+  if (!pilot) return '';
+  return `${pilot.name || ''}${pilot.dezgra ? ' (D)' : ''}`.trim();
+}
+
