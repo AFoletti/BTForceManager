@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
+import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import MechAutocomplete from './MechAutocomplete';
 
