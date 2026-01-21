@@ -226,7 +226,7 @@ export default function PilotRoster({ force, onUpdate }) {
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">{force.pilots.length} Pilots</span>
-              <Button size="sm" onClick={() => openDialog()}>
+              <Button size="sm" onClick={() => openDialog()} data-testid="add-pilot-button">
                 <Plus className="w-4 h-4" />
                 Add Pilot
               </Button>
