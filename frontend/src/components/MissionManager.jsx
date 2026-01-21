@@ -682,6 +682,7 @@ export default function MissionManager({ force, onUpdate }) {
                                 checked={formData.assignedElementals.includes(elemental.id)}
                                 onChange={() => toggleElementalAssignment(elemental.id)}
                                 className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                                data-testid={`mission-elemental-checkbox-${elemental.id}`}
                               />
                             ) : (
                               <div className="w-4 h-4" aria-hidden="true" />
