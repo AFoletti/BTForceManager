@@ -602,6 +602,7 @@ export default function MissionManager({ force, onUpdate }) {
                                 checked={formData.assignedMechs.includes(mech.id)}
                                 onChange={() => toggleMechAssignment(mech.id)}
                                 className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                                data-testid={`mission-mech-checkbox-${mech.id}`}
                               />
                             ) : (
                               <div className="w-4 h-4" aria-hidden="true" />
