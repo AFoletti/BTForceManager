@@ -222,6 +222,7 @@ export default function PilotRoster({ force, onUpdate }) {
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
               className="max-w-xs h-8 text-xs"
+              data-testid="pilot-filter-input"
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">{force.pilots.length} Pilots</span>
