@@ -346,6 +346,7 @@ export default function PilotRoster({ force, onUpdate }) {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Natasha Kerensky"
+                data-testid="pilot-name-input"
               />
             </div>
 
