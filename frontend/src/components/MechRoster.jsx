@@ -344,7 +344,7 @@ export default function MechRoster({ force, onUpdate }) {
                   <option value="">No pilot</option>
                   {availablePilots.map((pilot) => (
                     <option key={pilot.id} value={pilot.id}>
-                      {pilot.name} - G:{pilot.gunnery} / P:{pilot.piloting}
+                      {getPilotDisplayName(pilot)} - G:{pilot.gunnery} / P:{pilot.piloting}
                     </option>
                   ))}
                 </Select>
