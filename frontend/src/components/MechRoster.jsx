@@ -267,8 +267,8 @@ export default function MechRoster({ force, onUpdate }) {
                       {!pilot
                         ? 'Missing Pilot'
                         : pilot.injuries === 6
-                          ? `${pilot.name} - KIA`
-                          : `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
+                          ? `${getPilotDisplayName(pilot)} - KIA`
+                          : `${getPilotDisplayName(pilot)} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                     </td>
                     <td className="text-right font-mono">{formatNumber(getMechAdjustedBV(force, mech))}</td>
                     <td className="text-right font-mono">{mech.weight}t</td>
