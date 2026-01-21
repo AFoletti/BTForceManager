@@ -420,10 +420,10 @@ export default function PilotRoster({ force, onUpdate }) {
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
-              <Button variant="outline" onClick={() => setShowDialog(false)}>
+              <Button variant="outline" onClick={() => setShowDialog(false)} data-testid="pilot-dialog-cancel-button">
                 Cancel
               </Button>
-              <Button onClick={handleSave} disabled={!formData.name}>
+              <Button onClick={handleSave} disabled={!formData.name} data-testid="pilot-dialog-save-button">
                 {editingPilot ? 'Update Pilot' : 'Add Pilot'}
               </Button>
             </div>
