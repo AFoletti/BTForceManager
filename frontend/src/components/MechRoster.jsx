@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
+import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import MechAutocomplete from './MechAutocomplete';
 
@@ -266,8 +267,8 @@ export default function MechRoster({ force, onUpdate }) {
                       {!pilot
                         ? 'Missing Pilot'
                         : pilot.injuries === 6
-                          ? `${pilot.name} - KIA`
-                          : `${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
+                          ? `${getPilotDisplayName(pilot)} - KIA`
+                          : `${getPilotDisplayName(pilot)} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                     </td>
                     <td className="text-right font-mono">{formatNumber(getMechAdjustedBV(force, mech))}</td>
                     <td className="text-right font-mono">{mech.weight}t</td>
@@ -343,7 +344,7 @@ export default function MechRoster({ force, onUpdate }) {
                   <option value="">No pilot</option>
                   {availablePilots.map((pilot) => (
                     <option key={pilot.id} value={pilot.id}>
-                      {pilot.name} - G:{pilot.gunnery} / P:{pilot.piloting}
+                      {getPilotDisplayName(pilot)} - G:{pilot.gunnery} / P:{pilot.piloting}
                     </option>
                   ))}
                 </Select>

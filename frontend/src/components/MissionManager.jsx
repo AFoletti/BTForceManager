@@ -18,6 +18,7 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
+import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString } from '../lib/snapshots';
 
@@ -370,7 +371,7 @@ export default function MissionManager({ force, onUpdate }) {
               <Target className="w-4 h-4" />
               Mission Log
             </h3>
-            <Button size="sm" onClick={() => openDialog()}>
+            <Button size="sm" onClick={() => openDialog()} data-testid="new-mission-button">
               <Plus className="w-4 h-4" />
               New Mission
             </Button>
@@ -454,11 +455,15 @@ export default function MissionManager({ force, onUpdate }) {
                               <div>
                                 <div className="text-xs text-muted-foreground mb-1">Mechs:</div>
                                 <div className="flex flex-wrap gap-2">
-                                  {getAssignedMechs(force, mission.assignedMechs).map((mech) => (
-                                    <Badge key={mech.id} variant="secondary" className="text-xs">
-                                      {mech.name} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
-                                    </Badge>
-                                  ))}
+                                  {getAssignedMechs(force, mission.assignedMechs).map((mech) => {
+                                    const pilot = findPilotForMech(force, mech);
+                                    return (
+                                      <Badge key={mech.id} variant="secondary" className="text-xs">
+                                        {mech.name}
+                                        {pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
+                                      </Badge>
+                                    );
+                                  })}
                                 </div>
                               </div>
                             )}
@@ -597,6 +602,7 @@ export default function MissionManager({ force, onUpdate }) {
                                 checked={formData.assignedMechs.includes(mech.id)}
                                 onChange={() => toggleMechAssignment(mech.id)}
                                 className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                                data-testid={`mission-mech-checkbox-${mech.id}`}
                               />
                             ) : (
                               <div className="w-4 h-4" aria-hidden="true" />
@@ -608,8 +614,8 @@ export default function MissionManager({ force, onUpdate }) {
                                   {!pilot
                                     ? 'Pilot: Missing Pilot'
                                     : pilot.injuries === 6
-                                      ? `Pilot: ${pilot.name} - KIA`
-                                      : `Pilot: ${pilot.name} - G:${pilot.gunnery} / P:${pilot.piloting}`}
+                                      ? `Pilot: ${getPilotDisplayName(pilot)} - KIA`
+                                      : `Pilot: ${getPilotDisplayName(pilot)} - G:${pilot.gunnery} / P:${pilot.piloting}`}
                                 </div>
                               </div>
                               <div className="flex items-center gap-2">
@@ -676,6 +682,7 @@ export default function MissionManager({ force, onUpdate }) {
                                 checked={formData.assignedElementals.includes(elemental.id)}
                                 onChange={() => toggleElementalAssignment(elemental.id)}
                                 className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                                data-testid={`mission-elemental-checkbox-${elemental.id}`}
                               />
                             ) : (
                               <div className="w-4 h-4" aria-hidden="true" />
@@ -805,7 +812,7 @@ export default function MissionManager({ force, onUpdate }) {
               <Button variant="outline" onClick={() => setShowDialog(false)}>
                 Cancel
               </Button>
-              <Button onClick={saveMission} disabled={!formData.name}>
+              <Button onClick={saveMission} disabled={!formData.name} data-testid="mission-save-button">
                 {editingMission ? 'Update Mission' : 'Create Mission'}
               </Button>
             </div>

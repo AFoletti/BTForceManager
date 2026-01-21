@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, Minus, User, ArrowUp, ArrowDown } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { findMechForPilot } from '../lib/mechs';
+import { getPilotDisplayName } from '../lib/pilots';
 
 export default function PilotRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -18,6 +19,7 @@ export default function PilotRoster({ force, onUpdate }) {
     gunnery: 4,
     piloting: 5,
     injuries: 0,
+    dezgra: false,
     history: '',
     warchestCost: 0,
   });
@@ -30,6 +32,7 @@ export default function PilotRoster({ force, onUpdate }) {
         gunnery: pilot.gunnery,
         piloting: pilot.piloting,
         injuries: pilot.injuries,
+        dezgra: Boolean(pilot.dezgra),
         history: pilot.history || '',
         warchestCost: pilot.warchestCost || 0,
       });
@@ -40,6 +43,7 @@ export default function PilotRoster({ force, onUpdate }) {
         gunnery: 4,
         piloting: 5,
         injuries: 0,
+        dezgra: false,
         history: '',
         warchestCost: 0,
       });
@@ -58,15 +62,32 @@ export default function PilotRoster({ force, onUpdate }) {
       // Update existing pilot
       const updatedPilots = force.pilots.map((pilot) =>
         pilot.id === editingPilot.id
-          ? {
-              ...pilot,
-              name: formData.name,
-              gunnery: parseInt(formData.gunnery, 10) || 4,
-              piloting: parseInt(formData.piloting, 10) || 5,
-              injuries: parseInt(formData.injuries, 10) || 0,
-              history: formData.history,
-              warchestCost: parseInt(formData.warchestCost, 10) || 0,
-            }
+          ? (() => {
+              const nextDezgra = Boolean(formData.dezgra);
+              const prevDezgra = Boolean(pilot.dezgra);
+
+              const nextActivityLog = Array.isArray(pilot.activityLog) ? [...pilot.activityLog] : [];
+              if (nextDezgra !== prevDezgra) {
+                nextActivityLog.push({
+                  timestamp: force.currentDate,
+                  action: nextDezgra ? 'Marked as Dezgra' : 'Cleared Dezgra status',
+                  mission: null,
+                  cost: 0,
+                });
+              }
+
+              return {
+                ...pilot,
+                name: formData.name,
+                gunnery: parseInt(formData.gunnery, 10) || 4,
+                piloting: parseInt(formData.piloting, 10) || 5,
+                injuries: parseInt(formData.injuries, 10) || 0,
+                dezgra: nextDezgra,
+                history: formData.history,
+                warchestCost: parseInt(formData.warchestCost, 10) || 0,
+                activityLog: nextActivityLog,
+              };
+            })()
           : pilot,
       );
       const prevCost = editingPilot.warchestCost || 0;
@@ -84,6 +105,7 @@ export default function PilotRoster({ force, onUpdate }) {
         gunnery: parseInt(formData.gunnery, 10) || 4,
         piloting: parseInt(formData.piloting, 10) || 5,
         injuries: 0,
+        dezgra: false,
         history: formData.history,
         warchestCost,
         activityLog: [
@@ -200,10 +222,11 @@ export default function PilotRoster({ force, onUpdate }) {
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
               className="max-w-xs h-8 text-xs"
+              data-testid="pilot-filter-input"
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">{force.pilots.length} Pilots</span>
-              <Button size="sm" onClick={() => openDialog()}>
+              <Button size="sm" onClick={() => openDialog()} data-testid="add-pilot-button">
                 <Plus className="w-4 h-4" />
                 Add Pilot
               </Button>
@@ -259,7 +282,9 @@ export default function PilotRoster({ force, onUpdate }) {
                     }}
                     className="cursor-pointer hover:bg-muted/50 transition-colors"
                   >
-                    <td className="font-medium">{pilot.name}</td>
+                    <td className="font-medium" data-testid={`pilot-name-${pilot.id}`}>
+                      {getPilotDisplayName(pilot)}
+                    </td>
                     <td className="text-sm">
                       {assignedMech ? assignedMech.name : 'Unassigned'}
                     </td>
@@ -321,6 +346,7 @@ export default function PilotRoster({ force, onUpdate }) {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Natasha Kerensky"
+                data-testid="pilot-name-input"
               />
             </div>
 
@@ -353,6 +379,23 @@ export default function PilotRoster({ force, onUpdate }) {
             </div>
 
             <div>
+              <label className="block text-sm font-medium mb-2">Dezgra</label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={Boolean(formData.dezgra)}
+                  onChange={(e) => setFormData({ ...formData, dezgra: e.target.checked })}
+                  className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                  data-testid="pilot-dezgra-checkbox"
+                />
+                <span>Mark this pilot as Dezgra</span>
+              </label>
+              <p className="text-xs text-muted-foreground mt-1">
+                Dezgra pilots are marked with (D) across the UI and exports.
+              </p>
+            </div>
+
+            <div>
               <label className="block text-sm font-medium mb-2">Warchest Cost (WP)</label>
               <Input
                 type="number"
@@ -377,10 +420,10 @@ export default function PilotRoster({ force, onUpdate }) {
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
-              <Button variant="outline" onClick={() => setShowDialog(false)}>
+              <Button variant="outline" onClick={() => setShowDialog(false)} data-testid="pilot-dialog-cancel-button">
                 Cancel
               </Button>
-              <Button onClick={handleSave} disabled={!formData.name}>
+              <Button onClick={handleSave} disabled={!formData.name} data-testid="pilot-dialog-save-button">
                 {editingPilot ? 'Update Pilot' : 'Add Pilot'}
               </Button>
             </div>
