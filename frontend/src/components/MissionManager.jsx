@@ -371,7 +371,7 @@ export default function MissionManager({ force, onUpdate }) {
               <Target className="w-4 h-4" />
               Mission Log
             </h3>
-            <Button size="sm" onClick={() => openDialog()}>
+            <Button size="sm" onClick={() => openDialog()} data-testid="new-mission-button">
               <Plus className="w-4 h-4" />
               New Mission
             </Button>
