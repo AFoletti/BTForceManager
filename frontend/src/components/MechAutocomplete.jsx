@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
+import Papa from 'papaparse';
 
 /**
  * MechAutocomplete - A searchable dropdown for selecting mechs from the catalog
