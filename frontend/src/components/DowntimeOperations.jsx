@@ -209,6 +209,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
 
     // Create or update a post-downtime snapshot from the resulting force state.
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
 
     // Only overwrite the last snapshot if it is a post-downtime snapshot.
     // If a mission was completed since the last downtime, a new snapshot should be created.
@@ -223,10 +224,33 @@ export default function DowntimeOperations({ force, onUpdate }) {
     });
 
     let nextSnapshots;
+    let nextFullSnapshots = existingFullSnapshots;
+
     if (shouldOverwrite) {
+      // Overwrite the last snapshot
       nextSnapshots = existingSnapshots.map((s, idx) => (idx === lastSnapshotIndex ? snapshot : s));
+      
+      // Also update the corresponding full snapshot if it exists
+      const existingFullIndex = existingFullSnapshots.findIndex(
+        fs => fs.snapshotId === lastSnapshot.id
+      );
+      if (existingFullIndex !== -1) {
+        // Replace the existing full snapshot with updated data
+        const newFullSnapshot = createFullSnapshot(workingForce, snapshot.id);
+        nextFullSnapshots = existingFullSnapshots.map((fs, idx) =>
+          idx === existingFullIndex ? newFullSnapshot : fs
+        );
+      } else {
+        // Create new full snapshot for the overwritten snapshot
+        const fullSnapshot = createFullSnapshot(workingForce, snapshot.id);
+        nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
+      }
     } else {
       nextSnapshots = [...existingSnapshots, snapshot];
+      
+      // Create a full snapshot for rollback capability
+      const fullSnapshot = createFullSnapshot(workingForce, snapshot.id);
+      nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
     }
 
     const nextDate = advanceDateString(force.currentDate);
@@ -238,6 +262,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
       currentWarchest: workingForce.currentWarchest,
       currentDate: nextDate,
       snapshots: nextSnapshots,
+      fullSnapshots: nextFullSnapshots,
     });
 
     setPlannedActions([]);
