@@ -392,8 +392,8 @@ export function applyPilotDowntimeAction(
       const base = typeof piloting === 'number' ? piloting : 5;
       piloting = Math.max(0, Math.min(8, base - 1));
     } else if (actionId === DOWNTIME_ACTION_IDS.HEAL_INJURY) {
-      const base = typeof injuries === 'number' ? injuries : 0;
-      injuries = Math.max(0, Math.min(6, base - 1));
+      // Heal all injuries at once
+      injuries = 0;
     }
 
     return {
