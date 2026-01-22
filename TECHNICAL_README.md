@@ -59,7 +59,7 @@ You only need this folder if you want to change the app behaviour or styling and
 │   └── js/
 │       └── main.js           # Compiled React bundle
 ├── scripts/
-│   └── build-mech-database.py  # Mech catalog builder script
+│   └── build-mech-database.py  # (Legacy) mech catalog builder script (no longer needed)
 ├── .github/
 │   └── workflows/
 │       └── update-mech-catalog.yml  # GitHub Action to refresh mech catalog
