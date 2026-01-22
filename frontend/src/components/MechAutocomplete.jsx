@@ -84,7 +84,6 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
         // Prefer CSV (source of truth). Fallback to legacy JSON for safety.
         const candidates = [
           './data/mek_catalog.csv',
-          '/data/mek_catalog.csv',
           `${process.env.PUBLIC_URL}/data/mek_catalog.csv`,
         ];
 
