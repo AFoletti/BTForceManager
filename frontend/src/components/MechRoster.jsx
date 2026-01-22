@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -10,7 +10,7 @@ import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
-import MechAutocomplete from './MechAutocomplete';
+import MechAutocomplete, { loadMechCatalog, lookupMechInCatalog } from './MechAutocomplete';
 
 /**
  * Parse components string into categorized equipment arrays
