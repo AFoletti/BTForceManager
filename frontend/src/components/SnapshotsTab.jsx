@@ -76,8 +76,9 @@ export default function SnapshotsTab({ force, onUpdate }) {
               </tr>
             </thead>
             <tbody>
-              {snapshots.map((snap) => {
-                const canRollback = hasFullSnapshot(snap.id, fullSnapshots);
+              {snapshots.map((snap, index) => {
+                const isLastSnapshot = index === snapshots.length - 1;
+                const canRollback = !isLastSnapshot && hasFullSnapshot(snap.id, fullSnapshots);
                 return (
                 <tr key={snap.id} data-testid="snapshot-row">
                   <td className="font-mono text-xs">{snap.createdAt}</td>
