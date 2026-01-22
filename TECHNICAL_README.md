@@ -197,7 +197,7 @@ After copying, `index.html` + `static/` are in sync with source.
 
 - `components/MechAutocomplete.jsx`
   - Searchable dropdown for selecting mechs from the catalog.
-  - Loads `data/mech-catalog.json` on mount.
+  - Loads `data/mek_catalog.csv` on mount (fallbacks to `data/mech-catalog.json` for older deployments).
   - Filters by name, chassis, or model (minimum 2 characters).
   - Keyboard navigation (↑/↓/Enter/Escape).
   - Shows tonnage and BV in dropdown items.
