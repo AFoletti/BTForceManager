@@ -190,7 +190,7 @@ After copying, `index.html` + `static/` are in sync with source.
 
 - `components/MechAutocomplete.jsx`
   - Searchable dropdown for selecting mechs from the catalog.
-  - Loads `data/mech-catalog.json` on mount.
+  - Loads and parses `data/mek_catalog.csv` on mount.
   - Filters by name, chassis, or model (minimum 2 characters).
   - Keyboard navigation (↑/↓/Enter/Escape).
   - Shows tonnage and BV in dropdown items.
@@ -290,60 +290,22 @@ Each mech, pilot, elemental and mission can carry its own `activityLog` array; t
 
 ### 5.3 Mech catalog
 
-The mech catalog provides autocomplete data when adding mechs. It combines two sources:
+The mech catalog (`data/mek_catalog.csv`) provides autocomplete data when adding mechs. It is sourced from [MekBay](https://next.mekbay.com) and contains all necessary information:
 
-1. **MekBay CSV** (`data/mek_catalog.csv`) – Master list with accurate BV values, exported from:
-   ```
-   https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true
-   ```
-   Provides: chassis, model, BV, year, techbase, role, MUL ID.
+- **chassis** – Mech chassis name (e.g., "Atlas")
+- **model** – Variant designation (e.g., "AS7-D")
+- **tonnage** – Mech weight in tons
+- **BV** – Battle Value
+- **year** – Introduction year
+- **techBase** – Technology base (Inner Sphere, Clan, etc.)
+- **role** – Combat role
+- **mul_id** – Master Unit List ID
 
-2. **MegaMek mm-data** – Tonnage fetched from [mm-data repository](https://github.com/MegaMek/mm-data) MTF files.
+The app parses the CSV directly at runtime via `MechAutocomplete.jsx`. The display name is constructed as `{chassis} {model}`.
 
-The generated `data/mech-catalog.json` looks like:
+To update the catalog, re-export the CSV from MekBay and save to `data/mek_catalog.csv`.
 
-```json
-{
-  "metadata": {
-    "lastUpdated": "2025-01-15T10:30:00Z",
-    "source": "MekBay CSV + MegaMek mm-data",
-    "totalUnits": 3858,
-    "unitsWithTonnage": 3700,
-    "unitsWithBV": 3858
-  },
-  "mechs": [
-    {
-      "name": "Atlas AS7-D",
-      "chassis": "Atlas",
-      "model": "AS7-D",
-      "tonnage": 100,
-      "bv": 1897,
-      "mulId": 140,
-      "year": 2755,
-      "techbase": "Inner Sphere",
-      "role": "Juggernaut"
-    }
-  ]
-}
-```
-
-The catalog is built by `scripts/build-mech-database.py` which:
-
-1. Reads the MekBay CSV for mech names, BV, year, techbase, role, and MUL ID.
-2. Matches each mech to an MTF file in mm-data (by normalized name).
-3. Fetches tonnage from the matched MTF file.
-4. Outputs the combined data to `data/mech-catalog.json`.
-
-Run manually:
-
-```bash
-python scripts/build-mech-database.py            # process all mechs
-python scripts/build-mech-database.py --limit 10 # test with 10 mechs
-```
-
-Or use the **Update Mech Catalog** GitHub Action to rebuild and commit the catalog.
-
-To update the master mech list, re-export the CSV from MekBay and save to `data/mek_catalog.csv`.
+> **Copyright Notice:** This app contains MegaMek data (copyright 2025 The MegaMek Team), licensed under CC BY-NC-SA 4.0.
 
 ---
 
