@@ -448,12 +448,12 @@ export default function MechRoster({ force, onUpdate }) {
                   {/* Heat */}
                   <div className="flex items-center gap-2">
                     <Flame className="w-4 h-4 text-orange-500" />
-                    <span className="text-sm font-medium">Heat:</span>
-                    <span className="text-sm font-mono">
-                      {catalogInfo.heat} / {catalogInfo.dissipation}
-                      <span className={`ml-1 ${catalogInfo.dissipationEfficiency >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        ({catalogInfo.dissipationEfficiency >= 0 ? '+' : ''}{catalogInfo.dissipationEfficiency})
-                      </span>
+                    <span className="text-sm">
+                      <span className="text-orange-400">{catalogInfo.heat}</span>
+                      <span className="text-muted-foreground"> gen</span>
+                      <span className="mx-1">/</span>
+                      <span className="text-cyan-400">{catalogInfo.dissipation}</span>
+                      <span className="text-muted-foreground"> sink</span>
                     </span>
                   </div>
                 </div>
