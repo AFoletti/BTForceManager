@@ -307,7 +307,7 @@ The mech catalog provides autocomplete data when adding mechs. It combines two s
 
 2. **MegaMek mm-data** – Tonnage fetched from [mm-data repository](https://github.com/MegaMek/mm-data) MTF files.
 
-The generated `data/mech-catalog.json` looks like:
+The mech catalog is now loaded from CSV at runtime, so the previous generated JSON format is legacy:
 
 ```json
 {
