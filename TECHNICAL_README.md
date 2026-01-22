@@ -339,7 +339,7 @@ The catalog is built by `scripts/build-mech-database.py` which:
 1. Reads the MekBay CSV for mech names, BV, year, techbase, role, and MUL ID.
 2. Matches each mech to an MTF file in mm-data (by normalized name).
 3. Fetches tonnage from the matched MTF file.
-4. Outputs the combined data to `data/mech-catalog.json`.
+4. (Legacy) Previously output the combined data to `data/mech-catalog.json`.
 
 Run manually:
 
