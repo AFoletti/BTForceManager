@@ -4,7 +4,7 @@ import { UNIT_STATUS } from '../lib/constants';
 import { hasFullSnapshot, rollbackToSnapshot, MAX_FULL_SNAPSHOTS } from '../lib/snapshots';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, AlertTriangle } from 'lucide-react';
 
 const STATUS_ORDER = [
   UNIT_STATUS.OPERATIONAL,
