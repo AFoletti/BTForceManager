@@ -159,18 +159,6 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
       .catch(err => console.warn('Could not load mech catalog:', err))
       .finally(() => setIsLoading(false));
   }, []);
-            // Try next path
-          }
-        }
-        console.warn('Could not load mech catalog from any path');
-      } catch (error) {
-        console.warn('Could not load mech catalog:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadCatalog();
-  }, []);
 
   // Filter mechs based on search input
   const filteredMechs = catalog.filter((mech) => {
