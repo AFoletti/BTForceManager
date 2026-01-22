@@ -20,9 +20,11 @@ Adjusted BV is shown in the Mech Roster, Mission Manager, and PDF Export. The st
 
 ## Adding Mechs
 
-When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV) sourced from [MekBay](https://next.mekbay.com). Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
+When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV) sourced from [MekBay](https://next.mekbay.com) and stored in `data/mek_catalog.csv`. Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
 
 You can also type a custom mech name if it's not in the catalog.
+
+> **Copyright Notice:** This app contains MegaMek data (copyright 2025 The MegaMek Team), licensed under CC BY-NC-SA 4.0.
 
 ---
 
@@ -80,29 +82,10 @@ For deeper technical details (code structure, build & deploy, data contracts, et
 
 ## Updating the Mech Catalog
 
-The mech catalog (`data/mech-catalog.json`) provides autocomplete data for adding mechs. It is built from two sources:
+The mech catalog (`data/mek_catalog.csv`) provides autocomplete data for adding mechs. It is sourced from [MekBay](https://next.mekbay.com) and contains all necessary mech information: chassis, model, BV, tonnage, year, techbase, role, and MUL ID.
 
-1. **MekBay** – The master list of mechs with accurate BV values, exported from:
-   https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true
-   
-   This CSV is stored in `data/mek_catalog.csv` and provides: chassis, model, BV, year, techbase, role, and MUL ID.
+To refresh the mech list:
 
-2. **MegaMek mm-data** – Tonnage is fetched from the [mm-data repository](https://github.com/MegaMek/mm-data) MTF files.
-
-### Running the Update
-
-A GitHub Action rebuilds the catalog:
-
-1. Go to **Actions** → **Update Mech Catalog**.
-2. Click **Run workflow**.
-3. Optionally set `limit` to process only N mechs (for testing).
-
-The action reads the full CSV, fetches tonnage from mm-data for each mech, and commits the updated `data/mech-catalog.json`.
-
-### Updating the Source CSV
-
-To refresh the master mech list:
-
-1. Visit the [MekBay URL](https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true) above.
+1. Visit [MekBay](https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true).
 2. Export as CSV and save to `data/mek_catalog.csv`.
-3. Run the **Update Mech Catalog** action to regenerate the JSON catalog.
+3. Commit and push. The app reads the CSV directly at runtime.
