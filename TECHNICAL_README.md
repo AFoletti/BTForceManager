@@ -334,7 +334,7 @@ The mech catalog is now loaded from CSV at runtime, so the previous generated JS
 }
 ```
 
-The catalog is built by `scripts/build-mech-database.py` which:
+(Legacy) The catalog used to be built by `scripts/build-mech-database.py` which:
 
 1. Reads the MekBay CSV for mech names, BV, year, techbase, role, and MUL ID.
 2. Matches each mech to an MTF file in mm-data (by normalized name).
