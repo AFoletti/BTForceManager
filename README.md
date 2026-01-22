@@ -80,7 +80,7 @@ For deeper technical details (code structure, build & deploy, data contracts, et
 
 ## Updating the Mech Catalog
 
-The mech catalog (`data/mech-catalog.json`) provides autocomplete data for adding mechs. It is built from two sources:
+The mech catalog uses `data/mek_catalog.csv` directly to provide autocomplete data for adding mechs.
 
 1. **MekBay** – The master list of mechs with accurate BV values, exported from:
    https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true
