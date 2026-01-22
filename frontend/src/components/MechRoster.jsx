@@ -5,18 +5,104 @@ import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
-import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
+import { Shield, Plus, ArrowUp, ArrowDown, Move, Flame, Crosshair } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import MechAutocomplete from './MechAutocomplete';
 
+/**
+ * Parse components string into categorized equipment arrays
+ */
+function parseComponents(componentsStr) {
+  if (!componentsStr) return { weapons: [], equipment: [], ammo: [] };
+  
+  const items = componentsStr.split(',').map(s => s.trim()).filter(Boolean);
+  const weapons = [];
+  const equipment = [];
+  const ammoItems = [];
+  
+  // Equipment types that are not weapons
+  const equipmentPatterns = [
+    /armor/i, /structure/i, /engine/i, /gyro/i, /cockpit/i,
+    /ecm/i, /bap/i, /c3/i, /tag/i, /narc/i, /ams/i,
+    /case/i, /targeting/i, /probe/i, /supercharger/i,
+    /tsm/i, /masc/i, /jump jet/i, /partial wing/i,
+    /void signature/i, /stealth/i, /heat sink/i,
+    /ferro/i, /endo/i, /xl engine/i, /light engine/i,
+    /capacitor/i, /apollo/i
+  ];
+  
+  // Weapon patterns
+  const weaponPatterns = [
+    /laser/i, /ppc/i, /ac\s*\d/i, /autocannon/i, /gauss/i,
+    /lrm/i, /srm/i, /mrm/i, /atm/i, /streak/i,
+    /machine gun/i, /mg/i, /flamer/i, /plasma/i,
+    /hag/i, /lb.*ac/i, /ultra/i, /rotary/i,
+    /thunderbolt/i, /arrow/i, /mml/i, /rocket/i
+  ];
+  
+  for (const item of items) {
+    // Extract count and name (format: "2xER Medium Laser:LA")
+    const match = item.match(/^(\d+)x(.+?)(?::(.+))?$/);
+    if (!match) continue;
+    
+    const count = parseInt(match[1], 10);
+    const name = match[2].trim();
+    const location = match[3]?.trim() || '';
+    
+    // Skip internal components shown in certain locations
+    if (['Armor', 'Structure', 'Engine'].includes(location)) continue;
+    
+    const isEquipment = equipmentPatterns.some(p => p.test(name));
+    const isWeapon = weaponPatterns.some(p => p.test(name));
+    
+    const entry = { count, name, location };
+    
+    if (isWeapon && !isEquipment) {
+      weapons.push(entry);
+    } else if (isEquipment || location === '*') {
+      equipment.push(entry);
+    } else {
+      // Default to weapon if unclear
+      weapons.push(entry);
+    }
+  }
+  
+  return { weapons, equipment, ammo: ammoItems };
+}
+
+/**
+ * Get color class for equipment type (similar to MekBay)
+ */
+function getEquipmentColor(name) {
+  const nameLower = name.toLowerCase();
+  
+  // Energy weapons - blue
+  if (/laser|ppc|plasma|flamer/i.test(nameLower)) {
+    return 'border-blue-500 bg-blue-500/10';
+  }
+  // Ballistic - purple
+  if (/ac|autocannon|gauss|machine gun|mg|lb.*x|ultra|rotary|hag/i.test(nameLower)) {
+    return 'border-purple-500 bg-purple-500/10';
+  }
+  // Missile - green
+  if (/lrm|srm|mrm|atm|streak|mml|rocket|thunderbolt|arrow/i.test(nameLower)) {
+    return 'border-green-500 bg-green-500/10';
+  }
+  // Equipment - yellow/gold
+  return 'border-yellow-600 bg-yellow-600/10';
+}
+
 export default function MechRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMech, setEditingMech] = useState(null);
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  
+  // Catalog info from CSV (movement, heat, components)
+  const [catalogInfo, setCatalogInfo] = useState(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -42,6 +128,7 @@ export default function MechRoster({ force, onUpdate }) {
         history: mech.history || '',
         warchestCost: mech.warchestCost || 0,
       });
+      setCatalogInfo(null); // Clear catalog info when editing existing mech
     } else {
       setEditingMech(null);
       setFormData({
@@ -54,6 +141,7 @@ export default function MechRoster({ force, onUpdate }) {
         history: '',
         warchestCost: 0,
       });
+      setCatalogInfo(null);
     }
     setShowDialog(true);
   };
