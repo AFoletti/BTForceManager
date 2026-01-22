@@ -152,27 +152,13 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
   const wrapperRef = useRef(null);
   const listRef = useRef(null);
 
-  // Load mech catalog CSV on mount
+  // Load mech catalog CSV on mount (uses cached version)
   useEffect(() => {
-    const loadCatalog = async () => {
-      try {
-        // Try multiple paths to support both development and production
-        const paths = [
-          './data/mek_catalog.csv',
-          '/data/mek_catalog.csv',
-          `${process.env.PUBLIC_URL}/data/mek_catalog.csv`,
-        ];
-        
-        for (const path of paths) {
-          try {
-            const response = await fetch(path);
-            if (response.ok) {
-              const csvText = await response.text();
-              const mechs = parseMechCatalogCSV(csvText);
-              setCatalog(mechs);
-              return;
-            }
-          } catch {
+    loadMechCatalog()
+      .then(mechs => setCatalog(mechs))
+      .catch(err => console.warn('Could not load mech catalog:', err))
+      .finally(() => setIsLoading(false));
+  }, []);
             // Try next path
           }
         }
