@@ -585,7 +585,14 @@ export default function MissionManager({ force, onUpdate }) {
                     })
                   }
                   placeholder="0"
+                  min="6"
+                  className={formData.cost <= 5 ? 'border-destructive' : ''}
                 />
+                {formData.cost <= 5 && (
+                  <p className="text-xs text-destructive mt-1">
+                    Cost must be greater than 5 WP
+                  </p>
+                )}
               </div>
             </div>
 
