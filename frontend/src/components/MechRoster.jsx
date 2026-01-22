@@ -312,6 +312,7 @@ export default function MechRoster({ force, onUpdate }) {
                     });
                   }}
                   placeholder="Search mech catalog..."
+                  data-testid="mech-autocomplete-input"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   Type at least 2 characters to search. Select a mech to auto-fill BV and weight.
