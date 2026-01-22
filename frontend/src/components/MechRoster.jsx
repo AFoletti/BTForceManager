@@ -1,22 +1,110 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
-import { Shield, Plus, ArrowUp, ArrowDown } from 'lucide-react';
+import { Shield, Plus, ArrowUp, ArrowDown, Move, Flame, Crosshair } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
-import MechAutocomplete from './MechAutocomplete';
+import MechAutocomplete, { loadMechCatalog, lookupMechInCatalog } from './MechAutocomplete';
+
+/**
+ * Parse components string into categorized equipment arrays
+ */
+function parseComponents(componentsStr) {
+  if (!componentsStr) return { weapons: [], equipment: [] };
+  
+  const items = componentsStr.split(',').map(s => s.trim()).filter(Boolean);
+  const weapons = [];
+  const equipment = [];
+  
+  // Skip patterns - internal components and ammo
+  const skipPatterns = [
+    /armor/i, /structure/i, /engine/i, /gyro/i, /cockpit/i,
+    /\bammo\b/i, /ferro.*fibrous/i, /endo.*steel/i, /endo.*composite/i
+  ];
+  
+  // Equipment types that are not weapons
+  const equipmentPatterns = [
+    /ecm/i, /bap/i, /\bc3\b/i, /\btag\b/i, /\bnarc\b/i, /\bams\b/i,
+    /\bcase\b/i, /targeting/i, /probe/i, /supercharger/i,
+    /\btsm\b/i, /\bmasc\b/i, /jump jet/i, /partial wing/i,
+    /void signature/i, /stealth/i, /heat sink/i,
+    /capacitor/i, /apollo/i, /artemis/i, /streak/i
+  ];
+  
+  // Weapon patterns
+  const weaponPatterns = [
+    /laser/i, /ppc/i, /\bac[\s/-]*\d/i, /autocannon/i, /gauss/i,
+    /\blrm/i, /\bsrm/i, /\bmrm/i, /\batm\b/i,
+    /machine gun/i, /\bmg\b/i, /flamer/i, /plasma/i,
+    /\bhag\b/i, /lb.*ac/i, /\bultra\b/i, /rotary/i,
+    /thunderbolt/i, /arrow/i, /\bmml/i, /rocket/i
+  ];
+  
+  for (const item of items) {
+    // Extract count and name (format: "2xER Medium Laser:LA")
+    const match = item.match(/^(\d+)x(.+?)(?::(.+))?$/);
+    if (!match) continue;
+    
+    const count = parseInt(match[1], 10);
+    const name = match[2].trim();
+    const location = match[3]?.trim() || '';
+    
+    // Skip internal components
+    if (['Armor', 'Structure', 'Engine'].includes(location)) continue;
+    if (skipPatterns.some(p => p.test(name))) continue;
+    
+    const isEquipment = equipmentPatterns.some(p => p.test(name));
+    const isWeapon = weaponPatterns.some(p => p.test(name));
+    
+    const entry = { count, name, location };
+    
+    if (isWeapon && !isEquipment) {
+      weapons.push(entry);
+    } else {
+      equipment.push(entry);
+    }
+  }
+  
+  return { weapons, equipment };
+}
+
+/**
+ * Get color class for equipment type (similar to MekBay)
+ */
+function getEquipmentColor(name) {
+  const nameLower = name.toLowerCase();
+  
+  // Energy weapons - blue
+  if (/laser|ppc|plasma|flamer/i.test(nameLower)) {
+    return 'border-blue-500 bg-blue-500/10';
+  }
+  // Ballistic - purple
+  if (/ac|autocannon|gauss|machine gun|mg|lb.*x|ultra|rotary|hag/i.test(nameLower)) {
+    return 'border-purple-500 bg-purple-500/10';
+  }
+  // Missile - green
+  if (/lrm|srm|mrm|atm|streak|mml|rocket|thunderbolt|arrow/i.test(nameLower)) {
+    return 'border-green-500 bg-green-500/10';
+  }
+  // Equipment - yellow/gold
+  return 'border-yellow-600 bg-yellow-600/10';
+}
 
 export default function MechRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMech, setEditingMech] = useState(null);
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  
+  // Catalog for lookups and catalog info display
+  const [catalog, setCatalog] = useState([]);
+  const [catalogInfo, setCatalogInfo] = useState(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -28,6 +116,26 @@ export default function MechRoster({ force, onUpdate }) {
     history: '',
     warchestCost: 0,
   });
+
+  // Load catalog on mount
+  useEffect(() => {
+    loadMechCatalog().then(setCatalog);
+  }, []);
+
+  // Helper to extract catalog info from a mech entry
+  const extractCatalogInfo = useCallback((mechEntry) => {
+    if (!mechEntry) return null;
+    return {
+      walk: mechEntry.walk,
+      maxWalk: mechEntry.maxWalk,
+      jump: mechEntry.jump,
+      maxJump: mechEntry.maxJump,
+      heat: mechEntry.heat,
+      dissipation: mechEntry.dissipation,
+      dissipationEfficiency: mechEntry.dissipationEfficiency,
+      components: mechEntry.components,
+    };
+  }, []);
 
   const openDialog = (mech = null) => {
     if (mech) {
@@ -42,6 +150,9 @@ export default function MechRoster({ force, onUpdate }) {
         history: mech.history || '',
         warchestCost: mech.warchestCost || 0,
       });
+      // Look up catalog info for existing mech
+      const found = lookupMechInCatalog(catalog, mech.name);
+      setCatalogInfo(extractCatalogInfo(found));
     } else {
       setEditingMech(null);
       setFormData({
@@ -54,6 +165,7 @@ export default function MechRoster({ force, onUpdate }) {
         history: '',
         warchestCost: 0,
       });
+      setCatalogInfo(null);
     }
     setShowDialog(true);
   };
@@ -291,33 +403,123 @@ export default function MechRoster({ force, onUpdate }) {
 
       {/* Add/Edit Mech Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl">
+        <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingMech ? 'Edit Mech' : 'Add New Mech'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Mech Name *</label>
-                <MechAutocomplete
-                  value={formData.name}
-                  onChange={(name) => setFormData({ ...formData, name })}
-                  onSelect={(mechData) => {
-                    setFormData({
-                      ...formData,
-                      name: mechData.name,
-                      bv: mechData.bv || formData.bv,
-                      weight: mechData.weight || formData.weight,
-                    });
-                  }}
-                  placeholder="Search mech catalog..."
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Type at least 2 characters to search. Select a mech to auto-fill BV and weight.
-                </p>
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Mech Name *</label>
+              <MechAutocomplete
+                value={formData.name}
+                onChange={(name) => {
+                  setFormData({ ...formData, name });
+                  setCatalogInfo(null); // Clear catalog info when typing
+                }}
+                onSelect={(mechData) => {
+                  setFormData({
+                    ...formData,
+                    name: mechData.name,
+                    bv: mechData.bv || formData.bv,
+                    weight: mechData.weight || formData.weight,
+                  });
+                  // Store catalog info for display
+                  setCatalogInfo({
+                    walk: mechData.walk,
+                    maxWalk: mechData.maxWalk,
+                    jump: mechData.jump,
+                    maxJump: mechData.maxJump,
+                    heat: mechData.heat,
+                    dissipation: mechData.dissipation,
+                    dissipationEfficiency: mechData.dissipationEfficiency,
+                    components: mechData.components,
+                  });
+                }}
+                placeholder="Search mech catalog..."
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Type at least 2 characters to search. Select a mech to auto-fill BV and weight.
+              </p>
+            </div>
 
+            {/* Catalog Info Display */}
+            {catalogInfo && (
+              <div className="border border-border rounded-lg p-4 bg-muted/30 space-y-4">
+                {/* Movement and Heat Row */}
+                <div className="flex flex-wrap gap-6">
+                  {/* Movement */}
+                  <div className="flex items-center gap-2">
+                    <Move className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Movement:</span>
+                    <span className="text-sm font-mono">
+                      {catalogInfo.walk}/{catalogInfo.walk * 1.5 | 0}
+                      {catalogInfo.maxWalk > catalogInfo.walk && (
+                        <span className="text-blue-400"> [{catalogInfo.maxWalk}/{catalogInfo.maxWalk * 1.5 | 0}]</span>
+                      )}
+                      {catalogInfo.jump > 0 && (
+                        <>
+                          /{catalogInfo.jump}
+                          {catalogInfo.maxJump > catalogInfo.jump && (
+                            <span className="text-blue-400"> [{catalogInfo.maxJump}]</span>
+                          )}
+                        </>
+                      )}
+                    </span>
+                  </div>
+                  
+                  {/* Heat */}
+                  <div className="flex items-center gap-2">
+                    <Flame className="w-4 h-4 text-orange-500" />
+                    <span className="text-sm font-medium">Heat:</span>
+                    <span className="text-sm">
+                      <span className="text-orange-400">{catalogInfo.heat}</span>
+                      <span className="text-muted-foreground"> gen</span>
+                      <span className="mx-1">/</span>
+                      <span className="text-cyan-400">{catalogInfo.dissipation}</span>
+                      <span className="text-muted-foreground"> sink</span>
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Equipment Section */}
+                {catalogInfo.components && (() => {
+                  const { weapons, equipment } = parseComponents(catalogInfo.components);
+                  const hasContent = weapons.length > 0 || equipment.length > 0;
+                  
+                  if (!hasContent) return null;
+                  
+                  return (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Crosshair className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">Equipment</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {weapons.map((w, i) => (
+                          <div
+                            key={`weapon-${i}`}
+                            className={`px-2 py-1 text-xs font-medium border-l-4 ${getEquipmentColor(w.name)}`}
+                          >
+                            {w.count}× {w.name}
+                          </div>
+                        ))}
+                        {equipment.map((e, i) => (
+                          <div
+                            key={`equip-${i}`}
+                            className={`px-2 py-1 text-xs font-medium border-l-4 ${getEquipmentColor(e.name)}`}
+                          >
+                            {e.count}× {e.name}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+
+            <div className="grid grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Status</label>
                 <Select
@@ -332,26 +534,6 @@ export default function MechRoster({ force, onUpdate }) {
                   <option value={UNIT_STATUS.UNAVAILABLE}>{UNIT_STATUS.UNAVAILABLE}</option>
                 </Select>
               </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Pilot</label>
-                <Select
-                  value={formData.pilotId}
-                  onChange={(e) => setFormData({ ...formData, pilotId: e.target.value })}
-                >
-                  <option value="">No pilot</option>
-                  {availablePilots.map((pilot) => (
-                    <option key={pilot.id} value={pilot.id}>
-                      {getPilotDisplayName(pilot)} - G:{pilot.gunnery} / P:{pilot.piloting}
-                    </option>
-                  ))}
-                </Select>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Only pilots not currently assigned to a mech are listed.
-                </p>
-              </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">BV (Battle Value) *</label>
@@ -361,6 +543,18 @@ export default function MechRoster({ force, onUpdate }) {
                   onChange={(e) => setFormData({ ...formData, bv: e.target.value })}
                   placeholder="0"
                   min="0"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Weight (tons) *</label>
+                <Input
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                  placeholder="0"
+                  min="0"
+                  max="100"
                 />
               </div>
 
@@ -378,18 +572,24 @@ export default function MechRoster({ force, onUpdate }) {
                   Warchest.
                 </p>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Weight (tons) *</label>
-                <Input
-                  type="number"
-                  value={formData.weight}
-                  onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-                  placeholder="0"
-                  min="0"
-                  max="100"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Pilot</label>
+              <Select
+                value={formData.pilotId}
+                onChange={(e) => setFormData({ ...formData, pilotId: e.target.value })}
+              >
+                <option value="">No pilot</option>
+                {availablePilots.map((pilot) => (
+                  <option key={pilot.id} value={pilot.id}>
+                    {getPilotDisplayName(pilot)} - G:{pilot.gunnery} / P:{pilot.piloting}
+                  </option>
+                ))}
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                Only pilots not currently assigned to a mech are listed.
+              </p>
             </div>
 
             <div>
