@@ -140,3 +140,110 @@ export function advanceDateString(dateStr) {
 
   return `${nextYear}-${nextMonth}-${nextDay}`;
 }
+
+/**
+ * Maximum number of full snapshots to keep for rollback.
+ */
+export const MAX_FULL_SNAPSHOTS = 3;
+
+/**
+ * Create a full snapshot that stores complete force data for rollback.
+ * This is separate from the regular snapshot which only stores summaries.
+ *
+ * @param {Object} force The complete force object to snapshot
+ * @param {string} snapshotId The ID of the corresponding regular snapshot
+ * @returns {FullSnapshot}
+ */
+export function createFullSnapshot(force, snapshotId) {
+  // Deep clone the force data, excluding fullSnapshots to avoid circular/bloat
+  const { fullSnapshots, ...forceDataToStore } = force;
+  
+  return {
+    id: `full-${snapshotId}`,
+    snapshotId,
+    forceData: JSON.parse(JSON.stringify(forceDataToStore)),
+    createdAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * Add a full snapshot to the array, keeping only the most recent MAX_FULL_SNAPSHOTS.
+ *
+ * @param {FullSnapshot[]} existingFullSnapshots
+ * @param {FullSnapshot} newFullSnapshot
+ * @returns {FullSnapshot[]}
+ */
+export function addFullSnapshot(existingFullSnapshots, newFullSnapshot) {
+  const updated = [...(existingFullSnapshots || []), newFullSnapshot];
+  
+  // Keep only the most recent MAX_FULL_SNAPSHOTS
+  if (updated.length > MAX_FULL_SNAPSHOTS) {
+    return updated.slice(-MAX_FULL_SNAPSHOTS);
+  }
+  
+  return updated;
+}
+
+/**
+ * Check if a snapshot has a corresponding full snapshot for rollback.
+ *
+ * @param {string} snapshotId
+ * @param {FullSnapshot[]} fullSnapshots
+ * @returns {boolean}
+ */
+export function hasFullSnapshot(snapshotId, fullSnapshots) {
+  if (!fullSnapshots || !Array.isArray(fullSnapshots)) return false;
+  return fullSnapshots.some(fs => fs.snapshotId === snapshotId);
+}
+
+/**
+ * Get the full snapshot for a given snapshot ID.
+ *
+ * @param {string} snapshotId
+ * @param {FullSnapshot[]} fullSnapshots
+ * @returns {FullSnapshot|null}
+ */
+export function getFullSnapshot(snapshotId, fullSnapshots) {
+  if (!fullSnapshots || !Array.isArray(fullSnapshots)) return null;
+  return fullSnapshots.find(fs => fs.snapshotId === snapshotId) || null;
+}
+
+/**
+ * Perform a rollback to a specific snapshot.
+ * Returns the restored force data and cleaned up snapshot arrays.
+ *
+ * @param {Object} force Current force
+ * @param {string} snapshotId The snapshot ID to roll back to
+ * @returns {{ restoredForce: Object, snapshots: Snapshot[], fullSnapshots: FullSnapshot[] } | null}
+ */
+export function rollbackToSnapshot(force, snapshotId) {
+  const fullSnapshots = force.fullSnapshots || [];
+  const snapshots = force.snapshots || [];
+  
+  const fullSnap = getFullSnapshot(snapshotId, fullSnapshots);
+  if (!fullSnap) return null;
+  
+  // Find the index of the snapshot we're rolling back to
+  const snapshotIndex = snapshots.findIndex(s => s.id === snapshotId);
+  if (snapshotIndex === -1) return null;
+  
+  // Keep only snapshots up to and including the rolled-back one
+  const keptSnapshots = snapshots.slice(0, snapshotIndex + 1);
+  
+  // Keep only full snapshots that correspond to kept snapshots
+  const keptSnapshotIds = new Set(keptSnapshots.map(s => s.id));
+  const keptFullSnapshots = fullSnapshots.filter(fs => keptSnapshotIds.has(fs.snapshotId));
+  
+  // Restore force data from the full snapshot
+  const restoredForce = {
+    ...fullSnap.forceData,
+    snapshots: keptSnapshots,
+    fullSnapshots: keptFullSnapshots,
+  };
+  
+  return {
+    restoredForce,
+    snapshots: keptSnapshots,
+    fullSnapshots: keptFullSnapshots,
+  };
+}
