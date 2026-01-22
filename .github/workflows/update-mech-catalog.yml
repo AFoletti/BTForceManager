@@ -1,4 +1,4 @@
-name: Update Mech Catalog
+name: Update Mek Catalog CSV (no build step)
 
 on:
   workflow_dispatch:
