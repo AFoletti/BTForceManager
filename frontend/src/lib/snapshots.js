@@ -210,7 +210,7 @@ export function getFullSnapshot(snapshotId, fullSnapshots) {
 
 /**
  * Perform a rollback to a specific snapshot.
- * Returns the restored force data and cleaned up snapshot arrays.
+ * Simply restores the force data as it was when the snapshot was taken.
  *
  * @param {Object} force Current force
  * @param {string} snapshotId The snapshot ID to roll back to
@@ -218,7 +218,6 @@ export function getFullSnapshot(snapshotId, fullSnapshots) {
  */
 export function rollbackToSnapshot(force, snapshotId) {
   const fullSnapshots = force.fullSnapshots || [];
-  const snapshots = force.snapshots || [];
   
   const fullSnap = getFullSnapshot(snapshotId, fullSnapshots);
   if (!fullSnap) {
@@ -226,27 +225,15 @@ export function rollbackToSnapshot(force, snapshotId) {
     return null;
   }
   
-  // Find the index of the snapshot we're rolling back to
-  const snapshotIndex = snapshots.findIndex(s => s.id === snapshotId);
-  if (snapshotIndex === -1) {
-    console.warn('Rollback failed: Snapshot not found in snapshots array', snapshotId);
-    return null;
-  }
+  // Simply restore forceData, preserving current force ID
+  // Rebuild fullSnapshots to only keep those matching snapshots in restored data
+  const restoredSnapshots = fullSnap.forceData.snapshots || [];
+  const restoredSnapshotIds = new Set(restoredSnapshots.map(s => s.id));
+  const keptFullSnapshots = fullSnapshots.filter(fs => restoredSnapshotIds.has(fs.snapshotId));
   
-  // Keep only snapshots up to and including the rolled-back one
-  const keptSnapshots = snapshots.slice(0, snapshotIndex + 1);
-  
-  // Keep only full snapshots that correspond to kept snapshots
-  const keptSnapshotIds = new Set(keptSnapshots.map(s => s.id));
-  const keptFullSnapshots = fullSnapshots.filter(fs => keptSnapshotIds.has(fs.snapshotId));
-  
-  // Restore force data from the full snapshot, preserving the current force ID
-  const restoredForce = {
+  return {
     ...fullSnap.forceData,
-    id: force.id, // Preserve current force ID
-    snapshots: keptSnapshots,
+    id: force.id,
     fullSnapshots: keptFullSnapshots,
   };
-  
-  return restoredForce;
 }
