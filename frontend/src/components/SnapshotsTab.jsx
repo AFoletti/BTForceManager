@@ -32,9 +32,9 @@ export default function SnapshotsTab({ force, onUpdate }) {
   if (!force) return null;
 
   const handleRollback = (snapshotId) => {
-    const result = rollbackToSnapshot(force, snapshotId);
-    if (result) {
-      onUpdate(result.restoredForce);
+    const restoredForce = rollbackToSnapshot(force, snapshotId);
+    if (restoredForce) {
+      onUpdate(restoredForce);
       setConfirmRollback(null);
     }
   };
