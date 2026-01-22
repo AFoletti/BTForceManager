@@ -297,27 +297,27 @@ export default function MechRoster({ force, onUpdate }) {
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Mech Name *</label>
-                <MechAutocomplete
-                  value={formData.name}
-                  onChange={(name) => setFormData({ ...formData, name })}
-                  onSelect={(mechData) => {
-                    setFormData({
-                      ...formData,
-                      name: mechData.name,
-                      bv: mechData.bv || formData.bv,
-                      weight: mechData.weight || formData.weight,
-                    });
-                  }}
-                  placeholder="Search mech catalog..."
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Type at least 2 characters to search. Select a mech to auto-fill BV and weight.
-                </p>
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Mech Name *</label>
+              <MechAutocomplete
+                value={formData.name}
+                onChange={(name) => setFormData({ ...formData, name })}
+                onSelect={(mechData) => {
+                  setFormData({
+                    ...formData,
+                    name: mechData.name,
+                    bv: mechData.bv || formData.bv,
+                    weight: mechData.weight || formData.weight,
+                  });
+                }}
+                placeholder="Search mech catalog..."
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Type at least 2 characters to search. Select a mech to auto-fill BV and weight.
+              </p>
+            </div>
 
+            <div className="grid grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Status</label>
                 <Select
@@ -332,26 +332,6 @@ export default function MechRoster({ force, onUpdate }) {
                   <option value={UNIT_STATUS.UNAVAILABLE}>{UNIT_STATUS.UNAVAILABLE}</option>
                 </Select>
               </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Pilot</label>
-                <Select
-                  value={formData.pilotId}
-                  onChange={(e) => setFormData({ ...formData, pilotId: e.target.value })}
-                >
-                  <option value="">No pilot</option>
-                  {availablePilots.map((pilot) => (
-                    <option key={pilot.id} value={pilot.id}>
-                      {getPilotDisplayName(pilot)} - G:{pilot.gunnery} / P:{pilot.piloting}
-                    </option>
-                  ))}
-                </Select>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Only pilots not currently assigned to a mech are listed.
-                </p>
-              </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">BV (Battle Value) *</label>
@@ -361,6 +341,18 @@ export default function MechRoster({ force, onUpdate }) {
                   onChange={(e) => setFormData({ ...formData, bv: e.target.value })}
                   placeholder="0"
                   min="0"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Weight (tons) *</label>
+                <Input
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                  placeholder="0"
+                  min="0"
+                  max="100"
                 />
               </div>
 
@@ -378,18 +370,24 @@ export default function MechRoster({ force, onUpdate }) {
                   Warchest.
                 </p>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Weight (tons) *</label>
-                <Input
-                  type="number"
-                  value={formData.weight}
-                  onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-                  placeholder="0"
-                  min="0"
-                  max="100"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Pilot</label>
+              <Select
+                value={formData.pilotId}
+                onChange={(e) => setFormData({ ...formData, pilotId: e.target.value })}
+              >
+                <option value="">No pilot</option>
+                {availablePilots.map((pilot) => (
+                  <option key={pilot.id} value={pilot.id}>
+                    {getPilotDisplayName(pilot)} - G:{pilot.gunnery} / P:{pilot.piloting}
+                  </option>
+                ))}
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                Only pilots not currently assigned to a mech are listed.
+              </p>
             </div>
 
             <div>
