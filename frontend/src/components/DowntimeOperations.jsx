@@ -207,7 +207,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
       }
     });
 
-    // Capture state BEFORE changes for rollback
+    // Create snapshots from the resulting force state
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
     const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
 
@@ -224,32 +224,32 @@ export default function DowntimeOperations({ force, onUpdate }) {
     });
 
     let nextSnapshots;
-    let nextFullSnapshots = existingFullSnapshots;
+    let nextFullSnapshots;
 
     if (shouldOverwrite) {
       // Overwrite the last snapshot
       nextSnapshots = existingSnapshots.map((s, idx) => (idx === lastSnapshotIndex ? snapshot : s));
       
-      // Keep the existing full snapshot (it already captures the state BEFORE the first downtime)
-      // Just update the snapshotId reference
+      // Also overwrite the corresponding full snapshot
       const existingFullIndex = existingFullSnapshots.findIndex(
         fs => fs.snapshotId === lastSnapshot.id
       );
       if (existingFullIndex !== -1) {
-        // Update the snapshotId to point to the new snapshot
+        // Replace the existing full snapshot with new state
+        const newFullSnapshot = createFullSnapshot(workingForce, snapshot.id);
         nextFullSnapshots = existingFullSnapshots.map((fs, idx) =>
-          idx === existingFullIndex ? { ...fs, snapshotId: snapshot.id } : fs
+          idx === existingFullIndex ? newFullSnapshot : fs
         );
       } else {
-        // Create new full snapshot capturing state BEFORE changes
-        const fullSnapshot = createFullSnapshot(force, snapshot.id);
+        // Create new full snapshot
+        const fullSnapshot = createFullSnapshot(workingForce, snapshot.id);
         nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
       }
     } else {
       nextSnapshots = [...existingSnapshots, snapshot];
       
-      // Create full snapshot capturing state BEFORE changes (linked to the new snapshot)
-      const fullSnapshot = createFullSnapshot(force, snapshot.id);
+      // Create full snapshot of the state AFTER changes (same as normal snapshot)
+      const fullSnapshot = createFullSnapshot(workingForce, snapshot.id);
       nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
     }
 
