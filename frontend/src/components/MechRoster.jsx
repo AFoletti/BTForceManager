@@ -379,7 +379,7 @@ export default function MechRoster({ force, onUpdate }) {
 
       {/* Add/Edit Mech Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl">
+        <DialogContent onClose={() => setShowDialog(false)} className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingMech ? 'Edit Mech' : 'Add New Mech'}</DialogTitle>
           </DialogHeader>
@@ -389,13 +389,27 @@ export default function MechRoster({ force, onUpdate }) {
               <label className="block text-sm font-medium mb-2">Mech Name *</label>
               <MechAutocomplete
                 value={formData.name}
-                onChange={(name) => setFormData({ ...formData, name })}
+                onChange={(name) => {
+                  setFormData({ ...formData, name });
+                  setCatalogInfo(null); // Clear catalog info when typing
+                }}
                 onSelect={(mechData) => {
                   setFormData({
                     ...formData,
                     name: mechData.name,
                     bv: mechData.bv || formData.bv,
                     weight: mechData.weight || formData.weight,
+                  });
+                  // Store catalog info for display
+                  setCatalogInfo({
+                    walk: mechData.walk,
+                    maxWalk: mechData.maxWalk,
+                    jump: mechData.jump,
+                    maxJump: mechData.maxJump,
+                    heat: mechData.heat,
+                    dissipation: mechData.dissipation,
+                    dissipationEfficiency: mechData.dissipationEfficiency,
+                    components: mechData.components,
                   });
                 }}
                 placeholder="Search mech catalog..."
@@ -404,6 +418,81 @@ export default function MechRoster({ force, onUpdate }) {
                 Type at least 2 characters to search. Select a mech to auto-fill BV and weight.
               </p>
             </div>
+
+            {/* Catalog Info Display */}
+            {catalogInfo && (
+              <div className="border border-border rounded-lg p-4 bg-muted/30 space-y-4">
+                {/* Movement and Heat Row */}
+                <div className="flex flex-wrap gap-6">
+                  {/* Movement */}
+                  <div className="flex items-center gap-2">
+                    <Move className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Movement:</span>
+                    <span className="text-sm font-mono">
+                      {catalogInfo.walk}/{catalogInfo.walk * 1.5 | 0}
+                      {catalogInfo.maxWalk > catalogInfo.walk && (
+                        <span className="text-blue-400"> [{catalogInfo.maxWalk}/{catalogInfo.maxWalk * 1.5 | 0}]</span>
+                      )}
+                      {catalogInfo.jump > 0 && (
+                        <>
+                          /{catalogInfo.jump}
+                          {catalogInfo.maxJump > catalogInfo.jump && (
+                            <span className="text-blue-400"> [{catalogInfo.maxJump}]</span>
+                          )}
+                        </>
+                      )}
+                    </span>
+                  </div>
+                  
+                  {/* Heat */}
+                  <div className="flex items-center gap-2">
+                    <Flame className="w-4 h-4 text-orange-500" />
+                    <span className="text-sm font-medium">Heat:</span>
+                    <span className="text-sm font-mono">
+                      {catalogInfo.heat} / {catalogInfo.dissipation}
+                      <span className={`ml-1 ${catalogInfo.dissipationEfficiency >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        ({catalogInfo.dissipationEfficiency >= 0 ? '+' : ''}{catalogInfo.dissipationEfficiency})
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Equipment Section */}
+                {catalogInfo.components && (() => {
+                  const { weapons, equipment } = parseComponents(catalogInfo.components);
+                  const hasContent = weapons.length > 0 || equipment.length > 0;
+                  
+                  if (!hasContent) return null;
+                  
+                  return (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Crosshair className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">Equipment</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {weapons.map((w, i) => (
+                          <div
+                            key={`weapon-${i}`}
+                            className={`px-2 py-1 text-xs font-medium border-l-4 ${getEquipmentColor(w.name)}`}
+                          >
+                            {w.count}× {w.name}
+                          </div>
+                        ))}
+                        {equipment.map((e, i) => (
+                          <div
+                            key={`equip-${i}`}
+                            className={`px-2 py-1 text-xs font-medium border-l-4 ${getEquipmentColor(e.name)}`}
+                          >
+                            {e.count}× {e.name}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
 
             <div className="grid grid-cols-4 gap-4">
               <div>
