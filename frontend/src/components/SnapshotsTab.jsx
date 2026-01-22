@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { formatNumber } from '../lib/utils';
 import { UNIT_STATUS } from '../lib/constants';
+import { hasFullSnapshot, rollbackToSnapshot, MAX_FULL_SNAPSHOTS } from '../lib/snapshots';
+import { Button } from './ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { RotateCcw } from 'lucide-react';
 
 const STATUS_ORDER = [
   UNIT_STATUS.OPERATIONAL,
@@ -20,10 +24,24 @@ const STATUS_LABELS = {
   [UNIT_STATUS.DESTROYED]: 'DEST',
 };
 
-export default function SnapshotsTab({ force }) {
+export default function SnapshotsTab({ force, onUpdate }) {
+  const [confirmRollback, setConfirmRollback] = useState(null);
   const snapshots = force?.snapshots || [];
+  const fullSnapshots = force?.fullSnapshots || [];
 
   if (!force) return null;
+
+  const handleRollback = (snapshotId) => {
+    const result = rollbackToSnapshot(force, snapshotId);
+    if (result) {
+      onUpdate(result.restoredForce);
+      setConfirmRollback(null);
+    }
+  };
+
+  const snapshotToRollback = confirmRollback 
+    ? snapshots.find(s => s.id === confirmRollback) 
+    : null;
 
   return (
     <div className="tactical-panel" data-testid="snapshots-panel">
