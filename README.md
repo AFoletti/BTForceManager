@@ -105,4 +105,4 @@ To refresh the master mech list:
 
 1. Visit the [MekBay URL](https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true) above.
 2. Export as CSV and save to `data/mek_catalog.csv`.
-3. Run the **Update Mech Catalog** action to regenerate the JSON catalog.
+3. Push to GitHub (no JSON generation step needed).
