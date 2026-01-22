@@ -16,31 +16,34 @@ import MechAutocomplete from './MechAutocomplete';
  * Parse components string into categorized equipment arrays
  */
 function parseComponents(componentsStr) {
-  if (!componentsStr) return { weapons: [], equipment: [], ammo: [] };
+  if (!componentsStr) return { weapons: [], equipment: [] };
   
   const items = componentsStr.split(',').map(s => s.trim()).filter(Boolean);
   const weapons = [];
   const equipment = [];
-  const ammoItems = [];
+  
+  // Skip patterns - internal components and ammo
+  const skipPatterns = [
+    /armor/i, /structure/i, /engine/i, /gyro/i, /cockpit/i,
+    /\bammo\b/i, /ferro.*fibrous/i, /endo.*steel/i, /endo.*composite/i
+  ];
   
   // Equipment types that are not weapons
   const equipmentPatterns = [
-    /armor/i, /structure/i, /engine/i, /gyro/i, /cockpit/i,
-    /ecm/i, /bap/i, /c3/i, /tag/i, /narc/i, /ams/i,
-    /case/i, /targeting/i, /probe/i, /supercharger/i,
-    /tsm/i, /masc/i, /jump jet/i, /partial wing/i,
+    /ecm/i, /bap/i, /\bc3\b/i, /\btag\b/i, /\bnarc\b/i, /\bams\b/i,
+    /\bcase\b/i, /targeting/i, /probe/i, /supercharger/i,
+    /\btsm\b/i, /\bmasc\b/i, /jump jet/i, /partial wing/i,
     /void signature/i, /stealth/i, /heat sink/i,
-    /ferro/i, /endo/i, /xl engine/i, /light engine/i,
-    /capacitor/i, /apollo/i
+    /capacitor/i, /apollo/i, /artemis/i, /streak/i
   ];
   
   // Weapon patterns
   const weaponPatterns = [
-    /laser/i, /ppc/i, /ac\s*\d/i, /autocannon/i, /gauss/i,
-    /lrm/i, /srm/i, /mrm/i, /atm/i, /streak/i,
-    /machine gun/i, /mg/i, /flamer/i, /plasma/i,
-    /hag/i, /lb.*ac/i, /ultra/i, /rotary/i,
-    /thunderbolt/i, /arrow/i, /mml/i, /rocket/i
+    /laser/i, /ppc/i, /\bac[\s/-]*\d/i, /autocannon/i, /gauss/i,
+    /\blrm/i, /\bsrm/i, /\bmrm/i, /\batm\b/i,
+    /machine gun/i, /\bmg\b/i, /flamer/i, /plasma/i,
+    /\bhag\b/i, /lb.*ac/i, /\bultra\b/i, /rotary/i,
+    /thunderbolt/i, /arrow/i, /\bmml/i, /rocket/i
   ];
   
   for (const item of items) {
@@ -52,8 +55,9 @@ function parseComponents(componentsStr) {
     const name = match[2].trim();
     const location = match[3]?.trim() || '';
     
-    // Skip internal components shown in certain locations
+    // Skip internal components
     if (['Armor', 'Structure', 'Engine'].includes(location)) continue;
+    if (skipPatterns.some(p => p.test(name))) continue;
     
     const isEquipment = equipmentPatterns.some(p => p.test(name));
     const isWeapon = weaponPatterns.some(p => p.test(name));
@@ -62,15 +66,12 @@ function parseComponents(componentsStr) {
     
     if (isWeapon && !isEquipment) {
       weapons.push(entry);
-    } else if (isEquipment || location === '*') {
-      equipment.push(entry);
     } else {
-      // Default to weapon if unclear
-      weapons.push(entry);
+      equipment.push(entry);
     }
   }
   
-  return { weapons, equipment, ammo: ammoItems };
+  return { weapons, equipment };
 }
 
 /**
