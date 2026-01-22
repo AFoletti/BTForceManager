@@ -353,7 +353,12 @@ export default function MissionManager({ force, onUpdate }) {
     });
 
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
     const nextDate = advanceDateString(force.currentDate);
+
+    // Create full snapshot for rollback capability
+    const fullSnapshot = createFullSnapshot(nextForce, snapshot.id);
+    const nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
 
     onUpdate({
       ...result,
@@ -362,6 +367,7 @@ export default function MissionManager({ force, onUpdate }) {
       pilots: updatedPilots,
       currentDate: nextDate,
       snapshots: [...existingSnapshots, snapshot],
+      fullSnapshots: nextFullSnapshots,
     });
 
     setShowCompleteDialog(false);
