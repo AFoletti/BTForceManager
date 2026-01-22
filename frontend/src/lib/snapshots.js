@@ -22,6 +22,14 @@ import { UNIT_STATUS } from './constants';
  * @property {SnapshotUnitsSummary} units
  */
 
+/**
+ * @typedef {Object} FullSnapshot
+ * @property {string} id               // matches the corresponding Snapshot id
+ * @property {string} snapshotId       // reference to the linked Snapshot
+ * @property {Object} forceData        // complete force data for restoration
+ * @property {string} createdAt        // timestamp
+ */
+
 const STATUS_ORDER = [
   UNIT_STATUS.OPERATIONAL,
   UNIT_STATUS.DAMAGED,
