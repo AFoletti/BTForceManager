@@ -3,6 +3,55 @@ import { Input } from './ui/input';
 import { Search } from 'lucide-react';
 
 /**
+ * Parse CSV text into an array of mech objects.
+ * Expects columns: chassis, model, BV, tonnage (at minimum).
+ */
+function parseMechCatalogCSV(csvText) {
+  const lines = csvText.split('\n');
+  if (lines.length < 2) return [];
+
+  // Parse header (handle BOM if present)
+  const header = lines[0].replace(/^\uFEFF/, '').split(',').map(h => h.trim().toLowerCase());
+  const chassisIdx = header.indexOf('chassis');
+  const modelIdx = header.indexOf('model');
+  const bvIdx = header.indexOf('bv');
+  const tonnageIdx = header.indexOf('tonnage');
+  const mulIdIdx = header.indexOf('mul_id');
+  const yearIdx = header.indexOf('year');
+  const techBaseIdx = header.indexOf('techbase');
+  const roleIdx = header.indexOf('role');
+
+  if (chassisIdx === -1) {
+    console.warn('CSV missing required "chassis" column');
+    return [];
+  }
+
+  const mechs = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+
+    // Simple CSV parsing (handles basic cases, fields shouldn't contain commas in this dataset)
+    const cols = line.split(',');
+    const chassis = cols[chassisIdx]?.trim() || '';
+    if (!chassis) continue;
+
+    const model = modelIdx !== -1 ? cols[modelIdx]?.trim() || '' : '';
+    const name = model ? `${chassis} ${model}` : chassis;
+    const bv = bvIdx !== -1 ? parseInt(cols[bvIdx], 10) || 0 : 0;
+    const tonnage = tonnageIdx !== -1 ? parseInt(cols[tonnageIdx], 10) || 0 : 0;
+    const mulId = mulIdIdx !== -1 ? parseInt(cols[mulIdIdx], 10) || null : null;
+    const year = yearIdx !== -1 ? parseInt(cols[yearIdx], 10) || null : null;
+    const techbase = techBaseIdx !== -1 ? cols[techBaseIdx]?.trim() || null : null;
+    const role = roleIdx !== -1 ? cols[roleIdx]?.trim() || null : null;
+
+    mechs.push({ name, chassis, model, bv, tonnage, mulId, year, techbase, role });
+  }
+
+  return mechs;
+}
+
+/**
  * MechAutocomplete - A searchable dropdown for selecting mechs from the catalog
  * 
  * @param {string} value - Current input value
@@ -18,23 +67,24 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
   const wrapperRef = useRef(null);
   const listRef = useRef(null);
 
-  // Load mech catalog on mount
+  // Load mech catalog CSV on mount
   useEffect(() => {
     const loadCatalog = async () => {
       try {
         // Try multiple paths to support both development and production
         const paths = [
-          './data/mech-catalog.json',
-          '/data/mech-catalog.json',
-          `${process.env.PUBLIC_URL}/data/mech-catalog.json`,
+          './data/mek_catalog.csv',
+          '/data/mek_catalog.csv',
+          `${process.env.PUBLIC_URL}/data/mek_catalog.csv`,
         ];
         
         for (const path of paths) {
           try {
             const response = await fetch(path);
             if (response.ok) {
-              const data = await response.json();
-              setCatalog(data.mechs || []);
+              const csvText = await response.text();
+              const mechs = parseMechCatalogCSV(csvText);
+              setCatalog(mechs);
               return;
             }
           } catch {
