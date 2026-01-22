@@ -102,7 +102,8 @@ export default function MechRoster({ force, onUpdate }) {
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   
-  // Catalog info from CSV (movement, heat, components)
+  // Catalog for lookups and catalog info display
+  const [catalog, setCatalog] = useState([]);
   const [catalogInfo, setCatalogInfo] = useState(null);
   
   const [formData, setFormData] = useState({
@@ -115,6 +116,26 @@ export default function MechRoster({ force, onUpdate }) {
     history: '',
     warchestCost: 0,
   });
+
+  // Load catalog on mount
+  useEffect(() => {
+    loadMechCatalog().then(setCatalog);
+  }, []);
+
+  // Helper to extract catalog info from a mech entry
+  const extractCatalogInfo = useCallback((mechEntry) => {
+    if (!mechEntry) return null;
+    return {
+      walk: mechEntry.walk,
+      maxWalk: mechEntry.maxWalk,
+      jump: mechEntry.jump,
+      maxJump: mechEntry.maxJump,
+      heat: mechEntry.heat,
+      dissipation: mechEntry.dissipation,
+      dissipationEfficiency: mechEntry.dissipationEfficiency,
+      components: mechEntry.components,
+    };
+  }, []);
 
   const openDialog = (mech = null) => {
     if (mech) {
@@ -129,7 +150,9 @@ export default function MechRoster({ force, onUpdate }) {
         history: mech.history || '',
         warchestCost: mech.warchestCost || 0,
       });
-      setCatalogInfo(null); // Clear catalog info when editing existing mech
+      // Look up catalog info for existing mech
+      const found = lookupMechInCatalog(catalog, mech.name);
+      setCatalogInfo(extractCatalogInfo(found));
     } else {
       setEditingMech(null);
       setFormData({
