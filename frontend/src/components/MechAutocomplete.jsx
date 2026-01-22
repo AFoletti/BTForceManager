@@ -90,6 +90,52 @@ function parseMechCatalogCSV(csvText) {
   return mechs;
 }
 
+// Cached catalog for reuse
+let cachedCatalog = null;
+let catalogPromise = null;
+
+/**
+ * Load the mech catalog from CSV (cached)
+ */
+export async function loadMechCatalog() {
+  if (cachedCatalog) return cachedCatalog;
+  if (catalogPromise) return catalogPromise;
+  
+  catalogPromise = (async () => {
+    const paths = [
+      './data/mek_catalog.csv',
+      '/data/mek_catalog.csv',
+      `${process.env.PUBLIC_URL}/data/mek_catalog.csv`,
+    ];
+    
+    for (const path of paths) {
+      try {
+        const response = await fetch(path);
+        if (response.ok) {
+          const csvText = await response.text();
+          cachedCatalog = parseMechCatalogCSV(csvText);
+          return cachedCatalog;
+        }
+      } catch {
+        // Try next path
+      }
+    }
+    console.warn('Could not load mech catalog from any path');
+    return [];
+  })();
+  
+  return catalogPromise;
+}
+
+/**
+ * Look up a mech in the catalog by name (exact match)
+ */
+export function lookupMechInCatalog(catalog, mechName) {
+  if (!catalog || !mechName) return null;
+  const nameLower = mechName.toLowerCase().trim();
+  return catalog.find(m => m.name.toLowerCase() === nameLower) || null;
+}
+
 /**
  * MechAutocomplete - A searchable dropdown for selecting mechs from the catalog
  * 
