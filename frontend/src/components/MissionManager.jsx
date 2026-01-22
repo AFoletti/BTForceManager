@@ -332,10 +332,6 @@ export default function MissionManager({ force, onUpdate }) {
       pilots: updatedPilots,
     };
 
-    // Capture state BEFORE completion for rollback
-    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
-    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
-
     const result = applyMissionCompletion(
       forceAfterBattle,
       missionBeingCompleted.id,
@@ -356,10 +352,12 @@ export default function MissionManager({ force, onUpdate }) {
       label: snapshotLabel,
     });
 
+    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
     const nextDate = advanceDateString(force.currentDate);
 
-    // Create full snapshot capturing state BEFORE changes (linked to the new snapshot)
-    const fullSnapshot = createFullSnapshot(force, snapshot.id);
+    // Create full snapshot of the state AFTER changes (same as normal snapshot)
+    const fullSnapshot = createFullSnapshot(nextForce, snapshot.id);
     const nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
 
     onUpdate({
