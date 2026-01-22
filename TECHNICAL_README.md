@@ -19,8 +19,7 @@ The live app is a pure static site:
   - `data/forces/manifest.json` – list of force JSON files.
   - `data/forces/*.json` – individual force definitions.
   - `data/downtime-actions.json` – definitions for downtime/repair actions.
-  - `data/mek_catalog.csv` – master mech list from MekBay (source for catalog).
-  - `data/mech-catalog.json` – mech database for autocomplete (generated from CSV + mm-data).
+  - `data/mek_catalog.csv` – mech database for autocomplete (from MekBay).
 - `.nojekyll` – ensures GitHub Pages serves `/static` as-is.
 
 There is **no backend** and no database. All state is in memory and/or JSON.
@@ -48,8 +47,7 @@ You only need this folder if you want to change the app behaviour or styling and
 ├── package.json              # Optional helper for local static serving
 ├── data/
 │   ├── downtime-actions.json # Downtime/repair definitions
-│   ├── mek_catalog.csv       # Master mech list from MekBay (source)
-│   ├── mech-catalog.json     # Mech database for autocomplete (generated)
+│   ├── mek_catalog.csv       # Mech database for autocomplete (from MekBay)
 │   └── forces/
 │       ├── manifest.json     # List of force JSON files
 │       └── *.json            # Individual forces
@@ -58,11 +56,6 @@ You only need this folder if you want to change the app behaviour or styling and
 │   │   └── main.css          # Compiled Tailwind CSS
 │   └── js/
 │       └── main.js           # Compiled React bundle
-├── scripts/
-│   └── build-mech-database.py  # Mech catalog builder script
-├── .github/
-│   └── workflows/
-│       └── update-mech-catalog.yml  # GitHub Action to refresh mech catalog
 └── frontend/                 # Source app (React + Tailwind)
     ├── package.json
     ├── tailwind.config.js
