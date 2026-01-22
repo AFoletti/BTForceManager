@@ -448,6 +448,7 @@ export default function MechRoster({ force, onUpdate }) {
                   {/* Heat */}
                   <div className="flex items-center gap-2">
                     <Flame className="w-4 h-4 text-orange-500" />
+                    <span className="text-sm font-medium">Heat:</span>
                     <span className="text-sm">
                       <span className="text-orange-400">{catalogInfo.heat}</span>
                       <span className="text-muted-foreground"> gen</span>
