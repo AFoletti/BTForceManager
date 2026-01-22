@@ -87,17 +87,17 @@ The mech catalog uses `data/mek_catalog.csv` directly to provide autocomplete da
    
    This CSV is stored in `data/mek_catalog.csv` and provides: chassis, model, BV, year, techbase, role, and MUL ID.
 
-2. **MegaMek mm-data** – Tonnage is fetched from the [mm-data repository](https://github.com/MegaMek/mm-data) MTF files.
+2. **Tonnage** – Now provided directly by the MekBay export (the `tonnage` column in `data/mek_catalog.csv`).
 
 ### Running the Update
 
-A GitHub Action rebuilds the catalog:
+No build step is required anymore.
 
-1. Go to **Actions** → **Update Mech Catalog**.
-2. Click **Run workflow**.
-3. Optionally set `limit` to process only N mechs (for testing).
+1. Re-export the MekBay CSV.
+2. Commit `data/mek_catalog.csv`.
+3. Push to GitHub Pages.
 
-The action reads the full CSV, fetches tonnage from mm-data for each mech, and commits the updated `data/mech-catalog.json`.
+The app will load the updated CSV at runtime.
 
 ### Updating the Source CSV
 
