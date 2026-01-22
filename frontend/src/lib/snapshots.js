@@ -214,18 +214,24 @@ export function getFullSnapshot(snapshotId, fullSnapshots) {
  *
  * @param {Object} force Current force
  * @param {string} snapshotId The snapshot ID to roll back to
- * @returns {{ restoredForce: Object, snapshots: Snapshot[], fullSnapshots: FullSnapshot[] } | null}
+ * @returns {Object | null} The restored force data ready for onUpdate
  */
 export function rollbackToSnapshot(force, snapshotId) {
   const fullSnapshots = force.fullSnapshots || [];
   const snapshots = force.snapshots || [];
   
   const fullSnap = getFullSnapshot(snapshotId, fullSnapshots);
-  if (!fullSnap) return null;
+  if (!fullSnap) {
+    console.warn('Rollback failed: No full snapshot found for', snapshotId);
+    return null;
+  }
   
   // Find the index of the snapshot we're rolling back to
   const snapshotIndex = snapshots.findIndex(s => s.id === snapshotId);
-  if (snapshotIndex === -1) return null;
+  if (snapshotIndex === -1) {
+    console.warn('Rollback failed: Snapshot not found in snapshots array', snapshotId);
+    return null;
+  }
   
   // Keep only snapshots up to and including the rolled-back one
   const keptSnapshots = snapshots.slice(0, snapshotIndex + 1);
@@ -234,16 +240,13 @@ export function rollbackToSnapshot(force, snapshotId) {
   const keptSnapshotIds = new Set(keptSnapshots.map(s => s.id));
   const keptFullSnapshots = fullSnapshots.filter(fs => keptSnapshotIds.has(fs.snapshotId));
   
-  // Restore force data from the full snapshot
+  // Restore force data from the full snapshot, preserving the current force ID
   const restoredForce = {
     ...fullSnap.forceData,
+    id: force.id, // Preserve current force ID
     snapshots: keptSnapshots,
     fullSnapshots: keptFullSnapshots,
   };
   
-  return {
-    restoredForce,
-    snapshots: keptSnapshots,
-    fullSnapshots: keptFullSnapshots,
-  };
+  return restoredForce;
 }
