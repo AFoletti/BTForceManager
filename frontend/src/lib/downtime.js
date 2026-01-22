@@ -8,14 +8,15 @@ import { DOWNTIME_ACTION_IDS, UNIT_STATUS } from './constants';
  * Build the context object used when evaluating downtime formulas.
  *
  * @param {Object} force
- * @param {Object} unit Mech or Elemental
- * @returns {{ weight?: number, suitsDamaged?: number, suitsDestroyed?: number, wpMultiplier: number }}
+ * @param {Object} unit Mech, Elemental, or Pilot
+ * @returns {{ weight?: number, suitsDamaged?: number, suitsDestroyed?: number, injuries?: number, wpMultiplier: number }}
  */
 export function buildDowntimeContext(force, unit) {
   return {
     weight: unit.weight || 0,
     suitsDamaged: unit.suitsDamaged || 0,
     suitsDestroyed: unit.suitsDestroyed || 0,
+    injuries: unit.injuries || 0,
     wpMultiplier: force.wpMultiplier || 5,
   };
 }
