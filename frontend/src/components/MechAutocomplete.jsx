@@ -3,8 +3,31 @@ import { Input } from './ui/input';
 import { Search } from 'lucide-react';
 
 /**
+ * Parse a CSV line handling quoted fields (which may contain commas).
+ */
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
+/**
  * Parse CSV text into an array of mech objects.
- * Expects columns: chassis, model, BV, tonnage (at minimum).
+ * Extracts all relevant mech data including movement, heat, and components.
  */
 function parseMechCatalogCSV(csvText) {
   const lines = csvText.split('\n');
@@ -12,16 +35,12 @@ function parseMechCatalogCSV(csvText) {
 
   // Parse header (handle BOM if present)
   const header = lines[0].replace(/^\uFEFF/, '').split(',').map(h => h.trim().toLowerCase());
-  const chassisIdx = header.indexOf('chassis');
-  const modelIdx = header.indexOf('model');
-  const bvIdx = header.indexOf('bv');
-  const tonnageIdx = header.indexOf('tonnage');
-  const mulIdIdx = header.indexOf('mul_id');
-  const yearIdx = header.indexOf('year');
-  const techBaseIdx = header.indexOf('techbase');
-  const roleIdx = header.indexOf('role');
+  
+  // Build column index map
+  const colIdx = {};
+  header.forEach((col, idx) => { colIdx[col] = idx; });
 
-  if (chassisIdx === -1) {
+  if (colIdx['chassis'] === undefined) {
     console.warn('CSV missing required "chassis" column');
     return [];
   }
@@ -31,21 +50,41 @@ function parseMechCatalogCSV(csvText) {
     const line = lines[i].trim();
     if (!line) continue;
 
-    // Simple CSV parsing (handles basic cases, fields shouldn't contain commas in this dataset)
-    const cols = line.split(',');
-    const chassis = cols[chassisIdx]?.trim() || '';
+    const cols = parseCSVLine(line);
+    const chassis = cols[colIdx['chassis']]?.trim() || '';
     if (!chassis) continue;
 
-    const model = modelIdx !== -1 ? cols[modelIdx]?.trim() || '' : '';
+    const model = cols[colIdx['model']]?.trim() || '';
     const name = model ? `${chassis} ${model}` : chassis;
-    const bv = bvIdx !== -1 ? parseInt(cols[bvIdx], 10) || 0 : 0;
-    const tonnage = tonnageIdx !== -1 ? parseInt(cols[tonnageIdx], 10) || 0 : 0;
-    const mulId = mulIdIdx !== -1 ? parseInt(cols[mulIdIdx], 10) || null : null;
-    const year = yearIdx !== -1 ? parseInt(cols[yearIdx], 10) || null : null;
-    const techbase = techBaseIdx !== -1 ? cols[techBaseIdx]?.trim() || null : null;
-    const role = roleIdx !== -1 ? cols[roleIdx]?.trim() || null : null;
-
-    mechs.push({ name, chassis, model, bv, tonnage, mulId, year, techbase, role });
+    
+    // Basic info
+    const bv = parseInt(cols[colIdx['bv']], 10) || 0;
+    const tonnage = parseInt(cols[colIdx['tonnage']], 10) || 0;
+    const mulId = parseInt(cols[colIdx['mul_id']], 10) || null;
+    const year = parseInt(cols[colIdx['year']], 10) || null;
+    const techbase = cols[colIdx['techbase']]?.trim() || null;
+    const role = cols[colIdx['role']]?.trim() || null;
+    
+    // Movement
+    const walk = parseInt(cols[colIdx['walk']], 10) || 0;
+    const maxWalk = parseInt(cols[colIdx['maxwalk']], 10) || walk;
+    const jump = parseInt(cols[colIdx['jump']], 10) || 0;
+    const maxJump = parseInt(cols[colIdx['maxjump']], 10) || jump;
+    
+    // Heat
+    const heat = parseInt(cols[colIdx['heat']], 10) || 0;
+    const dissipation = parseInt(cols[colIdx['dissipation']], 10) || 0;
+    const dissipationEfficiency = parseInt(cols[colIdx['dissipationefficiency']], 10) || 0;
+    
+    // Components (equipment/weapons)
+    const componentsRaw = cols[colIdx['components']]?.trim() || '';
+    
+    mechs.push({
+      name, chassis, model, bv, tonnage, mulId, year, techbase, role,
+      walk, maxWalk, jump, maxJump,
+      heat, dissipation, dissipationEfficiency,
+      components: componentsRaw
+    });
   }
 
   return mechs;
