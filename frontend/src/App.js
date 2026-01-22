@@ -430,7 +430,7 @@ export default function App() {
             </TabsContent>
 
             <TabsContent value="snapshots">
-              <SnapshotsTab force={selectedForce} />
+              <SnapshotsTab force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
             <TabsContent value="data">
