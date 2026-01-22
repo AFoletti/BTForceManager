@@ -182,6 +182,17 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
       name: mech.name,
       bv: mech.bv || 0,
       weight: mech.tonnage || 0,
+      // Movement data
+      walk: mech.walk || 0,
+      maxWalk: mech.maxWalk || mech.walk || 0,
+      jump: mech.jump || 0,
+      maxJump: mech.maxJump || mech.jump || 0,
+      // Heat data
+      heat: mech.heat || 0,
+      dissipation: mech.dissipation || 0,
+      dissipationEfficiency: mech.dissipationEfficiency || 0,
+      // Components
+      components: mech.components || '',
     });
     setIsOpen(false);
   }, [onSelect]);
