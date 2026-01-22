@@ -55,10 +55,10 @@
     },
     {
       "id": "heal-injury",
-      "name": "Heal 1 Injury",
-      "formula": "30/wpMultiplier",
+      "name": "Heal All Injuries",
+      "formula": "(30*injuries)/wpMultiplier",
       "makesUnavailable": false,
-      "description": "Heal one pilot injury (up to maximum health)"
+      "description": "Heal all pilot injuries at once (30 WP per injury)"
     }
   ]
 }
