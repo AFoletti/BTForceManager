@@ -232,6 +232,7 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
           placeholder={placeholder}
           className="pl-9"
           autoComplete="off"
+          {...props}
         />
       </div>
 
