@@ -847,7 +847,11 @@ export default function MissionManager({ force, onUpdate }) {
               <Button variant="outline" onClick={() => setShowDialog(false)}>
                 Cancel
               </Button>
-              <Button onClick={saveMission} disabled={!formData.name} data-testid="mission-save-button">
+              <Button 
+                onClick={saveMission} 
+                disabled={!formData.name || formData.cost <= 5} 
+                data-testid="mission-save-button"
+              >
                 {editingMission ? 'Update Mission' : 'Create Mission'}
               </Button>
             </div>
