@@ -130,6 +130,11 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
       }
     };
 
+    return () => {
+      // Help GC on unmount
+      setCatalog([]);
+    };
+
     loadCatalog();
   }, []);
 
