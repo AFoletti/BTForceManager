@@ -37,28 +37,5 @@
       "makesUnavailable": false,
       "description": "Purchase replacement elemental suits"
     }
-  ],
-  "pilotActions": [
-    {
-      "id": "train-gunnery",
-      "name": "Train Gunnery",
-      "formula": "200/wpMultiplier",
-      "makesUnavailable": false,
-      "description": "Improve pilot gunnery by 1 (lower is better)"
-    },
-    {
-      "id": "train-piloting",
-      "name": "Train Piloting",
-      "formula": "150/wpMultiplier",
-      "makesUnavailable": false,
-      "description": "Improve pilot piloting by 1 (lower is better)"
-    },
-    {
-      "id": "heal-injury",
-      "name": "Heal 1 Injury",
-      "formula": "30/wpMultiplier",
-      "makesUnavailable": false,
-      "description": "Heal one pilot injury (up to maximum health)"
-    }
   ]
 }

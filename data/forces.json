@@ -1,0 +1,90 @@
+{
+  "forces": [
+    {
+      "id": "force-1",
+      "name": "Gray Death Legion",
+      "description": "Elite mercenary unit known for tactical excellence",
+      "image": "https://images.unsplash.com/photo-1589254065878-42c9da997008?w=400",
+      "startingWarchest": 1000,
+      "currentWarchest": 1000,
+      "wpMultiplier": 5,
+      "otherActionsLog": [],
+      "mechs": [
+        {
+          "id": "mech-1",
+          "name": "Atlas AS7-D",
+          "status": "Operational",
+          "pilot": "Grayson Carlyle",
+          "bv": 1897,
+          "weight": 100,
+          "image": "https://images.unsplash.com/photo-1589254066007-f3f74e0e8543?w=200",
+          "activityLog": []
+        },
+        {
+          "id": "mech-2",
+          "name": "Marauder MAD-3R",
+          "status": "Operational",
+          "pilot": "Lori Kalmar",
+          "bv": 1543,
+          "weight": 75,
+          "image": "https://images.unsplash.com/photo-1589254066213-a0c9dc853511?w=200",
+          "activityLog": []
+        }
+      ],
+      "pilots": [
+        {
+          "id": "pilot-1",
+          "name": "Grayson Carlyle",
+          "gunnery": 3,
+          "piloting": 4,
+          "injuries": 0,
+          "activityLog": []
+        },
+        {
+          "id": "pilot-2",
+          "name": "Lori Kalmar",
+          "gunnery": 4,
+          "piloting": 4,
+          "injuries": 0,
+          "activityLog": []
+        }
+      ],
+      "elementals": [
+        {
+          "id": "elemental-1",
+          "name": "Elemental Point Alpha",
+          "commander": "Star Captain Elena",
+          "gunnery": 3,
+          "antimech": 4,
+          "suitsDestroyed": 0,
+          "suitsDamaged": 0,
+          "bv": 485,
+          "status": "Operational",
+          "image": "",
+          "activityLog": []
+        }
+      ],
+      "missions": [],
+      "repairActions": [
+        {
+          "id": "repair-1",
+          "name": "Repair Armor",
+          "formula": "(weight/5)",
+          "makesUnavailable": false
+        },
+        {
+          "id": "repair-2",
+          "name": "Reconfigure Omni",
+          "formula": "(weight*20)/5",
+          "makesUnavailable": true
+        },
+        {
+          "id": "repair-3",
+          "name": "Replace Structure",
+          "formula": "(weight/3)",
+          "makesUnavailable": true
+        }
+      ]
+    }
+  ]
+}
