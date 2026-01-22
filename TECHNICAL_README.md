@@ -343,12 +343,7 @@ The mech catalog is now loaded from CSV at runtime, so the previous generated JS
 
 Run manually:
 
-```bash
-python scripts/build-mech-database.py            # process all mechs
-python scripts/build-mech-database.py --limit 10 # test with 10 mechs
-```
-
-Or use the **Update Mech Catalog** GitHub Action to rebuild and commit the catalog.
+No script run is needed anymore. Update `data/mek_catalog.csv` and redeploy.
 
 To update the master mech list, re-export the CSV from MekBay and save to `data/mek_catalog.csv`.
 
