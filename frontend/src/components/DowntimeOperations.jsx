@@ -217,8 +217,16 @@ export default function DowntimeOperations({ force, onUpdate }) {
     const lastSnapshot = existingSnapshots[lastSnapshotIndex];
     const shouldOverwrite = lastSnapshot && lastSnapshot.type === 'post-downtime';
 
+    const nextDate = advanceDateString(force.currentDate);
+
+    // Build complete working force with updated date
+    const completeWorkingForce = {
+      ...workingForce,
+      currentDate: nextDate,
+    };
+
     const snapshotLabel = 'After downtime cycle';
-    const snapshot = createSnapshot(workingForce, {
+    const snapshot = createSnapshot(completeWorkingForce, {
       type: 'post-downtime',
       label: snapshotLabel,
     });
@@ -230,30 +238,40 @@ export default function DowntimeOperations({ force, onUpdate }) {
       // Overwrite the last snapshot
       nextSnapshots = existingSnapshots.map((s, idx) => (idx === lastSnapshotIndex ? snapshot : s));
       
+      // Build force with updated snapshots for full snapshot
+      const forceForFullSnapshot = {
+        ...completeWorkingForce,
+        snapshots: nextSnapshots,
+      };
+
       // Also overwrite the corresponding full snapshot
       const existingFullIndex = existingFullSnapshots.findIndex(
         fs => fs.snapshotId === lastSnapshot.id
       );
       if (existingFullIndex !== -1) {
-        // Replace the existing full snapshot with new state
-        const newFullSnapshot = createFullSnapshot(workingForce, snapshot.id);
+        // Replace the existing full snapshot with new state (including the snapshot)
+        const newFullSnapshot = createFullSnapshot(forceForFullSnapshot, snapshot.id);
         nextFullSnapshots = existingFullSnapshots.map((fs, idx) =>
           idx === existingFullIndex ? newFullSnapshot : fs
         );
       } else {
         // Create new full snapshot
-        const fullSnapshot = createFullSnapshot(workingForce, snapshot.id);
+        const fullSnapshot = createFullSnapshot(forceForFullSnapshot, snapshot.id);
         nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
       }
     } else {
       nextSnapshots = [...existingSnapshots, snapshot];
       
-      // Create full snapshot of the state AFTER changes (same as normal snapshot)
-      const fullSnapshot = createFullSnapshot(workingForce, snapshot.id);
+      // Build force with updated snapshots for full snapshot
+      const forceForFullSnapshot = {
+        ...completeWorkingForce,
+        snapshots: nextSnapshots,
+      };
+
+      // Create full snapshot that includes the normal snapshot
+      const fullSnapshot = createFullSnapshot(forceForFullSnapshot, snapshot.id);
       nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
     }
-
-    const nextDate = advanceDateString(force.currentDate);
 
     onUpdate({
       mechs: workingForce.mechs,
