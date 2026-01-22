@@ -20,7 +20,7 @@ import {
 import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
-import { createSnapshot, advanceDateString } from '../lib/snapshots';
+import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
 
 const emptyMissionForm = {
   name: '',
@@ -170,6 +170,10 @@ export default function MissionManager({ force, onUpdate }) {
 
     const result = applyMissionCreation(force, payload, timestamp);
 
+    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
+    const nextDate = advanceDateString(force.currentDate);
+
     const nextForce = {
       ...force,
       mechs: result.mechs,
@@ -177,6 +181,7 @@ export default function MissionManager({ force, onUpdate }) {
       elementals: result.elementals,
       missions: result.missions,
       currentWarchest: result.currentWarchest,
+      currentDate: nextDate,
     };
 
     const snapshotLabel = `Prior to mission: ${payload.name || 'Unnamed mission'}`;
@@ -185,13 +190,22 @@ export default function MissionManager({ force, onUpdate }) {
       label: snapshotLabel,
     });
 
-    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
-    const nextDate = advanceDateString(force.currentDate);
+    // Build the complete force state including the new snapshot
+    const nextSnapshots = [...existingSnapshots, snapshot];
+    const forceForFullSnapshot = {
+      ...nextForce,
+      snapshots: nextSnapshots,
+    };
+
+    // Create full snapshot that includes the normal snapshot
+    const fullSnapshot = createFullSnapshot(forceForFullSnapshot, snapshot.id);
+    const nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
 
     onUpdate({
       ...result,
       currentDate: nextDate,
-      snapshots: [...existingSnapshots, snapshot],
+      snapshots: nextSnapshots,
+      fullSnapshots: nextFullSnapshots,
     });
 
     setShowDialog(false);
@@ -333,11 +347,16 @@ export default function MissionManager({ force, onUpdate }) {
       timestamp,
     );
 
+    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
+    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
+    const nextDate = advanceDateString(force.currentDate);
+
     // Build the next force state (post-mission) to generate a snapshot.
     const nextForce = {
       ...forceAfterBattle,
       missions: result.missions,
       currentWarchest: result.currentWarchest,
+      currentDate: nextDate,
     };
 
     const snapshotLabel = `After ${missionBeingCompleted.name || 'mission'}`;
@@ -346,8 +365,16 @@ export default function MissionManager({ force, onUpdate }) {
       label: snapshotLabel,
     });
 
-    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
-    const nextDate = advanceDateString(force.currentDate);
+    // Build the complete force state including the new snapshot
+    const nextSnapshots = [...existingSnapshots, snapshot];
+    const forceForFullSnapshot = {
+      ...nextForce,
+      snapshots: nextSnapshots,
+    };
+
+    // Create full snapshot that includes the normal snapshot
+    const fullSnapshot = createFullSnapshot(forceForFullSnapshot, snapshot.id);
+    const nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
 
     onUpdate({
       ...result,
@@ -355,7 +382,8 @@ export default function MissionManager({ force, onUpdate }) {
       elementals: updatedElementals,
       pilots: updatedPilots,
       currentDate: nextDate,
-      snapshots: [...existingSnapshots, snapshot],
+      snapshots: nextSnapshots,
+      fullSnapshots: nextFullSnapshots,
     });
 
     setShowCompleteDialog(false);

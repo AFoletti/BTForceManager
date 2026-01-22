@@ -144,6 +144,11 @@ export function normalizeForce(raw) {
     ? normalized.snapshots
     : [];
 
+  // Full snapshots for rollback (max 3 kept). If not present, default to []
+  normalized.fullSnapshots = Array.isArray(normalized.fullSnapshots)
+    ? normalized.fullSnapshots
+    : [];
+
   return normalized;
 }
 
