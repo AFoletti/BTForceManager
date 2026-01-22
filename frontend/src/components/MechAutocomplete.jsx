@@ -21,16 +21,95 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
 
   // Load mech catalog on mount
   useEffect(() => {
+    const normalizeChassis = (chassis) => {
+      if (!chassis) return '';
+      // MekBay exports sometimes wrap names with single-quotes; keep them as-is for display
+      // but normalize whitespace.
+      return String(chassis).trim().replace(/\s+/g, ' ');
+    };
+
+    const normalizeModel = (model) => {
+      if (model === undefined || model === null) return '';
+      return String(model).trim().replace(/\s+/g, ' ');
+    };
+
+    const toIntOrNull = (v) => {
+      if (v === undefined || v === null || v === '') return null;
+      const n = Number(String(v).trim());
+      return Number.isFinite(n) ? Math.trunc(n) : null;
+    };
+
+    const parseCSVToCatalog = (csvText) => {
+      const parsed = Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true,
+      });
+
+      if (parsed.errors?.length) {
+        // Still try to proceed (Papa can emit non-fatal issues)
+        console.warn('Mech catalog CSV parse warnings:', parsed.errors.slice(0, 5));
+      }
+
+      const rows = Array.isArray(parsed.data) ? parsed.data : [];
+
+      const mechs = rows
+        .map((row) => {
+          // BOM-safe chassis key
+          const chassis = normalizeChassis(row.chassis ?? row['\ufeffchassis']);
+          const model = normalizeModel(row.model);
+          if (!chassis) return null;
+
+          const name = `${chassis} ${model}`.trim();
+
+          return {
+            name,
+            chassis,
+            model,
+            bv: toIntOrNull(row.BV),
+            tonnage: toIntOrNull(row.tonnage),
+            mulId: toIntOrNull(row.mul_id),
+            year: toIntOrNull(row.year),
+            techbase: row.techBase ? String(row.techBase).trim() : null,
+            role: row.role ? String(row.role).trim() : null,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      return mechs;
+    };
+
     const loadCatalog = async () => {
       try {
-        // Try multiple paths to support both development and production
-        const paths = [
+        // Prefer CSV (source of truth). Fallback to legacy JSON for safety.
+        const candidates = [
+          './data/mek_catalog.csv',
+          '/data/mek_catalog.csv',
+          `${process.env.PUBLIC_URL}/data/mek_catalog.csv`,
+        ];
+
+        for (const path of candidates) {
+          try {
+            const response = await fetch(path);
+            if (response.ok) {
+              const text = await response.text();
+              const mechs = parseCSVToCatalog(text);
+              setCatalog(mechs);
+              return;
+            }
+          } catch {
+            // Try next path
+          }
+        }
+
+        // Fallback to JSON (older deployments)
+        const jsonPaths = [
           './data/mech-catalog.json',
           '/data/mech-catalog.json',
           `${process.env.PUBLIC_URL}/data/mech-catalog.json`,
         ];
-        
-        for (const path of paths) {
+
+        for (const path of jsonPaths) {
           try {
             const response = await fetch(path);
             if (response.ok) {
@@ -42,13 +121,15 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
             // Try next path
           }
         }
-        console.warn('Could not load mech catalog from any path');
+
+        console.warn('Could not load mech catalog from CSV or JSON');
       } catch (error) {
         console.warn('Could not load mech catalog:', error);
       } finally {
         setIsLoading(false);
       }
     };
+
     loadCatalog();
   }, []);
 
