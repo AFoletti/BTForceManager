@@ -1,13 +1,7 @@
 name: Update Mek Catalog CSV (no build step)
 
 on:
-  workflow_dispatch:
-    inputs:
-      limit:
-        description: 'Limit number of mechs to process (0 = all)'
-        required: false
-        default: '0'
-        type: string
+  workflow_dispatch: {}
 
 # Grant write permissions to the GITHUB_TOKEN for committing changes
 permissions:
