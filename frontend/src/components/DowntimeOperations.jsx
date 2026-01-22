@@ -94,13 +94,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
     const action = availableActions.find((a) => a.id === selectedAction);
     if (!action || action.id === 'other') return 0;
 
-    if (selectedUnitType === 'pilot') {
-      // For pilot actions, we currently use flat WP costs from downtime-actions.json
-      // so the formula is evaluated with only wpMultiplier.
-      const context = buildDowntimeContext(force, {});
-      return evaluateDowntimeCost(action.formula, context);
-    }
-
+    // Build context with unit data (works for mechs, elementals, and pilots)
     const context = buildDowntimeContext(force, selectedUnit);
     return evaluateDowntimeCost(action.formula, context);
   };
