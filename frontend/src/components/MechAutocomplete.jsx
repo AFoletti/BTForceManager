@@ -11,7 +11,7 @@ import Papa from 'papaparse';
  * @param {function} onSelect - Called with full mech data when a mech is selected from the list
  * @param {string} placeholder - Input placeholder text
  */
-export default function MechAutocomplete({ value, onChange, onSelect, placeholder = "Search mechs..." }) {
+export default function MechAutocomplete({ value, onChange, onSelect, placeholder = "Search mechs...", ...props }) {
   const [catalog, setCatalog] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
