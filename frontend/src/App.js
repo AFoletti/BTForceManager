@@ -225,6 +225,26 @@ export default function App() {
                       className="max-h-32 max-w-32 rounded object-contain border-2 border-primary"
                     />
                   )}
+                  
+                  {/* Special Abilities Table - between image and main content */}
+                  {selectedForce.specialAbilities && selectedForce.specialAbilities.length > 0 && (
+                    <div className="border border-border rounded bg-muted/30 p-3 min-w-48 max-w-64">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                        Special Abilities
+                      </h3>
+                      <table className="w-full text-xs">
+                        <tbody>
+                          {selectedForce.specialAbilities.map((ability, index) => (
+                            <tr key={index} className="border-b border-border/50 last:border-0">
+                              <td className="py-1 pr-2 font-medium text-foreground">{ability.title}</td>
+                              <td className="py-1 text-muted-foreground">{ability.description}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
                   <div className="flex-1">
                     <h2 className="text-2xl font-bold text-foreground mb-2">{selectedForce.name}</h2>
                     <p className="text-sm text-muted-foreground mb-3">{selectedForce.description}</p>
