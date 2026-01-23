@@ -6,6 +6,16 @@
   "startingWarchest": 2000,
   "currentWarchest": 902,
   "wpMultiplier": 5,
+  "specialAbilities": [
+    {
+      "title": "Zellbrigen",
+      "description": "Clan Honor Dueling Protocols"
+    },
+    {
+      "title": "Blood Fury",
+      "description": "+1 Initiative when outnumbered"
+    }
+  ],
   "mechs": [
     {
       "id": "mech-1763627170957",
