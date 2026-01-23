@@ -745,7 +745,7 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
               return (
                 <View key={pilot.id} style={[styles.unitCard, styles.rosterItem]} wrap={false}>
                   <View style={styles.unitHeader}>
-                    <Text style={styles.unitName}>{getPilotDisplayName(pilot)}</Text>
+                    <Text style={styles.unitName}>{getPilotDisplayNamePDF(pilot)}</Text>
                     <Text
                       style={
                         pilot.injuries === 6
