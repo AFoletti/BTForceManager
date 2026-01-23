@@ -8,7 +8,7 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from '../lib/mechs';
-import { getPilotDisplayName } from '../lib/pilots';
+// Note: getPilotDisplayName not imported - using PDF-specific version instead
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { computeCombatStats } from '../lib/achievements';
