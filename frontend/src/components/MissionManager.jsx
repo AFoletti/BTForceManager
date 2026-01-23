@@ -63,6 +63,23 @@ export default function MissionManager({ force, onUpdate }) {
     elementals: {},
     pilots: {},
   });
+  
+  // Combat tracking state for kills and assists
+  const [pilotCombatUpdates, setPilotCombatUpdates] = useState({});
+  const [killSearchInput, setKillSearchInput] = useState({});
+  
+  // Achievements state
+  const [achievementDefinitions, setAchievementDefinitions] = useState([]);
+  const [showAchievementsPopup, setShowAchievementsPopup] = useState(false);
+  const [newAchievements, setNewAchievements] = useState([]);
+
+  // Load achievement definitions
+  useEffect(() => {
+    fetch('./data/achievements.json')
+      .then((res) => res.json())
+      .then((data) => setAchievementDefinitions(data.achievements || []))
+      .catch(() => setAchievementDefinitions([]));
+  }, []);
 
   const normaliseObjectives = (rawObjectives) => {
     if (Array.isArray(rawObjectives)) return rawObjectives;
