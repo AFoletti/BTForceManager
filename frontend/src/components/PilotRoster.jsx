@@ -488,6 +488,95 @@ export default function PilotRoster({ force, onUpdate }) {
               />
             </div>
 
+            {/* Combat Record Section - Only shown when editing existing pilot */}
+            {editingPilot && (editingPilot.combatRecord?.kills?.length > 0 || editingPilot.achievements?.length > 0) && (
+              <div className="border border-border rounded p-4 bg-muted/10">
+                <h4 className="text-sm font-semibold mb-3">Combat Record</h4>
+                
+                {/* Stats Summary */}
+                {(() => {
+                  const stats = computeCombatStats(editingPilot.combatRecord);
+                  return (
+                    <div className="grid grid-cols-4 gap-2 text-xs mb-3">
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg text-primary">{stats.killCount}</div>
+                        <div className="text-muted-foreground">Kills</div>
+                      </div>
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg">{stats.assists}</div>
+                        <div className="text-muted-foreground">Assists</div>
+                      </div>
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg">{stats.missionsCompleted}</div>
+                        <div className="text-muted-foreground">Missions</div>
+                      </div>
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg">{formatNumber(stats.totalTonnageDestroyed)}t</div>
+                        <div className="text-muted-foreground">Tonnage</div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Kill List Table */}
+                {editingPilot.combatRecord?.kills?.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Kill List</div>
+                    <div className="max-h-32 overflow-y-auto border border-border rounded">
+                      <table className="w-full text-xs">
+                        <thead className="bg-muted/50 sticky top-0">
+                          <tr>
+                            <th className="text-left px-2 py-1">Mech</th>
+                            <th className="text-center px-2 py-1">Tonnage</th>
+                            <th className="text-left px-2 py-1">Mission</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {editingPilot.combatRecord.kills.map((kill, idx) => (
+                            <tr key={idx} className="border-t border-border/50">
+                              <td className="px-2 py-1 font-medium">{kill.mechModel}</td>
+                              <td className="px-2 py-1 text-center">{kill.tonnage}t</td>
+                              <td className="px-2 py-1 text-muted-foreground">{kill.mission}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Achievements Table */}
+                {editingPilot.achievements?.length > 0 && (
+                  <div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Achievements</div>
+                    <div className="max-h-32 overflow-y-auto border border-border rounded">
+                      <table className="w-full text-xs">
+                        <thead className="bg-muted/50 sticky top-0">
+                          <tr>
+                            <th className="text-center px-2 py-1 w-10">Icon</th>
+                            <th className="text-left px-2 py-1">Achievement</th>
+                            <th className="text-left px-2 py-1">Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {editingPilot.achievements.map((achId) => {
+                            const ach = getAchievementById(achId);
+                            return (
+                              <tr key={achId} className="border-t border-border/50">
+                                <td className="px-2 py-1 text-center text-base">{ach.icon}</td>
+                                <td className="px-2 py-1 font-medium">{ach.name}</td>
+                                <td className="px-2 py-1 text-muted-foreground">{ach.description}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={() => setShowDialog(false)} data-testid="pilot-dialog-cancel-button">
                 Cancel
