@@ -327,12 +327,18 @@ export default function MissionManager({ force, onUpdate }) {
     });
 
     const pilotState = {};
+    const combatUpdates = {};
     assignedMechs.forEach((mech) => {
       const pilot = findPilotForMech(force, mech);
       if (pilot) {
         pilotState[pilot.id] = {
           injuries:
             typeof pilot.injuries === 'number' && pilot.injuries >= 0 ? pilot.injuries : 0,
+        };
+        // Initialize combat updates for this pilot
+        combatUpdates[pilot.id] = {
+          kills: [],
+          assists: 0,
         };
       }
     });
@@ -342,6 +348,11 @@ export default function MissionManager({ force, onUpdate }) {
       elementals: elementalState,
       pilots: pilotState,
     });
+    
+    // Reset combat tracking state
+    setPilotCombatUpdates(combatUpdates);
+    setKillSearchInput({});
+    setNewAchievements([]);
 
     setMissionBeingCompleted(mission);
     setCompletionObjectives(objectives);
