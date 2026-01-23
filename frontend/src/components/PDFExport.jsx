@@ -816,21 +816,19 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                             </View>
                           )}
                           
-                          {/* Achievements Table */}
+                          {/* Achievements Table (no icons - PDF doesn't support emoji) */}
                           {achievements.length > 0 && (
                             <View style={{ marginTop: 4, borderWidth: 0.5, borderColor: '#D1D5DB' }}>
                               <View style={{ flexDirection: 'row', backgroundColor: '#F3F4F6', borderBottomWidth: 0.5, borderBottomColor: '#D1D5DB' }}>
-                                <Text style={{ width: '10%', fontSize: 7, fontWeight: 'bold', padding: 2, textAlign: 'center' }}>Icon</Text>
-                                <Text style={{ width: '30%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Achievement</Text>
-                                <Text style={{ width: '60%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Description</Text>
+                                <Text style={{ width: '35%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Achievement</Text>
+                                <Text style={{ width: '65%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Description</Text>
                               </View>
                               {achievements.map((achId) => {
-                                const achDef = achievementDefs.find(a => a.id === achId) || { icon: '🏆', name: achId, description: '' };
+                                const achDef = achievementDefs.find(a => a.id === achId) || { name: achId, description: '' };
                                 return (
                                   <View key={achId} style={{ flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#E5E7EB' }}>
-                                    <Text style={{ width: '10%', fontSize: 8, padding: 2, textAlign: 'center' }}>{achDef.icon}</Text>
-                                    <Text style={{ width: '30%', fontSize: 7, padding: 2, fontWeight: 'bold' }}>{achDef.name}</Text>
-                                    <Text style={{ width: '60%', fontSize: 7, padding: 2, color: '#6B7280' }}>{achDef.description}</Text>
+                                    <Text style={{ width: '35%', fontSize: 7, padding: 2, fontWeight: 'bold' }}>{achDef.name}</Text>
+                                    <Text style={{ width: '65%', fontSize: 7, padding: 2, color: '#6B7280' }}>{achDef.description}</Text>
                                   </View>
                                 );
                               })}
