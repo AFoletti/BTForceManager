@@ -938,16 +938,24 @@ export default function MissionManager({ force, onUpdate }) {
               formData.assignedElementals.length > 0) && (
               <div className="p-3 bg-primary/10 border border-primary/20 rounded">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold">Combined Force Total BV:</span>
-                  <span className="text-2xl font-bold font-mono text-primary">
-                    {formatNumber(
-                      calculateMissionTotalBV(
-                        force,
-                        formData.assignedMechs,
-                        formData.assignedElementals,
-                      ),
-                    )}
-                  </span>
+                  <div>
+                    <span className="font-semibold">Combined Force:</span>
+                    <span className="ml-4 text-sm text-muted-foreground">
+                      Tonnage: <span className="font-mono font-bold">{formatNumber(formData.totalTonnage || 0)}t</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Total BV:</span>
+                    <span className="text-2xl font-bold font-mono text-primary">
+                      {formatNumber(
+                        calculateMissionTotalBV(
+                          force,
+                          formData.assignedMechs,
+                          formData.assignedElementals,
+                        ),
+                      )}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
