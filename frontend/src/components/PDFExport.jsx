@@ -1239,6 +1239,15 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
 
 export default function PDFExport({ force }) {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [achievementDefs, setAchievementDefs] = useState([]);
+
+  // Load achievement definitions
+  useEffect(() => {
+    fetch('./data/achievements.json')
+      .then((res) => res.json())
+      .then((data) => setAchievementDefs(data.achievements || []))
+      .catch(() => setAchievementDefs([]));
+  }, []);
 
   if (!force) return null;
 
@@ -1248,7 +1257,7 @@ export default function PDFExport({ force }) {
       const safeName = force.name ? force.name.replace(/\s+/g, '_') : 'force';
       const fileName = `${safeName}_Force_Report.pdf`;
 
-      const blob = await pdf(<ForcePDF force={force} />).toBlob();
+      const blob = await pdf(<ForcePDF force={force} achievementDefs={achievementDefs} />).toBlob();
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
