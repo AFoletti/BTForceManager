@@ -33,12 +33,24 @@ const emptyMissionForm = {
   completed: false,
   assignedMechs: [],
   assignedElementals: [],
+  spBudget: 0,
+  spPurchases: [],
+  totalTonnage: 0,
 };
 
 export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
   const [formData, setFormData] = useState(emptyMissionForm);
+  const [spChoices, setSpChoices] = useState([]);
+
+  // Load SP choices from JSON file
+  useEffect(() => {
+    fetch('./data/sp-choices.json')
+      .then((res) => res.json())
+      .then((data) => setSpChoices(data.spChoices || []))
+      .catch(() => setSpChoices([]));
+  }, []);
 
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
   const [missionBeingCompleted, setMissionBeingCompleted] = useState(null);
