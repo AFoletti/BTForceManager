@@ -485,6 +485,12 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
     return `${entry?.action || ''}${missionLabel}${costLabel}`;
   };
 
+  // PDF-specific pilot name formatter (uses [Dezgra] text instead of emoji)
+  const getPilotDisplayNamePDF = (pilot) => {
+    if (!pilot) return '';
+    return `${pilot.name || ''}${pilot.dezgra ? ' [Dezgra]' : ''}`.trim();
+  };
+
   const currentWarchest =
     typeof force.currentWarchest === 'number'
       ? force.currentWarchest
