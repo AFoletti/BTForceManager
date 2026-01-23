@@ -1547,6 +1547,51 @@ export default function MissionManager({ force, onUpdate }) {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Achievements Popup */}
+      <Dialog open={showAchievementsPopup} onOpenChange={setShowAchievementsPopup}>
+        <DialogContent onClose={() => setShowAchievementsPopup(false)} className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Trophy className="w-6 h-6 text-yellow-500" />
+              Achievements Unlocked!
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {newAchievements.map((pilotAchievements) => (
+              <div key={pilotAchievements.pilotId} className="space-y-2">
+                <div className="font-semibold text-foreground">
+                  {pilotAchievements.pilotName}
+                </div>
+                <div className="space-y-2 pl-2">
+                  {pilotAchievements.achievements.map((achievementId) => {
+                    const achievement = getAchievementById(achievementId);
+                    return (
+                      <div 
+                        key={achievementId}
+                        className="flex items-center gap-3 p-2 bg-muted/30 rounded border border-border"
+                      >
+                        <span className="text-2xl">{achievement.icon}</span>
+                        <div>
+                          <div className="font-medium text-sm">{achievement.name}</div>
+                          <div className="text-xs text-muted-foreground">{achievement.description}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="flex justify-end pt-2">
+            <Button onClick={() => setShowAchievementsPopup(false)}>
+              Continue
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
