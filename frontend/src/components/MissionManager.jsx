@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Target, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
+import { Plus, Target, CheckCircle2, AlertCircle, Shield, X } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { Select } from './ui/select';
 import { formatDate, formatNumber } from '../lib/utils';
 import {
   calculateMissionTotalBV,
+  calculateMissionTotalTonnage,
   getAssignedMechs,
   getAssignedElementals,
   applyMissionCreation,
