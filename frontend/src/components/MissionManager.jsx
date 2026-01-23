@@ -778,12 +778,14 @@ export default function MissionManager({ force, onUpdate }) {
                 <label className="block text-sm font-medium mb-2">
                   <div className="flex items-center justify-between">
                     <span>Assign Mechs to Mission</span>
-                    <span className="text-xs text-primary font-mono">
-                      BV:{' '}
-                      {formatNumber(
-                        calculateMissionTotalBV(force, formData.assignedMechs, []),
-                      )}
-                    </span>
+                    <div className="flex gap-3">
+                      <span className="text-xs font-mono">
+                        Tonnage: {formatNumber(formData.totalTonnage || 0)}t
+                      </span>
+                      <span className="text-xs text-primary font-mono">
+                        BV: {formatNumber(calculateMissionTotalBV(force, formData.assignedMechs, []))}
+                      </span>
+                    </div>
                   </div>
                 </label>
                 <div className="border border-border rounded p-3 bg-muted/20 max-h-60 overflow-y-auto">
