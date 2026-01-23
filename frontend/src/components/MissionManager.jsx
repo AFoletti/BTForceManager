@@ -522,16 +522,24 @@ export default function MissionManager({ force, onUpdate }) {
                               <Shield className="w-4 h-4 text-primary" />
                               <span className="font-medium text-sm">Assigned Force</span>
                             </div>
-                            <div className="text-sm">
-                              <span className="text-muted-foreground">Total BV:</span>
-                              <span className="ml-2 font-mono font-bold text-primary">
-                                {formatNumber(
-                                  calculateMissionTotalBV(
-                                    force,
-                                    mission.assignedMechs,
-                                    mission.assignedElementals || [],
-                                  ),
-                                )}
+                            <div className="text-sm flex gap-4">
+                              <span>
+                                <span className="text-muted-foreground">Tonnage:</span>
+                                <span className="ml-1 font-mono font-bold">
+                                  {formatNumber(mission.totalTonnage || calculateMissionTotalTonnage(force, mission.assignedMechs))}t
+                                </span>
+                              </span>
+                              <span>
+                                <span className="text-muted-foreground">Total BV:</span>
+                                <span className="ml-1 font-mono font-bold text-primary">
+                                  {formatNumber(
+                                    calculateMissionTotalBV(
+                                      force,
+                                      mission.assignedMechs,
+                                      mission.assignedElementals || [],
+                                    ),
+                                  )}
+                                </span>
                               </span>
                             </div>
                           </div>
