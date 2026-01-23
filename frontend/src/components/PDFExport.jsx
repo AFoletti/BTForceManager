@@ -1104,7 +1104,7 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                       const pilot = findPilotForMech(force, m);
                       return (
                         <Text key={m.id} style={styles.missionUnits}>
-                          • {m.name}{pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.weight || 0}t, {m.status || 'Unknown'})
+                          • {m.name}{pilot && pilot.dezgra ? ' 🚫' : ''} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.weight || 0}t, {m.status || 'Unknown'})
                         </Text>
                       );
                     })}
