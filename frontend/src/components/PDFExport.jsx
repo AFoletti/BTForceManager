@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer';
 import { Button } from './ui/button';
 import {
@@ -11,6 +11,7 @@ import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from '../lib/me
 import { getPilotDisplayName } from '../lib/pilots';
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
+import { computeCombatStats } from '../lib/achievements';
 
 // Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
