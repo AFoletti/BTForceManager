@@ -271,17 +271,20 @@ export default function PilotRoster({ force, onUpdate }) {
               <th onClick={() => handleSort('piloting')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
                 <div className="flex items-center justify-center">Piloting <SortIcon column="piloting" /></div>
               </th>
+              <th onClick={() => handleSort('kills')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-center">Kills <SortIcon column="kills" /></div>
+              </th>
+              <th className="text-center">Achievements</th>
               <th onClick={() => handleSort('injuries')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
                 <div className="flex items-center justify-center">Injuries <SortIcon column="injuries" /></div>
               </th>
               <th className="text-center">Actions</th>
-              <th>Recent Activity</th>
             </tr>
           </thead>
           <tbody>
             {sortedPilots.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center py-8 text-muted-foreground">
+                <td colSpan="8" className="text-center py-8 text-muted-foreground">
                   {force.pilots.length === 0 
                     ? "No pilots in roster. Add pilots via Data Editor." 
                     : "No pilots match your filter."}
@@ -290,6 +293,9 @@ export default function PilotRoster({ force, onUpdate }) {
             ) : (
               sortedPilots.map((pilot) => {
                 const assignedMech = findMechForPilot(force, pilot);
+                const combatStats = computeCombatStats(pilot.combatRecord);
+                const achievements = pilot.achievements || [];
+                const kills = pilot.combatRecord?.kills || [];
 
                 return (
                   <tr
@@ -310,6 +316,57 @@ export default function PilotRoster({ force, onUpdate }) {
                     </td>
                     <td className="text-center font-mono">{pilot.gunnery}</td>
                     <td className="text-center font-mono">{pilot.piloting}</td>
+                    <td className="text-center">
+                      <div className="relative group">
+                        <span className="font-mono font-bold text-primary">{combatStats.killCount}</span>
+                        {kills.length > 0 && (
+                          <div className="absolute z-50 hidden group-hover:block bg-popover border border-border rounded-md shadow-lg p-2 min-w-48 left-1/2 -translate-x-1/2 mt-1 text-xs">
+                            <div className="font-semibold mb-1">Kill List:</div>
+                            {kills.map((kill, idx) => (
+                              <div key={idx} className="text-muted-foreground py-0.5">
+                                • {kill.mechModel} ({kill.tonnage}t)
+                              </div>
+                            ))}
+                            <div className="border-t border-border mt-1 pt-1 text-muted-foreground">
+                              Assists: {combatStats.assists}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="text-center">
+                      <div className="relative group flex justify-center gap-0.5">
+                        {achievements.length > 0 ? (
+                          <>
+                            {achievements.slice(0, 4).map((achId) => {
+                              const ach = getAchievementById(achId);
+                              return (
+                                <span key={achId} className="text-sm" title={`${ach.name}: ${ach.description}`}>
+                                  {ach.icon}
+                                </span>
+                              );
+                            })}
+                            {achievements.length > 4 && (
+                              <span className="text-xs text-muted-foreground">+{achievements.length - 4}</span>
+                            )}
+                            <div className="absolute z-50 hidden group-hover:block bg-popover border border-border rounded-md shadow-lg p-2 min-w-48 left-1/2 -translate-x-1/2 mt-1 text-xs">
+                              <div className="font-semibold mb-1">Achievements:</div>
+                              {achievements.map((achId) => {
+                                const ach = getAchievementById(achId);
+                                return (
+                                  <div key={achId} className="py-0.5 flex items-center gap-2">
+                                    <span>{ach.icon}</span>
+                                    <span className="font-medium">{ach.name}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-muted-foreground/50 text-xs">—</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="text-center">
                       <Badge variant={getInjuryColor(pilot.injuries)}>
                         {getInjuryDisplay(pilot.injuries)}
@@ -334,15 +391,6 @@ export default function PilotRoster({ force, onUpdate }) {
                           <Plus className="w-4 h-4" />
                         </Button>
                       </div>
-                    </td>
-                    <td className="text-xs text-muted-foreground">
-                      {pilot.activityLog && pilot.activityLog.length > 0 ? (
-                        <div className="max-w-xs truncate">
-                          {pilot.activityLog[pilot.activityLog.length - 1].action}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground/50">No activity</span>
-                      )}
                     </td>
                   </tr>
                 );
