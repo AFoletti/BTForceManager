@@ -578,6 +578,25 @@ export default function MissionManager({ force, onUpdate }) {
                         </div>
                       )}
 
+                      {/* SP Purchases */}
+                      {mission.spPurchases && mission.spPurchases.length > 0 && (
+                        <div className="mt-3 p-3 bg-background/50 rounded border border-border">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-sm">Support Point Purchases</span>
+                            <span className="text-xs text-muted-foreground">
+                              Budget: {formatNumber(mission.spBudget || 0)} SP
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {mission.spPurchases.map((purchase) => (
+                              <Badge key={purchase.id} variant="outline" className="text-xs">
+                                {purchase.name} ({purchase.cost} SP)
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       {mission.recap && (
                         <div className="text-sm mt-2 p-3 bg-background/50 rounded">
                           <span className="font-medium">Mission Recap:</span>
