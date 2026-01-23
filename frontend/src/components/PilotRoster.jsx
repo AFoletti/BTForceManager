@@ -229,11 +229,6 @@ export default function PilotRoster({ force, onUpdate }) {
     return 0;
   });
 
-  const SortIcon = ({ column }) => {
-    if (sortConfig.key !== column) return null;
-    return sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
-  };
-
   return (
     <div className="tactical-panel">
       <div className="tactical-header">
@@ -266,23 +261,23 @@ export default function PilotRoster({ force, onUpdate }) {
           <thead>
             <tr>
               <th onClick={() => handleSort('name')} className="cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center">Name <SortIcon column="name" /></div>
+                <div className="flex items-center">Name <SortIcon sortKey="name" sortConfig={sortConfig} /></div>
               </th>
               <th onClick={() => handleSort('mech')} className="cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center">Mech <SortIcon column="mech" /></div>
+                <div className="flex items-center">Mech <SortIcon sortKey="mech" sortConfig={sortConfig} /></div>
               </th>
               <th onClick={() => handleSort('gunnery')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center justify-center">Gunnery <SortIcon column="gunnery" /></div>
+                <div className="flex items-center justify-center">Gunnery <SortIcon sortKey="gunnery" sortConfig={sortConfig} /></div>
               </th>
               <th onClick={() => handleSort('piloting')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center justify-center">Piloting <SortIcon column="piloting" /></div>
+                <div className="flex items-center justify-center">Piloting <SortIcon sortKey="piloting" sortConfig={sortConfig} /></div>
               </th>
               <th onClick={() => handleSort('kills')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center justify-center">Kills <SortIcon column="kills" /></div>
+                <div className="flex items-center justify-center">Kills <SortIcon sortKey="kills" sortConfig={sortConfig} /></div>
               </th>
               <th className="text-center">Achievements</th>
               <th onClick={() => handleSort('injuries')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center justify-center">Injuries <SortIcon column="injuries" /></div>
+                <div className="flex items-center justify-center">Injuries <SortIcon sortKey="injuries" sortConfig={sortConfig} /></div>
               </th>
               <th className="text-center">Actions</th>
             </tr>
