@@ -155,6 +155,22 @@ export function calculateMissionTotalBV(force, mechIds, elementalIds = []) {
 }
 
 /**
+ * Calculate the total tonnage of assigned mechs for a mission.
+ * Only mechs have tonnage; elementals do not contribute.
+ *
+ * @param {Force} force
+ * @param {string[]} mechIds
+ * @returns {number}
+ */
+export function calculateMissionTotalTonnage(force, mechIds) {
+  return mechIds.reduce((total, mechId) => {
+    const mech = force.mechs.find((m) => m.id === mechId);
+    if (!mech) return total;
+    return total + (mech.weight || 0);
+  }, 0);
+}
+
+/**
  * Return the mech objects corresponding to the given ids, preserving order.
  *
  * @param {Force} force
