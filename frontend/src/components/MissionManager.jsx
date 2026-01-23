@@ -1400,45 +1400,116 @@ export default function MissionManager({ force, onUpdate }) {
                     </div>
                   )}
 
-                {/* Deployed Pilots */}
+                {/* Deployed Pilots - Injuries + Combat Record */}
                 {Object.keys(postMissionUnitState.pilots).length > 0 && (
                   <div className="border border-border rounded p-3 bg-muted/10">
-                    <div className="text-xs font-semibold mb-2">Pilots</div>
-                    <div className="space-y-1">
+                    <div className="text-xs font-semibold mb-2">Pilots - Combat Record</div>
+                    <div className="space-y-4">
                       {(force.pilots || [])
                         .filter((pilot) => postMissionUnitState.pilots[pilot.id])
                         .map((pilot) => {
                           const state = postMissionUnitState.pilots[pilot.id];
+                          const combatUpdate = pilotCombatUpdates[pilot.id] || { kills: [], assists: 0 };
+                          const searchValue = killSearchInput[pilot.id] || '';
+                          
                           return (
                             <div
                               key={pilot.id}
-                              className="flex items-center justify-between gap-2 text-xs"
+                              className="border border-border/50 rounded p-2 bg-background/50"
                             >
-                              <span className="font-medium">{pilot.name}</span>
-                              <div className="flex items-center gap-1">
-                                <span className="text-[11px] text-muted-foreground">Injuries</span>
-                                <Input
-                                  type="number"
-                                  className="h-7 w-16 text-xs"
-                                  value={state.injuries}
-                                  min={0}
-                                  max={6}
-                                  onChange={(e) => {
-                                    const value = parseInt(e.target.value, 10);
-                                    setPostMissionUnitState((prev) => ({
-                                      ...prev,
-                                      pilots: {
-                                        ...prev.pilots,
-                                        [pilot.id]: {
-                                          ...prev.pilots[pilot.id],
-                                          injuries: Number.isNaN(value)
-                                            ? 0
-                                            : Math.max(0, Math.min(6, value)),
+                              <div className="flex items-center justify-between gap-2 text-xs mb-2">
+                                <span className="font-medium text-sm">{pilot.name}</span>
+                                <div className="flex items-center gap-1">
+                                  <span className="text-[11px] text-muted-foreground">Injuries</span>
+                                  <Input
+                                    type="number"
+                                    className="h-7 w-16 text-xs"
+                                    value={state.injuries}
+                                    min={0}
+                                    max={6}
+                                    onChange={(e) => {
+                                      const value = parseInt(e.target.value, 10);
+                                      setPostMissionUnitState((prev) => ({
+                                        ...prev,
+                                        pilots: {
+                                          ...prev.pilots,
+                                          [pilot.id]: {
+                                            ...prev.pilots[pilot.id],
+                                            injuries: Number.isNaN(value)
+                                              ? 0
+                                              : Math.max(0, Math.min(6, value)),
+                                          },
                                         },
-                                      },
-                                    }));
-                                  }}
-                                />
+                                      }));
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              
+                              {/* Kills Section */}
+                              <div className="mt-2">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[11px] text-muted-foreground">Kills:</span>
+                                </div>
+                                
+                                {/* Kill Entry */}
+                                <div className="flex gap-2 mb-2">
+                                  <div className="flex-1">
+                                    <MechAutocomplete
+                                      value={searchValue}
+                                      onChange={(val) => setKillSearchInput((prev) => ({ ...prev, [pilot.id]: val }))}
+                                      onSelect={(mechData) => addPilotKill(pilot.id, mechData)}
+                                      placeholder="Search mech destroyed..."
+                                    />
+                                  </div>
+                                </div>
+                                
+                                {/* Kill List */}
+                                {combatUpdate.kills.length > 0 && (
+                                  <div className="space-y-1 mb-2">
+                                    {combatUpdate.kills.map((kill) => (
+                                      <div 
+                                        key={kill.id}
+                                        className="flex items-center justify-between text-xs bg-muted/30 rounded px-2 py-1"
+                                      >
+                                        <span>{kill.mechModel} ({kill.tonnage}t)</span>
+                                        <Button
+                                          size="icon"
+                                          variant="ghost"
+                                          className="h-5 w-5"
+                                          onClick={() => removePilotKill(pilot.id, kill.id)}
+                                        >
+                                          <X className="w-3 h-3" />
+                                        </Button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* Assists Section */}
+                              <div className="flex items-center gap-2 mt-2">
+                                <span className="text-[11px] text-muted-foreground">Assists:</span>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="h-6 w-6"
+                                    onClick={() => updatePilotAssists(pilot.id, -1)}
+                                    disabled={combatUpdate.assists <= 0}
+                                  >
+                                    <span className="text-xs">-</span>
+                                  </Button>
+                                  <span className="font-mono text-xs w-6 text-center">{combatUpdate.assists}</span>
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="h-6 w-6"
+                                    onClick={() => updatePilotAssists(pilot.id, 1)}
+                                  >
+                                    <span className="text-xs">+</span>
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           );
