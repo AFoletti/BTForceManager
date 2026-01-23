@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Target, CheckCircle2, AlertCircle, Shield, X } from 'lucide-react';
+import { Plus, Target, CheckCircle2, AlertCircle, Shield, X, Trophy } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Select } from './ui/select';
 import { formatDate, formatNumber } from '../lib/utils';
@@ -23,6 +23,8 @@ import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
+import { checkAchievements, findNewAchievements, recordMissionCompletion, addKill, addAssists, createEmptyCombatRecord } from '../lib/achievements';
+import MechAutocomplete from './MechAutocomplete';
 
 const emptyMissionForm = {
   name: '',
