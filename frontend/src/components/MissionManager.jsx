@@ -207,9 +207,15 @@ export default function MissionManager({ force, onUpdate }) {
       achieved: Boolean(obj.achieved),
     }));
 
+    // Calculate current tonnage from assigned mechs
+    const totalTonnage = calculateMissionTotalTonnage(force, formData.assignedMechs);
+
     const payload = {
       ...formData,
       objectives: cleanObjectives,
+      spBudget: formData.spBudget || 0,
+      spPurchases: formData.spPurchases || [],
+      totalTonnage,
     };
 
     if (editingMission) {
