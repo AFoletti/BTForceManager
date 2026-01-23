@@ -795,20 +795,45 @@ const ForcePDF = ({ force }) => {
                         <View style={styles.missionSection}>
                           <Text style={styles.missionSectionTitle}>Combat Record:</Text>
                           <Text style={styles.missionText}>
-                            Kills: {stats.killCount} | Assists: {stats.assists} | Missions: {stats.missionsCompleted}
+                            Kills: {stats.killCount} | Assists: {stats.assists} | Missions: {stats.missionsCompleted} | Total Tonnage: {formatNumber(stats.totalTonnageDestroyed)}t
                           </Text>
+                          
+                          {/* Kill List Table */}
                           {kills.length > 0 && (
-                            <View style={{ marginTop: 2 }}>
-                              <Text style={{ fontSize: 7, color: '#6B7280' }}>
-                                Kill List: {kills.map(k => `${k.mechModel} (${k.tonnage}t)`).join(', ')}
-                              </Text>
+                            <View style={{ marginTop: 4, borderWidth: 0.5, borderColor: '#D1D5DB' }}>
+                              <View style={{ flexDirection: 'row', backgroundColor: '#F3F4F6', borderBottomWidth: 0.5, borderBottomColor: '#D1D5DB' }}>
+                                <Text style={{ width: '40%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Mech</Text>
+                                <Text style={{ width: '15%', fontSize: 7, fontWeight: 'bold', padding: 2, textAlign: 'center' }}>Tons</Text>
+                                <Text style={{ width: '45%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Mission</Text>
+                              </View>
+                              {kills.map((kill, idx) => (
+                                <View key={idx} style={{ flexDirection: 'row', borderBottomWidth: idx < kills.length - 1 ? 0.5 : 0, borderBottomColor: '#E5E7EB' }}>
+                                  <Text style={{ width: '40%', fontSize: 7, padding: 2 }}>{kill.mechModel}</Text>
+                                  <Text style={{ width: '15%', fontSize: 7, padding: 2, textAlign: 'center' }}>{kill.tonnage}t</Text>
+                                  <Text style={{ width: '45%', fontSize: 7, padding: 2, color: '#6B7280' }}>{kill.mission}</Text>
+                                </View>
+                              ))}
                             </View>
                           )}
+                          
+                          {/* Achievements Table */}
                           {achievements.length > 0 && (
-                            <View style={{ marginTop: 2 }}>
-                              <Text style={{ fontSize: 7, color: '#6B7280' }}>
-                                Achievements: {achievements.join(', ')}
-                              </Text>
+                            <View style={{ marginTop: 4, borderWidth: 0.5, borderColor: '#D1D5DB' }}>
+                              <View style={{ flexDirection: 'row', backgroundColor: '#F3F4F6', borderBottomWidth: 0.5, borderBottomColor: '#D1D5DB' }}>
+                                <Text style={{ width: '10%', fontSize: 7, fontWeight: 'bold', padding: 2, textAlign: 'center' }}>Icon</Text>
+                                <Text style={{ width: '30%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Achievement</Text>
+                                <Text style={{ width: '60%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Description</Text>
+                              </View>
+                              {achievements.map((achId) => {
+                                const achDef = achievementDefs.find(a => a.id === achId) || { icon: '🏆', name: achId, description: '' };
+                                return (
+                                  <View key={achId} style={{ flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#E5E7EB' }}>
+                                    <Text style={{ width: '10%', fontSize: 8, padding: 2, textAlign: 'center' }}>{achDef.icon}</Text>
+                                    <Text style={{ width: '30%', fontSize: 7, padding: 2, fontWeight: 'bold' }}>{achDef.name}</Text>
+                                    <Text style={{ width: '60%', fontSize: 7, padding: 2, color: '#6B7280' }}>{achDef.description}</Text>
+                                  </View>
+                                );
+                              })}
                             </View>
                           )}
                         </View>
