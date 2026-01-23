@@ -366,6 +366,53 @@ export default function MissionManager({ force, onUpdate }) {
     );
   };
 
+  // Add a kill to a pilot's combat updates
+  const addPilotKill = (pilotId, mechData) => {
+    const missionName = missionBeingCompleted?.name || 'Mission';
+    const missionDate = force.currentDate;
+    
+    setPilotCombatUpdates((prev) => ({
+      ...prev,
+      [pilotId]: {
+        ...prev[pilotId],
+        kills: [
+          ...(prev[pilotId]?.kills || []),
+          {
+            id: `kill-${Date.now()}`,
+            mechModel: mechData.name,
+            tonnage: mechData.weight || 0,
+            mission: missionName,
+            date: missionDate,
+          },
+        ],
+      },
+    }));
+    // Clear search input for this pilot
+    setKillSearchInput((prev) => ({ ...prev, [pilotId]: '' }));
+  };
+
+  // Remove a kill from a pilot's combat updates
+  const removePilotKill = (pilotId, killId) => {
+    setPilotCombatUpdates((prev) => ({
+      ...prev,
+      [pilotId]: {
+        ...prev[pilotId],
+        kills: (prev[pilotId]?.kills || []).filter((k) => k.id !== killId),
+      },
+    }));
+  };
+
+  // Update assists for a pilot
+  const updatePilotAssists = (pilotId, delta) => {
+    setPilotCombatUpdates((prev) => ({
+      ...prev,
+      [pilotId]: {
+        ...prev[pilotId],
+        assists: Math.max(0, (prev[pilotId]?.assists || 0) + delta),
+      },
+    }));
+  };
+
   const confirmCompleteMission = () => {
     if (!missionBeingCompleted) return;
     const timestamp = force.currentDate;
@@ -409,14 +456,65 @@ export default function MissionManager({ force, onUpdate }) {
       };
     });
 
+    // Update pilots with injuries AND combat records
+    const allNewAchievements = [];
     const updatedPilots = (force.pilots || []).map((pilot) => {
-      const edited = postMissionUnitState.pilots[pilot.id];
-      if (!edited) return pilot;
+      const editedState = postMissionUnitState.pilots[pilot.id];
+      const combatUpdate = pilotCombatUpdates[pilot.id];
+      
+      if (!editedState && !combatUpdate) return pilot;
+      
+      // Get current injuries and check if pilot was injured this mission
+      const previousInjuries = pilot.injuries || 0;
+      const newInjuries = editedState 
+        ? (Number.isFinite(editedState.injuries) ? Math.max(0, Math.min(6, editedState.injuries)) : 0)
+        : previousInjuries;
+      const wasInjured = newInjuries > previousInjuries;
+      
+      // Update combat record
+      let combatRecord = pilot.combatRecord || createEmptyCombatRecord();
+      
+      // Only update if pilot participated (has state entry)
+      if (editedState) {
+        // Record mission completion
+        combatRecord = recordMissionCompletion(combatRecord, wasInjured);
+        
+        // Add kills
+        if (combatUpdate?.kills?.length > 0) {
+          combatUpdate.kills.forEach((kill) => {
+            combatRecord = addKill(combatRecord, {
+              mechModel: kill.mechModel,
+              tonnage: kill.tonnage,
+              mission: kill.mission,
+              date: kill.date,
+            });
+          });
+        }
+        
+        // Add assists
+        if (combatUpdate?.assists > 0) {
+          combatRecord = addAssists(combatRecord, combatUpdate.assists);
+        }
+      }
+      
+      // Check for new achievements
+      const previousAchievements = pilot.achievements || [];
+      const currentAchievements = checkAchievements(combatRecord, achievementDefinitions);
+      const earnedNew = findNewAchievements(previousAchievements, currentAchievements);
+      
+      if (earnedNew.length > 0) {
+        allNewAchievements.push({
+          pilotId: pilot.id,
+          pilotName: pilot.name,
+          achievements: earnedNew,
+        });
+      }
+      
       return {
         ...pilot,
-        injuries: Number.isFinite(edited.injuries)
-          ? Math.max(0, Math.min(6, edited.injuries))
-          : 0,
+        injuries: newInjuries,
+        combatRecord,
+        achievements: currentAchievements,
       };
     });
 
