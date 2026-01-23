@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 import { findMechForPilot } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { computeCombatStats } from '../lib/achievements';
+import { formatNumber } from '../lib/utils';
 
 // Sort icon component (moved outside to avoid recreation on render)
 function SortIcon({ sortKey, sortConfig }) {
