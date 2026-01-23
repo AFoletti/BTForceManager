@@ -678,7 +678,98 @@ export default function MissionManager({ force, onUpdate }) {
                   </p>
                 )}
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Support Points Budget</label>
+                <Input
+                  type="number"
+                  value={formData.spBudget}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      spBudget: parseInt(e.target.value, 10) || 0,
+                    })
+                  }
+                  placeholder="0"
+                  min="0"
+                  data-testid="sp-budget-input"
+                />
+              </div>
             </div>
+
+            {/* SP Purchases Section */}
+            {formData.spBudget > 0 && (
+              <div className="border border-border rounded p-4 bg-muted/10">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-medium">Support Point Purchases</label>
+                  <div className="text-xs">
+                    <span className="text-muted-foreground">Remaining: </span>
+                    <span className={`font-mono font-bold ${spRemaining < 0 ? 'text-destructive' : 'text-primary'}`}>
+                      {spRemaining} SP
+                    </span>
+                    <span className="text-muted-foreground ml-2">/ {formData.spBudget} SP</span>
+                  </div>
+                </div>
+
+                {/* Add SP Purchase Dropdown */}
+                <div className="flex gap-2 mb-3">
+                  <Select
+                    className="flex-1"
+                    value=""
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        addSpPurchase(e.target.value);
+                        e.target.value = '';
+                      }
+                    }}
+                    data-testid="sp-choice-select"
+                  >
+                    <option value="">Select support to purchase...</option>
+                    {spChoices.map((choice) => {
+                      const canAfford = choice.cost <= spRemaining;
+                      return (
+                        <option 
+                          key={choice.id} 
+                          value={choice.id}
+                          disabled={!canAfford}
+                        >
+                          {choice.name} ({choice.cost} SP){!canAfford ? ' - Insufficient SP' : ''}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </div>
+
+                {/* Purchased Items */}
+                {formData.spPurchases && formData.spPurchases.length > 0 ? (
+                  <div className="space-y-2">
+                    {formData.spPurchases.map((purchase) => (
+                      <div 
+                        key={purchase.id} 
+                        className="flex items-center justify-between p-2 bg-background rounded border border-border"
+                      >
+                        <span className="text-sm">{purchase.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono text-muted-foreground">{purchase.cost} SP</span>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6"
+                            onClick={() => removeSpPurchase(purchase.id)}
+                            data-testid={`remove-sp-${purchase.id}`}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground text-center py-2">
+                    No support points purchased yet
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Force Assignment */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
