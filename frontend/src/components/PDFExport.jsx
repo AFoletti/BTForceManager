@@ -785,6 +785,38 @@ const ForcePDF = ({ force }) => {
                     </View>
                   </View>
 
+                  {/* Combat Record Section */}
+                  {(() => {
+                    const stats = computeCombatStats(pilot.combatRecord);
+                    const kills = pilot.combatRecord?.kills || [];
+                    const achievements = pilot.achievements || [];
+                    if (stats.killCount > 0 || stats.assists > 0 || achievements.length > 0) {
+                      return (
+                        <View style={styles.missionSection}>
+                          <Text style={styles.missionSectionTitle}>Combat Record:</Text>
+                          <Text style={styles.missionText}>
+                            Kills: {stats.killCount} | Assists: {stats.assists} | Missions: {stats.missionsCompleted}
+                          </Text>
+                          {kills.length > 0 && (
+                            <View style={{ marginTop: 2 }}>
+                              <Text style={{ fontSize: 7, color: '#6B7280' }}>
+                                Kill List: {kills.map(k => `${k.mechModel} (${k.tonnage}t)`).join(', ')}
+                              </Text>
+                            </View>
+                          )}
+                          {achievements.length > 0 && (
+                            <View style={{ marginTop: 2 }}>
+                              <Text style={{ fontSize: 7, color: '#6B7280' }}>
+                                Achievements: {achievements.join(', ')}
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                      );
+                    }
+                    return null;
+                  })()}
+
                   {pilot.history && (
                     <View style={styles.unitHistory}>
                       <Text>{pilot.history}</Text>
