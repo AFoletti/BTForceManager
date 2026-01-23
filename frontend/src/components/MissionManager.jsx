@@ -692,7 +692,7 @@ export default function MissionManager({ force, onUpdate }) {
                                     return (
                                       <Badge key={mech.id} variant="secondary" className="text-xs">
                                         {mech.name}
-                                        {pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
+                                        {pilot && pilot.dezgra ? ' 🚫' : ''} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
                                       </Badge>
                                     );
                                   })}
