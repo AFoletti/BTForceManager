@@ -457,10 +457,10 @@ export default function PilotRoster({ force, onUpdate }) {
                   className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
                   data-testid="pilot-dezgra-checkbox"
                 />
-                <span>Mark this pilot as Dezgra</span>
+                <span>Mark this pilot as Dezgra 🚫</span>
               </label>
               <p className="text-xs text-muted-foreground mt-1">
-                Dezgra pilots are marked with (D) across the UI and exports.
+                Dezgra pilots are marked with 🚫 across the UI and exports.
               </p>
             </div>
 
