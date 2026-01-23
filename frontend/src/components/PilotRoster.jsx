@@ -9,6 +9,12 @@ import { findMechForPilot } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { computeCombatStats } from '../lib/achievements';
 
+// Sort icon component (moved outside to avoid recreation on render)
+function SortIcon({ sortKey, sortConfig }) {
+  if (sortConfig.key !== sortKey) return null;
+  return sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
+}
+
 export default function PilotRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingPilot, setEditingPilot] = useState(null);
