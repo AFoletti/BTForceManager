@@ -90,12 +90,41 @@ export default function MissionManager({ force, onUpdate }) {
         completed: mission.completed || false,
         assignedMechs: mission.assignedMechs || [],
         assignedElementals: mission.assignedElementals || [],
+        spBudget: mission.spBudget || 0,
+        spPurchases: mission.spPurchases || [],
+        totalTonnage: mission.totalTonnage || 0,
       });
     } else {
       setEditingMission(null);
       setFormData(emptyMissionForm);
     }
     setShowDialog(true);
+  };
+
+  // Calculate spent SP from purchases
+  const spSpent = (formData.spPurchases || []).reduce((sum, p) => sum + (p.cost || 0), 0);
+  const spRemaining = (formData.spBudget || 0) - spSpent;
+
+  // Add SP purchase
+  const addSpPurchase = (choiceId) => {
+    const choice = spChoices.find((c) => c.id === choiceId);
+    if (!choice || choice.cost > spRemaining) return;
+    
+    setFormData((prev) => ({
+      ...prev,
+      spPurchases: [
+        ...(prev.spPurchases || []),
+        { id: `sp-${Date.now()}`, choiceId: choice.id, name: choice.name, cost: choice.cost },
+      ],
+    }));
+  };
+
+  // Remove SP purchase
+  const removeSpPurchase = (purchaseId) => {
+    setFormData((prev) => ({
+      ...prev,
+      spPurchases: (prev.spPurchases || []).filter((p) => p.id !== purchaseId),
+    }));
   };
 
   const toggleMechAssignment = (mechId) => {
