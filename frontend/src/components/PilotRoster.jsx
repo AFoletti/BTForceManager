@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -7,12 +7,26 @@ import { Plus, Minus, User, ArrowUp, ArrowDown } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { findMechForPilot } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
+import { computeCombatStats } from '../lib/achievements';
 
 export default function PilotRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingPilot, setEditingPilot] = useState(null);
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  const [achievementDefinitions, setAchievementDefinitions] = useState([]);
+
+  // Load achievement definitions
+  useEffect(() => {
+    fetch('./data/achievements.json')
+      .then((res) => res.json())
+      .then((data) => setAchievementDefinitions(data.achievements || []))
+      .catch(() => setAchievementDefinitions([]));
+  }, []);
+
+  const getAchievementById = (achievementId) => {
+    return achievementDefinitions.find((a) => a.id === achievementId) || { name: achievementId, icon: '🏆', description: '' };
+  };
 
   const [formData, setFormData] = useState({
     name: '',
