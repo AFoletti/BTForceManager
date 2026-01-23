@@ -184,6 +184,8 @@ export default function PilotRoster({ force, onUpdate }) {
   const sortedPilots = [...filteredPilots].sort((a, b) => {
     const mechA = findMechForPilot(force, a);
     const mechB = findMechForPilot(force, b);
+    const statsA = computeCombatStats(a.combatRecord);
+    const statsB = computeCombatStats(b.combatRecord);
     
     let aValue, bValue;
     
@@ -207,6 +209,10 @@ export default function PilotRoster({ force, onUpdate }) {
       case 'injuries':
         aValue = a.injuries;
         bValue = b.injuries;
+        break;
+      case 'kills':
+        aValue = statsA.killCount;
+        bValue = statsB.killCount;
         break;
       default:
         return 0;
