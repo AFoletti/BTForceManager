@@ -128,12 +128,20 @@ export default function MissionManager({ force, onUpdate }) {
   };
 
   const toggleMechAssignment = (mechId) => {
-    setFormData((prev) => ({
-      ...prev,
-      assignedMechs: prev.assignedMechs.includes(mechId)
+    setFormData((prev) => {
+      const newAssignedMechs = prev.assignedMechs.includes(mechId)
         ? prev.assignedMechs.filter((id) => id !== mechId)
-        : [...prev.assignedMechs, mechId],
-    }));
+        : [...prev.assignedMechs, mechId];
+      
+      // Recalculate tonnage
+      const totalTonnage = calculateMissionTotalTonnage(force, newAssignedMechs);
+      
+      return {
+        ...prev,
+        assignedMechs: newAssignedMechs,
+        totalTonnage,
+      };
+    });
   };
 
   const toggleElementalAssignment = (elementalId) => {
