@@ -961,9 +961,9 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
               let pilotDisplay = 'Missing Pilot';
               if (pilot) {
                 if (pilot.injuries === 6) {
-                  pilotDisplay = `${getPilotDisplayName(pilot)} - KIA`;
+                  pilotDisplay = `${getPilotDisplayNamePDF(pilot)} - KIA`;
                 } else {
-                  pilotDisplay = `${getPilotDisplayName(pilot)} - G:${pilot.gunnery || 0} / P:${
+                  pilotDisplay = `${getPilotDisplayNamePDF(pilot)} - G:${pilot.gunnery || 0} / P:${
                     pilot.piloting || 0
                   }`;
                 }
