@@ -1,0 +1,54 @@
+{
+  "spChoices": [
+    {
+      "id": "artillery-strike",
+      "name": "Artillery Strike",
+      "cost": 50
+    },
+    {
+      "id": "air-support",
+      "name": "Air Support",
+      "cost": 75
+    },
+    {
+      "id": "recon-flight",
+      "name": "Recon Flight",
+      "cost": 25
+    },
+    {
+      "id": "supply-drop",
+      "name": "Supply Drop",
+      "cost": 30
+    },
+    {
+      "id": "reinforcements",
+      "name": "Reinforcements",
+      "cost": 100
+    },
+    {
+      "id": "ecm-support",
+      "name": "ECM Support",
+      "cost": 40
+    },
+    {
+      "id": "field-repairs",
+      "name": "Field Repairs",
+      "cost": 35
+    },
+    {
+      "id": "intel-report",
+      "name": "Intel Report",
+      "cost": 20
+    },
+    {
+      "id": "orbital-scan",
+      "name": "Orbital Scan",
+      "cost": 45
+    },
+    {
+      "id": "smoke-screen",
+      "name": "Smoke Screen",
+      "cost": 15
+    }
+  ]
+}

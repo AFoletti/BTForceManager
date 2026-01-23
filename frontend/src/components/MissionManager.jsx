@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Target, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
+import { Plus, Target, CheckCircle2, AlertCircle, Shield, X } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { Select } from './ui/select';
 import { formatDate, formatNumber } from '../lib/utils';
 import {
   calculateMissionTotalBV,
+  calculateMissionTotalTonnage,
   getAssignedMechs,
   getAssignedElementals,
   applyMissionCreation,
@@ -31,12 +33,24 @@ const emptyMissionForm = {
   completed: false,
   assignedMechs: [],
   assignedElementals: [],
+  spBudget: 0,
+  spPurchases: [],
+  totalTonnage: 0,
 };
 
 export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
   const [formData, setFormData] = useState(emptyMissionForm);
+  const [spChoices, setSpChoices] = useState([]);
+
+  // Load SP choices from JSON file
+  useEffect(() => {
+    fetch('./data/sp-choices.json')
+      .then((res) => res.json())
+      .then((data) => setSpChoices(data.spChoices || []))
+      .catch(() => setSpChoices([]));
+  }, []);
 
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
   const [missionBeingCompleted, setMissionBeingCompleted] = useState(null);
@@ -76,6 +90,9 @@ export default function MissionManager({ force, onUpdate }) {
         completed: mission.completed || false,
         assignedMechs: mission.assignedMechs || [],
         assignedElementals: mission.assignedElementals || [],
+        spBudget: mission.spBudget || 0,
+        spPurchases: mission.spPurchases || [],
+        totalTonnage: mission.totalTonnage || 0,
       });
     } else {
       setEditingMission(null);
@@ -84,13 +101,47 @@ export default function MissionManager({ force, onUpdate }) {
     setShowDialog(true);
   };
 
-  const toggleMechAssignment = (mechId) => {
+  // Calculate spent SP from purchases
+  const spSpent = (formData.spPurchases || []).reduce((sum, p) => sum + (p.cost || 0), 0);
+  const spRemaining = (formData.spBudget || 0) - spSpent;
+
+  // Add SP purchase
+  const addSpPurchase = (choiceId) => {
+    const choice = spChoices.find((c) => c.id === choiceId);
+    if (!choice || choice.cost > spRemaining) return;
+    
     setFormData((prev) => ({
       ...prev,
-      assignedMechs: prev.assignedMechs.includes(mechId)
-        ? prev.assignedMechs.filter((id) => id !== mechId)
-        : [...prev.assignedMechs, mechId],
+      spPurchases: [
+        ...(prev.spPurchases || []),
+        { id: `sp-${Date.now()}`, choiceId: choice.id, name: choice.name, cost: choice.cost },
+      ],
     }));
+  };
+
+  // Remove SP purchase
+  const removeSpPurchase = (purchaseId) => {
+    setFormData((prev) => ({
+      ...prev,
+      spPurchases: (prev.spPurchases || []).filter((p) => p.id !== purchaseId),
+    }));
+  };
+
+  const toggleMechAssignment = (mechId) => {
+    setFormData((prev) => {
+      const newAssignedMechs = prev.assignedMechs.includes(mechId)
+        ? prev.assignedMechs.filter((id) => id !== mechId)
+        : [...prev.assignedMechs, mechId];
+      
+      // Recalculate tonnage
+      const totalTonnage = calculateMissionTotalTonnage(force, newAssignedMechs);
+      
+      return {
+        ...prev,
+        assignedMechs: newAssignedMechs,
+        totalTonnage,
+      };
+    });
   };
 
   const toggleElementalAssignment = (elementalId) => {
@@ -156,9 +207,15 @@ export default function MissionManager({ force, onUpdate }) {
       achieved: Boolean(obj.achieved),
     }));
 
+    // Calculate current tonnage from assigned mechs
+    const totalTonnage = calculateMissionTotalTonnage(force, formData.assignedMechs);
+
     const payload = {
       ...formData,
       objectives: cleanObjectives,
+      spBudget: formData.spBudget || 0,
+      spPurchases: formData.spPurchases || [],
+      totalTonnage,
     };
 
     if (editingMission) {
@@ -465,16 +522,24 @@ export default function MissionManager({ force, onUpdate }) {
                               <Shield className="w-4 h-4 text-primary" />
                               <span className="font-medium text-sm">Assigned Force</span>
                             </div>
-                            <div className="text-sm">
-                              <span className="text-muted-foreground">Total BV:</span>
-                              <span className="ml-2 font-mono font-bold text-primary">
-                                {formatNumber(
-                                  calculateMissionTotalBV(
-                                    force,
-                                    mission.assignedMechs,
-                                    mission.assignedElementals || [],
-                                  ),
-                                )}
+                            <div className="text-sm flex gap-4">
+                              <span>
+                                <span className="text-muted-foreground">Tonnage:</span>
+                                <span className="ml-1 font-mono font-bold">
+                                  {formatNumber(mission.totalTonnage || calculateMissionTotalTonnage(force, mission.assignedMechs))}t
+                                </span>
+                              </span>
+                              <span>
+                                <span className="text-muted-foreground">Total BV:</span>
+                                <span className="ml-1 font-mono font-bold text-primary">
+                                  {formatNumber(
+                                    calculateMissionTotalBV(
+                                      force,
+                                      mission.assignedMechs,
+                                      mission.assignedElementals || [],
+                                    ),
+                                  )}
+                                </span>
                               </span>
                             </div>
                           </div>
@@ -509,6 +574,25 @@ export default function MissionManager({ force, onUpdate }) {
                                 </div>
                               </div>
                             )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* SP Purchases */}
+                      {mission.spPurchases && mission.spPurchases.length > 0 && (
+                        <div className="mt-3 p-3 bg-background/50 rounded border border-border">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-sm">Support Point Purchases</span>
+                            <span className="text-xs text-muted-foreground">
+                              Budget: {formatNumber(mission.spBudget || 0)} SP
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {mission.spPurchases.map((purchase) => (
+                              <Badge key={purchase.id} variant="outline" className="text-xs">
+                                {purchase.name} ({purchase.cost} SP)
+                              </Badge>
+                            ))}
                           </div>
                         </div>
                       )}
@@ -594,7 +678,98 @@ export default function MissionManager({ force, onUpdate }) {
                   </p>
                 )}
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Support Points Budget</label>
+                <Input
+                  type="number"
+                  value={formData.spBudget}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      spBudget: parseInt(e.target.value, 10) || 0,
+                    })
+                  }
+                  placeholder="0"
+                  min="0"
+                  data-testid="sp-budget-input"
+                />
+              </div>
             </div>
+
+            {/* SP Purchases Section */}
+            {formData.spBudget > 0 && (
+              <div className="border border-border rounded p-4 bg-muted/10">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-medium">Support Point Purchases</label>
+                  <div className="text-xs">
+                    <span className="text-muted-foreground">Remaining: </span>
+                    <span className={`font-mono font-bold ${spRemaining < 0 ? 'text-destructive' : 'text-primary'}`}>
+                      {spRemaining} SP
+                    </span>
+                    <span className="text-muted-foreground ml-2">/ {formData.spBudget} SP</span>
+                  </div>
+                </div>
+
+                {/* Add SP Purchase Dropdown */}
+                <div className="flex gap-2 mb-3">
+                  <Select
+                    className="flex-1"
+                    value=""
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        addSpPurchase(e.target.value);
+                        e.target.value = '';
+                      }
+                    }}
+                    data-testid="sp-choice-select"
+                  >
+                    <option value="">Select support to purchase...</option>
+                    {spChoices.map((choice) => {
+                      const canAfford = choice.cost <= spRemaining;
+                      return (
+                        <option 
+                          key={choice.id} 
+                          value={choice.id}
+                          disabled={!canAfford}
+                        >
+                          {choice.name} ({choice.cost} SP){!canAfford ? ' - Insufficient SP' : ''}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </div>
+
+                {/* Purchased Items */}
+                {formData.spPurchases && formData.spPurchases.length > 0 ? (
+                  <div className="space-y-2">
+                    {formData.spPurchases.map((purchase) => (
+                      <div 
+                        key={purchase.id} 
+                        className="flex items-center justify-between p-2 bg-background rounded border border-border"
+                      >
+                        <span className="text-sm">{purchase.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono text-muted-foreground">{purchase.cost} SP</span>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6"
+                            onClick={() => removeSpPurchase(purchase.id)}
+                            data-testid={`remove-sp-${purchase.id}`}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground text-center py-2">
+                    No support points purchased yet
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Force Assignment */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -603,12 +778,14 @@ export default function MissionManager({ force, onUpdate }) {
                 <label className="block text-sm font-medium mb-2">
                   <div className="flex items-center justify-between">
                     <span>Assign Mechs to Mission</span>
-                    <span className="text-xs text-primary font-mono">
-                      BV:{' '}
-                      {formatNumber(
-                        calculateMissionTotalBV(force, formData.assignedMechs, []),
-                      )}
-                    </span>
+                    <div className="flex gap-3">
+                      <span className="text-xs font-mono">
+                        Tonnage: {formatNumber(formData.totalTonnage || 0)}t
+                      </span>
+                      <span className="text-xs text-primary font-mono">
+                        BV: {formatNumber(calculateMissionTotalBV(force, formData.assignedMechs, []))}
+                      </span>
+                    </div>
                   </div>
                 </label>
                 <div className="border border-border rounded p-3 bg-muted/20 max-h-60 overflow-y-auto">
@@ -761,16 +938,24 @@ export default function MissionManager({ force, onUpdate }) {
               formData.assignedElementals.length > 0) && (
               <div className="p-3 bg-primary/10 border border-primary/20 rounded">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold">Combined Force Total BV:</span>
-                  <span className="text-2xl font-bold font-mono text-primary">
-                    {formatNumber(
-                      calculateMissionTotalBV(
-                        force,
-                        formData.assignedMechs,
-                        formData.assignedElementals,
-                      ),
-                    )}
-                  </span>
+                  <div>
+                    <span className="font-semibold">Combined Force:</span>
+                    <span className="ml-4 text-sm text-muted-foreground">
+                      Tonnage: <span className="font-mono font-bold">{formatNumber(formData.totalTonnage || 0)}t</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Total BV:</span>
+                    <span className="text-2xl font-bold font-mono text-primary">
+                      {formatNumber(
+                        calculateMissionTotalBV(
+                          force,
+                          formData.assignedMechs,
+                          formData.assignedElementals,
+                        ),
+                      )}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
