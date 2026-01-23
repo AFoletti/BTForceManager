@@ -468,7 +468,7 @@ const getStatusBadgeStyle = (status) => {
   return style || styles.unitBadge;
 };
 
-const ForcePDF = ({ force }) => {
+const ForcePDF = ({ force, achievementDefs = [] }) => {
   // Helper to sort activity logs by timestamp (YYYY-MM-DD), oldest first
   const sortActivityLog = (log = []) => {
     return [...log].sort((a, b) => {
