@@ -963,6 +963,7 @@ const ForcePDF = ({ force }) => {
               assignedMechIds,
               assignedElementalIds,
             );
+            const totalTonnage = mission.totalTonnage || 0;
 
             const statusLabel = mission.completed ? 'COMPLETED' : 'ACTIVE';
             const missionDate = mission.createdAt || '';
@@ -978,7 +979,7 @@ const ForcePDF = ({ force }) => {
                   </Text>
                   <Text style={styles.missionMeta}>
                     Cost: {formatNumber(mission.cost || 0)} WP | Gained:{' '}
-                    {formatNumber(reward || 0)} WP | Total BV:{' '}
+                    {formatNumber(reward || 0)} WP | Tonnage: {formatNumber(totalTonnage)}t | Total BV:{' '}
                     {formatNumber(totalBV || 0)}
                   </Text>
                 </View>
@@ -1003,6 +1004,20 @@ const ForcePDF = ({ force }) => {
                   </View>
                 )}
 
+                {/* SP Purchases in PDF */}
+                {Array.isArray(mission.spPurchases) && mission.spPurchases.length > 0 && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>
+                      Support Point Purchases (Budget: {formatNumber(mission.spBudget || 0)} SP):
+                    </Text>
+                    {mission.spPurchases.map((purchase) => (
+                      <Text key={purchase.id} style={styles.missionUnits}>
+                        • {purchase.name} ({formatNumber(purchase.cost)} SP)
+                      </Text>
+                    ))}
+                  </View>
+                )}
+
                 {assignedMechObjects.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Assigned Mechs:</Text>
@@ -1010,7 +1025,7 @@ const ForcePDF = ({ force }) => {
                       const pilot = findPilotForMech(force, m);
                       return (
                         <Text key={m.id} style={styles.missionUnits}>
-                          • {m.name}{pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.status || 'Unknown'})
+                          • {m.name}{pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.weight || 0}t, {m.status || 'Unknown'})
                         </Text>
                       );
                     })}
