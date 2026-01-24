@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, StyleSheet, pdf, Image } from '@react-pdf/renderer';
 import { Button } from './ui/button';
 import {
@@ -8,9 +8,10 @@ import {
   getMissionObjectiveReward,
 } from '../lib/missions';
 import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from '../lib/mechs';
-import { getPilotDisplayName } from '../lib/pilots';
+// Note: getPilotDisplayName not imported - using PDF-specific version instead
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
+import { computeCombatStats } from '../lib/achievements';
 
 // Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
@@ -467,7 +468,7 @@ const getStatusBadgeStyle = (status) => {
   return style || styles.unitBadge;
 };
 
-const ForcePDF = ({ force }) => {
+const ForcePDF = ({ force, achievementDefs = [] }) => {
   // Helper to sort activity logs by timestamp (YYYY-MM-DD), oldest first
   const sortActivityLog = (log = []) => {
     return [...log].sort((a, b) => {
@@ -482,6 +483,12 @@ const ForcePDF = ({ force }) => {
     const hasCost = typeof entry?.cost === 'number' && !Number.isNaN(entry.cost);
     const costLabel = hasCost ? ` (${formatNumber(entry.cost)} WP)` : '';
     return `${entry?.action || ''}${missionLabel}${costLabel}`;
+  };
+
+  // PDF-specific pilot name formatter (uses [Dezgra] text instead of emoji)
+  const getPilotDisplayNamePDF = (pilot) => {
+    if (!pilot) return '';
+    return `${pilot.name || ''}${pilot.dezgra ? ' [Dezgra]' : ''}`.trim();
   };
 
   const currentWarchest =
@@ -738,7 +745,7 @@ const ForcePDF = ({ force }) => {
               return (
                 <View key={pilot.id} style={[styles.unitCard, styles.rosterItem]} wrap={false}>
                   <View style={styles.unitHeader}>
-                    <Text style={styles.unitName}>{getPilotDisplayName(pilot)}</Text>
+                    <Text style={styles.unitName}>{getPilotDisplayNamePDF(pilot)}</Text>
                     <Text
                       style={
                         pilot.injuries === 6
@@ -783,6 +790,61 @@ const ForcePDF = ({ force }) => {
                       </View>
                     </View>
                   </View>
+
+                  {/* Combat Record Section */}
+                  {(() => {
+                    const stats = computeCombatStats(pilot.combatRecord);
+                    const kills = pilot.combatRecord?.kills || [];
+                    const achievements = pilot.achievements || [];
+                    if (stats.killCount > 0 || stats.assists > 0 || achievements.length > 0) {
+                      return (
+                        <View style={styles.missionSection}>
+                          <Text style={styles.missionSectionTitle}>Combat Record:</Text>
+                          <Text style={styles.missionText}>
+                            Kills: {stats.killCount} | Assists: {stats.assists} | Missions: {stats.missionsCompleted} | Total Tonnage: {formatNumber(stats.totalTonnageDestroyed)}t
+                          </Text>
+                          
+                          {/* Kill List Table */}
+                          {kills.length > 0 && (
+                            <View style={{ marginTop: 4, borderWidth: 0.5, borderColor: '#D1D5DB' }}>
+                              <View style={{ flexDirection: 'row', backgroundColor: '#F3F4F6', borderBottomWidth: 0.5, borderBottomColor: '#D1D5DB' }}>
+                                <Text style={{ width: '40%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Mech</Text>
+                                <Text style={{ width: '15%', fontSize: 7, fontWeight: 'bold', padding: 2, textAlign: 'center' }}>Tons</Text>
+                                <Text style={{ width: '45%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Mission</Text>
+                              </View>
+                              {kills.map((kill, idx) => (
+                                <View key={idx} style={{ flexDirection: 'row', borderBottomWidth: idx < kills.length - 1 ? 0.5 : 0, borderBottomColor: '#E5E7EB' }}>
+                                  <Text style={{ width: '40%', fontSize: 7, padding: 2 }}>{kill.mechModel}</Text>
+                                  <Text style={{ width: '15%', fontSize: 7, padding: 2, textAlign: 'center' }}>{kill.tonnage}t</Text>
+                                  <Text style={{ width: '45%', fontSize: 7, padding: 2, color: '#6B7280' }}>{kill.mission}</Text>
+                                </View>
+                              ))}
+                            </View>
+                          )}
+                          
+                          {/* Achievements Table (no icons - PDF doesn't support emoji) */}
+                          {achievements.length > 0 && (
+                            <View style={{ marginTop: 4, borderWidth: 0.5, borderColor: '#D1D5DB' }}>
+                              <View style={{ flexDirection: 'row', backgroundColor: '#F3F4F6', borderBottomWidth: 0.5, borderBottomColor: '#D1D5DB' }}>
+                                <Text style={{ width: '35%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Achievement</Text>
+                                <Text style={{ width: '65%', fontSize: 7, fontWeight: 'bold', padding: 2 }}>Description</Text>
+                              </View>
+                              {achievements.map((achId) => {
+                                const achDef = achievementDefs.find(a => a.id === achId) || { name: achId, description: '' };
+                                return (
+                                  <View key={achId} style={{ flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#E5E7EB' }}>
+                                    <Text style={{ width: '35%', fontSize: 7, padding: 2, fontWeight: 'bold' }}>{achDef.name}</Text>
+                                    <Text style={{ width: '65%', fontSize: 7, padding: 2, color: '#6B7280' }}>{achDef.description}</Text>
+                                  </View>
+                                );
+                              })}
+                            </View>
+                          )}
+                        </View>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   {pilot.history && (
                     <View style={styles.unitHistory}>
@@ -899,9 +961,9 @@ const ForcePDF = ({ force }) => {
               let pilotDisplay = 'Missing Pilot';
               if (pilot) {
                 if (pilot.injuries === 6) {
-                  pilotDisplay = `${getPilotDisplayName(pilot)} - KIA`;
+                  pilotDisplay = `${getPilotDisplayNamePDF(pilot)} - KIA`;
                 } else {
-                  pilotDisplay = `${getPilotDisplayName(pilot)} - G:${pilot.gunnery || 0} / P:${
+                  pilotDisplay = `${getPilotDisplayNamePDF(pilot)} - G:${pilot.gunnery || 0} / P:${
                     pilot.piloting || 0
                   }`;
                 }
@@ -1046,7 +1108,7 @@ const ForcePDF = ({ force }) => {
                       const pilot = findPilotForMech(force, m);
                       return (
                         <Text key={m.id} style={styles.missionUnits}>
-                          • {m.name}{pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.weight || 0}t, {m.status || 'Unknown'})
+                          • {m.name}{pilot && pilot.dezgra ? ' [Dezgra]' : ''} ({formatNumber(getMechAdjustedBV(force, m))} BV, {m.weight || 0}t, {m.status || 'Unknown'})
                         </Text>
                       );
                     })}
@@ -1181,6 +1243,15 @@ const ForcePDF = ({ force }) => {
 
 export default function PDFExport({ force }) {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [achievementDefs, setAchievementDefs] = useState([]);
+
+  // Load achievement definitions
+  useEffect(() => {
+    fetch('./data/achievements.json')
+      .then((res) => res.json())
+      .then((data) => setAchievementDefs(data.achievements || []))
+      .catch(() => setAchievementDefs([]));
+  }, []);
 
   if (!force) return null;
 
@@ -1190,7 +1261,7 @@ export default function PDFExport({ force }) {
       const safeName = force.name ? force.name.replace(/\s+/g, '_') : 'force';
       const fileName = `${safeName}_Force_Report.pdf`;
 
-      const blob = await pdf(<ForcePDF force={force} />).toBlob();
+      const blob = await pdf(<ForcePDF force={force} achievementDefs={achievementDefs} />).toBlob();
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');

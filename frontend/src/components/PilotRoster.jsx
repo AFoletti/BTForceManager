@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -7,12 +7,33 @@ import { Plus, Minus, User, ArrowUp, ArrowDown } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { findMechForPilot } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
+import { computeCombatStats } from '../lib/achievements';
+import { formatNumber } from '../lib/utils';
+
+// Sort icon component (moved outside to avoid recreation on render)
+function SortIcon({ sortKey, sortConfig }) {
+  if (sortConfig.key !== sortKey) return null;
+  return sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
+}
 
 export default function PilotRoster({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingPilot, setEditingPilot] = useState(null);
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  const [achievementDefinitions, setAchievementDefinitions] = useState([]);
+
+  // Load achievement definitions
+  useEffect(() => {
+    fetch('./data/achievements.json')
+      .then((res) => res.json())
+      .then((data) => setAchievementDefinitions(data.achievements || []))
+      .catch(() => setAchievementDefinitions([]));
+  }, []);
+
+  const getAchievementById = (achievementId) => {
+    return achievementDefinitions.find((a) => a.id === achievementId) || { name: achievementId, icon: '🏆', description: '' };
+  };
 
   const [formData, setFormData] = useState({
     name: '',
@@ -170,6 +191,8 @@ export default function PilotRoster({ force, onUpdate }) {
   const sortedPilots = [...filteredPilots].sort((a, b) => {
     const mechA = findMechForPilot(force, a);
     const mechB = findMechForPilot(force, b);
+    const statsA = computeCombatStats(a.combatRecord);
+    const statsB = computeCombatStats(b.combatRecord);
     
     let aValue, bValue;
     
@@ -194,6 +217,10 @@ export default function PilotRoster({ force, onUpdate }) {
         aValue = a.injuries;
         bValue = b.injuries;
         break;
+      case 'kills':
+        aValue = statsA.killCount;
+        bValue = statsB.killCount;
+        break;
       default:
         return 0;
     }
@@ -202,11 +229,6 @@ export default function PilotRoster({ force, onUpdate }) {
     if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
     return 0;
   });
-
-  const SortIcon = ({ column }) => {
-    if (sortConfig.key !== column) return null;
-    return sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3 ml-1" /> : <ArrowDown className="w-3 h-3 ml-1" />;
-  };
 
   return (
     <div className="tactical-panel">
@@ -240,28 +262,31 @@ export default function PilotRoster({ force, onUpdate }) {
           <thead>
             <tr>
               <th onClick={() => handleSort('name')} className="cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center">Name <SortIcon column="name" /></div>
+                <div className="flex items-center">Name <SortIcon sortKey="name" sortConfig={sortConfig} /></div>
               </th>
               <th onClick={() => handleSort('mech')} className="cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center">Mech <SortIcon column="mech" /></div>
+                <div className="flex items-center">Mech <SortIcon sortKey="mech" sortConfig={sortConfig} /></div>
               </th>
               <th onClick={() => handleSort('gunnery')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center justify-center">Gunnery <SortIcon column="gunnery" /></div>
+                <div className="flex items-center justify-center">Gunnery <SortIcon sortKey="gunnery" sortConfig={sortConfig} /></div>
               </th>
               <th onClick={() => handleSort('piloting')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center justify-center">Piloting <SortIcon column="piloting" /></div>
+                <div className="flex items-center justify-center">Piloting <SortIcon sortKey="piloting" sortConfig={sortConfig} /></div>
               </th>
+              <th onClick={() => handleSort('kills')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
+                <div className="flex items-center justify-center">Kills <SortIcon sortKey="kills" sortConfig={sortConfig} /></div>
+              </th>
+              <th className="text-center">Achievements</th>
               <th onClick={() => handleSort('injuries')} className="text-center cursor-pointer hover:bg-muted/80 select-none">
-                <div className="flex items-center justify-center">Injuries <SortIcon column="injuries" /></div>
+                <div className="flex items-center justify-center">Injuries <SortIcon sortKey="injuries" sortConfig={sortConfig} /></div>
               </th>
               <th className="text-center">Actions</th>
-              <th>Recent Activity</th>
             </tr>
           </thead>
           <tbody>
             {sortedPilots.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center py-8 text-muted-foreground">
+                <td colSpan="8" className="text-center py-8 text-muted-foreground">
                   {force.pilots.length === 0 
                     ? "No pilots in roster. Add pilots via Data Editor." 
                     : "No pilots match your filter."}
@@ -270,6 +295,9 @@ export default function PilotRoster({ force, onUpdate }) {
             ) : (
               sortedPilots.map((pilot) => {
                 const assignedMech = findMechForPilot(force, pilot);
+                const combatStats = computeCombatStats(pilot.combatRecord);
+                const achievements = pilot.achievements || [];
+                const kills = pilot.combatRecord?.kills || [];
 
                 return (
                   <tr
@@ -290,6 +318,57 @@ export default function PilotRoster({ force, onUpdate }) {
                     </td>
                     <td className="text-center font-mono">{pilot.gunnery}</td>
                     <td className="text-center font-mono">{pilot.piloting}</td>
+                    <td className="text-center">
+                      <div className="relative group">
+                        <span className="font-mono font-bold text-primary">{combatStats.killCount}</span>
+                        {kills.length > 0 && (
+                          <div className="absolute z-50 hidden group-hover:block bg-popover border border-border rounded-md shadow-lg p-2 min-w-48 left-1/2 -translate-x-1/2 mt-1 text-xs">
+                            <div className="font-semibold mb-1">Kill List:</div>
+                            {kills.map((kill, idx) => (
+                              <div key={idx} className="text-muted-foreground py-0.5">
+                                • {kill.mechModel} ({kill.tonnage}t)
+                              </div>
+                            ))}
+                            <div className="border-t border-border mt-1 pt-1 text-muted-foreground">
+                              Assists: {combatStats.assists}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="text-center">
+                      <div className="relative group flex justify-center gap-0.5">
+                        {achievements.length > 0 ? (
+                          <>
+                            {achievements.slice(0, 4).map((achId) => {
+                              const ach = getAchievementById(achId);
+                              return (
+                                <span key={achId} className="text-sm" title={`${ach.name}: ${ach.description}`}>
+                                  {ach.icon}
+                                </span>
+                              );
+                            })}
+                            {achievements.length > 4 && (
+                              <span className="text-xs text-muted-foreground">+{achievements.length - 4}</span>
+                            )}
+                            <div className="absolute z-50 hidden group-hover:block bg-popover border border-border rounded-md shadow-lg p-2 min-w-48 left-1/2 -translate-x-1/2 mt-1 text-xs">
+                              <div className="font-semibold mb-1">Achievements:</div>
+                              {achievements.map((achId) => {
+                                const ach = getAchievementById(achId);
+                                return (
+                                  <div key={achId} className="py-0.5 flex items-center gap-2">
+                                    <span>{ach.icon}</span>
+                                    <span className="font-medium">{ach.name}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-muted-foreground/50 text-xs">—</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="text-center">
                       <Badge variant={getInjuryColor(pilot.injuries)}>
                         {getInjuryDisplay(pilot.injuries)}
@@ -314,15 +393,6 @@ export default function PilotRoster({ force, onUpdate }) {
                           <Plus className="w-4 h-4" />
                         </Button>
                       </div>
-                    </td>
-                    <td className="text-xs text-muted-foreground">
-                      {pilot.activityLog && pilot.activityLog.length > 0 ? (
-                        <div className="max-w-xs truncate">
-                          {pilot.activityLog[pilot.activityLog.length - 1].action}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground/50">No activity</span>
-                      )}
                     </td>
                   </tr>
                 );
@@ -388,10 +458,10 @@ export default function PilotRoster({ force, onUpdate }) {
                   className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
                   data-testid="pilot-dezgra-checkbox"
                 />
-                <span>Mark this pilot as Dezgra</span>
+                <span>Mark this pilot as Dezgra 🚫</span>
               </label>
               <p className="text-xs text-muted-foreground mt-1">
-                Dezgra pilots are marked with (D) across the UI and exports.
+                Dezgra pilots are marked with 🚫 across the UI and exports.
               </p>
             </div>
 
@@ -418,6 +488,95 @@ export default function PilotRoster({ force, onUpdate }) {
                 rows={4}
               />
             </div>
+
+            {/* Combat Record Section - Only shown when editing existing pilot */}
+            {editingPilot && (editingPilot.combatRecord?.kills?.length > 0 || editingPilot.achievements?.length > 0) && (
+              <div className="border border-border rounded p-4 bg-muted/10">
+                <h4 className="text-sm font-semibold mb-3">Combat Record</h4>
+                
+                {/* Stats Summary */}
+                {(() => {
+                  const stats = computeCombatStats(editingPilot.combatRecord);
+                  return (
+                    <div className="grid grid-cols-4 gap-2 text-xs mb-3">
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg text-primary">{stats.killCount}</div>
+                        <div className="text-muted-foreground">Kills</div>
+                      </div>
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg">{stats.assists}</div>
+                        <div className="text-muted-foreground">Assists</div>
+                      </div>
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg">{stats.missionsCompleted}</div>
+                        <div className="text-muted-foreground">Missions</div>
+                      </div>
+                      <div className="bg-background rounded p-2 text-center">
+                        <div className="font-bold text-lg">{formatNumber(stats.totalTonnageDestroyed)}t</div>
+                        <div className="text-muted-foreground">Tonnage</div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Kill List Table */}
+                {editingPilot.combatRecord?.kills?.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Kill List</div>
+                    <div className="max-h-32 overflow-y-auto border border-border rounded">
+                      <table className="w-full text-xs">
+                        <thead className="bg-muted/50 sticky top-0">
+                          <tr>
+                            <th className="text-left px-2 py-1">Mech</th>
+                            <th className="text-center px-2 py-1">Tonnage</th>
+                            <th className="text-left px-2 py-1">Mission</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {editingPilot.combatRecord.kills.map((kill, idx) => (
+                            <tr key={idx} className="border-t border-border/50">
+                              <td className="px-2 py-1 font-medium">{kill.mechModel}</td>
+                              <td className="px-2 py-1 text-center">{kill.tonnage}t</td>
+                              <td className="px-2 py-1 text-muted-foreground">{kill.mission}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Achievements Table */}
+                {editingPilot.achievements?.length > 0 && (
+                  <div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Achievements</div>
+                    <div className="max-h-32 overflow-y-auto border border-border rounded">
+                      <table className="w-full text-xs">
+                        <thead className="bg-muted/50 sticky top-0">
+                          <tr>
+                            <th className="text-center px-2 py-1 w-10">Icon</th>
+                            <th className="text-left px-2 py-1">Achievement</th>
+                            <th className="text-left px-2 py-1">Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {editingPilot.achievements.map((achId) => {
+                            const ach = getAchievementById(achId);
+                            return (
+                              <tr key={achId} className="border-t border-border/50">
+                                <td className="px-2 py-1 text-center text-base">{ach.icon}</td>
+                                <td className="px-2 py-1 font-medium">{ach.name}</td>
+                                <td className="px-2 py-1 text-muted-foreground">{ach.description}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={() => setShowDialog(false)} data-testid="pilot-dialog-cancel-button">

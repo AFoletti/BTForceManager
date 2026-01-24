@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Target, CheckCircle2, AlertCircle, Shield, X } from 'lucide-react';
+import { Plus, Target, CheckCircle2, AlertCircle, Shield, X, Trophy } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Select } from './ui/select';
 import { formatDate, formatNumber } from '../lib/utils';
@@ -23,6 +23,8 @@ import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
+import { checkAchievements, findNewAchievements, recordMissionCompletion, addKill, addAssists, createEmptyCombatRecord } from '../lib/achievements';
+import MechAutocomplete from './MechAutocomplete';
 
 const emptyMissionForm = {
   name: '',
@@ -61,6 +63,23 @@ export default function MissionManager({ force, onUpdate }) {
     elementals: {},
     pilots: {},
   });
+  
+  // Combat tracking state for kills and assists
+  const [pilotCombatUpdates, setPilotCombatUpdates] = useState({});
+  const [killSearchInput, setKillSearchInput] = useState({});
+  
+  // Achievements state
+  const [achievementDefinitions, setAchievementDefinitions] = useState([]);
+  const [showAchievementsPopup, setShowAchievementsPopup] = useState(false);
+  const [newAchievements, setNewAchievements] = useState([]);
+
+  // Load achievement definitions
+  useEffect(() => {
+    fetch('./data/achievements.json')
+      .then((res) => res.json())
+      .then((data) => setAchievementDefinitions(data.achievements || []))
+      .catch(() => setAchievementDefinitions([]));
+  }, []);
 
   const normaliseObjectives = (rawObjectives) => {
     if (Array.isArray(rawObjectives)) return rawObjectives;
@@ -308,12 +327,18 @@ export default function MissionManager({ force, onUpdate }) {
     });
 
     const pilotState = {};
+    const combatUpdates = {};
     assignedMechs.forEach((mech) => {
       const pilot = findPilotForMech(force, mech);
       if (pilot) {
         pilotState[pilot.id] = {
           injuries:
             typeof pilot.injuries === 'number' && pilot.injuries >= 0 ? pilot.injuries : 0,
+        };
+        // Initialize combat updates for this pilot
+        combatUpdates[pilot.id] = {
+          kills: [],
+          assists: 0,
         };
       }
     });
@@ -323,6 +348,11 @@ export default function MissionManager({ force, onUpdate }) {
       elementals: elementalState,
       pilots: pilotState,
     });
+    
+    // Reset combat tracking state
+    setPilotCombatUpdates(combatUpdates);
+    setKillSearchInput({});
+    setNewAchievements([]);
 
     setMissionBeingCompleted(mission);
     setCompletionObjectives(objectives);
@@ -334,6 +364,53 @@ export default function MissionManager({ force, onUpdate }) {
     setCompletionObjectives((prev) =>
       prev.map((obj, i) => (i === index ? { ...obj, achieved: !obj.achieved } : obj)),
     );
+  };
+
+  // Add a kill to a pilot's combat updates
+  const addPilotKill = (pilotId, mechData) => {
+    const missionName = missionBeingCompleted?.name || 'Mission';
+    const missionDate = force.currentDate;
+    
+    setPilotCombatUpdates((prev) => ({
+      ...prev,
+      [pilotId]: {
+        ...prev[pilotId],
+        kills: [
+          ...(prev[pilotId]?.kills || []),
+          {
+            id: `kill-${Date.now()}`,
+            mechModel: mechData.name,
+            tonnage: mechData.weight || 0,
+            mission: missionName,
+            date: missionDate,
+          },
+        ],
+      },
+    }));
+    // Clear search input for this pilot
+    setKillSearchInput((prev) => ({ ...prev, [pilotId]: '' }));
+  };
+
+  // Remove a kill from a pilot's combat updates
+  const removePilotKill = (pilotId, killId) => {
+    setPilotCombatUpdates((prev) => ({
+      ...prev,
+      [pilotId]: {
+        ...prev[pilotId],
+        kills: (prev[pilotId]?.kills || []).filter((k) => k.id !== killId),
+      },
+    }));
+  };
+
+  // Update assists for a pilot
+  const updatePilotAssists = (pilotId, delta) => {
+    setPilotCombatUpdates((prev) => ({
+      ...prev,
+      [pilotId]: {
+        ...prev[pilotId],
+        assists: Math.max(0, (prev[pilotId]?.assists || 0) + delta),
+      },
+    }));
   };
 
   const confirmCompleteMission = () => {
@@ -379,14 +456,65 @@ export default function MissionManager({ force, onUpdate }) {
       };
     });
 
+    // Update pilots with injuries AND combat records
+    const allNewAchievements = [];
     const updatedPilots = (force.pilots || []).map((pilot) => {
-      const edited = postMissionUnitState.pilots[pilot.id];
-      if (!edited) return pilot;
+      const editedState = postMissionUnitState.pilots[pilot.id];
+      const combatUpdate = pilotCombatUpdates[pilot.id];
+      
+      if (!editedState && !combatUpdate) return pilot;
+      
+      // Get current injuries and check if pilot was injured this mission
+      const previousInjuries = pilot.injuries || 0;
+      const newInjuries = editedState 
+        ? (Number.isFinite(editedState.injuries) ? Math.max(0, Math.min(6, editedState.injuries)) : 0)
+        : previousInjuries;
+      const wasInjured = newInjuries > previousInjuries;
+      
+      // Update combat record
+      let combatRecord = pilot.combatRecord || createEmptyCombatRecord();
+      
+      // Only update if pilot participated (has state entry)
+      if (editedState) {
+        // Record mission completion
+        combatRecord = recordMissionCompletion(combatRecord, wasInjured);
+        
+        // Add kills
+        if (combatUpdate?.kills?.length > 0) {
+          combatUpdate.kills.forEach((kill) => {
+            combatRecord = addKill(combatRecord, {
+              mechModel: kill.mechModel,
+              tonnage: kill.tonnage,
+              mission: kill.mission,
+              date: kill.date,
+            });
+          });
+        }
+        
+        // Add assists
+        if (combatUpdate?.assists > 0) {
+          combatRecord = addAssists(combatRecord, combatUpdate.assists);
+        }
+      }
+      
+      // Check for new achievements
+      const previousAchievements = pilot.achievements || [];
+      const currentAchievements = checkAchievements(combatRecord, achievementDefinitions);
+      const earnedNew = findNewAchievements(previousAchievements, currentAchievements);
+      
+      if (earnedNew.length > 0) {
+        allNewAchievements.push({
+          pilotId: pilot.id,
+          pilotName: pilot.name,
+          achievements: earnedNew,
+        });
+      }
+      
       return {
         ...pilot,
-        injuries: Number.isFinite(edited.injuries)
-          ? Math.max(0, Math.min(6, edited.injuries))
-          : 0,
+        injuries: newInjuries,
+        combatRecord,
+        achievements: currentAchievements,
       };
     });
 
@@ -445,6 +573,17 @@ export default function MissionManager({ force, onUpdate }) {
 
     setShowCompleteDialog(false);
     setMissionBeingCompleted(null);
+    
+    // Show achievements popup if any new achievements were earned
+    if (allNewAchievements.length > 0) {
+      setNewAchievements(allNewAchievements);
+      setShowAchievementsPopup(true);
+    }
+  };
+
+  // Get achievement details by ID
+  const getAchievementById = (achievementId) => {
+    return achievementDefinitions.find((a) => a.id === achievementId) || { name: achievementId, icon: '🏆', description: '' };
   };
 
   return (
@@ -553,7 +692,7 @@ export default function MissionManager({ force, onUpdate }) {
                                     return (
                                       <Badge key={mech.id} variant="secondary" className="text-xs">
                                         {mech.name}
-                                        {pilot && pilot.dezgra ? ' (D)' : ''} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
+                                        {pilot && pilot.dezgra ? ' 🚫' : ''} ({formatNumber(getMechAdjustedBV(force, mech))} BV)
                                       </Badge>
                                     );
                                   })}
@@ -1261,45 +1400,116 @@ export default function MissionManager({ force, onUpdate }) {
                     </div>
                   )}
 
-                {/* Deployed Pilots */}
+                {/* Deployed Pilots - Injuries + Combat Record */}
                 {Object.keys(postMissionUnitState.pilots).length > 0 && (
                   <div className="border border-border rounded p-3 bg-muted/10">
-                    <div className="text-xs font-semibold mb-2">Pilots</div>
-                    <div className="space-y-1">
+                    <div className="text-xs font-semibold mb-2">Pilots - Combat Record</div>
+                    <div className="space-y-4">
                       {(force.pilots || [])
                         .filter((pilot) => postMissionUnitState.pilots[pilot.id])
                         .map((pilot) => {
                           const state = postMissionUnitState.pilots[pilot.id];
+                          const combatUpdate = pilotCombatUpdates[pilot.id] || { kills: [], assists: 0 };
+                          const searchValue = killSearchInput[pilot.id] || '';
+                          
                           return (
                             <div
                               key={pilot.id}
-                              className="flex items-center justify-between gap-2 text-xs"
+                              className="border border-border/50 rounded p-2 bg-background/50"
                             >
-                              <span className="font-medium">{pilot.name}</span>
-                              <div className="flex items-center gap-1">
-                                <span className="text-[11px] text-muted-foreground">Injuries</span>
-                                <Input
-                                  type="number"
-                                  className="h-7 w-16 text-xs"
-                                  value={state.injuries}
-                                  min={0}
-                                  max={6}
-                                  onChange={(e) => {
-                                    const value = parseInt(e.target.value, 10);
-                                    setPostMissionUnitState((prev) => ({
-                                      ...prev,
-                                      pilots: {
-                                        ...prev.pilots,
-                                        [pilot.id]: {
-                                          ...prev.pilots[pilot.id],
-                                          injuries: Number.isNaN(value)
-                                            ? 0
-                                            : Math.max(0, Math.min(6, value)),
+                              <div className="flex items-center justify-between gap-2 text-xs mb-2">
+                                <span className="font-medium text-sm">{pilot.name}</span>
+                                <div className="flex items-center gap-1">
+                                  <span className="text-[11px] text-muted-foreground">Injuries</span>
+                                  <Input
+                                    type="number"
+                                    className="h-7 w-16 text-xs"
+                                    value={state.injuries}
+                                    min={0}
+                                    max={6}
+                                    onChange={(e) => {
+                                      const value = parseInt(e.target.value, 10);
+                                      setPostMissionUnitState((prev) => ({
+                                        ...prev,
+                                        pilots: {
+                                          ...prev.pilots,
+                                          [pilot.id]: {
+                                            ...prev.pilots[pilot.id],
+                                            injuries: Number.isNaN(value)
+                                              ? 0
+                                              : Math.max(0, Math.min(6, value)),
+                                          },
                                         },
-                                      },
-                                    }));
-                                  }}
-                                />
+                                      }));
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              
+                              {/* Kills Section */}
+                              <div className="mt-2">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[11px] text-muted-foreground">Kills:</span>
+                                </div>
+                                
+                                {/* Kill Entry */}
+                                <div className="flex gap-2 mb-2">
+                                  <div className="flex-1">
+                                    <MechAutocomplete
+                                      value={searchValue}
+                                      onChange={(val) => setKillSearchInput((prev) => ({ ...prev, [pilot.id]: val }))}
+                                      onSelect={(mechData) => addPilotKill(pilot.id, mechData)}
+                                      placeholder="Search mech destroyed..."
+                                    />
+                                  </div>
+                                </div>
+                                
+                                {/* Kill List */}
+                                {combatUpdate.kills.length > 0 && (
+                                  <div className="space-y-1 mb-2">
+                                    {combatUpdate.kills.map((kill) => (
+                                      <div 
+                                        key={kill.id}
+                                        className="flex items-center justify-between text-xs bg-muted/30 rounded px-2 py-1"
+                                      >
+                                        <span>{kill.mechModel} ({kill.tonnage}t)</span>
+                                        <Button
+                                          size="icon"
+                                          variant="ghost"
+                                          className="h-5 w-5"
+                                          onClick={() => removePilotKill(pilot.id, kill.id)}
+                                        >
+                                          <X className="w-3 h-3" />
+                                        </Button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* Assists Section */}
+                              <div className="flex items-center gap-2 mt-2">
+                                <span className="text-[11px] text-muted-foreground">Assists:</span>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="h-6 w-6"
+                                    onClick={() => updatePilotAssists(pilot.id, -1)}
+                                    disabled={combatUpdate.assists <= 0}
+                                  >
+                                    <span className="text-xs">-</span>
+                                  </Button>
+                                  <span className="font-mono text-xs w-6 text-center">{combatUpdate.assists}</span>
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="h-6 w-6"
+                                    onClick={() => updatePilotAssists(pilot.id, 1)}
+                                  >
+                                    <span className="text-xs">+</span>
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           );
@@ -1335,6 +1545,51 @@ export default function MissionManager({ force, onUpdate }) {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Achievements Popup */}
+      <Dialog open={showAchievementsPopup} onOpenChange={setShowAchievementsPopup}>
+        <DialogContent onClose={() => setShowAchievementsPopup(false)} className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Trophy className="w-6 h-6 text-yellow-500" />
+              Achievements Unlocked!
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {newAchievements.map((pilotAchievements) => (
+              <div key={pilotAchievements.pilotId} className="space-y-2">
+                <div className="font-semibold text-foreground">
+                  {pilotAchievements.pilotName}
+                </div>
+                <div className="space-y-2 pl-2">
+                  {pilotAchievements.achievements.map((achievementId) => {
+                    const achievement = getAchievementById(achievementId);
+                    return (
+                      <div 
+                        key={achievementId}
+                        className="flex items-center gap-3 p-2 bg-muted/30 rounded border border-border"
+                      >
+                        <span className="text-2xl">{achievement.icon}</span>
+                        <div>
+                          <div className="font-medium text-sm">{achievement.name}</div>
+                          <div className="text-xs text-muted-foreground">{achievement.description}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="flex justify-end pt-2">
+            <Button onClick={() => setShowAchievementsPopup(false)}>
+              Continue
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
