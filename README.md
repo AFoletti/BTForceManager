@@ -6,6 +6,18 @@ The app runs entirely in the browser, backed only by JSON files in the `data/` f
 
 ---
 
+## Key Features
+
+- **Force Management**: Track mechs, pilots, and elementals with full status tracking
+- **Mission Manager**: Create missions, assign units, track objectives and rewards
+- **Pilot Kill Board & Achievements**: Track pilot combat records with kills, assists, and unlockable achievements
+- **Support Points (SP)**: Configure SP purchases for missions from a customizable catalog
+- **Downtime Operations**: Apply repairs, training, and healing with formula-based costs
+- **Snapshots**: Save and restore force states at key campaign moments
+- **PDF Export**: Generate comprehensive force reports
+
+---
+
 ## Battle Value (BV)
 
 The app uses **adjusted BV** throughout, calculated from the mech's base BV and the assigned pilot's skills:
@@ -25,6 +37,74 @@ When adding a new mech, you can search the **mech catalog** by typing at least 2
 You can also type a custom mech name if it's not in the catalog.
 
 > **Copyright Notice:** This app contains MegaMek data (copyright 2025 The MegaMek Team), licensed under CC BY-NC-SA 4.0.
+
+---
+
+## Pilot Kill Board & Achievements
+
+### Combat Records
+
+Each pilot tracks their combat performance:
+
+- **Kills**: Detailed list of destroyed enemy mechs (model, tonnage, mission, date)
+- **Assists**: Count of assisted kills
+- **Missions Completed**: Total missions participated in
+- **Tonnage Destroyed**: Cumulative tonnage of all kills
+
+During mission completion, you can log kills for each deployed pilot using the mech catalog dropdown (same autocomplete as adding mechs).
+
+### Achievements
+
+Pilots automatically earn achievements based on their combat records:
+
+| Achievement | Requirement |
+|-------------|-------------|
+| First Blood | 1 kill |
+| Ace | 5 kills |
+| Double Ace | 10 kills |
+| Legend | 20 kills |
+| Light Hunter | 5 light mech kills (20-35t) |
+| Medium Hunter | 5 medium mech kills (40-55t) |
+| Heavy Hunter | 5 heavy mech kills (60-75t) |
+| Assault Hunter | 5 assault mech kills (80-100t) |
+| Tonnage Master | 1000 tons destroyed |
+| Giant Slayer | Destroyed a 100-ton mech |
+| Team Player | 5 assists |
+| Survivor | 3 consecutive missions without injury |
+| Veteran | 5 missions completed |
+| Battle Hardened | 10 missions completed |
+| Iron Will | Recovered from 5 injuries |
+
+Achievements are displayed as emoji badges in the Pilot Roster and detailed in the pilot edit dialog. New achievements trigger a popup after mission completion.
+
+See `data/achievements.json` to customize achievements.
+
+---
+
+## Support Points (SP)
+
+Missions can include a Support Point budget for purchasing tactical support:
+
+1. Set an SP Budget when creating a mission
+2. Select items from the dropdown (items exceeding remaining budget are disabled)
+3. SP purchases are stored with the mission and appear in PDF exports
+
+SP choices are defined in `data/sp-choices.json`. See TECHNICAL_README.md for customization.
+
+---
+
+## Special Abilities
+
+Forces can have special abilities displayed in the force banner. Add a `specialAbilities` array to your force JSON:
+
+```json
+{
+  "specialAbilities": [
+    { "title": "Zellbrigen", "description": "Clan Honor Dueling Protocols" },
+    { "title": "Blood Fury", "description": "+1 Initiative when outnumbered" }
+  ]
+}
+```
 
 ---
 
@@ -82,7 +162,7 @@ For deeper technical details (code structure, build & deploy, data contracts, et
 
 ## Updating the Mech Catalog
 
-The mech catalog (`data/mek_catalog.csv`) provides autocomplete data for adding mechs. It is sourced from [MekBay](https://next.mekbay.com) and contains all necessary mech information: chassis, model, BV, tonnage, year, techbase, role, and MUL ID.
+The mech catalog (`data/mek_catalog.csv`) provides autocomplete data for adding mechs and logging kills. It is sourced from [MekBay](https://next.mekbay.com) and contains all necessary mech information: chassis, model, BV, tonnage, year, techbase, role, and MUL ID.
 
 To refresh the mech list:
 
