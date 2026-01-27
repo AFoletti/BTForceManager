@@ -144,7 +144,7 @@ export function advanceDateString(dateStr) {
 /**
  * Maximum number of full snapshots to keep for rollback.
  */
-export const MAX_FULL_SNAPSHOTS = 3;
+export const MAX_FULL_SNAPSHOTS = 2;
 
 /**
  * Create a full snapshot that stores complete force data for rollback.
