@@ -513,6 +513,8 @@ const VARIANT_TO_STYLE = {
   disabled: [styles.unitBadge, styles.unitBadgeDisabled],
   destroyed: [styles.unitBadge, styles.unitBadgeDestroyed],
   repairing: [styles.unitBadge, styles.unitBadgeRepairing],
+  unavailable: [styles.unitBadge, styles.unitBadgeUnavailable],
+  kia: [styles.unitBadge, styles.unitBadgeKIA],
 };
 
 const getStatusBadgeStyle = (status) => {
