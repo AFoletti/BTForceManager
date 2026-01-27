@@ -678,105 +678,84 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
           </View>
         )}
 
-        {/* Snapshots summary (first page, after notes) */}
-        {snapshots.length > 0 && (
-          <View>
-            <Text style={styles.sectionHeader} break>
-              █ CAMPAIGN SNAPSHOTS
-            </Text>
-            {snapshots.map((snap) => {
-              const mechStatus = buildStatusCountsForSnapshot(snap, 'mechs');
-              const elementalStatus = buildStatusCountsForSnapshot(snap, 'elementals');
+        {/* Snapshots summary - paginated (max 10 per page) */}
+        {snapshots.length > 0 && (() => {
+          const SNAPSHOTS_PER_PAGE = 10;
+          const pages = [];
+          for (let i = 0; i < snapshots.length; i += SNAPSHOTS_PER_PAGE) {
+            pages.push(snapshots.slice(i, i + SNAPSHOTS_PER_PAGE));
+          }
+          
+          return pages.map((pageSnapshots, pageIndex) => (
+            <View key={`snapshot-page-${pageIndex}`} break={pageIndex > 0}>
+              <Text style={styles.sectionHeader}>
+                {pageIndex === 0 ? '█ CAMPAIGN SNAPSHOTS' : `█ CAMPAIGN SNAPSHOTS (continued ${pageIndex + 1}/${pages.length})`}
+              </Text>
+              {pageSnapshots.map((snap) => {
+                const mechStatus = buildStatusCountsForSnapshot(snap, 'mechs');
+                const elementalStatus = buildStatusCountsForSnapshot(snap, 'elementals');
+                const snapTypeLabel = snap.type === 'pre-mission' ? 'Pre-Mission' : snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime';
 
-              return (
-                <View key={snap.id} style={{ marginBottom: 8, borderBottom: '0.5 solid #CCCCCC', paddingBottom: 4 }}>
-                  <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#000000' }}>
-                    {snap.createdAt} – {snap.label} ({
-                      snap.type === 'pre-mission'
-                        ? 'Pre-Mission'
-                        : snap.type === 'post-mission'
-                          ? 'Post-Mission'
-                          : 'Post-Downtime'
-                    })
-                  </Text>
-
-                  <View style={styles.snapshotRow}>
-                    <View style={styles.snapshotStatusTable}>
-                      <View style={styles.snapshotStatusHeaderRow}>
-                        <Text style={styles.snapshotStatusHeaderLabel} />
-                        {STATUS_ORDER.map((status) => (
-                          <Text key={status} style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
-                        ))}
+                return (
+                  <View key={snap.id} style={{ marginBottom: 8, borderBottom: '0.5 solid #CCCCCC', paddingBottom: 4 }} wrap={false}>
+                    <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#000000' }}>
+                      {`${snap.createdAt || ''} – ${snap.label || ''} (${snapTypeLabel})`}
+                    </Text>
+                    <View style={styles.snapshotRow}>
+                      <View style={styles.snapshotStatusTable}>
+                        <View style={styles.snapshotStatusHeaderRow}>
+                          <Text style={styles.snapshotStatusHeaderLabel}>{' '}</Text>
+                          {STATUS_ORDER.map((status) => (
+                            <Text key={status} style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
+                          ))}
+                        </View>
+                        <View style={styles.snapshotStatusRow}>
+                          <Text style={styles.snapshotStatusRowLabel}>{'M:'}</Text>
+                          {STATUS_ORDER.map((status) => (
+                            <Text
+                              key={status}
+                              style={[
+                                styles.snapshotStatusCell,
+                                styles.snapshotStatusValue,
+                                status === UNIT_STATUS.OPERATIONAL ? { color: '#16A34A' }
+                                  : status === UNIT_STATUS.DAMAGED ? { color: '#F59E0B' }
+                                  : status === UNIT_STATUS.REPAIRING ? { color: '#3B82F6' }
+                                  : status === UNIT_STATUS.DESTROYED ? { color: '#B91C1C' }
+                                  : { color: '#DC2626' },
+                              ]}
+                            >{String(mechStatus[status] || 0)}</Text>
+                          ))}
+                        </View>
+                        <View style={styles.snapshotStatusRow}>
+                          <Text style={styles.snapshotStatusRowLabel}>{'E:'}</Text>
+                          {STATUS_ORDER.map((status) => (
+                            <Text
+                              key={status}
+                              style={[
+                                styles.snapshotStatusCell,
+                                styles.snapshotStatusValue,
+                                status === UNIT_STATUS.OPERATIONAL ? { color: '#16A34A' }
+                                  : status === UNIT_STATUS.DAMAGED ? { color: '#F59E0B' }
+                                  : status === UNIT_STATUS.REPAIRING ? { color: '#3B82F6' }
+                                  : status === UNIT_STATUS.DESTROYED ? { color: '#B91C1C' }
+                                  : { color: '#DC2626' },
+                              ]}
+                            >{String(elementalStatus[status] || 0)}</Text>
+                          ))}
+                        </View>
                       </View>
-
-                      <View style={styles.snapshotStatusRow}>
-                        <Text style={styles.snapshotStatusRowLabel}>M:</Text>
-                        {STATUS_ORDER.map((status) => (
-                          <Text
-                            key={status}
-                            style={[
-                              styles.snapshotStatusCell,
-                              styles.snapshotStatusValue,
-                              status === UNIT_STATUS.OPERATIONAL
-                                ? { color: '#16A34A' }
-                                : status === UNIT_STATUS.DAMAGED
-                                  ? { color: '#F59E0B' }
-                                  : status === UNIT_STATUS.REPAIRING
-                                    ? { color: '#3B82F6' }
-                                    : status === UNIT_STATUS.DESTROYED
-                                      ? { color: '#B91C1C' }
-                                      : { color: '#DC2626' },
-                            ]}
-                          >
-                            {mechStatus[status] || 0}
-                          </Text>
-                        ))}
+                      <View style={styles.snapshotMetaCol}>
+                        <Text style={styles.snapshotMetaText}>{`Missions: ${snap.missionsCompleted || 0}`}</Text>
+                        <Text style={styles.snapshotMetaText}>{`WP: ${formatNumber(snap.currentWarchest || 0)}`}</Text>
+                        <Text style={styles.snapshotMetaText}>{`Δ: ${(snap.netWarchestChange || 0) >= 0 ? '+' : ''}${formatNumber(snap.netWarchestChange || 0)}`}</Text>
                       </View>
-
-                      <View style={styles.snapshotStatusRow}>
-                        <Text style={styles.snapshotStatusRowLabel}>E:</Text>
-                        {STATUS_ORDER.map((status) => (
-                          <Text
-                            key={status}
-                            style={[
-                              styles.snapshotStatusCell,
-                              styles.snapshotStatusValue,
-                              status === UNIT_STATUS.OPERATIONAL
-                                ? { color: '#16A34A' }
-                                : status === UNIT_STATUS.DAMAGED
-                                  ? { color: '#F59E0B' }
-                                  : status === UNIT_STATUS.REPAIRING
-                                    ? { color: '#3B82F6' }
-                                    : status === UNIT_STATUS.DESTROYED
-                                      ? { color: '#B91C1C' }
-                                      : { color: '#DC2626' },
-                            ]}
-                          >
-                            {elementalStatus[status] || 0}
-                          </Text>
-                        ))}
-                      </View>
-                    </View>
-
-                    <View style={styles.snapshotMetaCol}>
-                      <Text style={styles.snapshotMetaText}>
-                        Missions completed: {snap.missionsCompleted}
-                      </Text>
-                      <Text style={styles.snapshotMetaText}>
-                        Warchest: {formatNumber(snap.currentWarchest)} WP
-                      </Text>
-                      <Text style={styles.snapshotMetaText}>
-                        Net Δ WP:{' '}
-                        {snap.netWarchestChange >= 0 ? '+' : ''}
-                        {formatNumber(snap.netWarchestChange)}
-                      </Text>
                     </View>
                   </View>
-                </View>
-              );
-            })}
-          </View>
-        )}
+                );
+              })}
+            </View>
+          ));
+        })()}
 
         {/* Pilot Roster Section */}
         <Text style={styles.sectionHeader} break>
