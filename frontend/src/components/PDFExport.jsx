@@ -374,11 +374,11 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   warchestCostNegative: {
-    color: '#000000',
+    color: '#DC2626',
     fontWeight: 'bold',
   },
   warchestGainPositive: {
-    color: '#000000',
+    color: '#16A34A',
     fontWeight: 'bold',
   },
   warchestSummaryRow: {
