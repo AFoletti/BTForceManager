@@ -405,12 +405,12 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   snapshotStatusHeaderLabel: {
-    width: 14,
+    width: 20,
     fontSize: 7,
     color: '#666666',
   },
   snapshotStatusHeaderCell: {
-    flexGrow: 1,
+    width: 28,
     fontSize: 7,
     textAlign: 'center',
     color: '#666666',
@@ -420,14 +420,16 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   snapshotStatusRowLabel: {
-    width: 14,
+    width: 20,
     fontSize: 7,
     fontWeight: 'bold',
     color: '#333333',
   },
   snapshotStatusCell: {
-    flexGrow: 1,
+    width: 28,
     alignItems: 'center',
+    textAlign: 'center',
+  },
   },
   snapshotStatusValue: {
     fontSize: 7,
