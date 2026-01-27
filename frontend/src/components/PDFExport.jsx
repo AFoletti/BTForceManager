@@ -23,95 +23,110 @@ const formatNumber = (num) => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 };
 
-// Military-themed styles for PDF
+// CLASSIFIED DOCUMENT - High contrast black on white for printing
 const styles = StyleSheet.create({
   page: {
-    padding: 28,
-    fontFamily: 'Helvetica',
+    padding: 40,
+    fontFamily: 'Courier',
     fontSize: 9,
     backgroundColor: '#FFFFFF',
+    color: '#000000',
   },
-  // Sci-fi frame and accents
+  // Document border
   pageBackground: {
     position: 'absolute',
-    top: 18,
-    left: 18,
-    right: 18,
-    bottom: 18,
-    border: '0.75 solid #CBD5F5',
+    top: 20,
+    left: 20,
+    right: 20,
+    bottom: 20,
+    border: '2 solid #000000',
   },
   pageCornerAccent: {
     position: 'absolute',
-    width: 32,
+    width: 20,
     height: 2,
-    backgroundColor: '#111827',
+    backgroundColor: '#000000',
+  },
+  // Classification header
+  classificationHeader: {
+    textAlign: 'center',
+    fontSize: 10,
+    fontWeight: 'bold',
+    letterSpacing: 4,
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottom: '1 solid #000000',
   },
   // Cover/Header Section
   coverSection: {
-    marginBottom: 16,
-    borderBottom: '1 solid #D1D5DB',
-    paddingBottom: 10,
+    marginBottom: 20,
+    borderBottom: '2 solid #000000',
+    paddingBottom: 16,
   },
   coverHeaderRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   forceImageWrapper: {
-    width: 70,
-    marginRight: 10,
+    width: 80,
+    marginRight: 16,
+    border: '1 solid #000000',
+    padding: 4,
   },
   forceTitleWrapper: {
     flex: 1,
   },
   forceTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#000000',
     marginBottom: 4,
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
+    letterSpacing: 2,
   },
   forceSubtitle: {
     fontSize: 9,
-    color: '#6B7280',
+    color: '#333333',
     marginBottom: 8,
-    fontStyle: 'italic',
   },
   forceStatsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 6,
+    justifyContent: 'flex-start',
+    marginTop: 8,
+    gap: 12,
   },
   forceStatBox: {
-    padding: 6,
-    backgroundColor: '#F9FAFB',
-    borderLeft: '2 solid #4B5320',
-    minWidth: 110,
+    padding: 8,
+    backgroundColor: '#F5F5F5',
+    border: '1 solid #000000',
+    minWidth: 100,
   },
   forceStatLabel: {
     fontSize: 7,
-    color: '#666',
+    color: '#333333',
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 2,
   },
   forceStatValue: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 'bold',
-    color: '#2C2C2C',
+    color: '#000000',
   },
   // Section Headers
   sectionHeader: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 'bold',
-    color: '#1A1A1A',
+    color: '#000000',
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
-    marginTop: 18,
-    marginBottom: 10,
+    letterSpacing: 2,
+    marginTop: 20,
+    marginBottom: 12,
     paddingBottom: 6,
-    borderBottom: '2 solid #4B5320',
+    borderBottom: '2 solid #000000',
+    backgroundColor: '#EEEEEE',
+    padding: 8,
   },
   // Roster grid
   rosterGrid: {
@@ -121,59 +136,74 @@ const styles = StyleSheet.create({
   },
   rosterItem: {
     width: '48%',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   // Unit Cards
   unitCard: {
-    padding: 8,
-    border: '0.75 solid #D1D5DB',
-    borderLeft: '3 solid #4B5320',
+    padding: 10,
+    border: '1 solid #000000',
     backgroundColor: '#FFFFFF',
   },
   unitHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     marginBottom: 6,
     paddingBottom: 4,
-    borderBottom: '1 solid #E0E0E0',
+    borderBottom: '1 solid #CCCCCC',
   },
   unitName: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
-    color: '#1A1A1A',
+    color: '#000000',
+    textTransform: 'uppercase',
+    maxWidth: '70%',
   },
   unitBadge: {
-    fontSize: 8,
-    color: '#FFF',
-    backgroundColor: '#16A34A', // operational - green
-    padding: '2 6',
-    borderRadius: 2,
+    fontSize: 7,
+    color: '#FFFFFF',
+    backgroundColor: '#16A34A',
+    padding: '2 5',
+    textTransform: 'uppercase',
+    flexShrink: 0,
   },
   unitBadgeDamaged: {
-    backgroundColor: '#F59E0B', // damaged - amber
+    backgroundColor: '#F59E0B',
+    color: '#000000',
   },
   unitBadgeDisabled: {
-    backgroundColor: '#9CA3AF', // disabled/unavailable - gray
+    backgroundColor: '#9CA3AF',
+    color: '#000000',
   },
   unitBadgeDestroyed: {
-    backgroundColor: '#DC2626', // destroyed/KIA - red
+    backgroundColor: '#DC2626',
+    color: '#FFFFFF',
   },
   unitBadgeKIA: {
     backgroundColor: '#DC2626',
+    color: '#FFFFFF',
   },
   unitBadgeRepairing: {
-    backgroundColor: '#3B82F6', // repairing - blue
+    backgroundColor: '#3B82F6',
+    color: '#FFFFFF',
+  },
+  unitBadgeUnavailable: {
+    backgroundColor: '#6B7280',
+    color: '#FFFFFF',
   },
   unitContentRow: {
     flexDirection: 'row',
   },
   unitImageWrapper: {
-    width: 80,
+    width: 70,
     alignItems: 'flex-start',
-    marginRight: 6,
+    marginRight: 8,
+    border: '1 solid #CCCCCC',
+    padding: 2,
   },
   unitStatsWrapper: {
     flex: 1,
+    overflow: 'hidden',
   },
   unitStatsGrid: {
     flexDirection: 'row',
@@ -181,152 +211,159 @@ const styles = StyleSheet.create({
   },
   unitStatItem: {
     flexDirection: 'row',
-    minWidth: '45%',
-    marginRight: 6,
+    width: '100%',
     marginBottom: 3,
   },
   unitStatLabel: {
     fontSize: 8,
-    color: '#666',
+    color: '#666666',
     marginRight: 4,
+    flexShrink: 0,
   },
   unitStatValue: {
     fontSize: 8,
     fontWeight: 'bold',
-    color: '#2C2C2C',
+    color: '#000000',
+    flex: 1,
   },
   unitHistory: {
     fontSize: 8,
-    color: '#374151',
-    marginTop: 5,
-    padding: 5,
-    backgroundColor: '#F9FAFB',
-    borderLeft: '1.5 solid #D1D5DB',
-    fontStyle: 'italic',
+    color: '#333333',
+    marginTop: 6,
+    padding: 6,
+    backgroundColor: '#F5F5F5',
+    border: '1 solid #CCCCCC',
   },
   // Mission Log
   missionCard: {
-    marginBottom: 10,
-    padding: 8,
-    border: '1 solid #CCCCCC',
-    borderTop: '3 solid #4B5320',
-    backgroundColor: '#FAFAFA',
+    marginBottom: 12,
+    padding: 10,
+    border: '1 solid #000000',
+    backgroundColor: '#FFFFFF',
   },
   missionHeader: {
-    marginBottom: 6,
+    marginBottom: 8,
+    borderBottom: '1 solid #CCCCCC',
+    paddingBottom: 6,
   },
   missionName: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 3,
+    color: '#000000',
+    textTransform: 'uppercase',
+    marginBottom: 4,
   },
   missionMeta: {
     fontSize: 8,
-    color: '#666',
+    color: '#666666',
     marginBottom: 4,
   },
   missionSection: {
-    marginTop: 6,
+    marginTop: 8,
   },
   missionSectionTitle: {
     fontSize: 8,
     fontWeight: 'bold',
-    color: '#4A4A4A',
-    marginBottom: 3,
+    color: '#000000',
+    marginBottom: 4,
     textTransform: 'uppercase',
   },
   missionText: {
     fontSize: 8,
-    color: '#555',
-    lineHeight: 1.4,
+    color: '#333333',
+    lineHeight: 1.5,
   },
   missionUnits: {
     fontSize: 8,
-    color: '#555',
-    marginLeft: 10,
+    color: '#333333',
+    marginLeft: 12,
   },
-  // Activity log table-style rows
+  // Activity log
   activityRow: {
     flexDirection: 'row',
-    marginBottom: 2,
+    marginBottom: 3,
+    borderBottom: '0.5 solid #EEEEEE',
+    paddingBottom: 2,
   },
   activityDate: {
-    width: '24%',
+    width: '22%',
     fontSize: 8,
-    color: '#6B7280',
+    color: '#666666',
   },
   activityText: {
     flex: 1,
     fontSize: 8,
-    color: '#555',
+    color: '#333333',
   },
-  // Decorative hexagon grid (bottom-right) for sci-fi feel
+  // Decorative elements removed for cleaner print
   hexRow: {
-    flexDirection: 'row',
+    display: 'none',
   },
   hex: {
-    width: 10,
-    height: 10,
-    borderRadius: 2,
-    border: '0.5 solid #E5E7EB',
-    margin: 1,
+    display: 'none',
   },
   hexRowOffset: {
-    marginLeft: 5,
+    display: 'none',
   },
   // Warchest accounting
   warchestSection: {
-    marginTop: 10,
+    marginTop: 12,
     marginBottom: 16,
-    padding: 8,
-    border: '0.75 solid #D1D5DB',
+    padding: 10,
+    border: '1 solid #000000',
     backgroundColor: '#FFFFFF',
   },
   warchestHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: 6,
+    borderBottom: '1 solid #CCCCCC',
+    paddingBottom: 4,
   },
   warchestHeaderText: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#000000',
+    textTransform: 'uppercase',
   },
   warchestTableHeader: {
     flexDirection: 'row',
-    borderBottom: '1 solid #E5E7EB',
-    paddingBottom: 3,
-    marginBottom: 3,
+    borderBottom: '1 solid #000000',
+    paddingBottom: 4,
+    marginBottom: 4,
+    backgroundColor: '#EEEEEE',
+    padding: 4,
   },
   warchestTableHeaderCell: {
     fontSize: 7,
     fontWeight: 'bold',
-    color: '#6B7280',
+    color: '#000000',
+    textTransform: 'uppercase',
   },
   warchestTableRow: {
     flexDirection: 'row',
-    paddingVertical: 2,
+    paddingVertical: 3,
+    borderBottom: '0.5 solid #EEEEEE',
   },
   warchestCellDate: {
     width: '18%',
     fontSize: 8,
-    color: '#374151',
+    color: '#333333',
   },
   warchestCellType: {
     width: '14%',
     fontSize: 8,
-    color: '#374151',
+    color: '#333333',
   },
   warchestCellUnit: {
     width: '23%',
     fontSize: 8,
-    color: '#374151',
+    color: '#333333',
   },
   warchestCellDesc: {
     width: '25%',
     fontSize: 8,
-    color: '#4B5563',
+    color: '#333333',
   },
   warchestCellCost: {
     width: '10%',
@@ -339,25 +376,25 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   warchestCostNegative: {
-    color: '#B91C1C', // red-700
+    color: '#DC2626',
     fontWeight: 'bold',
   },
   warchestGainPositive: {
-    color: '#166534', // green-700
+    color: '#16A34A',
     fontWeight: 'bold',
   },
   warchestSummaryRow: {
-    marginTop: 4,
-    borderTop: '1 solid #E5E7EB',
-    paddingTop: 3,
+    marginTop: 6,
+    borderTop: '1 solid #000000',
+    paddingTop: 4,
   },
   warchestSummaryText: {
     fontSize: 8,
-    color: '#111827',
+    color: '#000000',
   },
-  // Snapshot status table
+  // Snapshot status
   snapshotRow: {
-    marginTop: 2,
+    marginTop: 3,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -367,54 +404,71 @@ const styles = StyleSheet.create({
   },
   snapshotStatusHeaderRow: {
     flexDirection: 'row',
-    marginBottom: 1,
+    marginBottom: 2,
   },
   snapshotStatusHeaderLabel: {
-    width: 12,
+    width: 20,
     fontSize: 7,
-    color: '#6B7280',
+    color: '#666666',
   },
   snapshotStatusHeaderCell: {
-    flexGrow: 1,
+    width: 28,
     fontSize: 7,
     textAlign: 'center',
-    color: '#6B7280',
+    color: '#666666',
   },
   snapshotStatusRow: {
     flexDirection: 'row',
-    marginBottom: 1,
+    marginBottom: 2,
   },
   snapshotStatusRowLabel: {
-    width: 12,
+    width: 20,
     fontSize: 7,
     fontWeight: 'bold',
-    color: '#6B7280',
+    color: '#333333',
   },
   snapshotStatusCell: {
-    flexGrow: 1,
+    width: 28,
     alignItems: 'center',
+    textAlign: 'center',
   },
   snapshotStatusValue: {
     fontSize: 7,
     fontWeight: 'bold',
   },
   snapshotMetaCol: {
-    marginLeft: 8,
+    marginLeft: 10,
     justifyContent: 'center',
   },
   snapshotMetaText: {
     fontSize: 8,
-    color: '#4B5563',
+    color: '#333333',
   },
   // Footer
+  pageFooter: {
+    position: 'absolute',
+    bottom: 25,
+    left: 40,
+    right: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderTop: '1 solid #000000',
+    paddingTop: 6,
+  },
+  pageFooterText: {
+    fontSize: 7,
+    color: '#666666',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
   pageNumber: {
     position: 'absolute',
-    fontSize: 9,
-    bottom: 18,
+    fontSize: 8,
+    bottom: 25,
     left: 0,
     right: 0,
     textAlign: 'center',
-    color: '#999',
+    color: '#333333',
   },
 });
 
@@ -460,6 +514,8 @@ const VARIANT_TO_STYLE = {
   disabled: [styles.unitBadge, styles.unitBadgeDisabled],
   destroyed: [styles.unitBadge, styles.unitBadgeDestroyed],
   repairing: [styles.unitBadge, styles.unitBadgeRepairing],
+  unavailable: [styles.unitBadge, styles.unitBadgeUnavailable],
+  kia: [styles.unitBadge, styles.unitBadgeKIA],
 };
 
 const getStatusBadgeStyle = (status) => {
@@ -520,36 +576,27 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
       <Page size="A4" style={styles.page}>
         {/* Page frame & accents */}
         <View style={styles.pageBackground} fixed />
-        <View style={[styles.pageCornerAccent, { top: 18, left: 18 }]} fixed />
-        <View style={[styles.pageCornerAccent, { top: 18, right: 18 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 18, left: 18 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 18, right: 18 }]} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, right: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, right: 20 }]} fixed />
+
+        {/* Classification Header */}
+        <Text style={styles.classificationHeader} fixed>
+          CONFIDENTIAL // FORCE STATUS REPORT
+        </Text>
 
         {/* Force Information Header */}
         <View style={styles.coverSection}>
-          <View style={{ position: 'relative', marginBottom: 6 }}>
-            <View style={{
-              position: 'absolute',
-              left: 0,
-              top: -10,
-              width: 140,
-              height: 140,
-              borderRadius: 70,
-              border: '0.75 solid #E5E7EB',
-              opacity: 0.15,
-            }} />
-          </View>
           <View style={styles.coverHeaderRow}>
             <View style={styles.forceImageWrapper}>
               {force.image && (
                 <Image
                   src={force.image}
                   style={{
-                    maxWidth: 80,
-                    maxHeight: 80,
+                    maxWidth: 70,
+                    maxHeight: 70,
                     objectFit: 'contain',
-                    borderRadius: 4,
-                    border: '0.75 solid #D1D5DB',
                   }}
                 />
               )}
@@ -642,8 +689,8 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
               const elementalStatus = buildStatusCountsForSnapshot(snap, 'elementals');
 
               return (
-                <View key={snap.id} style={{ marginBottom: 6 }} wrap={false}>
-                  <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#111827' }}>
+                <View key={snap.id} style={{ marginBottom: 8, borderBottom: '0.5 solid #CCCCCC', paddingBottom: 4 }}>
+                  <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#000000' }}>
                     {snap.createdAt} – {snap.label} ({
                       snap.type === 'pre-mission'
                         ? 'Pre-Mission'
@@ -658,57 +705,55 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                       <View style={styles.snapshotStatusHeaderRow}>
                         <Text style={styles.snapshotStatusHeaderLabel} />
                         {STATUS_ORDER.map((status) => (
-                          <View key={status} style={styles.snapshotStatusHeaderCell}>
-                            <Text style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
-                          </View>
+                          <Text key={status} style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
                         ))}
                       </View>
 
                       <View style={styles.snapshotStatusRow}>
                         <Text style={styles.snapshotStatusRowLabel}>M:</Text>
                         {STATUS_ORDER.map((status) => (
-                          <View key={status} style={styles.snapshotStatusCell}>
-                            <Text
-                              style={[
-                                styles.snapshotStatusValue,
-                                status === UNIT_STATUS.OPERATIONAL
-                                  ? { color: '#16A34A' }
-                                  : status === UNIT_STATUS.DAMAGED
-                                    ? { color: '#F59E0B' }
-                                    : status === UNIT_STATUS.REPAIRING
-                                      ? { color: '#3B82F6' }
-                                      : status === UNIT_STATUS.DESTROYED
-                                        ? { color: '#B91C1C' }
-                                        : { color: '#DC2626' },
-                              ]}
-                            >
-                              {mechStatus[status] || 0}
-                            </Text>
-                          </View>
+                          <Text
+                            key={status}
+                            style={[
+                              styles.snapshotStatusCell,
+                              styles.snapshotStatusValue,
+                              status === UNIT_STATUS.OPERATIONAL
+                                ? { color: '#16A34A' }
+                                : status === UNIT_STATUS.DAMAGED
+                                  ? { color: '#F59E0B' }
+                                  : status === UNIT_STATUS.REPAIRING
+                                    ? { color: '#3B82F6' }
+                                    : status === UNIT_STATUS.DESTROYED
+                                      ? { color: '#B91C1C' }
+                                      : { color: '#DC2626' },
+                            ]}
+                          >
+                            {mechStatus[status] || 0}
+                          </Text>
                         ))}
                       </View>
 
                       <View style={styles.snapshotStatusRow}>
                         <Text style={styles.snapshotStatusRowLabel}>E:</Text>
                         {STATUS_ORDER.map((status) => (
-                          <View key={status} style={styles.snapshotStatusCell}>
-                            <Text
-                              style={[
-                                styles.snapshotStatusValue,
-                                status === UNIT_STATUS.OPERATIONAL
-                                  ? { color: '#16A34A' }
-                                  : status === UNIT_STATUS.DAMAGED
-                                    ? { color: '#F59E0B' }
-                                    : status === UNIT_STATUS.REPAIRING
-                                      ? { color: '#3B82F6' }
-                                      : status === UNIT_STATUS.DESTROYED
-                                        ? { color: '#B91C1C' }
-                                        : { color: '#DC2626' },
-                              ]}
-                            >
-                              {elementalStatus[status] || 0}
-                            </Text>
-                          </View>
+                          <Text
+                            key={status}
+                            style={[
+                              styles.snapshotStatusCell,
+                              styles.snapshotStatusValue,
+                              status === UNIT_STATUS.OPERATIONAL
+                                ? { color: '#16A34A' }
+                                : status === UNIT_STATUS.DAMAGED
+                                  ? { color: '#F59E0B' }
+                                  : status === UNIT_STATUS.REPAIRING
+                                    ? { color: '#3B82F6' }
+                                    : status === UNIT_STATUS.DESTROYED
+                                      ? { color: '#B91C1C' }
+                                      : { color: '#DC2626' },
+                            ]}
+                          >
+                            {elementalStatus[status] || 0}
+                          </Text>
                         ))}
                       </View>
                     </View>
@@ -773,18 +818,14 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                     </View>
                     <View style={styles.unitStatsWrapper}>
                       <View style={styles.unitStatsGrid}>
-                        <View style={styles.unitStatItem}>
-                          <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                          <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
-                        </View>
-                        <View style={styles.unitStatItem}>
-                          <Text style={styles.unitStatLabel}>Piloting:</Text>
-                          <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                        <View style={{ flexDirection: 'row', marginBottom: 3, width: '100%' }}>
+                          <Text style={styles.unitStatLabel}>G/P:</Text>
+                          <Text style={styles.unitStatValue}>{pilot.gunnery || 0}/{pilot.piloting || 0}</Text>
                         </View>
                         {assignedMech && (
-                          <View style={styles.unitStatItem}>
-                            <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
-                            <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                          <View style={{ flexDirection: 'row', marginBottom: 3, width: '100%' }}>
+                            <Text style={styles.unitStatLabel}>Mech:</Text>
+                            <Text style={[styles.unitStatValue, { maxWidth: 90 }]} numberOfLines={1}>{assignedMech.name}</Text>
                           </View>
                         )}
                       </View>

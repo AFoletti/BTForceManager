@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List, FileText } from 'lucide-react';
+import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List, FileText, Calendar, Crosshair } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -43,6 +43,15 @@ export default function App() {
     UNIT_STATUS.DESTROYED,
   ];
 
+  const STATUS_LABELS = {
+    [UNIT_STATUS.OPERATIONAL]: 'OPR',
+    [UNIT_STATUS.DAMAGED]: 'DMG',
+    [UNIT_STATUS.DISABLED]: 'DIS',
+    [UNIT_STATUS.REPAIRING]: 'REP',
+    [UNIT_STATUS.UNAVAILABLE]: 'UNV',
+    [UNIT_STATUS.DESTROYED]: 'DES',
+  };
+
   const getStatusCounts = (units = []) => {
     const counts = STATUS_ORDER.reduce((acc, status) => {
       acc[status] = 0;
@@ -74,17 +83,14 @@ export default function App() {
     const mechs = selectedForce.mechs || [];
     const elementals = selectedForce.elementals || [];
     
-    // Sum base BV for mechs (excluding destroyed)
     const mechBaseBV = mechs
       .filter(m => m.status !== UNIT_STATUS.DESTROYED)
       .reduce((sum, mech) => sum + (mech.bv || 0), 0);
     
-    // Sum adjusted BV for mechs (excluding destroyed)
     const mechAdjustedBV = mechs
       .filter(m => m.status !== UNIT_STATUS.DESTROYED)
       .reduce((sum, mech) => sum + getMechAdjustedBV(selectedForce, mech), 0);
     
-    // Sum BV for elementals (excluding destroyed)
     const elementalBV = elementals
       .filter(e => e.status !== UNIT_STATUS.DESTROYED)
       .reduce((sum, e) => sum + (e.bv || 0), 0);
@@ -129,345 +135,373 @@ export default function App() {
     setEditingDate(false);
   };
 
+  // Loading State
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Shield className="w-16 h-16 mx-auto mb-4 text-primary animate-pulse" />
-          <p className="text-foreground">Loading forces data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <Shield className="w-16 h-16 mx-auto mb-4 text-destructive" />
-          <h2 className="text-xl font-bold text-foreground mb-2">Error Loading Data</h2>
-          <p className="text-muted-foreground mb-4">{error}</p>
-          <p className="text-sm text-muted-foreground">
-            Make sure{' '}
-            <code className="bg-muted px-2 py-1 rounded">data/forces/manifest.json</code>{' '}
-            exists in the repository.
+          <div className="relative">
+            <Crosshair className="w-20 h-20 mx-auto mb-4 text-primary animate-pulse" />
+            <div className="absolute inset-0 w-20 h-20 mx-auto border-2 border-primary/30 animate-ping" style={{ animationDuration: '2s' }} />
+          </div>
+          <p className="font-heading text-lg uppercase tracking-widest text-muted-foreground">
+            Initializing Command Interface
           </p>
         </div>
       </div>
     );
   }
 
-  const HeaderContent = () => (
-    <header className="bg-card/50 backdrop-blur-sm py-4 border-b border-border">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded bg-primary flex items-center justify-center">
-              <Shield className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight">BattleTech Forces Manager</h1>
-              <p className="text-xs text-muted-foreground">Classic Mech &amp; Pilot Management System</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Select
-              value={selectedForceId}
-              onChange={(e) => setSelectedForceId(e.target.value)}
-              className="w-64"
-            >
-              {forces.map((force) => (
-                <option key={force.id} value={force.id}>
-                  {force.name} (WP: {force.currentWarchest}/{force.startingWarchest})
-                </option>
-              ))}
-            </Select>
-
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setShowAddForceDialog(true)}
-              title="Create new force"
-            >
-              <Plus className="w-4 h-4" />
-              Add Force
-            </Button>
-
-            <PDFExport force={selectedForce} />
-
-            <Button variant="outline" size="sm" onClick={handleExport}>
-              <Download className="w-4 h-4" />
-              Export
-            </Button>
-          </div>
+  // Error State
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="tactical-panel p-8 max-w-md text-center">
+          <Shield className="w-16 h-16 mx-auto mb-4 text-destructive" />
+          <h2 className="font-heading text-xl font-bold uppercase tracking-wider text-destructive mb-2">
+            System Error
+          </h2>
+          <p className="text-muted-foreground mb-4 font-mono text-sm">{error}</p>
+          <p className="text-xs text-muted-foreground font-mono">
+            Verify: <code className="bg-muted px-2 py-1">data/forces/manifest.json</code>
+          </p>
         </div>
       </div>
-    </header>
+    );
+  }
+
+  // Status Bar Component
+  const StatusBar = ({ counts, label }) => (
+    <div className="flex items-center gap-1">
+      <span className="text-[10px] uppercase tracking-wider text-muted-foreground mr-2 w-6">{label}</span>
+      {STATUS_ORDER.map((status) => {
+        const count = counts?.[status] || 0;
+        const isActive = count > 0;
+        return (
+          <div
+            key={status}
+            className={`flex flex-col items-center px-1.5 py-0.5 border ${
+              isActive 
+                ? status === UNIT_STATUS.OPERATIONAL ? 'border-operational/50 bg-operational/10'
+                : status === UNIT_STATUS.DAMAGED ? 'border-damaged/50 bg-damaged/10'
+                : status === UNIT_STATUS.DESTROYED ? 'border-red-900/50 bg-red-900/20'
+                : status === UNIT_STATUS.REPAIRING ? 'border-repairing/50 bg-repairing/10'
+                : 'border-critical/50 bg-critical/10'
+                : 'border-border/30 bg-transparent'
+            }`}
+            title={status}
+          >
+            <span className="text-[9px] text-muted-foreground uppercase">{STATUS_LABELS[status]}</span>
+            <span className={`font-mono text-xs font-bold ${
+              isActive
+                ? status === UNIT_STATUS.OPERATIONAL ? 'text-operational'
+                : status === UNIT_STATUS.DAMAGED ? 'text-damaged'
+                : status === UNIT_STATUS.DESTROYED ? 'text-red-400'
+                : status === UNIT_STATUS.REPAIRING ? 'text-repairing'
+                : 'text-critical'
+                : 'text-muted-foreground/50'
+            }`}>
+              {count}
+            </span>
+          </div>
+        );
+      })}
+    </div>
   );
 
   return (
     <div className="min-h-screen bg-background">
       {selectedForce ? (
         <Tabs defaultValue="mechs" className="flex flex-col min-h-screen">
-          {/* Sticky Header Group */}
-          <div className="sticky top-0 z-50 bg-background shadow-md">
-            <HeaderContent />
-            
+          {/* === COMMAND HEADER === */}
+          <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border/40">
+            {/* Top Bar */}
+            <div className="h-14 border-b border-border/30 px-6 flex items-center justify-between">
+              {/* Logo & Title */}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-primary/20 border border-primary/40 flex items-center justify-center">
+                    <Crosshair className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h1 className="font-heading text-base font-bold uppercase tracking-wider text-foreground">
+                      BattleTech Forces Manager
+                    </h1>
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Classic Mech &amp; Pilot Management System
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Force Selector & Actions */}
+              <div className="flex items-center gap-3">
+                <Select
+                  value={selectedForceId}
+                  onChange={(e) => setSelectedForceId(e.target.value)}
+                  className="w-64 font-mono text-sm bg-input border-border/60"
+                  data-testid="force-selector"
+                >
+                  {forces.map((force) => (
+                    <option key={force.id} value={force.id}>
+                      {force.name}
+                    </option>
+                  ))}
+                </Select>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAddForceDialog(true)}
+                  className="border-primary/40 text-primary hover:bg-primary/10"
+                  data-testid="add-force-btn"
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
+
+                <PDFExport force={selectedForce} />
+
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleExport}
+                  className="border-border/60 hover:border-primary/40"
+                  data-testid="export-btn"
+                >
+                  <Download className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
             {/* Force Info Banner */}
-            <div className="border-b border-border bg-muted/20">
-              <div className="container mx-auto px-4 py-6">
-                <div className="flex items-start gap-6">
-                  {selectedForce.image && (
+            <div className="px-6 py-4 bg-card/50">
+              <div className="flex items-start gap-6">
+                {/* Force Image */}
+                {selectedForce.image && (
+                  <div className="relative hud-corners">
                     <img
                       src={selectedForce.image}
                       alt={selectedForce.name}
-                      className="max-h-32 max-w-32 rounded object-contain border-2 border-primary"
+                      className="h-28 w-28 object-contain border border-border/60"
                     />
-                  )}
-                  
-                  {/* Special Abilities Table - between image and main content */}
-                  {selectedForce.specialAbilities && selectedForce.specialAbilities.length > 0 && (
-                    <div className="border border-border rounded bg-muted/30 p-3 min-w-48 max-w-64">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                        Special Abilities
-                      </h3>
-                      <table className="w-full text-xs">
-                        <tbody>
+                  </div>
+                )}
+
+                {/* Force Details */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="font-heading text-2xl font-bold uppercase tracking-wide text-foreground">
+                        {selectedForce.name}
+                      </h2>
+                      <p className="text-sm text-muted-foreground mt-1 max-w-xl">
+                        {selectedForce.description}
+                      </p>
+                    </div>
+
+                    {/* Special Abilities */}
+                    {selectedForce.specialAbilities && selectedForce.specialAbilities.length > 0 && (
+                      <div className="border border-primary/30 bg-primary/5 p-3 min-w-48">
+                        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-primary mb-2">
+                          Special Abilities
+                        </h3>
+                        <div className="space-y-1">
                           {selectedForce.specialAbilities.map((ability, index) => (
-                            <tr key={index} className="border-b border-border/50 last:border-0">
-                              <td className="py-1 pr-2 font-medium text-foreground">{ability.title}</td>
-                              <td className="py-1 text-muted-foreground">{ability.description}</td>
-                            </tr>
+                            <div key={index} className="text-xs">
+                              <span className="font-medium text-foreground">{ability.title}:</span>
+                              <span className="text-muted-foreground ml-1">{ability.description}</span>
+                            </div>
                           ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-foreground mb-2">{selectedForce.name}</h2>
-                    <p className="text-sm text-muted-foreground mb-3">{selectedForce.description}</p>
-                    <div className="mt-3 flex items-center gap-6 text-sm">
-                      <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">Current Date (in-universe):</span>
-                        <Input
-                          type="text"
-                          data-testid="current-date-input"
-                          className="font-mono text-xs w-32 h-8"
-                          value={editingDate ? tempDate : (selectedForce.currentDate || '')}
-                          onChange={(e) => setTempDate(e.target.value)}
-                          disabled={!editingDate}
-                          placeholder="3025-01-01"
-                        />
-                        {editingDate ? (
-                          <>
-                            <Button size="sm" onClick={handleSaveDate}>
-                              Save
-                            </Button>
-                            <Button size="sm" variant="outline" onClick={handleCancelDate}>
-                              Cancel
-                            </Button>
-                          </>
-                        ) : (
-                          <Button size="sm" variant="outline" onClick={handleEditDate}>
-                            Edit
-                          </Button>
-                        )}
+                        </div>
                       </div>
+                    )}
+                  </div>
+
+                  {/* Stats Grid */}
+                  <div className="mt-4 flex flex-wrap items-center gap-6">
+                    {/* Date */}
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
+                      {editingDate ? (
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="text"
+                            data-testid="current-date-input"
+                            className="font-mono text-xs w-28 h-7 bg-input"
+                            value={tempDate}
+                            onChange={(e) => setTempDate(e.target.value)}
+                            placeholder="3025-01-01"
+                          />
+                          <Button size="sm" className="h-7 px-2 text-xs" onClick={handleSaveDate}>Save</Button>
+                          <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={handleCancelDate}>Cancel</Button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={handleEditDate}
+                          className="font-mono text-sm text-foreground hover:text-primary transition-colors"
+                        >
+                          {selectedForce.currentDate || 'Set Date'}
+                        </button>
+                      )}
                     </div>
 
-                    <div className="flex flex-col gap-1 text-xs mt-2">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-muted-foreground">Warchest:</span>
-                        <span className="font-mono font-semibold text-primary">
-                          {selectedForce.currentWarchest} WP
-                        </span>
-                        <span className="text-muted-foreground">Starting:</span>
-                        <span className="font-mono">{selectedForce.startingWarchest} WP</span>
-                        <span className="text-muted-foreground ml-4">Base BV:</span>
-                        <span className="font-mono">{formatNumber(forceBV.baseBV)}</span>
-                        <span className="text-muted-foreground">Adjusted BV:</span>
-                        <span className="font-mono font-semibold text-primary">{formatNumber(forceBV.adjustedBV)}</span>
-                        {selectedForce.originalBaseBV !== undefined && (
-                          <>
-                            <span className="text-muted-foreground ml-4">(Original BV:</span>
-                            <span className="font-mono">{formatNumber(selectedForce.originalBaseBV)}/{formatNumber(selectedForce.originalAdjustedBV)})</span>
-                          </>
-                        )}
-                      </div>
+                    {/* Divider */}
+                    <div className="h-6 w-px bg-border/40" />
 
-                      <div className="mt-1 overflow-x-auto">
-                        <table className="text-xs">
-                          <thead>
-                            <tr>
-                              <th className="pr-2 text-left text-muted-foreground" />
-                              {STATUS_ORDER.map((status) => (
-                                <th
-                                  key={status}
-                                  className="px-1 text-center text-muted-foreground"
-                                >
-                                  {status}
-                                </th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr data-testid="mech-status-summary">
-                              <td className="pr-2 font-semibold">Mechs:</td>
-                              {STATUS_ORDER.map((status) => (
-                                <td
-                                  key={status}
-                                  className="px-1 text-center"
-                                >
-                                  <span
-                                    className={`font-bold ${
-                                      status === UNIT_STATUS.OPERATIONAL
-                                        ? 'text-green-600'
-                                        : status === UNIT_STATUS.DAMAGED
-                                          ? 'text-amber-600'
-                                          : status === UNIT_STATUS.REPAIRING
-                                            ? 'text-blue-600'
-                                            : status === UNIT_STATUS.DESTROYED
-                                              ? 'text-red-700'
-                                              : 'text-red-600'
-                                    }`}
-                                    data-testid={`mech-status-${status.toLowerCase()}-count`}
-                                  >
-                                    {mechStatusCounts ? mechStatusCounts[status] : 0}
-                                  </span>
-                                </td>
-                              ))}
-                            </tr>
-                            <tr data-testid="elemental-status-summary">
-                              <td className="pr-2 font-semibold">Elementals:</td>
-                              {STATUS_ORDER.map((status) => (
-                                <td
-                                  key={status}
-                                  className="px-1 text-center"
-                                >
-                                  <span
-                                    className={`font-bold ${
-                                      status === UNIT_STATUS.OPERATIONAL
-                                        ? 'text-green-600'
-                                        : status === UNIT_STATUS.DAMAGED
-                                          ? 'text-amber-600'
-                                          : status === UNIT_STATUS.REPAIRING
-                                            ? 'text-blue-600'
-                                            : status === UNIT_STATUS.DESTROYED
-                                              ? 'text-red-700'
-                                              : 'text-red-600'
-                                    }`}
-                                    data-testid={`elemental-status-${status.toLowerCase()}-count`}
-                                  >
-                                    {elementalStatusCounts ? elementalStatusCounts[status] : 0}
-                                  </span>
-                                </td>
-                              ))}
-                            </tr>
-                          </tbody>
-                        </table>
+                    {/* Warchest */}
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Warchest</div>
+                        <div className="font-mono text-lg font-bold text-primary glow-text">
+                          {formatNumber(selectedForce.currentWarchest)} <span className="text-xs text-muted-foreground">WP</span>
+                        </div>
                       </div>
+                      <div className="text-xs text-muted-foreground">
+                        / {formatNumber(selectedForce.startingWarchest)}
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-6 w-px bg-border/40" />
+
+                    {/* BV Stats */}
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Base BV</div>
+                        <div className="font-mono text-sm text-foreground">{formatNumber(forceBV.baseBV)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Adjusted BV</div>
+                        <div className="font-mono text-sm font-semibold text-secondary">{formatNumber(forceBV.adjustedBV)}</div>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-6 w-px bg-border/40" />
+
+                    {/* Status Bars */}
+                    <div className="flex flex-col gap-1">
+                      <StatusBar counts={mechStatusCounts} label="M" />
+                      <StatusBar counts={elementalStatusCounts} label="E" />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Tabs List */}
-            <div className="bg-background border-b border-border">
-              <div className="container mx-auto px-4 py-2">
-                <TabsList className="grid w-full grid-cols-9 lg:w-auto">
-                  <TabsTrigger value="mechs">
-                    <Shield className="w-4 h-4" />
-                    Mechs
-                  </TabsTrigger>
-                  <TabsTrigger value="elementals">
-                    <Users className="w-4 h-4" />
-                    Elementals
-                  </TabsTrigger>
-                  <TabsTrigger value="pilots">
-                    <User className="w-4 h-4" />
-                    Pilots
-                  </TabsTrigger>
-                  <TabsTrigger value="missions">
-                    <Target className="w-4 h-4" />
-                    Missions
-                  </TabsTrigger>
-                  <TabsTrigger value="downtime">
-                    <Wrench className="w-4 h-4" />
-                    Downtime
-                  </TabsTrigger>
-                  <TabsTrigger value="ledger">
-                    <List className="w-4 h-4" />
-                    Ledger
-                  </TabsTrigger>
-                  <TabsTrigger value="notes" data-testid="force-notes-tab">
-                    <FileText className="w-4 h-4" />
-                    Notes
-                  </TabsTrigger>
-                  <TabsTrigger value="snapshots" data-testid="snapshots-tab">
-                    <FileText className="w-4 h-4" />
-                    Snapshots
-                  </TabsTrigger>
-                  <TabsTrigger value="data">
-                    <Database className="w-4 h-4" />
-                    Data Editor
-                  </TabsTrigger>
-                </TabsList>
-              </div>
+            {/* Navigation Tabs */}
+            <div className="px-6 py-2 bg-muted/20 border-t border-border/30">
+              <TabsList className="bg-transparent gap-1">
+                <TabsTrigger value="mechs" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <Shield className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Mechs</span>
+                </TabsTrigger>
+                <TabsTrigger value="elementals" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <Users className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Elementals</span>
+                </TabsTrigger>
+                <TabsTrigger value="pilots" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <User className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Pilots</span>
+                </TabsTrigger>
+                <TabsTrigger value="missions" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <Target className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Missions</span>
+                </TabsTrigger>
+                <TabsTrigger value="downtime" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <Wrench className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Downtime</span>
+                </TabsTrigger>
+                <TabsTrigger value="ledger" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <List className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Ledger</span>
+                </TabsTrigger>
+                <TabsTrigger value="notes" data-testid="force-notes-tab" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <FileText className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Notes</span>
+                </TabsTrigger>
+                <TabsTrigger value="snapshots" data-testid="snapshots-tab" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <Database className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Snapshots</span>
+                </TabsTrigger>
+                <TabsTrigger value="data" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
+                  <Database className="w-4 h-4" />
+                  <span className="font-heading uppercase tracking-wider">Data</span>
+                </TabsTrigger>
+              </TabsList>
             </div>
-          </div>
+          </header>
 
-          {/* Main Content */}
-          <main className="container mx-auto px-4 py-8 flex-1">
-            <TabsContent value="mechs">
+          {/* === MAIN CONTENT === */}
+          <main className="flex-1 p-6 max-w-[1920px] mx-auto w-full">
+            <TabsContent value="mechs" className="mt-0">
               <MechRoster force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="elementals">
+            <TabsContent value="elementals" className="mt-0">
               <ElementalRoster force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="pilots">
+            <TabsContent value="pilots" className="mt-0">
               <PilotRoster force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="missions">
+            <TabsContent value="missions" className="mt-0">
               <MissionManager force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="downtime">
+            <TabsContent value="downtime" className="mt-0">
               <DowntimeOperations force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="ledger">
+            <TabsContent value="ledger" className="mt-0">
               <LedgerTab force={selectedForce} />
             </TabsContent>
 
-            <TabsContent value="notes">
+            <TabsContent value="notes" className="mt-0">
               <NotesTab force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="snapshots">
+            <TabsContent value="snapshots" className="mt-0">
               <SnapshotsTab force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
 
-            <TabsContent value="data">
+            <TabsContent value="data" className="mt-0">
               <DataEditor force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
           </main>
+
+          {/* Footer */}
+          <footer className="border-t border-border/30 px-6 py-3 text-center">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              BattleTech Forces Manager • Orbital Command Interface • All Rights Reserved
+            </p>
+          </footer>
         </Tabs>
       ) : (
-        <>
-          <HeaderContent />
-          <div className="container mx-auto px-4 py-12">
-            <div className="text-center text-muted-foreground">
-              <Shield className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p>No forces available. Check your data/forces/ folder.</p>
+        <div className="min-h-screen flex flex-col">
+          <header className="h-14 border-b border-border/40 px-6 flex items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-primary/20 border border-primary/40 flex items-center justify-center">
+                <Crosshair className="w-5 h-5 text-primary" />
+              </div>
+              <h1 className="font-heading text-base font-bold uppercase tracking-wider">
+                BattleTech Forces Manager
+              </h1>
+            </div>
+          </header>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="tactical-panel p-12 text-center">
+              <Shield className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+              <p className="font-heading uppercase tracking-wider text-muted-foreground">
+                No forces available
+              </p>
+              <p className="text-xs text-muted-foreground mt-2 font-mono">
+                Check data/forces/ directory
+              </p>
             </div>
           </div>
-        </>
+        </div>
       )}
 
       {/* Add Force Dialog */}

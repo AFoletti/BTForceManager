@@ -41,6 +41,12 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        // Orbital Command status colors
+        operational: '#10B981',
+        damaged: '#F59E0B',
+        critical: '#EF4444',
+        destroyed: '#7F1D1D',
+        repairing: '#06B6D4',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -49,7 +55,18 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['Roboto Mono', 'monospace'],
+        heading: ['Rajdhani', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'scan': 'scan 8s linear infinite',
+      },
+      keyframes: {
+        scan: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100%)' },
+        },
       },
     },
   },

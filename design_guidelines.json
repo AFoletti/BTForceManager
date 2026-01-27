@@ -1,0 +1,141 @@
+{
+  "identity": {
+    "persona": "E1 - The Anti-AI Designer",
+    "mission": "Redesign BattleTech Forces Manager into a 'Tactical Command Interface'. Reject generic SaaS aesthetics. Embrace 'FUI' (Fictional User Interface) principles: density, purpose, and industrial grit.",
+    "principles": [
+      "Density is Information: BattleTech is about data. Don't hide it. Organize it.",
+      "Diegetic Immersion: The UI should feel like a physical console in a DropShip.",
+      "Function over Form: Every border, line, and color must have a tactical meaning.",
+      "High Contrast: Combat happens in the dark. Data must pop."
+    ]
+  },
+  "typography": {
+    "fonts": {
+      "headings": {
+        "family": "Rajdhani, sans-serif",
+        "weights": ["600", "700"],
+        "usage": "Page titles, Section headers, Modal titles. Use uppercase often."
+      },
+      "body": {
+        "family": "Inter, sans-serif",
+        "weights": ["400", "500"],
+        "usage": "Long form text, notes, descriptions."
+      },
+      "data": {
+        "family": "JetBrains Mono, monospace",
+        "weights": ["400", "500"],
+        "usage": "Stats (BV, Tons), Tables, IDs, Coordinates."
+      }
+    },
+    "scale": {
+      "h1": "text-4xl font-bold tracking-tight uppercase",
+      "h2": "text-2xl font-bold tracking-wide uppercase border-l-4 border-primary pl-3",
+      "h3": "text-lg font-semibold tracking-wider uppercase text-muted-foreground",
+      "data-lg": "text-xl font-mono font-medium",
+      "data-sm": "text-xs font-mono text-muted-foreground"
+    }
+  },
+  "colors": {
+    "palette_name": "Orbital Command",
+    "background": {
+      "default": "#09090b", 
+      "surface": "#121214", 
+      "panel": "#18181b"
+    },
+    "primary": {
+      "default": "#F59E0B", 
+      "glow": "rgba(245, 158, 11, 0.5)",
+      "dim": "#78350f"
+    },
+    "secondary": {
+      "default": "#06B6D4", 
+      "glow": "rgba(6, 182, 212, 0.5)",
+      "dim": "#164e63"
+    },
+    "status": {
+      "operational": "#10B981", 
+      "damaged": "#F59E0B", 
+      "critical": "#EF4444", 
+      "destroyed": "#7F1D1D"
+    },
+    "text": {
+      "primary": "#FAFAFA",
+      "secondary": "#A1A1AA",
+      "muted": "#52525B"
+    },
+    "border": {
+      "default": "#27272A",
+      "active": "#F59E0B"
+    }
+  },
+  "visual_enhancers": {
+    "borders": {
+      "tech": "border border-border/50 relative overflow-hidden",
+      "chamfer": "clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)"
+    },
+    "effects": {
+      "scanline": "background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2)); background-size: 100% 4px;",
+      "glass_panel": "bg-background/80 backdrop-blur-md border border-white/10 shadow-xl",
+      "glow_text": "text-shadow: 0 0 10px var(--tw-shadow-color)"
+    }
+  },
+  "components": {
+    "TacticalCard": {
+      "description": "Main container for data. Uses chamfered corners or 'tech' borders.",
+      "classes": "relative bg-card border border-border/40 p-6 overflow-hidden group hover:border-primary/50 transition-colors duration-300",
+      "decoration": "Add absolute positioned 'brackets' (SVGs) at corners for the HUD look."
+    },
+    "DataGrid": {
+      "description": "Dense table for rosters.",
+      "classes": "w-full text-sm font-mono",
+      "header": "bg-muted/20 text-muted-foreground uppercase tracking-wider text-xs py-3 px-4 text-left",
+      "row": "border-b border-border/40 hover:bg-primary/5 transition-colors cursor-pointer"
+    },
+    "StatusBadge": {
+      "description": "Indicator for unit status.",
+      "classes": "inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium uppercase tracking-wide border border-current bg-transparent"
+    },
+    "TechButton": {
+      "description": "Primary action element.",
+      "classes": "relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-transparent border border-primary group hover:bg-primary/10 transition-all active:scale-95",
+      "variant_ghost": "border-transparent hover:bg-muted/20 text-muted-foreground hover:text-foreground"
+    },
+    "StatBar": {
+      "description": "Health/Armor display.",
+      "style": "Segmented blocks instead of smooth gradient. Gap-1 between blocks."
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid (CSS Grid)",
+    "spacing": "Compact but breathable. Use p-4 for panels, gap-4 for grid.",
+    "dashboard_structure": {
+      "header": "h-16 border-b border-border/40 flex items-center justify-between px-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50",
+      "main": "p-6 grid grid-cols-1 md:grid-cols-12 gap-6 max-w-[1920px] mx-auto",
+      "sidebar": "hidden"
+    }
+  },
+  "pdf_export": {
+    "style": "Classified Document",
+    "background": "#FFFFFF",
+    "text": "#000000",
+    "font": "Courier Prime, monospace",
+    "header": "CONFIDENTIAL // FORCE REPORT",
+    "footer": "GENERATED BY BATTLETECH FORCES MANAGER // DO NOT DISTRIBUTE",
+    "borders": "2px solid #000000"
+  },
+  "instructions_to_main_agent": [
+    "1. INSTALL FONTS: Add 'Rajdhani' and 'JetBrains Mono' via Google Fonts in index.html or CSS import.",
+    "2. UPDATE TAILWIND: Configure the 'Orbital Command' colors in tailwind.config.js.",
+    "3. COMPONENT OVERRIDE: Modify shadcn components (Card, Button, Table) to remove rounded corners (rounded-none or rounded-sm) and add borders.",
+    "4. LAYOUT: Implement the Bento Grid for the main dashboard. Use 'col-span' classes to size widgets appropriately.",
+    "5. PDF: Rewrite the PDF generation logic to use the 'Classified Document' style (high contrast black on white).",
+    "6. DATA-TESTID: Ensure every interactive element has a data-testid attribute."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Avoid 'rounded-xl' or 'rounded-2xl'. This is a military app. Use 'rounded-none' or 'rounded-sm'.",
+    "Use uppercase text for labels and headers.",
+    "Opacity is your friend. Use bg-primary/10 for subtle highlights.",
+    "Don't use gradients for backgrounds. Use solid dark colors or subtle noise textures.",
+    "Animations should be fast (150ms) and linear or 'ease-out'. No bouncy springs."
+  ]
+}
