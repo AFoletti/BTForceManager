@@ -1127,6 +1127,68 @@ export default function MissionManager({ force, onUpdate }) {
               </div>
             )}
 
+            {/* OpFor Roster */}
+            <div className="border border-border rounded p-4 bg-muted/10">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-sm font-medium">
+                  <Shield className="w-4 h-4 inline mr-2" />
+                  Opposing Force (OpFor)
+                </label>
+                {formData.opForUnits && formData.opForUnits.length > 0 && (
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-mono">
+                      {formData.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0)}t
+                    </span>
+                    <span className="mx-2">|</span>
+                    <span className="font-mono">
+                      {formatNumber(formData.opForUnits.reduce((sum, u) => sum + (u.bv || 0), 0))} BV
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 mb-3">
+                <div className="flex-1">
+                  <MechAutocomplete
+                    value={opForSearchInput}
+                    onChange={setOpForSearchInput}
+                    onSelect={addOpForUnit}
+                    placeholder="Search mech to add to OpFor..."
+                  />
+                </div>
+              </div>
+
+              {formData.opForUnits && formData.opForUnits.length > 0 ? (
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {formData.opForUnits.map((unit) => (
+                    <div
+                      key={unit.id}
+                      className="flex items-center justify-between p-2 bg-background rounded border border-border"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">{unit.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {unit.tonnage}t | {formatNumber(unit.bv)} BV
+                        </span>
+                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-6 w-6"
+                        onClick={() => removeOpForUnit(unit.id)}
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground text-center py-2">
+                  No OpFor units added. Search above to add enemy mechs encountered in this mission.
+                </p>
+              )}
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-2">Description</label>
               <Textarea
