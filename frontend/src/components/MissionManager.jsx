@@ -1606,8 +1606,6 @@ export default function MissionManager({ force, onUpdate }) {
                                     </div>
                                   );
                                 })()}
-                                  </div>
-                                )}
 
                                 {/* Kill Entry */}
                                 <div className="flex gap-2 mb-2">
