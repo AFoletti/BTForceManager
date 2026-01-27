@@ -55,25 +55,7 @@ During mission completion, you can log kills for each deployed pilot using the m
 
 ### Achievements
 
-Pilots automatically earn achievements based on their combat records:
-
-| Achievement | Requirement |
-|-------------|-------------|
-| First Blood | 1 kill |
-| Ace | 5 kills |
-| Double Ace | 10 kills |
-| Legend | 20 kills |
-| Light Hunter | 5 light mech kills (20-35t) |
-| Medium Hunter | 5 medium mech kills (40-55t) |
-| Heavy Hunter | 5 heavy mech kills (60-75t) |
-| Assault Hunter | 5 assault mech kills (80-100t) |
-| Tonnage Master | 1000 tons destroyed |
-| Giant Slayer | Destroyed a 100-ton mech |
-| Team Player | 5 assists |
-| Survivor | 3 consecutive missions without injury |
-| Veteran | 5 missions completed |
-| Battle Hardened | 10 missions completed |
-| Iron Will | Recovered from 5 injuries |
+Pilots automatically earn achievements based on their combat records
 
 Achievements are displayed as emoji badges in the Pilot Roster and detailed in the pilot edit dialog. New achievements trigger a popup after mission completion.
 
