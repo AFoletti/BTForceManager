@@ -228,7 +228,7 @@ export default function App() {
                       BattleTech Forces Manager
                     </h1>
                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      Tactical Command Interface v2.0
+                      Classic Mech &amp; Pilot Management System
                     </p>
                   </div>
                 </div>
