@@ -33,23 +33,27 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [mechActions, setMechActions] = useState([]);
   const [elementalActions, setElementalActions] = useState([]);
   const [pilotActions, setPilotActions] = useState([]);
+  const [achievementDefinitions, setAchievementDefinitions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Planned actions backlog (downtime cycle)
   const [plannedActions, setPlannedActions] = useState([]);
 
   useEffect(() => {
-    fetch('./data/downtime-actions.json')
-      .then((response) => response.json())
-      .then((data) => {
-        setMechActions(data.mechActions || []);
-        setElementalActions(data.elementalActions || []);
-        setPilotActions(data.pilotActions || []);
+    Promise.all([
+      fetch('./data/downtime-actions.json').then((r) => r.json()),
+      fetch('./data/achievements.json').then((r) => r.json()),
+    ])
+      .then(([downtimeData, achievementsData]) => {
+        setMechActions(downtimeData.mechActions || []);
+        setElementalActions(downtimeData.elementalActions || []);
+        setPilotActions(downtimeData.pilotActions || []);
+        setAchievementDefinitions(achievementsData.achievements || []);
         setLoading(false);
       })
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.error('Failed to load downtime actions:', err);
+        console.error('Failed to load downtime actions or achievements:', err);
         setLoading(false);
       });
   }, []);
