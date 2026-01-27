@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,52 +6,43 @@
 
 @layer base {
   :root {
-    /* Military tactical dark theme - Battletech inspired */
-    --background: 220 13% 9%;        /* Deep dark gray-blue #14161a */
-    --foreground: 210 15% 90%;       /* Light gray for text */
+    /* ORBITAL COMMAND - Tactical Dark Theme */
+    --background: 240 6% 4%;          /* Deep void #09090b */
+    --foreground: 0 0% 98%;           /* Near white #FAFAFA */
     
-    --card: 220 13% 12%;             /* Slightly lighter than background */
-    --card-foreground: 210 15% 90%;
+    --card: 240 4% 7%;                /* Surface #121214 */
+    --card-foreground: 0 0% 98%;
     
-    --popover: 220 13% 12%;
-    --popover-foreground: 210 15% 90%;
+    --popover: 240 4% 10%;            /* Panel #18181b */
+    --popover-foreground: 0 0% 98%;
     
-    --primary: 25 95% 53%;           /* Aerospace Orange #FF4F00 */
-    --primary-foreground: 220 13% 9%;
+    --primary: 38 92% 50%;            /* Amber #F59E0B */
+    --primary-foreground: 240 6% 4%;
     
-    --secondary: 58 31% 21%;         /* Army Green #454B1B */
-    --secondary-foreground: 210 15% 90%;
+    --secondary: 187 94% 43%;         /* Cyan #06B6D4 */
+    --secondary-foreground: 0 0% 98%;
     
-    --muted: 220 10% 18%;            /* Muted dark gray */
-    --muted-foreground: 210 10% 60%;
+    --muted: 240 4% 16%;              /* Dark zinc */
+    --muted-foreground: 240 5% 65%;   /* #A1A1AA */
     
-    --accent: 30 100% 45%;           /* Dark Orange accent #C76E00 */
-    --accent-foreground: 210 15% 95%;
+    --accent: 38 92% 50%;             /* Amber accent */
+    --accent-foreground: 240 6% 4%;
     
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 210 15% 95%;
+    --destructive: 0 84% 60%;         /* Red #EF4444 */
+    --destructive-foreground: 0 0% 98%;
     
-    --border: 220 13% 20%;           /* Subtle border */
-    --input: 220 13% 18%;
-    --ring: 25 95% 53%;              /* Orange ring for focus */
+    --border: 240 4% 16%;             /* #27272A */
+    --input: 240 4% 10%;
+    --ring: 38 92% 50%;               /* Amber ring */
     
-    --radius: 0.25rem;
+    --radius: 0.125rem;               /* Minimal radius - military angular */
     
-    /* Custom tactical tokens */
-    --tactical-panel: 220 13% 11%;
-    --tactical-highlight: 25 95% 53%;
-    --status-operational: 142 76% 36%;
-    --status-damaged: 38 92% 50%;
-    --status-disabled: 0 72% 51%;
-    --status-destroyed: 0 72% 51%;
-    --status-repairing: 217 91% 60%;
-    
-    /* Shadows */
-    --shadow-tactical: 0 4px 12px -2px rgba(255, 79, 0, 0.15);
-    --shadow-panel: 0 2px 8px rgba(0, 0, 0, 0.4);
-    
-    /* Transitions */
-    --transition-smooth: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Status colors */
+    --status-operational: 160 84% 39%;  /* Emerald #10B981 */
+    --status-damaged: 38 92% 50%;       /* Amber #F59E0B */
+    --status-critical: 0 84% 60%;       /* Red #EF4444 */
+    --status-destroyed: 0 63% 31%;      /* Dark red #7F1D1D */
+    --status-repairing: 187 94% 43%;    /* Cyan #06B6D4 */
   }
 }
 
@@ -59,72 +50,191 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rajdhani', sans-serif;
+    @apply font-semibold tracking-wide;
   }
 }
 
 @layer components {
+  /* === TACTICAL PANELS === */
   .tactical-panel {
-    @apply bg-card border border-border rounded-md shadow-lg;
-    box-shadow: var(--shadow-panel);
-  }
-  
-  .tactical-header {
-    @apply border-b border-border bg-muted/30 px-4 py-3;
-  }
-  
-  .status-badge {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium uppercase tracking-wider;
-  }
-  
-  .data-table {
-    @apply w-full border-collapse;
-  }
-  
-  .data-table th {
-    @apply bg-muted/50 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border;
-  }
-  
-  .data-table td {
-    @apply px-4 py-3 text-sm border-b border-border/50;
-  }
-  
-  .data-table tbody tr {
+    @apply relative bg-card border border-border/40 overflow-hidden;
     @apply transition-colors duration-150;
   }
   
+  .tactical-panel:hover {
+    @apply border-border/60;
+  }
+  
+  .tactical-panel::before {
+    content: '';
+    @apply absolute top-0 left-0 w-1 h-full bg-primary/60;
+  }
+  
+  .tactical-header {
+    @apply border-b border-border/40 bg-muted/20 px-4 py-3;
+    @apply flex items-center justify-between;
+  }
+  
+  .tactical-header h3 {
+    @apply text-sm font-semibold uppercase tracking-wider text-foreground/90;
+    font-family: 'Rajdhani', sans-serif;
+  }
+  
+  /* === DATA TABLES === */
+  .data-table {
+    @apply w-full border-collapse font-mono text-sm;
+  }
+  
+  .data-table th {
+    @apply bg-muted/30 px-4 py-3 text-left;
+    @apply text-[11px] font-semibold uppercase tracking-wider text-muted-foreground;
+    @apply border-b border-border/60;
+    font-family: 'Rajdhani', sans-serif;
+  }
+  
+  .data-table td {
+    @apply px-4 py-3 border-b border-border/30;
+    @apply text-sm text-foreground/90;
+  }
+  
+  .data-table tbody tr {
+    @apply transition-all duration-100;
+  }
+  
   .data-table tbody tr:hover {
-    @apply bg-muted/20;
+    @apply bg-primary/5;
   }
   
-  .tactical-input {
-    @apply w-full bg-input border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow;
+  /* === STATUS BADGES === */
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5;
+    @apply text-[10px] font-semibold uppercase tracking-wider;
+    @apply border bg-transparent;
+    font-family: 'Rajdhani', sans-serif;
   }
   
-  .tactical-button {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded font-medium text-sm transition-all;
-    transition: var(--transition-smooth);
+  .status-operational {
+    @apply text-operational border-operational/50 bg-operational/10;
   }
   
-  .tactical-button-primary {
-    @apply tactical-button bg-primary text-primary-foreground hover:bg-primary/90;
+  .status-damaged {
+    @apply text-damaged border-damaged/50 bg-damaged/10;
   }
   
-  .tactical-button-secondary {
-    @apply tactical-button bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  .status-critical,
+  .status-disabled {
+    @apply text-critical border-critical/50 bg-critical/10;
   }
   
-  .tactical-button-ghost {
-    @apply tactical-button hover:bg-muted/50;
+  .status-destroyed {
+    @apply text-red-400 border-red-900/50 bg-red-900/20;
+  }
+  
+  .status-repairing,
+  .status-unavailable {
+    @apply text-repairing border-repairing/50 bg-repairing/10;
+  }
+  
+  /* === BUTTONS === */
+  .btn-tactical {
+    @apply relative inline-flex items-center justify-center gap-2;
+    @apply px-4 py-2 text-sm font-medium uppercase tracking-wider;
+    @apply border border-primary/60 bg-transparent text-primary;
+    @apply transition-all duration-150 ease-out;
+    @apply hover:bg-primary/10 hover:border-primary;
+    @apply active:scale-[0.98];
+    font-family: 'Rajdhani', sans-serif;
+  }
+  
+  .btn-tactical-solid {
+    @apply btn-tactical bg-primary text-background;
+    @apply hover:bg-primary/90;
+  }
+  
+  .btn-tactical-ghost {
+    @apply btn-tactical border-transparent text-muted-foreground;
+    @apply hover:text-foreground hover:bg-muted/30;
+  }
+  
+  /* === INPUTS === */
+  .input-tactical {
+    @apply w-full bg-input border border-border/60 px-3 py-2;
+    @apply text-sm text-foreground placeholder:text-muted-foreground;
+    @apply focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/30;
+    @apply transition-all duration-150;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  /* === STAT DISPLAYS === */
+  .stat-value {
+    @apply font-mono text-xl font-medium text-primary;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  .stat-label {
+    @apply text-[10px] uppercase tracking-wider text-muted-foreground;
+    font-family: 'Rajdhani', sans-serif;
+  }
+  
+  /* === CORNER BRACKETS (HUD Effect) === */
+  .hud-corners {
+    @apply relative;
+  }
+  
+  .hud-corners::before,
+  .hud-corners::after {
+    content: '';
+    @apply absolute w-3 h-3 border-primary/40;
+    @apply pointer-events-none;
+  }
+  
+  .hud-corners::before {
+    @apply top-0 left-0 border-t border-l;
+  }
+  
+  .hud-corners::after {
+    @apply bottom-0 right-0 border-b border-r;
+  }
+  
+  /* === GLOWING TEXT === */
+  .glow-text {
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  }
+  
+  /* === SECTION DIVIDER === */
+  .section-divider {
+    @apply relative flex items-center gap-4 my-6;
+  }
+  
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    @apply flex-1 h-px bg-border/40;
+  }
+  
+  .section-divider span {
+    @apply text-xs uppercase tracking-widest text-muted-foreground;
+    font-family: 'Rajdhani', sans-serif;
   }
 }
 
-/* Scrollbar styling */
+/* === SCROLLBARS === */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -132,15 +242,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted));
-  border-radius: 4px;
+  background: hsl(var(--border));
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
+  background: hsl(var(--muted-foreground) / 0.5);
 }
 
-/* Hide number input spinners/arrows for cleaner look while keeping direct editing */
+/* === NUMBER INPUT CLEANUP === */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -150,4 +259,9 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+
+/* === SELECTION === */
+::selection {
+  @apply bg-primary/30 text-foreground;
 }
