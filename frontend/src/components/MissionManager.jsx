@@ -813,13 +813,13 @@ export default function MissionManager({ force, onUpdate }) {
                             </span>
                             <span className="text-xs text-muted-foreground">
                               {mission.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0)}t |{' '}
-                              {formatNumber(mission.opForUnits.reduce((sum, u) => sum + (u.bv || 0), 0))} BV
+                              {formatNumber(calculateOpForTotalBV(mission.opForUnits))} BV
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {mission.opForUnits.map((unit) => (
                               <Badge key={unit.id} variant="outline" className="text-xs">
-                                {unit.name} ({unit.tonnage}t)
+                                {unit.name} ({unit.tonnage}t, {unit.gunnery ?? 4}/{unit.piloting ?? 5}, {formatNumber(getOpForAdjustedBV(unit))} BV)
                               </Badge>
                             ))}
                           </div>
