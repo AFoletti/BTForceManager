@@ -764,6 +764,29 @@ export default function MissionManager({ force, onUpdate }) {
                         </div>
                       )}
 
+                      {/* OpFor Roster */}
+                      {mission.opForUnits && mission.opForUnits.length > 0 && (
+                        <div className="mt-3 p-3 bg-background/50 rounded border border-border">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-sm flex items-center gap-2">
+                              <Shield className="w-4 h-4" />
+                              Opposing Force
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {mission.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0)}t |{' '}
+                              {formatNumber(mission.opForUnits.reduce((sum, u) => sum + (u.bv || 0), 0))} BV
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {mission.opForUnits.map((unit) => (
+                              <Badge key={unit.id} variant="outline" className="text-xs">
+                                {unit.name} ({unit.tonnage}t)
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       {mission.recap && (
                         <div className="text-sm mt-2 p-3 bg-background/50 rounded">
                           <span className="font-medium">Mission Recap:</span>
