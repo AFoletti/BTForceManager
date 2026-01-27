@@ -39,6 +39,10 @@ export default function DowntimeOperations({ force, onUpdate }) {
   // Planned actions backlog (downtime cycle)
   const [plannedActions, setPlannedActions] = useState([]);
 
+  // Achievement popup state
+  const [showAchievementsPopup, setShowAchievementsPopup] = useState(false);
+  const [newAchievements, setNewAchievements] = useState([]);
+
   useEffect(() => {
     Promise.all([
       fetch('./data/downtime-actions.json').then((r) => r.json()),
