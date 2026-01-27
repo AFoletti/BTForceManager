@@ -217,9 +217,21 @@ export default function DowntimeOperations({ force, onUpdate }) {
     });
 
     // Check achievements for all pilots after downtime cycle
+    const allNewAchievements = [];
     if (achievementDefinitions.length > 0) {
       const updatedPilots = (workingForce.pilots || []).map((pilot) => {
+        const previousAchievements = pilot.achievements || [];
         const currentAchievements = checkAchievements(pilot.combatRecord, achievementDefinitions);
+        const earnedNew = findNewAchievements(previousAchievements, currentAchievements);
+        
+        if (earnedNew.length > 0) {
+          allNewAchievements.push({
+            pilotId: pilot.id,
+            pilotName: pilot.name,
+            achievements: earnedNew,
+          });
+        }
+        
         return {
           ...pilot,
           achievements: currentAchievements,
