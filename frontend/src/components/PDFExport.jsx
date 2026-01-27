@@ -686,68 +686,50 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
             pages.push(snapshots.slice(i, i + SNAPSHOTS_PER_PAGE));
           }
           
+          // Helper to format status counts as a single string
+          const formatStatusLine = (label, statusCounts) => {
+            const parts = STATUS_ORDER.map(status => {
+              const count = statusCounts[status] || 0;
+              return `${STATUS_LABELS[status]}:${count}`;
+            });
+            return `${label} ${parts.join(' ')}`;
+          };
+          
           return pages.map((pageSnapshots, pageIndex) => (
             <View key={`snapshot-page-${pageIndex}`} break={pageIndex > 0}>
               <Text style={styles.sectionHeader}>
-                {pageIndex === 0 ? '█ CAMPAIGN SNAPSHOTS' : `█ CAMPAIGN SNAPSHOTS (continued ${pageIndex + 1}/${pages.length})`}
+                {pageIndex === 0 ? '█ CAMPAIGN SNAPSHOTS' : `█ CAMPAIGN SNAPSHOTS (cont. ${pageIndex + 1}/${pages.length})`}
               </Text>
               {pageSnapshots.map((snap) => {
                 const mechStatus = buildStatusCountsForSnapshot(snap, 'mechs');
                 const elementalStatus = buildStatusCountsForSnapshot(snap, 'elementals');
                 const snapTypeLabel = snap.type === 'pre-mission' ? 'Pre-Mission' : snap.type === 'post-mission' ? 'Post-Mission' : 'Post-Downtime';
+                const dateLabel = snap.createdAt || '—';
+                const snapLabel = snap.label || '—';
+                const wpValue = formatNumber(snap.currentWarchest || 0);
+                const wpDelta = snap.netWarchestChange || 0;
+                const wpDeltaStr = `${wpDelta >= 0 ? '+' : ''}${formatNumber(wpDelta)}`;
 
                 return (
-                  <View key={snap.id} style={{ marginBottom: 8, borderBottom: '0.5 solid #CCCCCC', paddingBottom: 4 }} wrap={false}>
-                    <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#000000' }}>
-                      {`${snap.createdAt || ''} – ${snap.label || ''} (${snapTypeLabel})`}
+                  <View key={snap.id} style={{ marginBottom: 6, paddingBottom: 4, borderBottom: '0.5 solid #CCCCCC' }} wrap={false}>
+                    <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#000000', marginBottom: 2 }}>
+                      {`${dateLabel} — ${snapLabel} (${snapTypeLabel})`}
                     </Text>
-                    <View style={styles.snapshotRow}>
-                      <View style={styles.snapshotStatusTable}>
-                        <View style={styles.snapshotStatusHeaderRow}>
-                          <Text style={styles.snapshotStatusHeaderLabel}>{' '}</Text>
-                          {STATUS_ORDER.map((status) => (
-                            <Text key={status} style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
-                          ))}
-                        </View>
-                        <View style={styles.snapshotStatusRow}>
-                          <Text style={styles.snapshotStatusRowLabel}>{'M:'}</Text>
-                          {STATUS_ORDER.map((status) => (
-                            <Text
-                              key={status}
-                              style={[
-                                styles.snapshotStatusCell,
-                                styles.snapshotStatusValue,
-                                status === UNIT_STATUS.OPERATIONAL ? { color: '#16A34A' }
-                                  : status === UNIT_STATUS.DAMAGED ? { color: '#F59E0B' }
-                                  : status === UNIT_STATUS.REPAIRING ? { color: '#3B82F6' }
-                                  : status === UNIT_STATUS.DESTROYED ? { color: '#B91C1C' }
-                                  : { color: '#DC2626' },
-                              ]}
-                            >{String(mechStatus[status] || 0)}</Text>
-                          ))}
-                        </View>
-                        <View style={styles.snapshotStatusRow}>
-                          <Text style={styles.snapshotStatusRowLabel}>{'E:'}</Text>
-                          {STATUS_ORDER.map((status) => (
-                            <Text
-                              key={status}
-                              style={[
-                                styles.snapshotStatusCell,
-                                styles.snapshotStatusValue,
-                                status === UNIT_STATUS.OPERATIONAL ? { color: '#16A34A' }
-                                  : status === UNIT_STATUS.DAMAGED ? { color: '#F59E0B' }
-                                  : status === UNIT_STATUS.REPAIRING ? { color: '#3B82F6' }
-                                  : status === UNIT_STATUS.DESTROYED ? { color: '#B91C1C' }
-                                  : { color: '#DC2626' },
-                              ]}
-                            >{String(elementalStatus[status] || 0)}</Text>
-                          ))}
-                        </View>
-                      </View>
-                      <View style={styles.snapshotMetaCol}>
-                        <Text style={styles.snapshotMetaText}>{`Missions: ${snap.missionsCompleted || 0}`}</Text>
-                        <Text style={styles.snapshotMetaText}>{`WP: ${formatNumber(snap.currentWarchest || 0)}`}</Text>
-                        <Text style={styles.snapshotMetaText}>{`Δ: ${(snap.netWarchestChange || 0) >= 0 ? '+' : ''}${formatNumber(snap.netWarchestChange || 0)}`}</Text>
+                    <Text style={{ fontSize: 8, color: '#333333' }}>
+                      {formatStatusLine('Mechs:', mechStatus)}
+                    </Text>
+                    <Text style={{ fontSize: 8, color: '#333333' }}>
+                      {formatStatusLine('Elem:', elementalStatus)}
+                    </Text>
+                    <Text style={{ fontSize: 8, color: '#333333' }}>
+                      {`Missions: ${snap.missionsCompleted || 0} | WP: ${wpValue} | Δ: ${wpDeltaStr}`}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ));
+        })()}
                       </View>
                     </View>
                   </View>
