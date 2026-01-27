@@ -38,6 +38,7 @@ const emptyMissionForm = {
   spBudget: 0,
   spPurchases: [],
   totalTonnage: 0,
+  opForUnits: [],
 };
 
 export default function MissionManager({ force, onUpdate }) {
