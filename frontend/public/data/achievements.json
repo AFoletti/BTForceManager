@@ -14,7 +14,8 @@
     { "id": "giant-slayer", "name": "Giant Slayer", "icon": "🗡️", "description": "Destroyed a 100-ton mech", "condition": "maxTonnageKill >= 100" },
     { "id": "team-player", "name": "Team Player", "icon": "🤝", "description": "5 assists", "condition": "assists >= 5" },
     
-    { "id": "survivor", "name": "Survivor", "icon": "🛡️", "description": "3 missions without injury", "condition": "missionsWithoutInjury >= 3" },
+    { "id": "untouchable", "name": "Untouchable", "icon": "🛡️", "description": "3 consecutive missions without injury", "condition": "missionsWithoutInjury >= 3" },
+    { "id": "survivor", "name": "Survivor", "icon": "🩹", "description": "Recovered from at least one injury", "condition": "totalInjuriesHealed >= 1" },
     { "id": "veteran", "name": "Veteran", "icon": "🎖️", "description": "Completed 5 missions", "condition": "missionsCompleted >= 5" },
     { "id": "battle-hardened", "name": "Battle Hardened", "icon": "💎", "description": "Completed 10 missions", "condition": "missionsCompleted >= 10" },
     { "id": "iron-will", "name": "Iron Will", "icon": "💪", "description": "Recovered from 5 injuries", "condition": "totalInjuriesHealed >= 5" }
