@@ -730,14 +730,6 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
             </View>
           ));
         })()}
-                      </View>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-          ));
-        })()}
 
         {/* Pilot Roster Section */}
         <Text style={styles.sectionHeader} break>
