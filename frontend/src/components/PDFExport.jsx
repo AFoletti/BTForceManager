@@ -1101,6 +1101,20 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                   </View>
                 )}
 
+                {/* OpFor Roster in PDF */}
+                {Array.isArray(mission.opForUnits) && mission.opForUnits.length > 0 && (
+                  <View style={styles.missionSection}>
+                    <Text style={styles.missionSectionTitle}>
+                      Opposing Force ({mission.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0)}t, {formatNumber(mission.opForUnits.reduce((sum, u) => sum + (u.bv || 0), 0))} BV):
+                    </Text>
+                    {mission.opForUnits.map((unit) => (
+                      <Text key={unit.id} style={styles.missionUnits}>
+                        • {unit.name} ({unit.tonnage}t, {formatNumber(unit.bv || 0)} BV)
+                      </Text>
+                    ))}
+                  </View>
+                )}
+
                 {assignedMechObjects.length > 0 && (
                   <View style={styles.missionSection}>
                     <Text style={styles.missionSectionTitle}>Assigned Mechs:</Text>
