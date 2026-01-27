@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Textarea } from './ui/textarea';
-import { Wrench, AlertTriangle, Settings } from 'lucide-react';
+import { Wrench, AlertTriangle, Settings, Trophy } from 'lucide-react';
 import {
   buildDowntimeContext,
   evaluateDowntimeCost,
