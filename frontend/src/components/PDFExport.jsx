@@ -583,10 +583,6 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                   }}
                 />
               )}
-                    border: '0.75 solid #D1D5DB',
-                  }}
-                />
-              )}
             </View>
             <View style={styles.forceTitleWrapper}>
               <Text style={styles.forceTitle}>{force.name}</Text>
