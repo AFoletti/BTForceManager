@@ -1102,18 +1102,27 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                 )}
 
                 {/* OpFor Roster in PDF */}
-                {Array.isArray(mission.opForUnits) && mission.opForUnits.length > 0 && (
-                  <View style={styles.missionSection}>
-                    <Text style={styles.missionSectionTitle}>
-                      Opposing Force ({mission.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0)}t, {formatNumber(mission.opForUnits.reduce((sum, u) => sum + (u.bv || 0), 0))} BV):
-                    </Text>
-                    {mission.opForUnits.map((unit) => (
-                      <Text key={unit.id} style={styles.missionUnits}>
-                        • {unit.name} ({unit.tonnage}t, {formatNumber(unit.bv || 0)} BV)
+                {Array.isArray(mission.opForUnits) && mission.opForUnits.length > 0 && (() => {
+                  const getOpForAdjustedBV = (unit) => {
+                    const baseBv = unit.baseBv ?? unit.bv ?? 0;
+                    return getAdjustedBV(baseBv, unit.gunnery ?? 4, unit.piloting ?? 5);
+                  };
+                  const totalBV = mission.opForUnits.reduce((sum, u) => sum + getOpForAdjustedBV(u), 0);
+                  const totalTonnage = mission.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0);
+                  
+                  return (
+                    <View style={styles.missionSection}>
+                      <Text style={styles.missionSectionTitle}>
+                        Opposing Force ({totalTonnage}t, {formatNumber(totalBV)} BV):
                       </Text>
-                    ))}
-                  </View>
-                )}
+                      {mission.opForUnits.map((unit) => (
+                        <Text key={unit.id} style={styles.missionUnits}>
+                          • {unit.name} ({unit.tonnage}t, {unit.gunnery ?? 4}/{unit.piloting ?? 5}, {formatNumber(getOpForAdjustedBV(unit))} BV)
+                        </Text>
+                      ))}
+                    </View>
+                  );
+                })()}
 
                 {assignedMechObjects.length > 0 && (
                   <View style={styles.missionSection}>
