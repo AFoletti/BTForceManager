@@ -1580,24 +1580,32 @@ export default function MissionManager({ force, onUpdate }) {
                                 </div>
                                 
                                 {/* OpFor Quick Select */}
-                                {missionBeingCompleted.opForUnits && missionBeingCompleted.opForUnits.length > 0 && (
-                                  <div className="mb-2">
-                                    <div className="text-[10px] text-muted-foreground mb-1">Quick select from OpFor:</div>
-                                    <div className="flex flex-wrap gap-1">
-                                      {missionBeingCompleted.opForUnits
-                                        .filter((unit) => unit.status !== 'destroyed')
-                                        .map((unit) => (
+                                {missionBeingCompleted.opForUnits && missionBeingCompleted.opForUnits.length > 0 && (() => {
+                                  const claimedIds = getClaimedOpForUnitIds();
+                                  const availableUnits = missionBeingCompleted.opForUnits
+                                    .filter((unit) => unit.status !== 'destroyed' && !claimedIds.has(unit.id));
+                                  
+                                  if (availableUnits.length === 0) return null;
+                                  
+                                  return (
+                                    <div className="mb-2">
+                                      <div className="text-[10px] text-muted-foreground mb-1">Quick select from OpFor:</div>
+                                      <div className="flex flex-wrap gap-1">
+                                        {availableUnits.map((unit) => (
                                           <Button
                                             key={unit.id}
                                             size="xs"
                                             variant="outline"
                                             className="h-6 text-[10px]"
-                                            onClick={() => addPilotKill(pilot.id, { name: unit.name, weight: unit.tonnage })}
+                                            onClick={() => addPilotKill(pilot.id, { name: unit.name, weight: unit.tonnage }, unit.id)}
                                           >
                                             {unit.name} ({unit.tonnage}t)
                                           </Button>
                                         ))}
+                                      </div>
                                     </div>
+                                  );
+                                })()}
                                   </div>
                                 )}
 
