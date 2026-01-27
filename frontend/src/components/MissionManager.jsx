@@ -41,6 +41,20 @@ const emptyMissionForm = {
   opForUnits: [],
 };
 
+// Calculate adjusted BV for an OpFor unit
+const getOpForAdjustedBV = (unit) => {
+  if (!unit) return 0;
+  // Support both old format (bv) and new format (baseBv)
+  const baseBv = unit.baseBv ?? unit.bv ?? 0;
+  return getAdjustedBV(baseBv, unit.gunnery ?? 4, unit.piloting ?? 5);
+};
+
+// Calculate total adjusted BV for all OpFor units
+const calculateOpForTotalBV = (opForUnits) => {
+  if (!opForUnits || opForUnits.length === 0) return 0;
+  return opForUnits.reduce((sum, unit) => sum + getOpForAdjustedBV(unit), 0);
+};
+
 export default function MissionManager({ force, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
