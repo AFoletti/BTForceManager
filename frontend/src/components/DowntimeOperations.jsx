@@ -212,6 +212,21 @@ export default function DowntimeOperations({ force, onUpdate }) {
       }
     });
 
+    // Check achievements for all pilots after downtime cycle
+    if (achievementDefinitions.length > 0) {
+      const updatedPilots = (workingForce.pilots || []).map((pilot) => {
+        const currentAchievements = checkAchievements(pilot.combatRecord, achievementDefinitions);
+        return {
+          ...pilot,
+          achievements: currentAchievements,
+        };
+      });
+      workingForce = {
+        ...workingForce,
+        pilots: updatedPilots,
+      };
+    }
+
     // Create snapshots from the resulting force state
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
     const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
