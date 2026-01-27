@@ -19,7 +19,7 @@ import {
   isElementalAvailableForMission,
   getMissionObjectiveReward,
 } from '../lib/missions';
-import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
+import { findPilotForMech, getMechAdjustedBV, getAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
@@ -38,6 +38,21 @@ const emptyMissionForm = {
   spBudget: 0,
   spPurchases: [],
   totalTonnage: 0,
+  opForUnits: [],
+};
+
+// Calculate adjusted BV for an OpFor unit
+const getOpForAdjustedBV = (unit) => {
+  if (!unit) return 0;
+  // Support both old format (bv) and new format (baseBv)
+  const baseBv = unit.baseBv ?? unit.bv ?? 0;
+  return getAdjustedBV(baseBv, unit.gunnery ?? 4, unit.piloting ?? 5);
+};
+
+// Calculate total adjusted BV for all OpFor units
+const calculateOpForTotalBV = (opForUnits) => {
+  if (!opForUnits || opForUnits.length === 0) return 0;
+  return opForUnits.reduce((sum, unit) => sum + getOpForAdjustedBV(unit), 0);
 };
 
 export default function MissionManager({ force, onUpdate }) {
@@ -112,6 +127,7 @@ export default function MissionManager({ force, onUpdate }) {
         spBudget: mission.spBudget || 0,
         spPurchases: mission.spPurchases || [],
         totalTonnage: mission.totalTonnage || 0,
+        opForUnits: mission.opForUnits || [],
       });
     } else {
       setEditingMission(null);
@@ -214,6 +230,42 @@ export default function MissionManager({ force, onUpdate }) {
     }));
   };
 
+  // OpFor unit management
+  const [opForSearchInput, setOpForSearchInput] = useState('');
+
+  const addOpForUnit = (mechData) => {
+    const newUnit = {
+      id: `opfor-${Date.now()}`,
+      name: mechData.name,
+      tonnage: mechData.weight || 0,
+      baseBv: mechData.bv || 0,
+      gunnery: 4,
+      piloting: 5,
+      status: 'active',
+    };
+    setFormData((prev) => ({
+      ...prev,
+      opForUnits: [...(prev.opForUnits || []), newUnit],
+    }));
+    setOpForSearchInput('');
+  };
+
+  const updateOpForUnit = (unitId, field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      opForUnits: (prev.opForUnits || []).map((unit) =>
+        unit.id === unitId ? { ...unit, [field]: value } : unit
+      ),
+    }));
+  };
+
+  const removeOpForUnit = (unitId) => {
+    setFormData((prev) => ({
+      ...prev,
+      opForUnits: (prev.opForUnits || []).filter((u) => u.id !== unitId),
+    }));
+  };
+
   const saveMission = () => {
     const timestamp = force.currentDate;
 
@@ -235,6 +287,7 @@ export default function MissionManager({ force, onUpdate }) {
       spBudget: formData.spBudget || 0,
       spPurchases: formData.spPurchases || [],
       totalTonnage,
+      opForUnits: formData.opForUnits || [],
     };
 
     if (editingMission) {
@@ -367,7 +420,7 @@ export default function MissionManager({ force, onUpdate }) {
   };
 
   // Add a kill to a pilot's combat updates
-  const addPilotKill = (pilotId, mechData) => {
+  const addPilotKill = (pilotId, mechData, opForUnitId = null) => {
     const missionName = missionBeingCompleted?.name || 'Mission';
     const missionDate = force.currentDate;
     
@@ -383,12 +436,26 @@ export default function MissionManager({ force, onUpdate }) {
             tonnage: mechData.weight || 0,
             mission: missionName,
             date: missionDate,
+            opForUnitId: opForUnitId,
           },
         ],
       },
     }));
     // Clear search input for this pilot
     setKillSearchInput((prev) => ({ ...prev, [pilotId]: '' }));
+  };
+
+  // Get all OpFor unit IDs that have already been claimed as kills
+  const getClaimedOpForUnitIds = () => {
+    const claimed = new Set();
+    Object.values(pilotCombatUpdates).forEach((update) => {
+      (update.kills || []).forEach((kill) => {
+        if (kill.opForUnitId) {
+          claimed.add(kill.opForUnitId);
+        }
+      });
+    });
+    return claimed;
   };
 
   // Remove a kill from a pilot's combat updates
@@ -730,6 +797,29 @@ export default function MissionManager({ force, onUpdate }) {
                             {mission.spPurchases.map((purchase) => (
                               <Badge key={purchase.id} variant="outline" className="text-xs">
                                 {purchase.name} ({purchase.cost} SP)
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* OpFor Roster */}
+                      {mission.opForUnits && mission.opForUnits.length > 0 && (
+                        <div className="mt-3 p-3 bg-background/50 rounded border border-border">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-sm flex items-center gap-2">
+                              <Shield className="w-4 h-4" />
+                              Opposing Force
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {mission.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0)}t |{' '}
+                              {formatNumber(calculateOpForTotalBV(mission.opForUnits))} BV
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {mission.opForUnits.map((unit) => (
+                              <Badge key={unit.id} variant="outline" className="text-xs">
+                                {unit.name} ({unit.tonnage}t, {unit.gunnery ?? 4}/{unit.piloting ?? 5}, {formatNumber(getOpForAdjustedBV(unit))} BV)
                               </Badge>
                             ))}
                           </div>
@@ -1099,6 +1189,101 @@ export default function MissionManager({ force, onUpdate }) {
               </div>
             )}
 
+            {/* OpFor Roster */}
+            <div className="border border-border rounded p-4 bg-muted/10">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-sm font-medium">
+                  <Shield className="w-4 h-4 inline mr-2" />
+                  Opposing Force (OpFor)
+                </label>
+                {formData.opForUnits && formData.opForUnits.length > 0 && (
+                  <div className="text-xs text-muted-foreground">
+                    <span className="font-mono">
+                      {formData.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0)}t
+                    </span>
+                    <span className="mx-2">|</span>
+                    <span className="font-mono">
+                      {formatNumber(calculateOpForTotalBV(formData.opForUnits))} BV
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 mb-3">
+                <div className="flex-1">
+                  <MechAutocomplete
+                    value={opForSearchInput}
+                    onChange={setOpForSearchInput}
+                    onSelect={addOpForUnit}
+                    placeholder="Search mech to add to OpFor..."
+                  />
+                </div>
+              </div>
+
+              {formData.opForUnits && formData.opForUnits.length > 0 ? (
+                <div className="space-y-2 max-h-60 overflow-y-auto">
+                  {formData.opForUnits.map((unit) => (
+                    <div
+                      key={unit.id}
+                      className="flex items-center justify-between p-2 bg-background rounded border border-border gap-2"
+                    >
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <span className="text-sm font-medium truncate">{unit.name}</span>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          {unit.tonnage}t
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px] text-muted-foreground">G</span>
+                          <Input
+                            type="number"
+                            className="h-6 w-12 text-xs text-center p-1"
+                            value={unit.gunnery ?? 4}
+                            min={0}
+                            max={8}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value, 10);
+                              updateOpForUnit(unit.id, 'gunnery', Number.isNaN(value) ? 4 : Math.max(0, Math.min(8, value)));
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px] text-muted-foreground">P</span>
+                          <Input
+                            type="number"
+                            className="h-6 w-12 text-xs text-center p-1"
+                            value={unit.piloting ?? 5}
+                            min={0}
+                            max={8}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value, 10);
+                              updateOpForUnit(unit.id, 'piloting', Number.isNaN(value) ? 5 : Math.max(0, Math.min(8, value)));
+                            }}
+                          />
+                        </div>
+                        <span className="text-xs font-mono text-muted-foreground w-16 text-right">
+                          {formatNumber(getOpForAdjustedBV(unit))} BV
+                        </span>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6"
+                          onClick={() => removeOpForUnit(unit.id)}
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground text-center py-2">
+                  No OpFor units added. Search above to add enemy mechs encountered in this mission.
+                </p>
+              )}
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-2">Description</label>
               <Textarea
@@ -1452,6 +1637,34 @@ export default function MissionManager({ force, onUpdate }) {
                                   <span className="text-[11px] text-muted-foreground">Kills:</span>
                                 </div>
                                 
+                                {/* OpFor Quick Select */}
+                                {missionBeingCompleted.opForUnits && missionBeingCompleted.opForUnits.length > 0 && (() => {
+                                  const claimedIds = getClaimedOpForUnitIds();
+                                  const availableUnits = missionBeingCompleted.opForUnits
+                                    .filter((unit) => unit.status !== 'destroyed' && !claimedIds.has(unit.id));
+                                  
+                                  if (availableUnits.length === 0) return null;
+                                  
+                                  return (
+                                    <div className="mb-2">
+                                      <div className="text-[10px] text-muted-foreground mb-1">Quick select from OpFor:</div>
+                                      <div className="flex flex-wrap gap-1">
+                                        {availableUnits.map((unit) => (
+                                          <Button
+                                            key={unit.id}
+                                            size="xs"
+                                            variant="outline"
+                                            className="h-6 text-[10px]"
+                                            onClick={() => addPilotKill(pilot.id, { name: unit.name, weight: unit.tonnage }, unit.id)}
+                                          >
+                                            {unit.name} ({unit.tonnage}t)
+                                          </Button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
+
                                 {/* Kill Entry */}
                                 <div className="flex gap-2 mb-2">
                                   <div className="flex-1">

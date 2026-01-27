@@ -7,7 +7,7 @@ import {
   getAssignedElementals,
   getMissionObjectiveReward,
 } from '../lib/missions';
-import { findPilotForMech, findMechForPilot, getMechAdjustedBV } from '../lib/mechs';
+import { findPilotForMech, findMechForPilot, getMechAdjustedBV, getAdjustedBV } from '../lib/mechs';
 // Note: getPilotDisplayName not imported - using PDF-specific version instead
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
@@ -1100,6 +1100,29 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                     ))}
                   </View>
                 )}
+
+                {/* OpFor Roster in PDF */}
+                {Array.isArray(mission.opForUnits) && mission.opForUnits.length > 0 && (() => {
+                  const getOpForAdjustedBV = (unit) => {
+                    const baseBv = unit.baseBv ?? unit.bv ?? 0;
+                    return getAdjustedBV(baseBv, unit.gunnery ?? 4, unit.piloting ?? 5);
+                  };
+                  const totalBV = mission.opForUnits.reduce((sum, u) => sum + getOpForAdjustedBV(u), 0);
+                  const totalTonnage = mission.opForUnits.reduce((sum, u) => sum + (u.tonnage || 0), 0);
+                  
+                  return (
+                    <View style={styles.missionSection}>
+                      <Text style={styles.missionSectionTitle}>
+                        Opposing Force ({totalTonnage}t, {formatNumber(totalBV)} BV):
+                      </Text>
+                      {mission.opForUnits.map((unit) => (
+                        <Text key={unit.id} style={styles.missionUnits}>
+                          • {unit.name} ({unit.tonnage}t, {unit.gunnery ?? 4}/{unit.piloting ?? 5}, {formatNumber(getOpForAdjustedBV(unit))} BV)
+                        </Text>
+                      ))}
+                    </View>
+                  );
+                })()}
 
                 {assignedMechObjects.length > 0 && (
                   <View style={styles.missionSection}>
