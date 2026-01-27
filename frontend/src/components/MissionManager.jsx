@@ -19,7 +19,7 @@ import {
   isElementalAvailableForMission,
   getMissionObjectiveReward,
 } from '../lib/missions';
-import { findPilotForMech, getMechAdjustedBV } from '../lib/mechs';
+import { findPilotForMech, getMechAdjustedBV, getAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
