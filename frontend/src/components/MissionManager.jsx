@@ -395,7 +395,7 @@ export default function MissionManager({ force, onUpdate }) {
   };
 
   // Add a kill to a pilot's combat updates
-  const addPilotKill = (pilotId, mechData) => {
+  const addPilotKill = (pilotId, mechData, opForUnitId = null) => {
     const missionName = missionBeingCompleted?.name || 'Mission';
     const missionDate = force.currentDate;
     
@@ -411,12 +411,26 @@ export default function MissionManager({ force, onUpdate }) {
             tonnage: mechData.weight || 0,
             mission: missionName,
             date: missionDate,
+            opForUnitId: opForUnitId,
           },
         ],
       },
     }));
     // Clear search input for this pilot
     setKillSearchInput((prev) => ({ ...prev, [pilotId]: '' }));
+  };
+
+  // Get all OpFor unit IDs that have already been claimed as kills
+  const getClaimedOpForUnitIds = () => {
+    const claimed = new Set();
+    Object.values(pilotCombatUpdates).forEach((update) => {
+      (update.kills || []).forEach((kill) => {
+        if (kill.opForUnitId) {
+          claimed.add(kill.opForUnitId);
+        }
+      });
+    });
+    return claimed;
   };
 
   // Remove a kill from a pilot's combat updates
