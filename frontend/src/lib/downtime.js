@@ -385,6 +385,7 @@ export function applyPilotDowntimeAction(
     let gunnery = pilot.gunnery;
     let piloting = pilot.piloting;
     let injuries = pilot.injuries;
+    let combatRecord = pilot.combatRecord;
 
     if (actionId === DOWNTIME_ACTION_IDS.TRAIN_GUNNERY) {
       const base = typeof gunnery === 'number' ? gunnery : 4;
@@ -393,6 +394,11 @@ export function applyPilotDowntimeAction(
       const base = typeof piloting === 'number' ? piloting : 5;
       piloting = Math.max(0, Math.min(8, base - 1));
     } else if (actionId === DOWNTIME_ACTION_IDS.HEAL_INJURY) {
+      // Track injuries healed before resetting
+      const injuriesToHeal = typeof injuries === 'number' ? injuries : 0;
+      if (injuriesToHeal > 0) {
+        combatRecord = recordInjuriesHealed(combatRecord, injuriesToHeal);
+      }
       // Heal all injuries at once
       injuries = 0;
     }
@@ -402,6 +408,7 @@ export function applyPilotDowntimeAction(
       gunnery,
       piloting,
       injuries,
+      combatRecord,
       activityLog,
     };
   });
