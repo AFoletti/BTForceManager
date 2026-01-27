@@ -262,6 +262,7 @@ export default function MissionManager({ force, onUpdate }) {
       spBudget: formData.spBudget || 0,
       spPurchases: formData.spPurchases || [],
       totalTonnage,
+      opForUnits: formData.opForUnits || [],
     };
 
     if (editingMission) {
