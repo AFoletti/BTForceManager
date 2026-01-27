@@ -559,35 +559,30 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
       <Page size="A4" style={styles.page}>
         {/* Page frame & accents */}
         <View style={styles.pageBackground} fixed />
-        <View style={[styles.pageCornerAccent, { top: 18, left: 18 }]} fixed />
-        <View style={[styles.pageCornerAccent, { top: 18, right: 18 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 18, left: 18 }]} fixed />
-        <View style={[styles.pageCornerAccent, { bottom: 18, right: 18 }]} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { top: 20, right: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, left: 20 }]} fixed />
+        <View style={[styles.pageCornerAccent, { bottom: 20, right: 20 }]} fixed />
+
+        {/* Classification Header */}
+        <Text style={styles.classificationHeader} fixed>
+          CONFIDENTIAL // FORCE STATUS REPORT
+        </Text>
 
         {/* Force Information Header */}
         <View style={styles.coverSection}>
-          <View style={{ position: 'relative', marginBottom: 6 }}>
-            <View style={{
-              position: 'absolute',
-              left: 0,
-              top: -10,
-              width: 140,
-              height: 140,
-              borderRadius: 70,
-              border: '0.75 solid #E5E7EB',
-              opacity: 0.15,
-            }} />
-          </View>
           <View style={styles.coverHeaderRow}>
             <View style={styles.forceImageWrapper}>
               {force.image && (
                 <Image
                   src={force.image}
                   style={{
-                    maxWidth: 80,
-                    maxHeight: 80,
+                    maxWidth: 70,
+                    maxHeight: 70,
                     objectFit: 'contain',
-                    borderRadius: 4,
+                  }}
+                />
+              )}
                     border: '0.75 solid #D1D5DB',
                   }}
                 />
