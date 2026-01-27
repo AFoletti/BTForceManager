@@ -49,7 +49,7 @@ export default function SnapshotsTab({ force, onUpdate }) {
         <h3 className="text-sm font-semibold uppercase tracking-wider">Campaign Snapshots</h3>
         <p className="text-xs text-muted-foreground">
           Snapshots are automatically created after missions and downtime cycles.
-          The {MAX_FULL_SNAPSHOTS} most recent can be rolled back to.
+          The 2 most recent can be rolled back to.
         </p>
       </div>
 
