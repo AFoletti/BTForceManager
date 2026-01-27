@@ -819,18 +819,14 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                     </View>
                     <View style={styles.unitStatsWrapper}>
                       <View style={styles.unitStatsGrid}>
-                        <View style={styles.unitStatItem}>
-                          <Text style={styles.unitStatLabel}>Gunnery:</Text>
-                          <Text style={styles.unitStatValue}>{pilot.gunnery || 0}</Text>
-                        </View>
-                        <View style={styles.unitStatItem}>
-                          <Text style={styles.unitStatLabel}>Piloting:</Text>
-                          <Text style={styles.unitStatValue}>{pilot.piloting || 0}</Text>
+                        <View style={{ flexDirection: 'row', marginBottom: 3, width: '100%' }}>
+                          <Text style={styles.unitStatLabel}>G/P:</Text>
+                          <Text style={styles.unitStatValue}>{pilot.gunnery || 0}/{pilot.piloting || 0}</Text>
                         </View>
                         {assignedMech && (
-                          <View style={styles.unitStatItem}>
-                            <Text style={styles.unitStatLabel}>Assigned Mech:</Text>
-                            <Text style={styles.unitStatValue}>{assignedMech.name}</Text>
+                          <View style={{ flexDirection: 'row', marginBottom: 3, width: '100%' }}>
+                            <Text style={styles.unitStatLabel}>Mech:</Text>
+                            <Text style={[styles.unitStatValue, { maxWidth: 90 }]} numberOfLines={1}>{assignedMech.name}</Text>
                           </View>
                         )}
                       </View>
