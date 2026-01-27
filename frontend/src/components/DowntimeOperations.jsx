@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Textarea } from './ui/textarea';
-import { Wrench, AlertTriangle, Settings } from 'lucide-react';
+import { Wrench, AlertTriangle, Settings, Trophy } from 'lucide-react';
 import {
   buildDowntimeContext,
   evaluateDowntimeCost,
@@ -14,6 +14,7 @@ import {
 } from '../lib/downtime';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
 import { UNIT_STATUS } from '../lib/constants';
+import { checkAchievements, findNewAchievements } from '../lib/achievements';
 
 // Planned downtime action kept in a cycle backlog until validation.
 // Actions are applied in sequence to a working copy of the force when
@@ -32,23 +33,31 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [mechActions, setMechActions] = useState([]);
   const [elementalActions, setElementalActions] = useState([]);
   const [pilotActions, setPilotActions] = useState([]);
+  const [achievementDefinitions, setAchievementDefinitions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Planned actions backlog (downtime cycle)
   const [plannedActions, setPlannedActions] = useState([]);
 
+  // Achievement popup state
+  const [showAchievementsPopup, setShowAchievementsPopup] = useState(false);
+  const [newAchievements, setNewAchievements] = useState([]);
+
   useEffect(() => {
-    fetch('./data/downtime-actions.json')
-      .then((response) => response.json())
-      .then((data) => {
-        setMechActions(data.mechActions || []);
-        setElementalActions(data.elementalActions || []);
-        setPilotActions(data.pilotActions || []);
+    Promise.all([
+      fetch('./data/downtime-actions.json').then((r) => r.json()),
+      fetch('./data/achievements.json').then((r) => r.json()),
+    ])
+      .then(([downtimeData, achievementsData]) => {
+        setMechActions(downtimeData.mechActions || []);
+        setElementalActions(downtimeData.elementalActions || []);
+        setPilotActions(downtimeData.pilotActions || []);
+        setAchievementDefinitions(achievementsData.achievements || []);
         setLoading(false);
       })
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.error('Failed to load downtime actions:', err);
+        console.error('Failed to load downtime actions or achievements:', err);
         setLoading(false);
       });
   }, []);
@@ -207,6 +216,33 @@ export default function DowntimeOperations({ force, onUpdate }) {
       }
     });
 
+    // Check achievements for all pilots after downtime cycle
+    const allNewAchievements = [];
+    if (achievementDefinitions.length > 0) {
+      const updatedPilots = (workingForce.pilots || []).map((pilot) => {
+        const previousAchievements = pilot.achievements || [];
+        const currentAchievements = checkAchievements(pilot.combatRecord, achievementDefinitions);
+        const earnedNew = findNewAchievements(previousAchievements, currentAchievements);
+        
+        if (earnedNew.length > 0) {
+          allNewAchievements.push({
+            pilotId: pilot.id,
+            pilotName: pilot.name,
+            achievements: earnedNew,
+          });
+        }
+        
+        return {
+          ...pilot,
+          achievements: currentAchievements,
+        };
+      });
+      workingForce = {
+        ...workingForce,
+        pilots: updatedPilots,
+      };
+    }
+
     // Create snapshots from the resulting force state
     const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
     const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
@@ -284,6 +320,17 @@ export default function DowntimeOperations({ force, onUpdate }) {
     });
 
     setPlannedActions([]);
+    
+    // Show achievements popup if any new achievements were earned
+    if (allNewAchievements.length > 0) {
+      setNewAchievements(allNewAchievements);
+      setShowAchievementsPopup(true);
+    }
+  };
+
+  // Get achievement details by ID
+  const getAchievementById = (achievementId) => {
+    return achievementDefinitions.find((a) => a.id === achievementId) || { name: achievementId, icon: '🏆', description: '' };
   };
 
   const performOtherAction = () => {
@@ -800,6 +847,51 @@ export default function DowntimeOperations({ force, onUpdate }) {
           </div>
         </div>
       </div>
+
+      {/* Achievements Popup */}
+      <Dialog open={showAchievementsPopup} onOpenChange={setShowAchievementsPopup}>
+        <DialogContent onClose={() => setShowAchievementsPopup(false)} className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Trophy className="w-6 h-6 text-yellow-500" />
+              Achievements Unlocked!
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {newAchievements.map((pilotAchievements) => (
+              <div key={pilotAchievements.pilotId} className="space-y-2">
+                <div className="font-semibold text-foreground">
+                  {pilotAchievements.pilotName}
+                </div>
+                <div className="space-y-2 pl-2">
+                  {pilotAchievements.achievements.map((achievementId) => {
+                    const achievement = getAchievementById(achievementId);
+                    return (
+                      <div 
+                        key={achievementId}
+                        className="flex items-center gap-3 p-2 bg-muted/30 rounded border border-border"
+                      >
+                        <span className="text-2xl">{achievement.icon}</span>
+                        <div>
+                          <div className="font-medium text-sm">{achievement.name}</div>
+                          <div className="text-xs text-muted-foreground">{achievement.description}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="flex justify-end pt-2">
+            <Button onClick={() => setShowAchievementsPopup(false)}>
+              Continue
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
