@@ -216,6 +216,31 @@ export default function MissionManager({ force, onUpdate }) {
     }));
   };
 
+  // OpFor unit management
+  const [opForSearchInput, setOpForSearchInput] = useState('');
+
+  const addOpForUnit = (mechData) => {
+    const newUnit = {
+      id: `opfor-${Date.now()}`,
+      name: mechData.name,
+      tonnage: mechData.weight || 0,
+      bv: mechData.bv || 0,
+      status: 'active',
+    };
+    setFormData((prev) => ({
+      ...prev,
+      opForUnits: [...(prev.opForUnits || []), newUnit],
+    }));
+    setOpForSearchInput('');
+  };
+
+  const removeOpForUnit = (unitId) => {
+    setFormData((prev) => ({
+      ...prev,
+      opForUnits: (prev.opForUnits || []).filter((u) => u.id !== unitId),
+    }));
+  };
+
   const saveMission = () => {
     const timestamp = force.currentDate;
 
