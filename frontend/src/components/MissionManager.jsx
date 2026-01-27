@@ -1203,7 +1203,7 @@ export default function MissionManager({ force, onUpdate }) {
                     </span>
                     <span className="mx-2">|</span>
                     <span className="font-mono">
-                      {formatNumber(formData.opForUnits.reduce((sum, u) => sum + (u.bv || 0), 0))} BV
+                      {formatNumber(calculateOpForTotalBV(formData.opForUnits))} BV
                     </span>
                   </div>
                 )}
@@ -1221,26 +1221,59 @@ export default function MissionManager({ force, onUpdate }) {
               </div>
 
               {formData.opForUnits && formData.opForUnits.length > 0 ? (
-                <div className="space-y-2 max-h-40 overflow-y-auto">
+                <div className="space-y-2 max-h-60 overflow-y-auto">
                   {formData.opForUnits.map((unit) => (
                     <div
                       key={unit.id}
-                      className="flex items-center justify-between p-2 bg-background rounded border border-border"
+                      className="flex items-center justify-between p-2 bg-background rounded border border-border gap-2"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium">{unit.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {unit.tonnage}t | {formatNumber(unit.bv)} BV
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <span className="text-sm font-medium truncate">{unit.name}</span>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          {unit.tonnage}t
                         </span>
                       </div>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-6 w-6"
-                        onClick={() => removeOpForUnit(unit.id)}
-                      >
-                        <X className="w-3 h-3" />
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px] text-muted-foreground">G</span>
+                          <Input
+                            type="number"
+                            className="h-6 w-12 text-xs text-center p-1"
+                            value={unit.gunnery ?? 4}
+                            min={0}
+                            max={8}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value, 10);
+                              updateOpForUnit(unit.id, 'gunnery', Number.isNaN(value) ? 4 : Math.max(0, Math.min(8, value)));
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px] text-muted-foreground">P</span>
+                          <Input
+                            type="number"
+                            className="h-6 w-12 text-xs text-center p-1"
+                            value={unit.piloting ?? 5}
+                            min={0}
+                            max={8}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value, 10);
+                              updateOpForUnit(unit.id, 'piloting', Number.isNaN(value) ? 5 : Math.max(0, Math.min(8, value)));
+                            }}
+                          />
+                        </div>
+                        <span className="text-xs font-mono text-muted-foreground w-16 text-right">
+                          {formatNumber(getOpForAdjustedBV(unit))} BV
+                        </span>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6"
+                          onClick={() => removeOpForUnit(unit.id)}
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
