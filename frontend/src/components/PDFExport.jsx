@@ -686,8 +686,8 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
               const elementalStatus = buildStatusCountsForSnapshot(snap, 'elementals');
 
               return (
-                <View key={snap.id} style={{ marginBottom: 6 }} wrap={false}>
-                  <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#111827' }}>
+                <View key={snap.id} style={{ marginBottom: 8, borderBottom: '0.5 solid #CCCCCC', paddingBottom: 4 }}>
+                  <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#000000' }}>
                     {snap.createdAt} – {snap.label} ({
                       snap.type === 'pre-mission'
                         ? 'Pre-Mission'
@@ -702,57 +702,55 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
                       <View style={styles.snapshotStatusHeaderRow}>
                         <Text style={styles.snapshotStatusHeaderLabel} />
                         {STATUS_ORDER.map((status) => (
-                          <View key={status} style={styles.snapshotStatusHeaderCell}>
-                            <Text style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
-                          </View>
+                          <Text key={status} style={styles.snapshotStatusHeaderCell}>{STATUS_LABELS[status]}</Text>
                         ))}
                       </View>
 
                       <View style={styles.snapshotStatusRow}>
                         <Text style={styles.snapshotStatusRowLabel}>M:</Text>
                         {STATUS_ORDER.map((status) => (
-                          <View key={status} style={styles.snapshotStatusCell}>
-                            <Text
-                              style={[
-                                styles.snapshotStatusValue,
-                                status === UNIT_STATUS.OPERATIONAL
-                                  ? { color: '#16A34A' }
-                                  : status === UNIT_STATUS.DAMAGED
-                                    ? { color: '#F59E0B' }
-                                    : status === UNIT_STATUS.REPAIRING
-                                      ? { color: '#3B82F6' }
-                                      : status === UNIT_STATUS.DESTROYED
-                                        ? { color: '#B91C1C' }
-                                        : { color: '#DC2626' },
-                              ]}
-                            >
-                              {mechStatus[status] || 0}
-                            </Text>
-                          </View>
+                          <Text
+                            key={status}
+                            style={[
+                              styles.snapshotStatusCell,
+                              styles.snapshotStatusValue,
+                              status === UNIT_STATUS.OPERATIONAL
+                                ? { color: '#16A34A' }
+                                : status === UNIT_STATUS.DAMAGED
+                                  ? { color: '#F59E0B' }
+                                  : status === UNIT_STATUS.REPAIRING
+                                    ? { color: '#3B82F6' }
+                                    : status === UNIT_STATUS.DESTROYED
+                                      ? { color: '#B91C1C' }
+                                      : { color: '#DC2626' },
+                            ]}
+                          >
+                            {mechStatus[status] || 0}
+                          </Text>
                         ))}
                       </View>
 
                       <View style={styles.snapshotStatusRow}>
                         <Text style={styles.snapshotStatusRowLabel}>E:</Text>
                         {STATUS_ORDER.map((status) => (
-                          <View key={status} style={styles.snapshotStatusCell}>
-                            <Text
-                              style={[
-                                styles.snapshotStatusValue,
-                                status === UNIT_STATUS.OPERATIONAL
-                                  ? { color: '#16A34A' }
-                                  : status === UNIT_STATUS.DAMAGED
-                                    ? { color: '#F59E0B' }
-                                    : status === UNIT_STATUS.REPAIRING
-                                      ? { color: '#3B82F6' }
-                                      : status === UNIT_STATUS.DESTROYED
-                                        ? { color: '#B91C1C' }
-                                        : { color: '#DC2626' },
-                              ]}
-                            >
-                              {elementalStatus[status] || 0}
-                            </Text>
-                          </View>
+                          <Text
+                            key={status}
+                            style={[
+                              styles.snapshotStatusCell,
+                              styles.snapshotStatusValue,
+                              status === UNIT_STATUS.OPERATIONAL
+                                ? { color: '#16A34A' }
+                                : status === UNIT_STATUS.DAMAGED
+                                  ? { color: '#F59E0B' }
+                                  : status === UNIT_STATUS.REPAIRING
+                                    ? { color: '#3B82F6' }
+                                    : status === UNIT_STATUS.DESTROYED
+                                      ? { color: '#B91C1C' }
+                                      : { color: '#DC2626' },
+                            ]}
+                          >
+                            {elementalStatus[status] || 0}
+                          </Text>
                         ))}
                       </View>
                     </View>
