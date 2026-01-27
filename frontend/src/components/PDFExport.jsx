@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
   },
   unitStatsWrapper: {
     flex: 1,
+    overflow: 'hidden',
   },
   unitStatsGrid: {
     flexDirection: 'row',
@@ -210,19 +211,20 @@ const styles = StyleSheet.create({
   },
   unitStatItem: {
     flexDirection: 'row',
-    minWidth: '45%',
-    marginRight: 8,
+    width: '100%',
     marginBottom: 3,
   },
   unitStatLabel: {
     fontSize: 8,
     color: '#666666',
     marginRight: 4,
+    flexShrink: 0,
   },
   unitStatValue: {
     fontSize: 8,
     fontWeight: 'bold',
     color: '#000000',
+    flex: 1,
   },
   unitHistory: {
     fontSize: 8,
