@@ -3,6 +3,7 @@
 // stays mostly focused on UI concerns.
 
 import { DOWNTIME_ACTION_IDS, UNIT_STATUS } from './constants';
+import { recordInjuriesHealed } from './achievements';
 
 /**
  * Build the context object used when evaluating downtime formulas.
