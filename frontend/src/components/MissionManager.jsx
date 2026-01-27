@@ -224,7 +224,9 @@ export default function MissionManager({ force, onUpdate }) {
       id: `opfor-${Date.now()}`,
       name: mechData.name,
       tonnage: mechData.weight || 0,
-      bv: mechData.bv || 0,
+      baseBv: mechData.bv || 0,
+      gunnery: 4,
+      piloting: 5,
       status: 'active',
     };
     setFormData((prev) => ({
@@ -232,6 +234,15 @@ export default function MissionManager({ force, onUpdate }) {
       opForUnits: [...(prev.opForUnits || []), newUnit],
     }));
     setOpForSearchInput('');
+  };
+
+  const updateOpForUnit = (unitId, field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      opForUnits: (prev.opForUnits || []).map((unit) =>
+        unit.id === unitId ? { ...unit, [field]: value } : unit
+      ),
+    }));
   };
 
   const removeOpForUnit = (unitId) => {
