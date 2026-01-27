@@ -432,7 +432,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
   },
-  },
   snapshotStatusValue: {
     fontSize: 7,
     fontWeight: 'bold',
