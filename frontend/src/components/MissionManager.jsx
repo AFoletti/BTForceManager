@@ -113,6 +113,7 @@ export default function MissionManager({ force, onUpdate }) {
         spBudget: mission.spBudget || 0,
         spPurchases: mission.spPurchases || [],
         totalTonnage: mission.totalTonnage || 0,
+        opForUnits: mission.opForUnits || [],
       });
     } else {
       setEditingMission(null);
