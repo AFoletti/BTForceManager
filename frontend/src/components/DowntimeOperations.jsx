@@ -320,6 +320,17 @@ export default function DowntimeOperations({ force, onUpdate }) {
     });
 
     setPlannedActions([]);
+    
+    // Show achievements popup if any new achievements were earned
+    if (allNewAchievements.length > 0) {
+      setNewAchievements(allNewAchievements);
+      setShowAchievementsPopup(true);
+    }
+  };
+
+  // Get achievement details by ID
+  const getAchievementById = (achievementId) => {
+    return achievementDefinitions.find((a) => a.id === achievementId) || { name: achievementId, icon: '🏆', description: '' };
   };
 
   const performOtherAction = () => {
