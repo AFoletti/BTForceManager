@@ -14,7 +14,7 @@ import {
 } from '../lib/downtime';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
 import { UNIT_STATUS } from '../lib/constants';
-import { checkAchievements } from '../lib/achievements';
+import { checkAchievements, findNewAchievements } from '../lib/achievements';
 
 // Planned downtime action kept in a cycle backlog until validation.
 // Actions are applied in sequence to a working copy of the force when
