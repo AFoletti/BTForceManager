@@ -1,54 +1,129 @@
 {
   "spChoices": [
     {
-      "id": "artillery-strike",
-      "name": "Artillery Strike",
-      "cost": 50
+      "id": "cv_vtol",
+      "name": "Combat Vehicle (VTOL)",
+      "cost": 5
     },
     {
-      "id": "air-support",
-      "name": "Air Support",
-      "cost": 75
+      "id": "cv_lthover",
+      "name": "Combat Vehicle (Light Hover)",
+      "cost": 4
     },
     {
-      "id": "recon-flight",
-      "name": "Recon Flight",
-      "cost": 25
+      "id": "cv_mdhover",
+      "name": "Combat Vehicle (Medium Hover)",
+      "cost": 5
     },
     {
-      "id": "supply-drop",
-      "name": "Supply Drop",
-      "cost": 30
+      "id": "cv_ltwheeled",
+      "name": "Combat Vehicle (Light Wheeled)",
+      "cost": 5
     },
     {
-      "id": "reinforcements",
-      "name": "Reinforcements",
-      "cost": 100
+      "id": "cv_mdwheeled",
+      "name": "Combat Vehicle (Medium Wheeled)",
+      "cost": 4
     },
     {
-      "id": "ecm-support",
-      "name": "ECM Support",
-      "cost": 40
+      "id": "cv_hvwheeled",
+      "name": "Combat Vehicle (Heavy Wheeled)",
+      "cost": 4
     },
     {
-      "id": "field-repairs",
-      "name": "Field Repairs",
-      "cost": 35
+      "id": "cv_lttracked",
+      "name": "Combat Vehicle (Light Tracked)",
+      "cost": 4
     },
     {
-      "id": "intel-report",
-      "name": "Intel Report",
-      "cost": 20
+      "id": "cv_mdtracked",
+      "name": "Combat Vehicle (Medium Tracked)",
+      "cost": 4
     },
     {
-      "id": "orbital-scan",
-      "name": "Orbital Scan",
-      "cost": 45
+      "id": "cv_hvtracked",
+      "name": "Combat Vehicle (Heavy Tracked)",
+      "cost": 5
     },
     {
-      "id": "smoke-screen",
-      "name": "Smoke Screen",
-      "cost": 15
+      "id": "cv_astracked",
+      "name": "Combat Vehicle (Assault Tracked)",
+      "cost": 7
+    },
+    {
+      "id": "inf_jump",
+      "name": "Jump Infantry Platoon",
+      "cost": 2
+    },
+    {
+      "id": "inf_mech",
+      "name": "Mechanized Infantry Platoon",
+      "cost": 2
+    },
+    {
+      "id": "air_ltstrike",
+      "name": "Light Air Strike",
+      "cost": 2
+    },
+    {
+      "id": "air_ltbomb",
+      "name": "Light Air Bombing",
+      "cost": 3
+    },
+    {
+      "id": "air_hvstrike",
+      "name": "Heavy Air Strike",
+      "cost": 3
+    },
+    {
+      "id": "air_hvbombe",
+      "name": "Heavy Air Bombing",
+      "cost": 4
+    },
+    {
+      "id": "air_strafe",
+      "name": "Air Strafing",
+      "cost": 5
+    },
+    {
+      "id": "air_ltcover",
+      "name": "Light Air Cover",
+      "cost": 1
+    },
+    {
+      "id": "air_hvcover",
+      "name": "Heavy Air Cover",
+      "cost": 2
+    },
+    {
+      "id": "art_thumper",
+      "name": "Artillery Thumper",
+      "cost": 3
+    },
+    {
+      "id": "art_sniper",
+      "name": "Artillery Sniper",
+      "cost": 4
+    },
+    {
+      "id": "art_longtom",
+      "name": "Artillery Long Tom",
+      "cost": 6
+    },
+    {
+      "id": "mine_lt",
+      "name": "Mine Light",
+      "cost": 0.5
+    },
+    {
+      "id": "mine_md",
+      "name": "Mine Medium",
+      "cost": 2
+    },
+    {
+      "id": "mine_hv",
+      "name": "Mine Heavy",
+      "cost": 4
     }
   ]
 }
