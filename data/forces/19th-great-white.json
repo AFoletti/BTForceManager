@@ -1148,7 +1148,24 @@
       ],
       "id": "mission-1766828244137",
       "createdAt": "3052-05-08",
-      "inGameDate": "3052-05-08"
+      "inGameDate": "3052-05-08",
+      "spBudget": 12,
+      "spPurchases": [
+        {
+          "id": "sp-1769791713875",
+          "choiceId": "art_longtom",
+          "name": "Artillery Long Tom",
+          "cost": 6
+        },
+        {
+          "id": "sp-1769791718127",
+          "choiceId": "art_longtom",
+          "name": "Artillery Long Tom",
+          "cost": 6
+        }
+      ],
+      "totalTonnage": 370,
+      "opForUnits": []
     }
   ],
   "repairActions": [],
@@ -1380,5 +1397,6 @@
         }
       }
     }
-  ]
+  ],
+  "fullSnapshots": []
 }
