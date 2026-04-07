@@ -1,0 +1,909 @@
+{
+  "id": "91st-division-vision-of-words",
+  "name": "91st Division Vision of Words",
+  "description": "OpFor for Ghost Bear Tukayyid campaign",
+  "image": "",
+  "startingWarchest": 2000,
+  "currentWarchest": 2000,
+  "wpMultiplier": 10,
+  "otherActionsLog": [],
+  "mechs": [
+    {
+      "id": "mech-1775539285478",
+      "name": "Nightstar NSR-9J",
+      "status": "Operational",
+      "pilotId": "pilot-1775539087764",
+      "bv": 2399,
+      "weight": 95,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539300395",
+      "name": "Cyclops CP-11-A",
+      "status": "Operational",
+      "pilotId": "pilot-1775539099906",
+      "bv": 1547,
+      "weight": 90,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539317001",
+      "name": "Stalker STK-5M",
+      "status": "Operational",
+      "pilotId": "pilot-1775539105501",
+      "bv": 1655,
+      "weight": 85,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539344460",
+      "name": "Orion ON1-K",
+      "status": "Operational",
+      "pilotId": "pilot-1775539111434",
+      "bv": 1429,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539365498",
+      "name": "Shadow Hawk SHD-2Ht",
+      "status": "Operational",
+      "pilotId": "pilot-1775539120540",
+      "bv": 1453,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539378360",
+      "name": "Black Knight BL-9-KNT",
+      "status": "Operational",
+      "pilotId": "pilot-1775539115664",
+      "bv": 1678,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539393345",
+      "name": "Highlander HGN-732",
+      "status": "Operational",
+      "pilotId": "pilot-1775539132270",
+      "bv": 2227,
+      "weight": 90,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539407910",
+      "name": "Thunderbolt TDR-7M",
+      "status": "Operational",
+      "pilotId": "pilot-1775539138751",
+      "bv": 1495,
+      "weight": 65,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539428056",
+      "name": "Orion ON1-M",
+      "status": "Operational",
+      "pilotId": "pilot-1775539149633",
+      "bv": 1414,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539442876",
+      "name": "Guillotine GLT-3N",
+      "status": "Operational",
+      "pilotId": "pilot-1775539142883",
+      "bv": 1418,
+      "weight": 70,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539454276",
+      "name": "Black Knight BL-9-KNT",
+      "status": "Operational",
+      "pilotId": "pilot-1775539164468",
+      "bv": 1678,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539467777",
+      "name": "Hunchback HBK-5M",
+      "status": "Operational",
+      "pilotId": "pilot-1775539170071",
+      "bv": 1056,
+      "weight": 50,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539483677",
+      "name": "Victor VTR-9B",
+      "status": "Operational",
+      "pilotId": "pilot-1775539185221",
+      "bv": 1378,
+      "weight": 80,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539500478",
+      "name": "Flashman FLS-8K",
+      "status": "Operational",
+      "pilotId": "pilot-1775539191641",
+      "bv": 1779,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539513731",
+      "name": "Flashman FLS-8K",
+      "status": "Operational",
+      "pilotId": "pilot-1775539195849",
+      "bv": 1779,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539523871",
+      "name": "Flashman FLS-8K",
+      "status": "Operational",
+      "pilotId": "pilot-1775539207707",
+      "bv": 1779,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539540214",
+      "name": "Lancelot LNC25-01",
+      "status": "Operational",
+      "pilotId": "pilot-1775539212185",
+      "bv": 1422,
+      "weight": 60,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539552919",
+      "name": "Wolverine WVR-7M",
+      "status": "Operational",
+      "pilotId": "pilot-1775539216775",
+      "bv": 1673,
+      "weight": 55,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539566360",
+      "name": "Warhammer WHM-7M",
+      "status": "Operational",
+      "pilotId": "pilot-1775539224883",
+      "bv": 1487,
+      "weight": 70,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539577970",
+      "name": "Black Knight BL-6-KNT",
+      "status": "Operational",
+      "pilotId": "pilot-1775539229743",
+      "bv": 1551,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539591065",
+      "name": "Thunderbolt TDR-5S",
+      "status": "Operational",
+      "pilotId": "pilot-1775539233501",
+      "bv": 1335,
+      "weight": 65,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539665647",
+      "name": "Rifleman RFL-3N",
+      "status": "Operational",
+      "pilotId": "pilot-1775539236921",
+      "bv": 1039,
+      "weight": 60,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539680071",
+      "name": "Marauder MAD-5M",
+      "status": "Operational",
+      "pilotId": "pilot-1775539240843",
+      "bv": 1471,
+      "weight": 75,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "mech-1775539692341",
+      "name": "Sentinel STN-3L",
+      "status": "Operational",
+      "pilotId": "pilot-1775539244517",
+      "bv": 717,
+      "weight": 40,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Purchased mech for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    }
+  ],
+  "elementals": [],
+  "pilots": [
+    {
+      "id": "pilot-1775539087764",
+      "name": "Demi-Precentor Abdul Hamid bin-Hawad",
+      "gunnery": 2,
+      "piloting": 3,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539099906",
+      "name": "Acolyte Orlena Rodriguez",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539105501",
+      "name": "Acolyte Glen Castaneda",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539111434",
+      "name": "Acolyte Taina Lajunen",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539115664",
+      "name": "Acolyte Eibe Pouwelse",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539120540",
+      "name": "Acolyte Mihye Ch'ae",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539132270",
+      "name": "Adept Amarjit Rekha",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539138751",
+      "name": "Acolyte Mack Newitt",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539142883",
+      "name": "Acolyte Elizabeth Williams",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539149633",
+      "name": "Acolyte Ethel Broederdorf",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539164468",
+      "name": "Acolyte Arely Chauhan",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539170071",
+      "name": "Acolyte Chih Tu",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539185221",
+      "name": "Adept Francine Chavéz",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539191641",
+      "name": "Acolyte Asgeir Lakerveld",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539195849",
+      "name": "Acolyte Alana Furse",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539207707",
+      "name": "Acolyte Juan Carlos Torres",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539212185",
+      "name": "Acolyte Amra Reza",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539216775",
+      "name": "Acolyte Madeleine Veuger",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539224883",
+      "name": "Adept Rakhshandha Montazeri",
+      "gunnery": 3,
+      "piloting": 4,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539229743",
+      "name": "Acolyte Michele Dautzenburg",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539233501",
+      "name": "Acolyte Logan Sullivan",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539236921",
+      "name": "Acolyte Tracy Papatamelis",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539240843",
+      "name": "Acolyte Lazzaro Cannavaro",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    },
+    {
+      "id": "pilot-1775539244517",
+      "name": "Acolyte Pamela Damm",
+      "gunnery": 4,
+      "piloting": 5,
+      "injuries": 0,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        {
+          "timestamp": "3052-05-01",
+          "action": "Hired pilot for 0 WP",
+          "mission": null,
+          "cost": 0
+        }
+      ]
+    }
+  ],
+  "missions": [],
+  "repairActions": [],
+  "currentDate": "3052-05-01",
+  "notes": "",
+  "snapshots": [],
+  "fullSnapshots": []
+}
