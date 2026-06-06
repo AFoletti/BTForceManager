@@ -4,7 +4,7 @@
   "description": "",
   "image": "",
   "startingWarchest": 2000,
-  "currentWarchest": 1663,
+  "currentWarchest": 1359,
   "wpMultiplier": 5,
   "otherActionsLog": [],
   "mechs": [
@@ -336,19 +336,31 @@
     },
     {
       "id": "mech-1774843191092",
-      "name": "Man O' War (Gargoyle) B",
+      "name": "Man O' War (Gargoyle) Prime",
       "status": "Operational",
       "pilotId": "pilot-1774842869060",
-      "bv": 1843,
+      "bv": 1537,
       "weight": 80,
       "image": "",
-      "history": "",
+      "history": "Reconfigured from B to Prime prior to M02",
       "warchestCost": 0,
       "activityLog": [
         {
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Reconfigure Mech performed (4 WP)",
+          "mission": "T01 - Teddy Bear's Picnic",
+          "cost": 4
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough",
+          "mission": "M02 - Breaktrhrough",
           "cost": 0
         }
       ]
@@ -369,6 +381,12 @@
           "action": "Purchased mech for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough",
+          "mission": "M02 - Breaktrhrough",
+          "cost": 0
         }
       ]
     },
@@ -387,6 +405,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough",
+          "mission": "M02 - Breaktrhrough",
           "cost": 0
         }
       ]
@@ -431,6 +455,12 @@
           "action": "Purchased elemental point for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough",
+          "mission": "M02 - Breaktrhrough",
+          "cost": 0
         }
       ]
     },
@@ -453,6 +483,12 @@
           "action": "Purchased elemental point for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough",
+          "mission": "M02 - Breaktrhrough",
+          "cost": 0
         }
       ]
     },
@@ -474,6 +510,12 @@
           "timestamp": "3052-05-01",
           "action": "Purchased elemental point for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough",
+          "mission": "M02 - Breaktrhrough",
           "cost": 0
         }
       ]
@@ -743,6 +785,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "inGameDate": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough (piloting Warhammer IIC)",
+          "mission": "M02 - Breaktrhrough",
+          "cost": 0
         }
       ],
       "achievements": []
@@ -762,6 +811,13 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "inGameDate": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough (piloting Highlander IIC)",
+          "mission": "M02 - Breaktrhrough",
+          "cost": 0
         }
       ],
       "achievements": []
@@ -780,6 +836,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "inGameDate": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough (piloting Man O' War (Gargoyle) Prime)",
+          "mission": "M02 - Breaktrhrough",
           "cost": 0
         }
       ],
@@ -1056,10 +1119,75 @@
       "createdAt": "3052-05-01",
       "inGameDate": "3052-05-01",
       "completedAt": "3052-05-02"
+    },
+    {
+      "name": "M02 - Breaktrhrough",
+      "cost": 300,
+      "description": "I am the attacker",
+      "objectives": [
+        {
+          "id": "obj-1780725525401-0",
+          "title": "Push Through",
+          "description": "Move at least half the force out of the defender's edge",
+          "wpReward": 300,
+          "achieved": false
+        },
+        {
+          "id": "obj-1780725696327-1",
+          "title": "Hold the field",
+          "description": "Destroy or cripple 100% of the opposing force",
+          "wpReward": 100,
+          "achieved": false
+        }
+      ],
+      "recap": "",
+      "completed": false,
+      "assignedMechs": [
+        "mech-1774843191092",
+        "mech-1774843203442",
+        "mech-1774843215204"
+      ],
+      "assignedElementals": [
+        "elemental-1774842671835",
+        "elemental-1774842695492",
+        "elemental-1774842710895"
+      ],
+      "spBudget": 12,
+      "spPurchases": [
+        {
+          "id": "sp-1780725488637",
+          "choiceId": "air_hvstrike",
+          "name": "Heavy Air Strike",
+          "cost": 3
+        },
+        {
+          "id": "sp-1780725491603",
+          "choiceId": "air_hvstrike",
+          "name": "Heavy Air Strike",
+          "cost": 3
+        },
+        {
+          "id": "sp-1780725493463",
+          "choiceId": "air_hvstrike",
+          "name": "Heavy Air Strike",
+          "cost": 3
+        },
+        {
+          "id": "sp-1780725495435",
+          "choiceId": "air_hvstrike",
+          "name": "Heavy Air Strike",
+          "cost": 3
+        }
+      ],
+      "totalTonnage": 250,
+      "opForUnits": [],
+      "id": "mission-1780725800062",
+      "createdAt": "3052-05-05",
+      "inGameDate": "3052-05-05"
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-04",
+  "currentDate": "3052-05-06",
   "notes": "",
   "snapshots": [
     {
@@ -1127,13 +1255,45 @@
       }
     },
     {
-      "id": "snapshot-1780327975594",
+      "id": "snapshot-1780725320509",
       "type": "post-downtime",
       "label": "After downtime cycle",
-      "createdAt": "3052-05-04",
-      "currentWarchest": 1663,
+      "createdAt": "3052-05-05",
+      "currentWarchest": 1659,
       "startingWarchest": 2000,
-      "netWarchestChange": -337,
+      "netWarchestChange": -341,
+      "missionsCompleted": 1,
+      "units": {
+        "mechs": {
+          "byStatus": {
+            "Operational": 16,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 2,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        },
+        "elementals": {
+          "byStatus": {
+            "Operational": 3,
+            "Damaged": 0,
+            "Disabled": 0,
+            "Repairing": 0,
+            "Unavailable": 0,
+            "Destroyed": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "snapshot-1780725800063",
+      "type": "pre-mission",
+      "label": "Prior to mission: M02 - Breaktrhrough",
+      "createdAt": "3052-05-06",
+      "currentWarchest": 1359,
+      "startingWarchest": 2000,
+      "netWarchestChange": -641,
       "missionsCompleted": 1,
       "units": {
         "mechs": {
@@ -1160,921 +1320,6 @@
     }
   ],
   "fullSnapshots": [
-    {
-      "id": "full-snapshot-1774985007509",
-      "snapshotId": "snapshot-1774985007509",
-      "forceData": {
-        "id": "ghost-bear",
-        "name": "Ghost Bear",
-        "description": "",
-        "image": "",
-        "startingWarchest": 2000,
-        "currentWarchest": 1600,
-        "wpMultiplier": 5,
-        "otherActionsLog": [],
-        "mechs": [
-          {
-            "id": "mech-1774842940746",
-            "name": "Puma (Adder) A",
-            "status": "Operational",
-            "pilotId": "pilot-1774842798311",
-            "bv": 1437,
-            "weight": 35,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774842966633",
-            "name": "Vixen (Incubus)",
-            "status": "Operational",
-            "pilotId": "pilot-1774842887936",
-            "bv": 1596,
-            "weight": 30,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774842982169",
-            "name": "Koshi (Mist Lynx) B",
-            "status": "Operational",
-            "pilotId": "pilot-1774842901371",
-            "bv": 1209,
-            "weight": 25,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774842999827",
-            "name": "Puma (Adder) Prime",
-            "status": "Operational",
-            "pilotId": "pilot-1774842792480",
-            "bv": 2083,
-            "weight": 35,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843018513",
-            "name": "Fenris (Ice Ferret) Prime",
-            "status": "Operational",
-            "pilotId": "pilot-1774842822314",
-            "bv": 1678,
-            "weight": 45,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843053271",
-            "name": "Black Hawk (Nova) S",
-            "status": "Operational",
-            "pilotId": "pilot-1774842826987",
-            "bv": 2056,
-            "weight": 50,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843066877",
-            "name": "Hellhound (Conjurer)",
-            "status": "Operational",
-            "pilotId": "pilot-1774842818222",
-            "bv": 1813,
-            "weight": 50,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843083289",
-            "name": "Goshawk (Vapor Eagle)",
-            "status": "Operational",
-            "pilotId": "pilot-1774842803104",
-            "bv": 2368,
-            "weight": 55,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843096726",
-            "name": "Archer C",
-            "status": "Operational",
-            "pilotId": "pilot-1774842877438",
-            "bv": 1811,
-            "weight": 70,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843110643",
-            "name": "Vulture (Mad Dog) S",
-            "status": "Operational",
-            "pilotId": "pilot-1774842893834",
-            "bv": 2676,
-            "weight": 60,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843126195",
-            "name": "Thor (Summoner) B",
-            "status": "Operational",
-            "pilotId": "pilot-1774842838822",
-            "bv": 2159,
-            "weight": 70,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843139528",
-            "name": "Mad Cat (Timber Wolf) B",
-            "status": "Operational",
-            "pilotId": "pilot-1774842831178",
-            "bv": 2224,
-            "weight": 75,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843157978",
-            "name": "Thor (Summoner) M",
-            "status": "Operational",
-            "pilotId": "pilot-1774842843594",
-            "bv": 2251,
-            "weight": 70,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843177534",
-            "name": "Vulture (Mad Dog) Prime",
-            "status": "Operational",
-            "pilotId": "pilot-1774842847335",
-            "bv": 2351,
-            "weight": 60,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843191092",
-            "name": "Man O' War (Gargoyle) B",
-            "status": "Operational",
-            "pilotId": "pilot-1774842869060",
-            "bv": 1843,
-            "weight": 80,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843203442",
-            "name": "Warhammer IIC",
-            "status": "Operational",
-            "pilotId": "pilot-1774842852136",
-            "bv": 2570,
-            "weight": 80,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843215204",
-            "name": "Highlander IIC",
-            "status": "Operational",
-            "pilotId": "pilot-1774842862876",
-            "bv": 2979,
-            "weight": 90,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "mech-1774843228166",
-            "name": "Behemoth (Stone Rhino)",
-            "status": "Operational",
-            "pilotId": "pilot-1774842882473",
-            "bv": 3001,
-            "weight": 100,
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased mech for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          }
-        ],
-        "elementals": [
-          {
-            "id": "elemental-1774842671835",
-            "name": "Alpha Point",
-            "commander": "Bill",
-            "gunnery": 3,
-            "antimech": 4,
-            "suitsDestroyed": 0,
-            "suitsDamaged": 0,
-            "bv": 590,
-            "status": "Operational",
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased elemental point for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "elemental-1774842695492",
-            "name": "Bravo",
-            "commander": "Aigneis",
-            "gunnery": 3,
-            "antimech": 4,
-            "suitsDestroyed": 0,
-            "suitsDamaged": 0,
-            "bv": 590,
-            "status": "Operational",
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased elemental point for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "elemental-1774842710895",
-            "name": "Charlie",
-            "commander": "Henka",
-            "gunnery": 3,
-            "antimech": 4,
-            "suitsDestroyed": 0,
-            "suitsDamaged": 0,
-            "bv": 590,
-            "status": "Operational",
-            "image": "",
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Purchased elemental point for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          }
-        ],
-        "pilots": [
-          {
-            "id": "pilot-1774842792480",
-            "name": "Logan",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842798311",
-            "name": "Karl",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842803104",
-            "name": "S.Commander Vera Stuczynski",
-            "gunnery": 2,
-            "piloting": 3,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "inGameDate": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Goshawk (Vapor Eagle))",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842818222",
-            "name": "Zhong-shan Babushkina",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "inGameDate": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Hellhound (Conjurer))",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842822314",
-            "name": "Hana",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842826987",
-            "name": "Azella Richardson",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "inGameDate": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Black Hawk (Nova) S)",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842831178",
-            "name": "Martin",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842838822",
-            "name": "Yekaterina",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842843594",
-            "name": "S.Commander Harvey Calvert",
-            "gunnery": 2,
-            "piloting": 3,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842847335",
-            "name": "Mary",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842852136",
-            "name": "Deo",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842862876",
-            "name": "Yeong-suk",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842869060",
-            "name": "S.Captain Yoshitora Reller",
-            "gunnery": 1,
-            "piloting": 2,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842877438",
-            "name": "Zocha",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842882473",
-            "name": "Lopa",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842887936",
-            "name": "Shurik",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "inGameDate": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Vixen (Incubus))",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842893834",
-            "name": "S.Commander Thierry Memba",
-            "gunnery": 2,
-            "piloting": 3,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              }
-            ]
-          },
-          {
-            "id": "pilot-1774842901371",
-            "name": "Rasia",
-            "gunnery": 3,
-            "piloting": 4,
-            "injuries": 0,
-            "dezgra": false,
-            "history": "",
-            "warchestCost": 0,
-            "activityLog": [
-              {
-                "timestamp": "3052-05-01",
-                "action": "Hired pilot for 0 WP",
-                "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-01",
-                "inGameDate": "3052-05-01",
-                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Koshi (Mist Lynx) B)",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 0
-              }
-            ]
-          }
-        ],
-        "missions": [
-          {
-            "name": "T01 - Teddy Bear's Picnic",
-            "cost": 400,
-            "description": "Attacker\nI take the \"Dig In\" option\nOpFor takes \"The Forest is on Fire\" option",
-            "objectives": [
-              {
-                "id": "obj-1774984880874-0",
-                "title": "Breakout!",
-                "description": "Exit at least 50% of the units from the Defender's home edge",
-                "wpReward": 150,
-                "achieved": false
-              },
-              {
-                "id": "obj-1774984921214-1",
-                "title": "Denying Pursuit",
-                "description": "Destroy or Cripple at least 50% of Defender's units before 50% of the Attacker's units have exited from the Defender's home edge",
-                "wpReward": 200,
-                "achieved": false
-              },
-              {
-                "id": "obj-1774984970507-2",
-                "title": "Frenzy",
-                "description": "Destroy or cripple all of the Defender's units before 50% of the Attacker's units have exited from the Defender's home edge",
-                "wpReward": 250,
-                "achieved": false
-              }
-            ],
-            "recap": "",
-            "completed": false,
-            "assignedMechs": [
-              "mech-1774842966633",
-              "mech-1774843066877",
-              "mech-1774843083289",
-              "mech-1774842982169",
-              "mech-1774843053271"
-            ],
-            "assignedElementals": [],
-            "spBudget": 12,
-            "spPurchases": [
-              {
-                "id": "sp-1774984811261",
-                "choiceId": "art_longtom",
-                "name": "Artillery Long Tom",
-                "cost": 6
-              },
-              {
-                "id": "sp-1774984815713",
-                "choiceId": "art_longtom",
-                "name": "Artillery Long Tom",
-                "cost": 6
-              }
-            ],
-            "totalTonnage": 210,
-            "opForUnits": [],
-            "id": "mission-1774985007509",
-            "createdAt": "3052-05-01",
-            "inGameDate": "3052-05-01"
-          }
-        ],
-        "repairActions": [],
-        "currentDate": "3052-05-02",
-        "notes": "",
-        "snapshots": [
-          {
-            "id": "snapshot-1774985007509",
-            "type": "pre-mission",
-            "label": "Prior to mission: T01 - Teddy Bear's Picnic",
-            "createdAt": "3052-05-02",
-            "currentWarchest": 1600,
-            "startingWarchest": 2000,
-            "netWarchestChange": -400,
-            "missionsCompleted": 0,
-            "units": {
-              "mechs": {
-                "byStatus": {
-                  "Operational": 18,
-                  "Damaged": 0,
-                  "Disabled": 0,
-                  "Repairing": 0,
-                  "Unavailable": 0,
-                  "Destroyed": 0
-                }
-              },
-              "elementals": {
-                "byStatus": {
-                  "Operational": 3,
-                  "Damaged": 0,
-                  "Disabled": 0,
-                  "Repairing": 0,
-                  "Unavailable": 0,
-                  "Destroyed": 0
-                }
-              }
-            }
-          }
-        ]
-      },
-      "createdAt": "2026-03-31T19:23:27.509Z"
-    },
     {
       "id": "full-snapshot-1780246512957",
       "snapshotId": "snapshot-1780246512957",
@@ -3146,15 +2391,15 @@
       "createdAt": "2026-05-31T16:55:12.957Z"
     },
     {
-      "id": "full-snapshot-1780327975594",
-      "snapshotId": "snapshot-1780327975594",
+      "id": "full-snapshot-1780725320509",
+      "snapshotId": "snapshot-1780725320509",
       "forceData": {
         "id": "ghost-bear",
         "name": "Bluefang Trinary",
         "description": "",
         "image": "",
         "startingWarchest": 2000,
-        "currentWarchest": 1663,
+        "currentWarchest": 1659,
         "wpMultiplier": 5,
         "otherActionsLog": [],
         "mechs": [
@@ -3500,6 +2745,12 @@
                 "action": "Purchased mech for 0 WP",
                 "mission": null,
                 "cost": 0
+              },
+              {
+                "timestamp": "3052-05-04",
+                "action": "Reconfigure Mech performed (4 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 4
               }
             ]
           },
@@ -4209,7 +3460,7 @@
           }
         ],
         "repairActions": [],
-        "currentDate": "3052-05-04",
+        "currentDate": "3052-05-05",
         "notes": "",
         "snapshots": [
           {
@@ -4277,13 +3528,13 @@
             }
           },
           {
-            "id": "snapshot-1780327975594",
+            "id": "snapshot-1780725320509",
             "type": "post-downtime",
             "label": "After downtime cycle",
-            "createdAt": "3052-05-04",
-            "currentWarchest": 1663,
+            "createdAt": "3052-05-05",
+            "currentWarchest": 1659,
             "startingWarchest": 2000,
-            "netWarchestChange": -337,
+            "netWarchestChange": -341,
             "missionsCompleted": 1,
             "units": {
               "mechs": {
@@ -4312,7 +3563,1336 @@
         "originalBaseBV": 38105,
         "originalAdjustedBV": 54216
       },
-      "createdAt": "2026-06-01T15:32:55.594Z"
+      "createdAt": "2026-06-06T05:55:20.509Z"
+    },
+    {
+      "id": "full-snapshot-1780725800063",
+      "snapshotId": "snapshot-1780725800063",
+      "forceData": {
+        "id": "ghost-bear",
+        "name": "Bluefang Trinary",
+        "description": "",
+        "image": "",
+        "startingWarchest": 2000,
+        "currentWarchest": 1359,
+        "wpMultiplier": 5,
+        "otherActionsLog": [],
+        "mechs": [
+          {
+            "id": "mech-1774842940746",
+            "name": "Puma (Adder) A",
+            "status": "Operational",
+            "pilotId": "pilot-1774842798311",
+            "bv": 1437,
+            "weight": 35,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774842966633",
+            "name": "Vixen (Incubus)",
+            "status": "Operational",
+            "pilotId": "pilot-1774842887936",
+            "bv": 1596,
+            "weight": 30,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Repair Mech Armor performed (6 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 6
+              }
+            ]
+          },
+          {
+            "id": "mech-1774842982169",
+            "name": "Koshi (Mist Lynx) B",
+            "status": "Repairing",
+            "pilotId": "pilot-1774842901371",
+            "bv": 1209,
+            "weight": 25,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Repair Mech Internal Structure performed (10 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 10
+              }
+            ]
+          },
+          {
+            "id": "mech-1774842999827",
+            "name": "Puma (Adder) Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1774842792480",
+            "bv": 2083,
+            "weight": 35,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843018513",
+            "name": "Fenris (Ice Ferret) Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1774842822314",
+            "bv": 1678,
+            "weight": 45,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843053271",
+            "name": "Black Hawk (Nova) S",
+            "status": "Operational",
+            "pilotId": "pilot-1774842826987",
+            "bv": 2056,
+            "weight": 50,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Repair Mech Armor performed (10 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 10
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843066877",
+            "name": "Hellhound (Conjurer)",
+            "status": "Repairing",
+            "pilotId": "pilot-1774842818222",
+            "bv": 1813,
+            "weight": 50,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Repair Mech Internal Structure performed (20 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 20
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843083289",
+            "name": "Goshawk (Vapor Eagle)",
+            "status": "Operational",
+            "pilotId": "pilot-1774842803104",
+            "bv": 2368,
+            "weight": 55,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Repair Mech Armor performed (11 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 11
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843096726",
+            "name": "Archer C",
+            "status": "Operational",
+            "pilotId": "pilot-1774842877438",
+            "bv": 1811,
+            "weight": 70,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843110643",
+            "name": "Vulture (Mad Dog) S",
+            "status": "Operational",
+            "pilotId": "pilot-1774842893834",
+            "bv": 2676,
+            "weight": 60,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843126195",
+            "name": "Thor (Summoner) B",
+            "status": "Operational",
+            "pilotId": "pilot-1774842838822",
+            "bv": 2159,
+            "weight": 70,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843139528",
+            "name": "Mad Cat (Timber Wolf) B",
+            "status": "Operational",
+            "pilotId": "pilot-1774842831178",
+            "bv": 2224,
+            "weight": 75,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843157978",
+            "name": "Thor (Summoner) M",
+            "status": "Operational",
+            "pilotId": "pilot-1774842843594",
+            "bv": 2251,
+            "weight": 70,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843177534",
+            "name": "Vulture (Mad Dog) Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1774842847335",
+            "bv": 2351,
+            "weight": 60,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843191092",
+            "name": "Man O' War (Gargoyle) Prime",
+            "status": "Operational",
+            "pilotId": "pilot-1774842869060",
+            "bv": 1537,
+            "weight": 80,
+            "image": "",
+            "history": "Reconfigured from B to Prime prior to M02",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-04",
+                "action": "Reconfigure Mech performed (4 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 4
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843203442",
+            "name": "Warhammer IIC",
+            "status": "Operational",
+            "pilotId": "pilot-1774842852136",
+            "bv": 2570,
+            "weight": 80,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843215204",
+            "name": "Highlander IIC",
+            "status": "Operational",
+            "pilotId": "pilot-1774842862876",
+            "bv": 2979,
+            "weight": 90,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "mech-1774843228166",
+            "name": "Behemoth (Stone Rhino)",
+            "status": "Operational",
+            "pilotId": "pilot-1774842882473",
+            "bv": 3001,
+            "weight": 100,
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased mech for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "elementals": [
+          {
+            "id": "elemental-1774842671835",
+            "name": "Alpha Point",
+            "commander": "Bill",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "elemental-1774842695492",
+            "name": "Bravo",
+            "commander": "Aigneis",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ]
+          },
+          {
+            "id": "elemental-1774842710895",
+            "name": "Charlie",
+            "commander": "Henka",
+            "gunnery": 3,
+            "antimech": 4,
+            "suitsDestroyed": 0,
+            "suitsDamaged": 0,
+            "bv": 590,
+            "status": "Operational",
+            "image": "",
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Purchased elemental point for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ]
+          }
+        ],
+        "pilots": [
+          {
+            "id": "pilot-1774842792480",
+            "name": "Logan",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842798311",
+            "name": "Karl",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842803104",
+            "name": "S.Commander Vera Stuczynski",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "inGameDate": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Goshawk (Vapor Eagle))",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              }
+            ],
+            "combatRecord": {
+              "kills": [],
+              "assists": 0,
+              "missionsCompleted": 1,
+              "missionsWithoutInjury": 1,
+              "totalInjuriesHealed": 0
+            },
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842818222",
+            "name": "Zhong-shan Babushkina",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "inGameDate": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Hellhound (Conjurer))",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Heal All Injuries performed (12 WP) after T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 12
+              }
+            ],
+            "combatRecord": {
+              "kills": [],
+              "assists": 0,
+              "missionsCompleted": 1,
+              "missionsWithoutInjury": 0,
+              "totalInjuriesHealed": 2
+            },
+            "achievements": [
+              "survivor"
+            ]
+          },
+          {
+            "id": "pilot-1774842822314",
+            "name": "Hana",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842826987",
+            "name": "Azella Richardson",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "inGameDate": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Black Hawk (Nova) S)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Heal All Injuries performed (6 WP) after T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 6
+              }
+            ],
+            "combatRecord": {
+              "kills": [],
+              "assists": 0,
+              "missionsCompleted": 1,
+              "missionsWithoutInjury": 0,
+              "totalInjuriesHealed": 1
+            },
+            "achievements": [
+              "survivor"
+            ]
+          },
+          {
+            "id": "pilot-1774842831178",
+            "name": "Martin",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842838822",
+            "name": "Yekaterina",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842843594",
+            "name": "S.Commander Harvey Calvert",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842847335",
+            "name": "Mary",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842852136",
+            "name": "Deo",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "inGameDate": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough (piloting Warhammer IIC)",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842862876",
+            "name": "Yeong-suk",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "inGameDate": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough (piloting Highlander IIC)",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842869060",
+            "name": "S.Captain Yoshitora Reller",
+            "gunnery": 1,
+            "piloting": 2,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "inGameDate": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough (piloting Man O' War (Gargoyle) Prime)",
+                "mission": "M02 - Breaktrhrough",
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842877438",
+            "name": "Zocha",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842882473",
+            "name": "Lopa",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842887936",
+            "name": "Shurik",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "inGameDate": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Vixen (Incubus))",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              }
+            ],
+            "combatRecord": {
+              "kills": [],
+              "assists": 0,
+              "missionsCompleted": 1,
+              "missionsWithoutInjury": 1,
+              "totalInjuriesHealed": 0
+            },
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842893834",
+            "name": "S.Commander Thierry Memba",
+            "gunnery": 2,
+            "piloting": 3,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              }
+            ],
+            "achievements": []
+          },
+          {
+            "id": "pilot-1774842901371",
+            "name": "Rasia",
+            "gunnery": 3,
+            "piloting": 4,
+            "injuries": 0,
+            "dezgra": false,
+            "history": "",
+            "warchestCost": 0,
+            "activityLog": [
+              {
+                "timestamp": "3052-05-01",
+                "action": "Hired pilot for 0 WP",
+                "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-01",
+                "inGameDate": "3052-05-01",
+                "action": "Assigned to mission: T01 - Teddy Bear's Picnic (piloting Koshi (Mist Lynx) B)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-03",
+                "action": "Heal All Injuries performed (12 WP) after T01 - Teddy Bear's Picnic",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 12
+              }
+            ],
+            "combatRecord": {
+              "kills": [],
+              "assists": 0,
+              "missionsCompleted": 1,
+              "missionsWithoutInjury": 0,
+              "totalInjuriesHealed": 2
+            },
+            "achievements": [
+              "survivor"
+            ]
+          }
+        ],
+        "missions": [
+          {
+            "name": "T01 - Teddy Bear's Picnic",
+            "cost": 400,
+            "description": "Attacker\nI take the \"Dig In\" option\nOpFor takes \"The Forest is on Fire\" option",
+            "objectives": [
+              {
+                "id": "obj-1774984880874-0",
+                "title": "Breakout!",
+                "description": "Exit at least 50% of the units from the Defender's home edge",
+                "wpReward": 150,
+                "achieved": true
+              },
+              {
+                "id": "obj-1774984921214-1",
+                "title": "Denying Pursuit",
+                "description": "Destroy or Cripple at least 50% of Defender's units before 50% of the Attacker's units have exited from the Defender's home edge",
+                "wpReward": 200,
+                "achieved": false
+              },
+              {
+                "id": "obj-1774984970507-2",
+                "title": "Frenzy",
+                "description": "Destroy or cripple all of the Defender's units before 50% of the Attacker's units have exited from the Defender's home edge",
+                "wpReward": 250,
+                "achieved": false
+              },
+              {
+                "id": "obj-1774985036538-3",
+                "title": "[Option] Dig In",
+                "description": "Up to 50% of the Defender's units may begin the game deployed as Hidden Units in the Defender's half of the map",
+                "wpReward": 150,
+                "achieved": false
+              }
+            ],
+            "recap": "",
+            "completed": true,
+            "assignedMechs": [
+              "mech-1774842966633",
+              "mech-1774843066877",
+              "mech-1774843083289",
+              "mech-1774842982169",
+              "mech-1774843053271"
+            ],
+            "assignedElementals": [],
+            "spBudget": 12,
+            "spPurchases": [
+              {
+                "id": "sp-1774984811261",
+                "choiceId": "art_longtom",
+                "name": "Artillery Long Tom",
+                "cost": 6
+              },
+              {
+                "id": "sp-1774984815713",
+                "choiceId": "art_longtom",
+                "name": "Artillery Long Tom",
+                "cost": 6
+              }
+            ],
+            "totalTonnage": 210,
+            "opForUnits": [
+              {
+                "id": "opfor-1780229185158",
+                "name": "Victor VTR-9B",
+                "tonnage": 80,
+                "baseBv": 1378,
+                "gunnery": 3,
+                "piloting": 4,
+                "status": "active"
+              },
+              {
+                "id": "opfor-1780229208190",
+                "name": "Black Knight BL-9-KNT",
+                "tonnage": 75,
+                "baseBv": 1678,
+                "gunnery": 4,
+                "piloting": 5,
+                "status": "active"
+              },
+              {
+                "id": "opfor-1780229248668",
+                "name": "Marauder MAD-5M",
+                "tonnage": 75,
+                "baseBv": 1471,
+                "gunnery": 4,
+                "piloting": 5,
+                "status": "active"
+              },
+              {
+                "id": "opfor-1780229265101",
+                "name": "Flashman FLS-8K",
+                "tonnage": 75,
+                "baseBv": 1779,
+                "gunnery": 4,
+                "piloting": 5,
+                "status": "active"
+              },
+              {
+                "id": "opfor-1780229292664",
+                "name": "Guillotine GLT-3N",
+                "tonnage": 70,
+                "baseBv": 1418,
+                "gunnery": 4,
+                "piloting": 5,
+                "status": "active"
+              },
+              {
+                "id": "opfor-1780229324315",
+                "name": "Lancelot LNC25-01",
+                "tonnage": 60,
+                "baseBv": 1422,
+                "gunnery": 4,
+                "piloting": 5,
+                "status": "active"
+              },
+              {
+                "id": "opfor-1780229349493",
+                "name": "Wolverine WVR-7M",
+                "tonnage": 55,
+                "baseBv": 1673,
+                "gunnery": 4,
+                "piloting": 5,
+                "status": "active"
+              },
+              {
+                "id": "opfor-1780229377011",
+                "name": "Shadow Hawk SHD-2Ht",
+                "tonnage": 55,
+                "baseBv": 1453,
+                "gunnery": 4,
+                "piloting": 5,
+                "status": "active"
+              }
+            ],
+            "id": "mission-1774985007509",
+            "createdAt": "3052-05-01",
+            "inGameDate": "3052-05-01",
+            "completedAt": "3052-05-02"
+          },
+          {
+            "name": "M02 - Breaktrhrough",
+            "cost": 300,
+            "description": "I am the attacker",
+            "objectives": [
+              {
+                "id": "obj-1780725525401-0",
+                "title": "Push Through",
+                "description": "Move at least half the force out of the defender's edge",
+                "wpReward": 300,
+                "achieved": false
+              },
+              {
+                "id": "obj-1780725696327-1",
+                "title": "Hold the field",
+                "description": "Destroy or cripple 100% of the opposing force",
+                "wpReward": 100,
+                "achieved": false
+              }
+            ],
+            "recap": "",
+            "completed": false,
+            "assignedMechs": [
+              "mech-1774843191092",
+              "mech-1774843203442",
+              "mech-1774843215204"
+            ],
+            "assignedElementals": [
+              "elemental-1774842671835",
+              "elemental-1774842695492",
+              "elemental-1774842710895"
+            ],
+            "spBudget": 12,
+            "spPurchases": [
+              {
+                "id": "sp-1780725488637",
+                "choiceId": "air_hvstrike",
+                "name": "Heavy Air Strike",
+                "cost": 3
+              },
+              {
+                "id": "sp-1780725491603",
+                "choiceId": "air_hvstrike",
+                "name": "Heavy Air Strike",
+                "cost": 3
+              },
+              {
+                "id": "sp-1780725493463",
+                "choiceId": "air_hvstrike",
+                "name": "Heavy Air Strike",
+                "cost": 3
+              },
+              {
+                "id": "sp-1780725495435",
+                "choiceId": "air_hvstrike",
+                "name": "Heavy Air Strike",
+                "cost": 3
+              }
+            ],
+            "totalTonnage": 250,
+            "opForUnits": [],
+            "id": "mission-1780725800062",
+            "createdAt": "3052-05-05",
+            "inGameDate": "3052-05-05"
+          }
+        ],
+        "repairActions": [],
+        "currentDate": "3052-05-06",
+        "notes": "",
+        "snapshots": [
+          {
+            "id": "snapshot-1774985007509",
+            "type": "pre-mission",
+            "label": "Prior to mission: T01 - Teddy Bear's Picnic",
+            "createdAt": "3052-05-02",
+            "currentWarchest": 1600,
+            "startingWarchest": 2000,
+            "netWarchestChange": -400,
+            "missionsCompleted": 0,
+            "units": {
+              "mechs": {
+                "byStatus": {
+                  "Operational": 18,
+                  "Damaged": 0,
+                  "Disabled": 0,
+                  "Repairing": 0,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              },
+              "elementals": {
+                "byStatus": {
+                  "Operational": 3,
+                  "Damaged": 0,
+                  "Disabled": 0,
+                  "Repairing": 0,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              }
+            }
+          },
+          {
+            "id": "snapshot-1780246512957",
+            "type": "post-mission",
+            "label": "After T01 - Teddy Bear's Picnic",
+            "createdAt": "3052-05-03",
+            "currentWarchest": 1750,
+            "startingWarchest": 2000,
+            "netWarchestChange": -250,
+            "missionsCompleted": 1,
+            "units": {
+              "mechs": {
+                "byStatus": {
+                  "Operational": 13,
+                  "Damaged": 3,
+                  "Disabled": 2,
+                  "Repairing": 0,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              },
+              "elementals": {
+                "byStatus": {
+                  "Operational": 3,
+                  "Damaged": 0,
+                  "Disabled": 0,
+                  "Repairing": 0,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              }
+            }
+          },
+          {
+            "id": "snapshot-1780725320509",
+            "type": "post-downtime",
+            "label": "After downtime cycle",
+            "createdAt": "3052-05-05",
+            "currentWarchest": 1659,
+            "startingWarchest": 2000,
+            "netWarchestChange": -341,
+            "missionsCompleted": 1,
+            "units": {
+              "mechs": {
+                "byStatus": {
+                  "Operational": 16,
+                  "Damaged": 0,
+                  "Disabled": 0,
+                  "Repairing": 2,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              },
+              "elementals": {
+                "byStatus": {
+                  "Operational": 3,
+                  "Damaged": 0,
+                  "Disabled": 0,
+                  "Repairing": 0,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              }
+            }
+          },
+          {
+            "id": "snapshot-1780725800063",
+            "type": "pre-mission",
+            "label": "Prior to mission: M02 - Breaktrhrough",
+            "createdAt": "3052-05-06",
+            "currentWarchest": 1359,
+            "startingWarchest": 2000,
+            "netWarchestChange": -641,
+            "missionsCompleted": 1,
+            "units": {
+              "mechs": {
+                "byStatus": {
+                  "Operational": 16,
+                  "Damaged": 0,
+                  "Disabled": 0,
+                  "Repairing": 2,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              },
+              "elementals": {
+                "byStatus": {
+                  "Operational": 3,
+                  "Damaged": 0,
+                  "Disabled": 0,
+                  "Repairing": 0,
+                  "Unavailable": 0,
+                  "Destroyed": 0
+                }
+              }
+            }
+          }
+        ],
+        "originalBaseBV": 38105,
+        "originalAdjustedBV": 54216
+      },
+      "createdAt": "2026-06-06T06:03:20.063Z"
     }
   ],
   "originalBaseBV": 38105,
