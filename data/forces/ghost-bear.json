@@ -279,10 +279,10 @@
     },
     {
       "id": "mech-1774843139528",
-      "name": "Mad Cat (Timber Wolf) B",
+      "name": "Mad Cat (Timber Wolf) S",
       "status": "Operational",
       "pilotId": "pilot-1774842831178",
-      "bv": 2224,
+      "bv": 2462,
       "weight": 75,
       "image": "",
       "history": "",
@@ -1143,9 +1143,9 @@
       "recap": "",
       "completed": false,
       "assignedMechs": [
-        "mech-1774843191092",
         "mech-1774843203442",
-        "mech-1774843215204"
+        "mech-1774843215204",
+        "mech-1774843139528"
       ],
       "assignedElementals": [
         "elemental-1774842671835",
@@ -1179,7 +1179,7 @@
           "cost": 3
         }
       ],
-      "totalTonnage": 250,
+      "totalTonnage": 245,
       "opForUnits": [],
       "id": "mission-1780725800062",
       "createdAt": "3052-05-05",
