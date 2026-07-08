@@ -285,25 +285,13 @@
       "bv": 2462,
       "weight": 75,
       "image": "",
-      "history": "",
+      "history": "Reconfigured from B to S configuraion prior to M02",
       "warchestCost": 0,
       "activityLog": [
         {
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
-          "cost": 0
-        },
-        {
-          "timestamp": "3052-05-03",
-          "action": "Reconfigure Mech performed (4 WP)",
-          "mission": "T01 - Teddy Bear's Picnic",
-          "cost": 4
-        },
-        {
-          "timestamp": "3052-05-04",
-          "action": "Assigned to mission: M02 - Breaktrhrough",
-          "mission": "M02 - Breaktrhrough",
           "cost": 0
         }
       ]
@@ -348,10 +336,10 @@
     },
     {
       "id": "mech-1774843191092",
-      "name": "Man O' War (Gargoyle) B",
+      "name": "Man O' War (Gargoyle) Prime",
       "status": "Operational",
       "pilotId": "pilot-1774842869060",
-      "bv": 1843,
+      "bv": 1537,
       "weight": 80,
       "image": "",
       "history": "",
@@ -361,6 +349,18 @@
           "timestamp": "3052-05-01",
           "action": "Purchased mech for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-04",
+          "action": "Reconfigure Mech performed (4 WP)",
+          "mission": "T01 - Teddy Bear's Picnic",
+          "cost": 4
+        },
+        {
+          "timestamp": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough",
+          "mission": "M02 - Breaktrhrough",
           "cost": 0
         }
       ]
@@ -383,7 +383,7 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-05",
           "action": "Assigned to mission: M02 - Breaktrhrough",
           "mission": "M02 - Breaktrhrough",
           "cost": 0
@@ -408,7 +408,7 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-05",
           "action": "Assigned to mission: M02 - Breaktrhrough",
           "mission": "M02 - Breaktrhrough",
           "cost": 0
@@ -457,7 +457,7 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-05",
           "action": "Assigned to mission: M02 - Breaktrhrough",
           "mission": "M02 - Breaktrhrough",
           "cost": 0
@@ -485,7 +485,7 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-05",
           "action": "Assigned to mission: M02 - Breaktrhrough",
           "mission": "M02 - Breaktrhrough",
           "cost": 0
@@ -513,7 +513,7 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
+          "timestamp": "3052-05-05",
           "action": "Assigned to mission: M02 - Breaktrhrough",
           "mission": "M02 - Breaktrhrough",
           "cost": 0
@@ -709,13 +709,6 @@
           "action": "Hired pilot for 0 WP",
           "mission": null,
           "cost": 0
-        },
-        {
-          "timestamp": "3052-05-04",
-          "inGameDate": "3052-05-04",
-          "action": "Assigned to mission: M02 - Breaktrhrough (piloting Mad Cat (Timber Wolf) S)",
-          "mission": "M02 - Breaktrhrough",
-          "cost": 0
         }
       ],
       "achievements": []
@@ -794,8 +787,8 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
-          "inGameDate": "3052-05-04",
+          "timestamp": "3052-05-05",
+          "inGameDate": "3052-05-05",
           "action": "Assigned to mission: M02 - Breaktrhrough (piloting Warhammer IIC)",
           "mission": "M02 - Breaktrhrough",
           "cost": 0
@@ -820,8 +813,8 @@
           "cost": 0
         },
         {
-          "timestamp": "3052-05-04",
-          "inGameDate": "3052-05-04",
+          "timestamp": "3052-05-05",
+          "inGameDate": "3052-05-05",
           "action": "Assigned to mission: M02 - Breaktrhrough (piloting Highlander IIC)",
           "mission": "M02 - Breaktrhrough",
           "cost": 0
@@ -843,6 +836,13 @@
           "timestamp": "3052-05-01",
           "action": "Hired pilot for 0 WP",
           "mission": null,
+          "cost": 0
+        },
+        {
+          "timestamp": "3052-05-05",
+          "inGameDate": "3052-05-05",
+          "action": "Assigned to mission: M02 - Breaktrhrough (piloting Man O' War (Gargoyle) Prime)",
+          "mission": "M02 - Breaktrhrough",
           "cost": 0
         }
       ],
@@ -1126,14 +1126,14 @@
       "description": "I am the attacker",
       "objectives": [
         {
-          "id": "obj-1783244440837-0",
+          "id": "obj-1780725525401-0",
           "title": "Push Through",
           "description": "Move at least half the force out of the defender's edge",
           "wpReward": 300,
           "achieved": false
         },
         {
-          "id": "obj-1783244457741-1",
+          "id": "obj-1780725696327-1",
           "title": "Hold the field",
           "description": "Destroy or cripple 100% of the opposing force",
           "wpReward": 100,
@@ -1143,9 +1143,9 @@
       "recap": "",
       "completed": false,
       "assignedMechs": [
-        "mech-1774843139528",
         "mech-1774843203442",
-        "mech-1774843215204"
+        "mech-1774843215204",
+        "mech-1774843139528"
       ],
       "assignedElementals": [
         "elemental-1774842671835",
@@ -1155,25 +1155,25 @@
       "spBudget": 12,
       "spPurchases": [
         {
-          "id": "sp-1783244405470",
+          "id": "sp-1780725488637",
           "choiceId": "air_hvstrike",
           "name": "Heavy Air Strike",
           "cost": 3
         },
         {
-          "id": "sp-1783244411618",
+          "id": "sp-1780725491603",
           "choiceId": "air_hvstrike",
           "name": "Heavy Air Strike",
           "cost": 3
         },
         {
-          "id": "sp-1783244413714",
+          "id": "sp-1780725493463",
           "choiceId": "air_hvstrike",
           "name": "Heavy Air Strike",
           "cost": 3
         },
         {
-          "id": "sp-1783244415526",
+          "id": "sp-1780725495435",
           "choiceId": "air_hvstrike",
           "name": "Heavy Air Strike",
           "cost": 3
@@ -1181,13 +1181,13 @@
       ],
       "totalTonnage": 245,
       "opForUnits": [],
-      "id": "mission-1783244474625",
-      "createdAt": "3052-05-04",
-      "inGameDate": "3052-05-04"
+      "id": "mission-1780725800062",
+      "createdAt": "3052-05-05",
+      "inGameDate": "3052-05-05"
     }
   ],
   "repairActions": [],
-  "currentDate": "3052-05-05",
+  "currentDate": "3052-05-06",
   "notes": "",
   "snapshots": [
     {
@@ -1255,10 +1255,10 @@
       }
     },
     {
-      "id": "snapshot-1783244320186",
+      "id": "snapshot-1780725320509",
       "type": "post-downtime",
       "label": "After downtime cycle",
-      "createdAt": "3052-05-04",
+      "createdAt": "3052-05-05",
       "currentWarchest": 1659,
       "startingWarchest": 2000,
       "netWarchestChange": -341,
@@ -1287,10 +1287,10 @@
       }
     },
     {
-      "id": "snapshot-1783244474625",
+      "id": "snapshot-1780725800063",
       "type": "pre-mission",
       "label": "Prior to mission: M02 - Breaktrhrough",
-      "createdAt": "3052-05-05",
+      "createdAt": "3052-05-06",
       "currentWarchest": 1359,
       "startingWarchest": 2000,
       "netWarchestChange": -641,
@@ -2391,8 +2391,8 @@
       "createdAt": "2026-05-31T16:55:12.957Z"
     },
     {
-      "id": "full-snapshot-1783244320186",
-      "snapshotId": "snapshot-1783244320186",
+      "id": "full-snapshot-1780725320509",
+      "snapshotId": "snapshot-1780725320509",
       "forceData": {
         "id": "ghost-bear",
         "name": "Bluefang Trinary",
@@ -2688,12 +2688,6 @@
                 "action": "Purchased mech for 0 WP",
                 "mission": null,
                 "cost": 0
-              },
-              {
-                "timestamp": "3052-05-03",
-                "action": "Reconfigure Mech performed (4 WP)",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 4
               }
             ]
           },
@@ -2751,6 +2745,12 @@
                 "action": "Purchased mech for 0 WP",
                 "mission": null,
                 "cost": 0
+              },
+              {
+                "timestamp": "3052-05-04",
+                "action": "Reconfigure Mech performed (4 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 4
               }
             ]
           },
@@ -3460,7 +3460,7 @@
           }
         ],
         "repairActions": [],
-        "currentDate": "3052-05-04",
+        "currentDate": "3052-05-05",
         "notes": "",
         "snapshots": [
           {
@@ -3528,10 +3528,10 @@
             }
           },
           {
-            "id": "snapshot-1783244320186",
+            "id": "snapshot-1780725320509",
             "type": "post-downtime",
             "label": "After downtime cycle",
-            "createdAt": "3052-05-04",
+            "createdAt": "3052-05-05",
             "currentWarchest": 1659,
             "startingWarchest": 2000,
             "netWarchestChange": -341,
@@ -3563,11 +3563,11 @@
         "originalBaseBV": 38105,
         "originalAdjustedBV": 54216
       },
-      "createdAt": "2026-07-05T09:38:40.186Z"
+      "createdAt": "2026-06-06T05:55:20.509Z"
     },
     {
-      "id": "full-snapshot-1783244474625",
-      "snapshotId": "snapshot-1783244474625",
+      "id": "full-snapshot-1780725800063",
+      "snapshotId": "snapshot-1780725800063",
       "forceData": {
         "id": "ghost-bear",
         "name": "Bluefang Trinary",
@@ -3849,10 +3849,10 @@
           },
           {
             "id": "mech-1774843139528",
-            "name": "Mad Cat (Timber Wolf) S",
+            "name": "Mad Cat (Timber Wolf) B",
             "status": "Operational",
             "pilotId": "pilot-1774842831178",
-            "bv": 2462,
+            "bv": 2224,
             "weight": 75,
             "image": "",
             "history": "",
@@ -3862,18 +3862,6 @@
                 "timestamp": "3052-05-01",
                 "action": "Purchased mech for 0 WP",
                 "mission": null,
-                "cost": 0
-              },
-              {
-                "timestamp": "3052-05-03",
-                "action": "Reconfigure Mech performed (4 WP)",
-                "mission": "T01 - Teddy Bear's Picnic",
-                "cost": 4
-              },
-              {
-                "timestamp": "3052-05-04",
-                "action": "Assigned to mission: M02 - Breaktrhrough",
-                "mission": "M02 - Breaktrhrough",
                 "cost": 0
               }
             ]
@@ -3918,19 +3906,31 @@
           },
           {
             "id": "mech-1774843191092",
-            "name": "Man O' War (Gargoyle) B",
+            "name": "Man O' War (Gargoyle) Prime",
             "status": "Operational",
             "pilotId": "pilot-1774842869060",
-            "bv": 1843,
+            "bv": 1537,
             "weight": 80,
             "image": "",
-            "history": "",
+            "history": "Reconfigured from B to Prime prior to M02",
             "warchestCost": 0,
             "activityLog": [
               {
                 "timestamp": "3052-05-01",
                 "action": "Purchased mech for 0 WP",
                 "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-04",
+                "action": "Reconfigure Mech performed (4 WP)",
+                "mission": "T01 - Teddy Bear's Picnic",
+                "cost": 4
+              },
+              {
+                "timestamp": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough",
+                "mission": "M02 - Breaktrhrough",
                 "cost": 0
               }
             ]
@@ -3953,7 +3953,7 @@
                 "cost": 0
               },
               {
-                "timestamp": "3052-05-04",
+                "timestamp": "3052-05-05",
                 "action": "Assigned to mission: M02 - Breaktrhrough",
                 "mission": "M02 - Breaktrhrough",
                 "cost": 0
@@ -3978,7 +3978,7 @@
                 "cost": 0
               },
               {
-                "timestamp": "3052-05-04",
+                "timestamp": "3052-05-05",
                 "action": "Assigned to mission: M02 - Breaktrhrough",
                 "mission": "M02 - Breaktrhrough",
                 "cost": 0
@@ -4027,7 +4027,7 @@
                 "cost": 0
               },
               {
-                "timestamp": "3052-05-04",
+                "timestamp": "3052-05-05",
                 "action": "Assigned to mission: M02 - Breaktrhrough",
                 "mission": "M02 - Breaktrhrough",
                 "cost": 0
@@ -4055,7 +4055,7 @@
                 "cost": 0
               },
               {
-                "timestamp": "3052-05-04",
+                "timestamp": "3052-05-05",
                 "action": "Assigned to mission: M02 - Breaktrhrough",
                 "mission": "M02 - Breaktrhrough",
                 "cost": 0
@@ -4083,7 +4083,7 @@
                 "cost": 0
               },
               {
-                "timestamp": "3052-05-04",
+                "timestamp": "3052-05-05",
                 "action": "Assigned to mission: M02 - Breaktrhrough",
                 "mission": "M02 - Breaktrhrough",
                 "cost": 0
@@ -4279,13 +4279,6 @@
                 "action": "Hired pilot for 0 WP",
                 "mission": null,
                 "cost": 0
-              },
-              {
-                "timestamp": "3052-05-04",
-                "inGameDate": "3052-05-04",
-                "action": "Assigned to mission: M02 - Breaktrhrough (piloting Mad Cat (Timber Wolf) S)",
-                "mission": "M02 - Breaktrhrough",
-                "cost": 0
               }
             ],
             "achievements": []
@@ -4364,8 +4357,8 @@
                 "cost": 0
               },
               {
-                "timestamp": "3052-05-04",
-                "inGameDate": "3052-05-04",
+                "timestamp": "3052-05-05",
+                "inGameDate": "3052-05-05",
                 "action": "Assigned to mission: M02 - Breaktrhrough (piloting Warhammer IIC)",
                 "mission": "M02 - Breaktrhrough",
                 "cost": 0
@@ -4390,8 +4383,8 @@
                 "cost": 0
               },
               {
-                "timestamp": "3052-05-04",
-                "inGameDate": "3052-05-04",
+                "timestamp": "3052-05-05",
+                "inGameDate": "3052-05-05",
                 "action": "Assigned to mission: M02 - Breaktrhrough (piloting Highlander IIC)",
                 "mission": "M02 - Breaktrhrough",
                 "cost": 0
@@ -4413,6 +4406,13 @@
                 "timestamp": "3052-05-01",
                 "action": "Hired pilot for 0 WP",
                 "mission": null,
+                "cost": 0
+              },
+              {
+                "timestamp": "3052-05-05",
+                "inGameDate": "3052-05-05",
+                "action": "Assigned to mission: M02 - Breaktrhrough (piloting Man O' War (Gargoyle) Prime)",
+                "mission": "M02 - Breaktrhrough",
                 "cost": 0
               }
             ],
@@ -4696,14 +4696,14 @@
             "description": "I am the attacker",
             "objectives": [
               {
-                "id": "obj-1783244440837-0",
+                "id": "obj-1780725525401-0",
                 "title": "Push Through",
                 "description": "Move at least half the force out of the defender's edge",
                 "wpReward": 300,
                 "achieved": false
               },
               {
-                "id": "obj-1783244457741-1",
+                "id": "obj-1780725696327-1",
                 "title": "Hold the field",
                 "description": "Destroy or cripple 100% of the opposing force",
                 "wpReward": 100,
@@ -4713,7 +4713,7 @@
             "recap": "",
             "completed": false,
             "assignedMechs": [
-              "mech-1774843139528",
+              "mech-1774843191092",
               "mech-1774843203442",
               "mech-1774843215204"
             ],
@@ -4725,39 +4725,39 @@
             "spBudget": 12,
             "spPurchases": [
               {
-                "id": "sp-1783244405470",
+                "id": "sp-1780725488637",
                 "choiceId": "air_hvstrike",
                 "name": "Heavy Air Strike",
                 "cost": 3
               },
               {
-                "id": "sp-1783244411618",
+                "id": "sp-1780725491603",
                 "choiceId": "air_hvstrike",
                 "name": "Heavy Air Strike",
                 "cost": 3
               },
               {
-                "id": "sp-1783244413714",
+                "id": "sp-1780725493463",
                 "choiceId": "air_hvstrike",
                 "name": "Heavy Air Strike",
                 "cost": 3
               },
               {
-                "id": "sp-1783244415526",
+                "id": "sp-1780725495435",
                 "choiceId": "air_hvstrike",
                 "name": "Heavy Air Strike",
                 "cost": 3
               }
             ],
-            "totalTonnage": 245,
+            "totalTonnage": 250,
             "opForUnits": [],
-            "id": "mission-1783244474625",
-            "createdAt": "3052-05-04",
-            "inGameDate": "3052-05-04"
+            "id": "mission-1780725800062",
+            "createdAt": "3052-05-05",
+            "inGameDate": "3052-05-05"
           }
         ],
         "repairActions": [],
-        "currentDate": "3052-05-05",
+        "currentDate": "3052-05-06",
         "notes": "",
         "snapshots": [
           {
@@ -4825,10 +4825,10 @@
             }
           },
           {
-            "id": "snapshot-1783244320186",
+            "id": "snapshot-1780725320509",
             "type": "post-downtime",
             "label": "After downtime cycle",
-            "createdAt": "3052-05-04",
+            "createdAt": "3052-05-05",
             "currentWarchest": 1659,
             "startingWarchest": 2000,
             "netWarchestChange": -341,
@@ -4857,10 +4857,10 @@
             }
           },
           {
-            "id": "snapshot-1783244474625",
+            "id": "snapshot-1780725800063",
             "type": "pre-mission",
             "label": "Prior to mission: M02 - Breaktrhrough",
-            "createdAt": "3052-05-05",
+            "createdAt": "3052-05-06",
             "currentWarchest": 1359,
             "startingWarchest": 2000,
             "netWarchestChange": -641,
@@ -4892,7 +4892,7 @@
         "originalBaseBV": 38105,
         "originalAdjustedBV": 54216
       },
-      "createdAt": "2026-07-05T09:41:14.625Z"
+      "createdAt": "2026-06-06T06:03:20.063Z"
     }
   ],
   "originalBaseBV": 38105,
