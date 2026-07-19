@@ -36,19 +36,28 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 
 ## Prioritized Backlog
 ### P0 (next phases per migration roadmap)
-- Phase 8: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
-- Phase 9: Wire frontend to consume the new API instead of static JSON fetch + client-side CSV parsing (incl. swapping `MechAutocomplete.jsx` to `/api/mech-catalog`); add `REACT_APP_BACKEND_URL`.
+- Phase 9: Wire frontend to consume the new write API instead of static JSON fetch + client-side CSV parsing (incl. swapping `MechAutocomplete.jsx` to `/api/mech-catalog`, `useForceManager.js` to the new CRUD/mission/downtime endpoints); add `REACT_APP_BACKEND_URL`.
 - Phase 10: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
+- Consider snapshot/fullSnapshot creation + `force.currentDate` auto-advance endpoints if a future phase needs to mirror `MissionManager.jsx`'s UI-orchestration behavior (intentionally out of scope for Phase 8, which targeted only the pure lib logic).
 
 ### P1
 - Investigate the pre-existing `ghost-bear.json`/`91st-division-vision-of-words.json` fetch race in `useForceManager.js`.
 - Tighten CORS policy and add auth once writes/multi-user exposure are introduced.
 - Consider case-insensitive uniqueness for special-abilities pool names if free-text entry is exposed in UI later.
 - Pilot SPA pool (Phase 5) is intentionally not wired into `GET /api/forces/{id}` pilot serialization yet - wire in when a phase actually needs it.
-- Minor code-review notes from Phase 7 (non-blocking): `watcher._history` list has no explicit lock around concurrent debounce timers; `process_csv_file` does a blocking file read inside an async function (fine at NAS-drop scale, revisit with aiofiles/run_in_executor if files get large); zero-data-row files count as a successful "ok" import with rows=0.
+- Minor code-review notes from Phase 7 (non-blocking): `watcher._history` list has no explicit lock around concurrent debounce timers; `process_csv_file` does a blocking file read inside an async function; zero-data-row files count as a successful "ok" import.
+- Minor code-review note from Phase 8 (non-blocking): `routers/missions_write.py` is ~360 lines; consider extracting mission-completion logic into `domain/missions_logic.py` if it grows further.
 
 ## Next Tasks
-- Await user's next user-story (Phase 8 scope) before proceeding.
+- Await user's next user-story (Phase 9 scope) before proceeding.
+
+### Phase 8 (Write API for Core Entities) - Done, tested 100% pass
+- `backend/domain/`: pure business logic ported from `frontend/src/lib/*.js` - `mechs_logic.py` (BV adjustment table), `achievements_logic.py` (combat stats + condition checker), `downtime_logic.py` (formula tokenizer/RPN evaluator over `data/downtime-actions.json`), `missions_logic.py` (tonnage/BV/availability calculations).
+- Full CRUD: `POST/PUT/DELETE /api/forces{,/…}`, `.../mechs`, `.../pilots`, `.../elementals` (`routers/forces_write.py`, `mechs.py`, `pilots.py`, `elementals.py`). Force delete cascades all children including Phase 3-5 join tables.
+- `routers/missions_write.py`: `POST /api/forces/{id}/missions` (deducts cost, activity-logs assigned units/pilots, snapshots SP purchases via Phase 4 mechanism, computes tonnage), `PUT /api/missions/{id}` (does NOT touch warchest - matches original `lib/missions.js` exactly), `POST /api/missions/{id}/complete` (applies kills/assists to pilot combat records, checks achievements against Phase 4's pool, persists newly-earned ones, computes WP reward from achieved objectives, updates warchest; 409 guard against double-completion).
+- `routers/downtime.py`: mech/elemental/pilot downtime actions using the ported formula evaluator (e.g. repair-armor = weight/wpMultiplier, heal-injury = 30\*injuries/wpMultiplier).
+- Verified end-to-end manually via curl and via `tests/test_write_api_lifecycle.py` (5 tests): full lifecycle (create force -> mech/pilot -> assign -> mission w/ SP purchase -> complete -> achievement earned + reward applied -> downtime -> cascade delete). All 36 backend tests pass; testing agent also smoke-tested externally via ingress and confirmed real campaign data (ghost-bear, 91st-division-vision-of-words) untouched.
+- Scope note: intentionally does NOT create snapshots/fullSnapshots or auto-advance `force.currentDate` - that's `MissionManager.jsx` UI-orchestration logic, out of scope for "mirroring lib/*.js" pure functions.
 
 ### Phase 7 (Watched-Folder Auto-Import Code) - Done, tested 100% pass
 - `backend/watcher.py`: background `watchdog.Observer` monitoring `MEK_CATALOG_WATCH_DIR` (opt-in via env var, no-op if unset) for `*.csv` drops, debounced via per-file `threading.Timer` (default 2s, `MEK_CATALOG_WATCH_DEBOUNCE_SECONDS`). Core logic split into pure/testable functions: `validate_header`, `process_csv_file` (upserts strictly by mul_id, rows without mul_id counted as skipped), `handle_dropped_file` (archives to `processed/<name>_<timestamp>.csv` or quarantines to `errors/` + a `.log` explaining why).
