@@ -28,6 +28,13 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 - Known accepted limitations (by design, documented, not bugs): removing an already-synced SP purchase from a mission has no unsync path (no DELETE endpoint for sp-purchases, very rare edge case); a transient sync failure silently drops that one change rather than retrying (acceptable for a single-user NAS tool); rolling back via Snapshots to before a mission was completed will not revert `mission.completed` server-side.
 - Minor non-blocking note from testing agent: occasional transient "Failed to fetch" console error on the very first load in dev mode (React.StrictMode double-invokes the mount effect) that always self-resolves within ~1-2s with correct data rendered; harmless and stripped in production builds.
 
+### Phase 9 Bugfix Round (post-cutover) - self-tested (curl + pytest), no testing_agent per user instruction
+- **Duplicate pilot/mech/elemental "Assigned to mission" activity-log entry**: root cause was that `POST /api/forces/{id}/missions` independently appends its own copy of that log entry server-side (mirroring `lib/missions.js`), while `forceSync.js` was also independently PUTting the client-computed activityLog for the same mechs/pilots - and the PUTs ran *before* the mission-create POST, so the backend's side effect landed last and stacked a second entry. Fix: reordered `syncForceToBackend()` in `forceSync.js` to run `syncMissions()` first, so the client's already-correct PUTs (which set, not append) always run last and win. Verified via curl simulating the exact reordered sequence (mission-create POST, then mech/pilot PUT) - resulting activityLog has exactly 1 entry, not 2.
+- **SP Purchase Undo**: root cause was `POST /api/missions/{id}/sp-purchases` (and the nested `spPurchases` on mission-create) always generated a server-side id, ignoring the client's own id, and no DELETE endpoint existed - so a purchase removed in the UI could never be un-synced. Fix: both endpoints now accept an optional client-supplied `id`; added `DELETE /api/sp-purchases/{purchase_id}`; `forceSync.js`'s mission sync now also detects purchases removed from a mission's `spPurchases` array (vs last-synced state) and calls the new DELETE. Verified via curl: created a purchase with a client-chosen id, deleted it by that same id, confirmed removed from the mission's serialized `spPurchases`.
+- All 36 backend pytest still pass after both fixes. No UI components were touched (Transparent Sync architecture preserved - only `forceSync.js`, `api.js`, `sp_choices.py`, `missions_write.py` changed).
+- Per explicit user instruction, `testing_agent_v4` was not used for this bugfix round; verification was via backend pytest + targeted curl simulation of the frontend sync sequence + `crawl_tool` regression check (app still renders real force data correctly, no console/compile errors).
+
+
 ### Phase 1-8
 See below entries (unchanged from prior session).
 
@@ -62,9 +69,7 @@ See below entries (unchanged from prior session).
 - Pilot SPA pool (Phase 5) is intentionally not wired into `GET /api/forces/{id}` pilot serialization yet - wire in when a phase actually needs it.
 - Minor code-review notes from Phase 7 (non-blocking): `watcher._history` list has no explicit lock around concurrent debounce timers; `process_csv_file` does a blocking file read inside an async function; zero-data-row files count as a successful "ok" import.
 - Minor code-review note from Phase 8 (non-blocking): `routers/missions_write.py` is ~360 lines; consider extracting mission-completion logic into `domain/missions_logic.py` if it grows further.
-- Add a DELETE endpoint for individual `mission_sp_purchases` rows (currently additive-only from the frontend sync engine's perspective).
 - Migrate remaining read-only static JSON fetches (`achievements.json`, `sp-choices.json`, `downtime-actions.json` inside components) to their existing Phase 3/4 backend endpoints for full consistency (not required for correctness today, both sources are in sync).
-- Pre-existing (not caused by Phase 9): pilot activityLog can show a duplicate "Assigned to mission" entry with identical timestamp after a mission is created then completed in the same session - lives in `frontend/src/lib/missions.js`, not part of the sync-layer work.
 
 ## Next Tasks
 - Phase 10 (Docker Compose full-stack validation) or any new user-requested feature - await user's next steer.
