@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
+import { searchMechCatalog } from '../lib/api';
 
 /**
  * Parse a CSV line handling quoted fields (which may contain commas).
@@ -145,31 +146,49 @@ export function lookupMechInCatalog(catalog, mechName) {
  * @param {string} placeholder - Input placeholder text
  */
 export default function MechAutocomplete({ value, onChange, onSelect, placeholder = "Search mechs..." }) {
-  const [catalog, setCatalog] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const wrapperRef = useRef(null);
   const listRef = useRef(null);
+  const debounceRef = useRef(null);
+  const requestIdRef = useRef(0);
 
-  // Load mech catalog CSV on mount (uses cached version)
+  // Debounced search against the backend mech catalog API
   useEffect(() => {
-    loadMechCatalog()
-      .then(mechs => setCatalog(mechs))
-      .catch(err => console.warn('Could not load mech catalog:', err))
-      .finally(() => setIsLoading(false));
-  }, []);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
 
-  // Filter mechs based on search input
-  const filteredMechs = catalog.filter((mech) => {
-    if (!value || value.length < 2) return false;
-    const searchLower = value.toLowerCase();
-    return (
-      mech.name?.toLowerCase().includes(searchLower) ||
-      mech.chassis?.toLowerCase().includes(searchLower) ||
-      mech.model?.toLowerCase().includes(searchLower)
-    );
-  }).slice(0, 50); // Limit results for performance
+    if (!value || value.length < 2) {
+      setSearchResults([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    const requestId = ++requestIdRef.current;
+    debounceRef.current = setTimeout(() => {
+      searchMechCatalog(value)
+        .then((results) => {
+          if (requestIdRef.current === requestId) {
+            setSearchResults(results);
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.warn('Mech catalog search failed:', err);
+          if (requestIdRef.current === requestId) {
+            setSearchResults([]);
+            setIsLoading(false);
+          }
+        });
+    }, 250);
+
+    return () => clearTimeout(debounceRef.current);
+  }, [value]);
+
+  const filteredMechs = searchResults;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -280,7 +299,7 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
         >
           {filteredMechs.map((mech, index) => (
             <button
-              key={mech.sourceFile || `${mech.name}-${index}`}
+              key={mech.id ?? `${mech.name}-${index}`}
               type="button"
               className={`w-full px-3 py-2 text-left text-sm hover:bg-accent transition-colors flex justify-between items-center ${
                 index === highlightedIndex ? 'bg-accent' : ''
@@ -307,7 +326,7 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
 
       {isLoading && value.length >= 2 && (
         <div className="absolute z-50 w-full mt-1 px-3 py-2 bg-popover border border-border rounded-md shadow-lg text-sm text-muted-foreground">
-          Loading mech catalog...
+          Searching catalog...
         </div>
       )}
     </div>
