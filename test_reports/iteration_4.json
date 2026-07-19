@@ -1,0 +1,28 @@
+{
+  "summary": "Phase 4 (Achievements & SP Purchases reference pools) fully validated. Migration is idempotent (second run: 16/25 catalog upserts, 0 new links/purchases). All 17 pytest tests pass (10 Phases 1-2 + 2 Phase 3 + 5 new Phase 4). All Phase 4 REST endpoints verified via external ingress URL. Core acceptance criteria confirmed: (a) historical SP purchase cost is snapshotted and not affected by later catalog price changes (pytest test_catalog_price_change_does_not_retroactively_alter_historical_cost), (b) repeated SP purchases of the same choiceId create distinct line items (ghost-bear M02 has 4 separate air_hvstrike entries each with a unique sp-* id). Force detail (ghost-bear) now serves normalized achievements (['survivor'] for pilot-1774842818222) and normalized spPurchases from the new tables. Frontend regression: root loads, renders Bluefang Trinary force with all tabs; pre-existing cold-fetch race on ghost-bear.json/91st-division-vision-of-words.json is a known frontend issue explicitly out of scope per review request.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_reference_pools.py",
+    "/app/backend/tests/test_forces_api.py",
+    "/app/backend/tests/test_special_abilities.py",
+    "/app/backend/tests/test_health.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "serializers.py force_detail_to_dict pre-builds achievements_by_pilot / sp_purchases_by_mission dicts up-front - clean, avoids N+1 in the per-force detail path.",
+    "POST /api/pilots/{pilot_id}/achievements correctly returns 409 on duplicate (pilot_id, achievement_id) and 404 for unknown achievement definition/pilot - verified.",
+    "MissionSpPurchase.cost_at_purchase and name_at_purchase snapshot pattern is correct; choice_id kept as nullable FK so future catalog deletions won't cascade-corrupt history.",
+    "Cost stored as Float supports fractional values like mine_lt=0.5 - verified end-to-end.",
+    "No auth on POST endpoints - acceptable for current NAS-hosted single-user phase but should be flagged before multi-user exposure (documented risk, not a Phase 4 blocker)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "N/A - no auth on API in this phase",
+  "seed_data_creation": "No new data created; migration was already run by main agent (idempotent second run verified 0 new links/purchases). No cleanup required.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Phases 1-4 all green. DB at /app/backend/data/btforcemanager.db has 16 achievement_definitions, 25 sp_choices, 6 pilot_achievements, 6 mission_sp_purchases. Real campaign data (ghost-bear pilot-1774842818222 has 'survivor'; ghost-bear M02 has 4x air_hvstrike sp purchases) is intact. Pre-existing frontend cold-fetch race on ghost-bear.json / 91st-division-vision-of-words.json is out of scope and documented in prior iterations.",
+  "rca of the issue": "N/A - no issues found"
+}

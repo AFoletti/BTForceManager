@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer, Boolean, Text, JSON, ForeignKey
+from sqlalchemy import String, Integer, Boolean, Float, Text, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
@@ -134,3 +134,40 @@ class ForceSpecialAbility(Base):
     ability_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("special_abilities.id"), primary_key=True
     )
+
+
+class AchievementDefinition(Base):
+    __tablename__ = "achievement_definitions"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    name: Mapped[str] = mapped_column(String, default="")
+    icon: Mapped[str] = mapped_column(String, default="")
+    description: Mapped[str] = mapped_column(Text, default="")
+    condition: Mapped[str] = mapped_column(String, default="")
+
+
+class PilotAchievement(Base):
+    __tablename__ = "pilot_achievements"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    pilot_id: Mapped[str] = mapped_column(String, ForeignKey("pilots.id"), index=True)
+    achievement_id: Mapped[str] = mapped_column(String, ForeignKey("achievement_definitions.id"))
+    earned_at: Mapped[str] = mapped_column(String, nullable=True)
+
+
+class SpChoice(Base):
+    __tablename__ = "sp_choices"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    name: Mapped[str] = mapped_column(String, default="")
+    cost: Mapped[float] = mapped_column(Float, default=0)
+
+
+class MissionSpPurchase(Base):
+    __tablename__ = "mission_sp_purchases"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    mission_id: Mapped[str] = mapped_column(String, ForeignKey("missions.id"), index=True)
+    choice_id: Mapped[str] = mapped_column(String, ForeignKey("sp_choices.id"), nullable=True)
+    cost_at_purchase: Mapped[float] = mapped_column(Float, default=0)
+    name_at_purchase: Mapped[str] = mapped_column(String, default="")
