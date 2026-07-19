@@ -36,9 +36,9 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 
 ## Prioritized Backlog
 ### P0 (next phases per migration roadmap)
-- Phase 6: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
-- Phase 7: Wire frontend (`useForceManager.js`) to consume the new API instead of static JSON fetch; add `REACT_APP_BACKEND_URL`.
-- Phase 8: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
+- Phase 7: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
+- Phase 8: Wire frontend to consume the new API instead of static JSON fetch + client-side CSV parsing (incl. swapping `MechAutocomplete.jsx` to `/api/mech-catalog`); add `REACT_APP_BACKEND_URL`.
+- Phase 9: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
 
 ### P1
 - Investigate the pre-existing `ghost-bear.json`/`91st-division-vision-of-words.json` fetch race in `useForceManager.js`.
@@ -47,7 +47,13 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 - Pilot SPA pool (Phase 5) is intentionally not wired into `GET /api/forces/{id}` pilot serialization yet - wire in when a phase actually needs it.
 
 ## Next Tasks
-- Await user's next user-story (Phase 6 scope) before proceeding.
+- Await user's next user-story (Phase 7 scope) before proceeding.
+
+### Phase 6 (Mech Catalog Table) - Done, tested 100% pass
+- `backend/models.py`: added `MechCatalogEntry` (id, mul_id unique+nullable, chassis, model, bv, tonnage, year, techbase, role, updated_at). Migration `be34ee216040`.
+- `backend/import_mech_catalog.py`: idempotent bulk-import from `data/mek_catalog.csv` (3867 rows -> 3861 unique entries; dedupes by mul_id, falls back to (chassis, model) for the ~89 rows without a mul_id). Verified: fresh run "Created 3861, updated 6"; re-run "Created 0, updated 3867" - fully idempotent, correct final count.
+- `backend/routers/mech_catalog.py`: `GET /api/mech-catalog?search=` - replicates `MechAutocomplete.jsx`'s exact UX (min 2 chars, case-insensitive substring on chassis/model/combined name, capped at 50 results). Verified live via ingress.
+- Additive-only: frontend's `MechAutocomplete.jsx` still does its own client-side CSV fetch+parse, untouched and confirmed still working (regression-tested). All 24 backend tests pass (Phases 1-6).
 
 ### Phase 5 (Pilot SPA Pool - Future-Proofing) - Done, tested 100% pass
 - `backend/models.py`: added `PilotSpecialAbility` (id, name unique, description) and `PilotSpaAssignment` join table (composite PK pilot_id+spa_id) - mirrors Phase 3's force-special-abilities pattern but for pilots. Migration `81c5b91ac451`.
