@@ -28,6 +28,14 @@ def catalog_entry_to_dict(entry):
         "year": entry.year,
         "techbase": entry.techbase,
         "role": entry.role,
+        "walk": entry.walk,
+        "maxWalk": entry.max_walk,
+        "jump": entry.jump,
+        "maxJump": entry.max_jump,
+        "heat": entry.heat,
+        "dissipation": entry.dissipation,
+        "dissipationEfficiency": entry.dissipation_efficiency,
+        "components": entry.components,
     }
 
 

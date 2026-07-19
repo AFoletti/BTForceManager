@@ -1,9 +1,9 @@
 import uuid
 from typing import Optional, List, Dict
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
@@ -49,6 +49,7 @@ class SpPurchaseChoiceIn(BaseModel):
 
 
 class MissionCreateIn(BaseModel):
+    id: Optional[str] = None
     name: str
     cost: int = 0
     description: str = ""
@@ -69,6 +70,9 @@ class MissionUpdateIn(BaseModel):
     assignedElementals: Optional[List[str]] = None
     spBudget: Optional[int] = None
     opForUnits: Optional[List[dict]] = None
+    completed: Optional[bool] = None
+    completedAt: Optional[str] = None
+    recap: Optional[str] = None
 
 
 class KillIn(BaseModel):
@@ -108,6 +112,9 @@ _UPDATE_FIELD_MAP = {
     "assignedElementals": "assigned_elementals",
     "spBudget": "sp_budget",
     "opForUnits": "op_for_units",
+    "completed": "completed",
+    "completedAt": "completed_at",
+    "recap": "recap",
 }
 
 
@@ -125,7 +132,7 @@ async def create_mission(
     mechs_by_id = {m.id: m for m in mechs}
     total_tonnage = calculate_mission_total_tonnage(mechs_by_id, payload.assignedMechs)
 
-    mission_id = _new_id("mission")
+    mission_id = payload.id or _new_id("mission")
     mission = Mission(
         id=mission_id,
         force_id=force_id,
@@ -235,6 +242,18 @@ async def update_mission(
         await session.execute(select(MissionSpPurchase).where(MissionSpPurchase.mission_id == mission_id))
     ).scalars().all()
     return mission_to_dict(mission, sp_purchases)
+
+
+@router.delete("/missions/{mission_id}", status_code=204)
+async def delete_mission(mission_id: str, session: AsyncSession = Depends(get_session)):
+    mission = await session.get(Mission, mission_id)
+    if not mission:
+        raise HTTPException(status_code=404, detail="Mission not found")
+
+    await session.execute(delete(MissionSpPurchase).where(MissionSpPurchase.mission_id == mission_id))
+    await session.delete(mission)
+    await session.commit()
+    return Response(status_code=204)
 
 
 @router.post("/missions/{mission_id}/complete")

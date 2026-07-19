@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
@@ -20,6 +20,8 @@ _FIELD_MAP = {
     "dezgra": "dezgra",
     "history": "history",
     "warchestCost": "warchest_cost",
+    "activityLog": "activity_log",
+    "combatRecord": "combat_record",
 }
 
 
@@ -32,6 +34,8 @@ class PilotCreateIn(BaseModel):
     dezgra: bool = False
     history: str = ""
     warchestCost: int = 0
+    activityLog: Optional[List[dict]] = None
+    combatRecord: Optional[dict] = None
 
 
 class PilotUpdateIn(BaseModel):
@@ -42,6 +46,8 @@ class PilotUpdateIn(BaseModel):
     dezgra: Optional[bool] = None
     history: Optional[str] = None
     warchestCost: Optional[int] = None
+    activityLog: Optional[List[dict]] = None
+    combatRecord: Optional[dict] = None
 
 
 @router.post("/forces/{force_id}/pilots", status_code=201)
@@ -60,7 +66,8 @@ async def create_pilot(force_id: str, payload: PilotCreateIn, session: AsyncSess
         dezgra=payload.dezgra,
         history=payload.history,
         warchest_cost=payload.warchestCost,
-        activity_log=[],
+        activity_log=payload.activityLog if payload.activityLog is not None else [],
+        combat_record=payload.combatRecord,
         achievements=[],
     )
     session.add(pilot)

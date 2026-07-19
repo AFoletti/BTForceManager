@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
@@ -23,6 +23,7 @@ _FIELD_MAP = {
     "image": "image",
     "history": "history",
     "warchestCost": "warchest_cost",
+    "activityLog": "activity_log",
 }
 
 
@@ -39,6 +40,7 @@ class ElementalCreateIn(BaseModel):
     image: str = ""
     history: str = ""
     warchestCost: int = 0
+    activityLog: Optional[List[dict]] = None
 
 
 class ElementalUpdateIn(BaseModel):
@@ -53,6 +55,7 @@ class ElementalUpdateIn(BaseModel):
     image: Optional[str] = None
     history: Optional[str] = None
     warchestCost: Optional[int] = None
+    activityLog: Optional[List[dict]] = None
 
 
 @router.post("/forces/{force_id}/elementals", status_code=201)
@@ -77,7 +80,7 @@ async def create_elemental(
         image=payload.image,
         history=payload.history,
         warchest_cost=payload.warchestCost,
-        activity_log=[],
+        activity_log=payload.activityLog if payload.activityLog is not None else [],
     )
     session.add(elemental)
     await session.commit()

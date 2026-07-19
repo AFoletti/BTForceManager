@@ -25,7 +25,7 @@ export default function DataEditor({ force, onUpdate }) {
       }
       
       onUpdate(parsedForce);
-      alert('✅ Force data saved to session!\n\n⚠️ IMPORTANT: This only updates the current session.\nTo persist changes permanently:\n1. Click "Export Force" below\n2. Replace data/forces.json in your repository\n3. Commit and push to GitHub');
+      alert('✅ Force data saved to the server.');
     } catch (err) {
       setError(`Invalid JSON: ${err.message}`);
     }
@@ -54,15 +54,10 @@ export default function DataEditor({ force, onUpdate }) {
           <div className="text-sm">
             <p className="font-semibold text-amber-200 mb-2">Data Management Notice</p>
             <p className="text-amber-100/90 mb-2">
-              Changes made here only affect your current browser session. To make permanent changes:
+              Edit the JSON below and click <strong>Save to Session</strong> to write the changes
+              to the backend database. Use <strong>Export Force</strong> to download a JSON backup
+              of the current force at any time.
             </p>
-            <ol className="list-decimal list-inside space-y-1 text-amber-100/80 ml-2">
-              <li>Edit the JSON below and click <strong>Save to Session</strong></li>
-              <li>Click <strong>Export Force</strong> to download the updated JSON</li>
-              <li>Replace <code className="bg-amber-950/50 px-1.5 py-0.5 rounded text-xs">data/forces.json</code> in your repository</li>
-              <li>Commit and push to GitHub: <code className="bg-amber-950/50 px-1.5 py-0.5 rounded text-xs">git add data/forces.json && git commit -m "Update force" && git push</code></li>
-              <li>GitHub Pages will serve the updated data (wait 1-2 minutes)</li>
-            </ol>
           </div>
         </div>
       </div>

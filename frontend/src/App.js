@@ -113,9 +113,7 @@ export default function App() {
   const handleAddForce = (newForce) => {
     addNewForce(newForce);
     // eslint-disable-next-line no-alert
-    alert(
-      `✅ Force "${newForce.name}" created!\n\n⚠️ IMPORTANT: This is a session-only force.\nTo persist:\n1. Go to Data Editor tab\n2. Click "Export Force"\n3. Save as data/forces/${newForce.id}.json\n4. Add "${newForce.id}.json" to manifest.json\n5. Commit and push to GitHub`,
-    );
+    alert(`Force "${newForce.name}" created and saved to the server.`);
   };
 
   const handleEditDate = () => {

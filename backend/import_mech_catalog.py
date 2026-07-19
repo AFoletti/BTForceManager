@@ -60,6 +60,14 @@ async def import_catalog(session):
             year = parse_int(row.get("year"))
             techbase = (row.get("techBase") or "").strip() or None
             role = (row.get("role") or "").strip() or None
+            walk = parse_int(row.get("walk")) or 0
+            max_walk = parse_int(row.get("maxWalk")) or walk
+            jump = parse_int(row.get("jump")) or 0
+            max_jump = parse_int(row.get("maxJump")) or jump
+            heat = parse_int(row.get("heat")) or 0
+            dissipation = parse_int(row.get("dissipation")) or 0
+            dissipation_efficiency = parse_int(row.get("dissipationEfficiency")) or 0
+            components = (row.get("components") or "").strip()
 
             existing = by_mul_id.get(mul_id) if mul_id is not None else by_chassis_model.get((chassis, model))
 
@@ -71,6 +79,14 @@ async def import_catalog(session):
                 existing.year = year
                 existing.techbase = techbase
                 existing.role = role
+                existing.walk = walk
+                existing.max_walk = max_walk
+                existing.jump = jump
+                existing.max_jump = max_jump
+                existing.heat = heat
+                existing.dissipation = dissipation
+                existing.dissipation_efficiency = dissipation_efficiency
+                existing.components = components
                 existing.updated_at = now
                 updated += 1
             else:
@@ -83,6 +99,14 @@ async def import_catalog(session):
                     year=year,
                     techbase=techbase,
                     role=role,
+                    walk=walk,
+                    max_walk=max_walk,
+                    jump=jump,
+                    max_jump=max_jump,
+                    heat=heat,
+                    dissipation=dissipation,
+                    dissipation_efficiency=dissipation_efficiency,
+                    components=components,
                     updated_at=now,
                 )
                 session.add(entry)

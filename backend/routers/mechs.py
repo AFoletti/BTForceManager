@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
@@ -20,6 +20,7 @@ _FIELD_MAP = {
     "image": "image",
     "history": "history",
     "warchestCost": "warchest_cost",
+    "activityLog": "activity_log",
 }
 
 
@@ -33,6 +34,7 @@ class MechCreateIn(BaseModel):
     image: str = ""
     history: str = ""
     warchestCost: int = 0
+    activityLog: Optional[List[dict]] = None
 
 
 class MechUpdateIn(BaseModel):
@@ -44,6 +46,7 @@ class MechUpdateIn(BaseModel):
     image: Optional[str] = None
     history: Optional[str] = None
     warchestCost: Optional[int] = None
+    activityLog: Optional[List[dict]] = None
 
 
 @router.post("/forces/{force_id}/mechs", status_code=201)
@@ -63,7 +66,7 @@ async def create_mech(force_id: str, payload: MechCreateIn, session: AsyncSessio
         image=payload.image,
         history=payload.history,
         warchest_cost=payload.warchestCost,
-        activity_log=[],
+        activity_log=payload.activityLog if payload.activityLog is not None else [],
     )
     session.add(mech)
     await session.commit()

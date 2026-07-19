@@ -22,6 +22,7 @@ from routers.pilots import router as pilots_router
 from routers.elementals import router as elementals_router
 from routers.missions_write import router as missions_write_router
 from routers.downtime import router as downtime_router
+from routers.snapshots import router as snapshots_router
 
 
 @asynccontextmanager
@@ -76,3 +77,4 @@ app.include_router(pilots_router)
 app.include_router(elementals_router)
 app.include_router(missions_write_router)
 app.include_router(downtime_router)
+app.include_router(snapshots_router)
