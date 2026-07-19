@@ -36,13 +36,22 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 
 ## Prioritized Backlog
 ### P0 (next phases per migration roadmap)
-- Phase 3: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js` (ported or called via API).
-- Phase 4: Wire frontend (`useForceManager.js`) to consume the new API instead of static JSON fetch; add `REACT_APP_BACKEND_URL`.
-- Phase 5: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
+- Phase 4: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
+- Phase 5: Wire frontend (`useForceManager.js`) to consume the new API instead of static JSON fetch; add `REACT_APP_BACKEND_URL`.
+- Phase 6: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
 
 ### P1
 - Investigate the pre-existing `ghost-bear.json` fetch race in `useForceManager.js`.
 - Tighten CORS policy once auth/writes are introduced.
+- Consider case-insensitive uniqueness for special-abilities pool names if free-text entry is exposed in UI later.
 
 ## Next Tasks
-- Await user's next user-story (Phase 3 scope) before proceeding.
+- Await user's next user-story (Phase 4 scope) before proceeding.
+
+### Phase 3 (Reference Pools: Special Abilities) - Done, tested 100% pass
+- `backend/models.py`: added `SpecialAbility` (id, name unique, description) and `ForceSpecialAbility` join table (composite PK force_id+ability_id). Migration `27b52250a900`.
+- `backend/migrate_special_abilities.py`: idempotent, get-or-create dedupe migration (importable `migrate(session)`); parses each Force's legacy `special_abilities` JSON column into the pool + join rows. Currently 0/0 for real data since neither manifest-imported force has specialAbilities yet.
+- `backend/routers/special_abilities.py`: `GET/POST /api/special-abilities`, `DELETE /api/special-abilities/{id}`, `GET/PUT /api/forces/{id}/special-abilities`.
+- `GET /api/forces/{id}` now sources `specialAbilities` from the join table (serialized as `[{id, title, description}]`, `title` key preserved for frontend contract compatibility) instead of the raw JSON blob.
+- Swagger UI moved under `/api/docs` (+ `/api/redoc`, `/api/openapi.json`) so it's externally reachable through the ingress (which only proxies `/api/*`).
+- `backend/tests/test_special_abilities.py`: dedup-across-two-forces test (1 pool row + 2 join rows, self-cleaning) + full CRUD/linking flow test. All 12 backend tests pass (Phase 1+2+3).
