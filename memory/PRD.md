@@ -36,17 +36,23 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 
 ## Prioritized Backlog
 ### P0 (next phases per migration roadmap)
-- Phase 5: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
-- Phase 6: Wire frontend (`useForceManager.js`) to consume the new API instead of static JSON fetch; add `REACT_APP_BACKEND_URL`.
-- Phase 7: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
+- Phase 6: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
+- Phase 7: Wire frontend (`useForceManager.js`) to consume the new API instead of static JSON fetch; add `REACT_APP_BACKEND_URL`.
+- Phase 8: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
 
 ### P1
 - Investigate the pre-existing `ghost-bear.json`/`91st-division-vision-of-words.json` fetch race in `useForceManager.js`.
 - Tighten CORS policy and add auth once writes/multi-user exposure are introduced.
 - Consider case-insensitive uniqueness for special-abilities pool names if free-text entry is exposed in UI later.
+- Pilot SPA pool (Phase 5) is intentionally not wired into `GET /api/forces/{id}` pilot serialization yet - wire in when a phase actually needs it.
 
 ## Next Tasks
-- Await user's next user-story (Phase 5 scope) before proceeding.
+- Await user's next user-story (Phase 6 scope) before proceeding.
+
+### Phase 5 (Pilot SPA Pool - Future-Proofing) - Done, tested 100% pass
+- `backend/models.py`: added `PilotSpecialAbility` (id, name unique, description) and `PilotSpaAssignment` join table (composite PK pilot_id+spa_id) - mirrors Phase 3's force-special-abilities pattern but for pilots. Migration `81c5b91ac451`.
+- `backend/routers/pilot_special_abilities.py`: `GET/POST /api/pilot-special-abilities`, `DELETE /api/pilot-special-abilities/{id}` (cascades assignment rows), `GET/PUT /api/pilots/{id}/spa`.
+- Additive-only, zero-risk: no existing serializer/router touched; `GET /api/forces/{id}` pilots intentionally do NOT expose SPA data yet. All 19 backend tests pass (Phases 1-5), no regressions.
 
 ### Phase 4 (Reference Pools: Achievements & SP Purchases) - Done, tested 100% pass
 - `backend/models.py`: added `AchievementDefinition` (id, name, icon, description, condition), `PilotAchievement` (autoincrement PK, pilot_id FK, achievement_id FK, earned_at nullable), `SpChoice` (id, name, cost as Float to support fractional prices like 0.5), `MissionSpPurchase` (id, mission_id FK, choice_id FK nullable, cost_at_purchase/name_at_purchase snapshots). Migration `a28c833e7254`.
