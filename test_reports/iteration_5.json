@@ -1,0 +1,37 @@
+{
+  "summary": "Phase 5 (Pilot SPA Pool) fully validated. All 19 pytest tests pass (17 prior + 2 new). All new endpoints verified via external ingress URL. Confirmed additive-only: GET /api/forces/{id} pilots do NOT contain 'spa' or 'specialAbilities' keys. Swagger UI and frontend still load 200. Zero regressions.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_pilot_special_abilities.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PUT /api/pilots/{pilot_id}/spa correctly validates all spa ids exist before applying (no partial apply). Good.",
+    "DELETE cascades PilotSpaAssignment rows explicitly before deleting the SPA row - correct given SQLite FK cascade is not defined at schema level.",
+    "Router is clean and mirrors Phase 3 pattern; response models could optionally be Pydantic (currently returning dicts) but not blocking."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "N/A - no auth on API",
+  "seed_data_creation": "Created and cleaned up TEST_Marksman SPA via curl on external URL. Pool ended empty (verified).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Phase 5 additive-only. Pool tables: pilot_special_abilities, pilot_spa_assignments. Not wired into force serializer by design - do not flag its absence as a bug in future phases unless explicitly requested to wire it in.",
+  "verification_details": {
+    "pytest": "19/19 passed in 1.09s",
+    "external_url_checks": {
+      "GET /api/pilot-special-abilities": "200 []",
+      "POST /api/pilot-special-abilities": "201 with {id,name,description}",
+      "POST duplicate name": "409",
+      "DELETE /api/pilot-special-abilities/{id}": "204",
+      "DELETE again": "404",
+      "GET /api/pilots/{unknown}/spa": "404",
+      "PUT /api/pilots/{unknown}/spa": "404",
+      "GET /api/forces/{id} pilots keys": "['achievements','activityLog','combatRecord','dezgra','gunnery','history','id','injuries','name','piloting','warchestCost'] - no spa key (correct)",
+      "GET /api/docs": "200",
+      "GET /": "200"
+    }
+  }
+}
