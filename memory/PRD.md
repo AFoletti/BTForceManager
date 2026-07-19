@@ -36,18 +36,25 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 
 ## Prioritized Backlog
 ### P0 (next phases per migration roadmap)
-- Phase 7: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
-- Phase 8: Wire frontend to consume the new API instead of static JSON fetch + client-side CSV parsing (incl. swapping `MechAutocomplete.jsx` to `/api/mech-catalog`); add `REACT_APP_BACKEND_URL`.
-- Phase 9: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
+- Phase 8: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
+- Phase 9: Wire frontend to consume the new API instead of static JSON fetch + client-side CSV parsing (incl. swapping `MechAutocomplete.jsx` to `/api/mech-catalog`); add `REACT_APP_BACKEND_URL`.
+- Phase 10: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
 
 ### P1
 - Investigate the pre-existing `ghost-bear.json`/`91st-division-vision-of-words.json` fetch race in `useForceManager.js`.
 - Tighten CORS policy and add auth once writes/multi-user exposure are introduced.
 - Consider case-insensitive uniqueness for special-abilities pool names if free-text entry is exposed in UI later.
 - Pilot SPA pool (Phase 5) is intentionally not wired into `GET /api/forces/{id}` pilot serialization yet - wire in when a phase actually needs it.
+- Minor code-review notes from Phase 7 (non-blocking): `watcher._history` list has no explicit lock around concurrent debounce timers; `process_csv_file` does a blocking file read inside an async function (fine at NAS-drop scale, revisit with aiofiles/run_in_executor if files get large); zero-data-row files count as a successful "ok" import with rows=0.
 
 ## Next Tasks
-- Await user's next user-story (Phase 7 scope) before proceeding.
+- Await user's next user-story (Phase 8 scope) before proceeding.
+
+### Phase 7 (Watched-Folder Auto-Import Code) - Done, tested 100% pass
+- `backend/watcher.py`: background `watchdog.Observer` monitoring `MEK_CATALOG_WATCH_DIR` (opt-in via env var, no-op if unset) for `*.csv` drops, debounced via per-file `threading.Timer` (default 2s, `MEK_CATALOG_WATCH_DEBOUNCE_SECONDS`). Core logic split into pure/testable functions: `validate_header`, `process_csv_file` (upserts strictly by mul_id, rows without mul_id counted as skipped), `handle_dropped_file` (archives to `processed/<name>_<timestamp>.csv` or quarantines to `errors/` + a `.log` explaining why).
+- Wired into FastAPI `lifespan` (start on startup, stop on shutdown). New `GET /api/mech-catalog/import-status` reports enabled/running/watchDir/debounceSeconds + last 20 import results.
+- `.env`/`.env.example`/`.env.docker.example` updated with `MEK_CATALOG_WATCH_DIR`.
+- Verified live end-to-end in the sandbox (valid + malformed drops both processed correctly, cleaned up after). 7 new pytest tests including a real `watchdog.Observer` integration test against a temp dir (no NAS needed, CI-verifiable). All 31 backend tests pass.
 
 ### Phase 6 (Mech Catalog Table) - Done, tested 100% pass
 - `backend/models.py`: added `MechCatalogEntry` (id, mul_id unique+nullable, chassis, model, bv, tonnage, year, techbase, role, updated_at). Migration `be34ee216040`.
