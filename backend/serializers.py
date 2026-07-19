@@ -114,7 +114,9 @@ def force_summary_to_dict(force, mech_count, pilot_count, elemental_count, missi
     }
 
 
-def force_detail_to_dict(force, mechs, pilots, elementals, missions, snapshots, full_snapshots):
+def force_detail_to_dict(
+    force, mechs, pilots, elementals, missions, snapshots, full_snapshots, special_abilities=None
+):
     return {
         "id": force.id,
         "name": force.name,
@@ -123,7 +125,9 @@ def force_detail_to_dict(force, mechs, pilots, elementals, missions, snapshots, 
         "startingWarchest": force.starting_warchest,
         "currentWarchest": force.current_warchest,
         "wpMultiplier": force.wp_multiplier,
-        "specialAbilities": force.special_abilities or [],
+        "specialAbilities": [
+            {"id": a.id, "title": a.name, "description": a.description} for a in (special_abilities or [])
+        ],
         "otherActionsLog": force.other_actions_log or [],
         "currentDate": force.current_date,
         "notes": force.notes,

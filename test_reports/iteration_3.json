@@ -1,0 +1,20 @@
+{
+  "summary": "Phase 3 (Special Abilities reference pool + join table) validated end-to-end. All 12 pytest tests pass (4 Phase 2 forces + 6 Phase 1 health + 2 new Phase 3). All new endpoints verified against the external preview URL via curl (create/duplicate/list/delete pool ops, force-link GET/PUT with clear + unknown-id + unknown-force cases, and confirmed GET /api/forces/{id} now returns specialAbilities as [{id,title,description}] from the join). Swagger UI reachable at /api/docs both internally (200) and externally (200) and lists all 3 special-abilities paths. migrate_special_abilities.py is idempotent (both consecutive runs report 0/0). DB left clean after all curl tests (pool and links empty, only the 2 manifest forces present). Frontend root still serves 200 - no regression.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": ["/app/backend/tests/test_special_abilities.py", "/app/backend/tests/test_forces_api.py", "/app/backend/tests/test_health.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Serializer contract change (specialAbilities item key 'title' instead of 'name') is correctly aligned with the README frontend contract - good call-out in the PR.",
+    "PUT /api/forces/{id}/special-abilities correctly validates all ability ids exist before replacing links (avoids partial-write). Consider deduping abilityIds in the payload defensively if not already done.",
+    "409 conflict on duplicate POST is well-handled with a clear message. Consider case-insensitive uniqueness if downstream UI allows free-text entry (not blocking)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100% (static, no changes)"},
+  "test_credentials": "N/A - no auth on API",
+  "seed_data_creation": "None - all curl-based tests created their own row (TESTAbility_XYZ) and cleaned it up; pytest suite also self-cleans. Final DB state verified: 0 rows in special_abilities and force_special_abilities.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Phase 3 fully green. External preview base URL: https://74f0460d-8c6c-427d-90e1-61960e96d92f.preview.emergentagent.com. Swagger at /api/docs. When Phase 4+ adds more mutation endpoints, remember DB is SQLite at /app/backend/data/btforcemanager.db and can be inspected via sqlite3 python module (sqlite3 CLI is NOT installed in the sandbox).",
+  "rca of the issue": "No issues found."
+}
