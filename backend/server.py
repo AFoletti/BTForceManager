@@ -9,6 +9,7 @@ from sqlalchemy import text
 
 from database import engine
 from routers.forces import router as forces_router
+from routers.special_abilities import router as special_abilities_router
 
 
 @asynccontextmanager
@@ -17,7 +18,13 @@ async def lifespan(app: FastAPI):
     await engine.dispose()
 
 
-app = FastAPI(title="BTForceManager API", lifespan=lifespan)
+app = FastAPI(
+    title="BTForceManager API",
+    lifespan=lifespan,
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,3 +51,4 @@ router = APIRouter(prefix="/api")
 router.get("/health")(health_check)
 app.include_router(router)
 app.include_router(forces_router)
+app.include_router(special_abilities_router)

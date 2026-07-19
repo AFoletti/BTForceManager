@@ -117,3 +117,20 @@ class FullSnapshot(Base):
     snapshot_id: Mapped[str] = mapped_column(String, default="")
     force_data: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[str] = mapped_column(String, default="")
+
+
+class SpecialAbility(Base):
+    __tablename__ = "special_abilities"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, unique=True, index=True)
+    description: Mapped[str] = mapped_column(Text, default="")
+
+
+class ForceSpecialAbility(Base):
+    __tablename__ = "force_special_abilities"
+
+    force_id: Mapped[str] = mapped_column(String, ForeignKey("forces.id"), primary_key=True)
+    ability_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("special_abilities.id"), primary_key=True
+    )
