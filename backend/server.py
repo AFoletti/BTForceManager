@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import asyncio
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -8,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from database import engine
+import watcher
 from routers.forces import router as forces_router
 from routers.special_abilities import router as special_abilities_router
 from routers.achievements import router as achievements_router
@@ -18,7 +20,9 @@ from routers.mech_catalog import router as mech_catalog_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    watcher.start_watcher(asyncio.get_event_loop())
     yield
+    watcher.stop_watcher()
     await engine.dispose()
 
 

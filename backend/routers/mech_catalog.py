@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
 from models import MechCatalogEntry
+import watcher
 
 router = APIRouter(prefix="/api")
 
@@ -47,3 +48,8 @@ async def search_mech_catalog(search: str = "", session: AsyncSession = Depends(
     ]
 
     return [catalog_entry_to_dict(e) for e in matches[:MAX_RESULTS]]
+
+
+@router.get("/mech-catalog/import-status")
+async def get_mech_catalog_import_status():
+    return watcher.get_status()
