@@ -45,6 +45,7 @@ class ObjectiveIn(BaseModel):
 
 
 class SpPurchaseChoiceIn(BaseModel):
+    id: Optional[str] = None
     choiceId: str
 
 
@@ -201,7 +202,7 @@ async def create_mission(
         if not choice:
             raise HTTPException(status_code=404, detail=f"SP choice '{choice_in.choiceId}' not found in catalog")
         purchase = MissionSpPurchase(
-            id=_new_id("sp"),
+            id=choice_in.id or _new_id("sp"),
             mission_id=mission_id,
             choice_id=choice.id,
             cost_at_purchase=choice.cost,

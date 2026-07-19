@@ -109,28 +109,43 @@ async function syncMissions(forceId, prev, next) {
         assignedMechs: m.assignedMechs || [],
         assignedElementals: m.assignedElementals || [],
         spBudget: m.spBudget || 0,
-        spPurchases: (m.spPurchases || []).map((p) => ({ choiceId: p.choiceId })),
+        spPurchases: (m.spPurchases || []).map((p) => ({ id: p.id, choiceId: p.choiceId })),
         opForUnits: m.opForUnits || [],
       }),
     update: (id, fields) => api.updateMission(id, fields),
     remove: (id) => api.deleteMission(id),
   });
 
-  // SP purchases added to an already-synced mission (not brand new this cycle)
+  // SP purchases added to or removed from an already-synced mission (not
+  // brand new this cycle - those are covered by `spPurchases` on create above).
   for (const nextMission of next.missions || []) {
     const prevMission = (prev.missions || []).find((m) => m.id === nextMission.id);
     if (!prevMission) continue;
     const prevPurchases = prevMission.spPurchases || [];
     const nextPurchases = nextMission.spPurchases || [];
-    if (nextPurchases.length <= prevPurchases.length) continue;
+    if (JSON.stringify(prevPurchases) === JSON.stringify(nextPurchases)) continue;
+
     const prevIds = new Set(prevPurchases.map((p) => p.id));
+    const nextIds = new Set(nextPurchases.map((p) => p.id));
+
     for (const purchase of nextPurchases) {
       if (!prevIds.has(purchase.id)) {
         try {
-          await api.addSpPurchase(nextMission.id, purchase.choiceId);
+          await api.addSpPurchase(nextMission.id, { id: purchase.id, choiceId: purchase.choiceId });
         } catch (err) {
           // eslint-disable-next-line no-console
           console.error('Failed to sync SP purchase', purchase, err);
+        }
+      }
+    }
+
+    for (const purchase of prevPurchases) {
+      if (!nextIds.has(purchase.id)) {
+        try {
+          await api.deleteSpPurchase(purchase.id);
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to delete SP purchase', purchase, err);
         }
       }
     }
@@ -167,10 +182,16 @@ async function syncSnapshots(forceId, prev, next) {
  * failure on one entity does not block syncing the rest.
  */
 export async function syncForceToBackend(forceId, prev, next) {
+  // Mission creation has a server-side side effect: it independently appends
+  // "Assigned to mission" activity-log entries to assigned mechs/pilots/elementals
+  // (mirroring frontend/src/lib/missions.js). Sync missions FIRST so that the
+  // subsequent entity PUTs below (which carry the client's already-correct,
+  // already-deduplicated activityLog) overwrite that server-side side effect
+  // instead of being overwritten by it - PUT sets the field, it never appends.
+  await syncMissions(forceId, prev, next);
   await syncMechs(forceId, prev, next);
   await syncPilots(forceId, prev, next);
   await syncElementals(forceId, prev, next);
-  await syncMissions(forceId, prev, next);
   await syncForceScalars(forceId, prev, next);
   await syncSnapshots(forceId, prev, next);
 }

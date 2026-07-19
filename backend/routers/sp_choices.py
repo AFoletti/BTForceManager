@@ -1,6 +1,7 @@
 import uuid
+from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,6 +13,7 @@ router = APIRouter(prefix="/api")
 
 
 class MissionSpPurchaseIn(BaseModel):
+    id: Optional[str] = None
     choiceId: str
 
 
@@ -50,7 +52,7 @@ async def create_mission_sp_purchase(
     # Snapshot the catalog's current name/cost at the moment of purchase -
     # this value never changes even if the catalog price is edited later.
     purchase = MissionSpPurchase(
-        id=f"sp-{uuid.uuid4().hex[:12]}",
+        id=payload.id or f"sp-{uuid.uuid4().hex[:12]}",
         mission_id=mission_id,
         choice_id=choice.id,
         cost_at_purchase=choice.cost,
@@ -60,3 +62,13 @@ async def create_mission_sp_purchase(
     await session.commit()
     await session.refresh(purchase)
     return sp_purchase_to_dict(purchase)
+
+
+@router.delete("/sp-purchases/{purchase_id}", status_code=204)
+async def delete_mission_sp_purchase(purchase_id: str, session: AsyncSession = Depends(get_session)):
+    purchase = await session.get(MissionSpPurchase, purchase_id)
+    if not purchase:
+        raise HTTPException(status_code=404, detail="SP purchase not found")
+    await session.delete(purchase)
+    await session.commit()
+    return Response(status_code=204)

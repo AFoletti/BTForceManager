@@ -55,8 +55,9 @@ export const deleteElemental = (id) => request('DELETE', `/elementals/${id}`);
 export const createMission = (forceId, payload) => request('POST', `/forces/${forceId}/missions`, payload);
 export const updateMission = (id, payload) => request('PUT', `/missions/${id}`, payload);
 export const deleteMission = (id) => request('DELETE', `/missions/${id}`);
-export const addSpPurchase = (missionId, choiceId) =>
-  request('POST', `/missions/${missionId}/sp-purchases`, { choiceId });
+export const addSpPurchase = (missionId, purchase) =>
+  request('POST', `/missions/${missionId}/sp-purchases`, purchase);
+export const deleteSpPurchase = (id) => request('DELETE', `/sp-purchases/${id}`);
 
 // Snapshots
 export const createSnapshot = (forceId, payload) => request('POST', `/forces/${forceId}/snapshots`, payload);
