@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from database import engine
+from routers.forces import router as forces_router
 
 
 @asynccontextmanager
@@ -37,10 +38,9 @@ async def health_check():
     return {"status": "ok", "db": db_status}
 
 
-api_router = FastAPI()
-
 app.get("/health")(health_check)
 
 router = APIRouter(prefix="/api")
 router.get("/health")(health_check)
 app.include_router(router)
+app.include_router(forces_router)
