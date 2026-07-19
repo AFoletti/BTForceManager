@@ -16,6 +16,12 @@ from routers.achievements import router as achievements_router
 from routers.sp_choices import router as sp_choices_router
 from routers.pilot_special_abilities import router as pilot_special_abilities_router
 from routers.mech_catalog import router as mech_catalog_router
+from routers.forces_write import router as forces_write_router
+from routers.mechs import router as mechs_router
+from routers.pilots import router as pilots_router
+from routers.elementals import router as elementals_router
+from routers.missions_write import router as missions_write_router
+from routers.downtime import router as downtime_router
 
 
 @asynccontextmanager
@@ -64,3 +70,9 @@ app.include_router(achievements_router)
 app.include_router(sp_choices_router)
 app.include_router(pilot_special_abilities_router)
 app.include_router(mech_catalog_router)
+app.include_router(forces_write_router)
+app.include_router(mechs_router)
+app.include_router(pilots_router)
+app.include_router(elementals_router)
+app.include_router(missions_write_router)
+app.include_router(downtime_router)
