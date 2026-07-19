@@ -171,3 +171,20 @@ class MissionSpPurchase(Base):
     choice_id: Mapped[str] = mapped_column(String, ForeignKey("sp_choices.id"), nullable=True)
     cost_at_purchase: Mapped[float] = mapped_column(Float, default=0)
     name_at_purchase: Mapped[str] = mapped_column(String, default="")
+
+
+class PilotSpecialAbility(Base):
+    __tablename__ = "pilot_special_abilities"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, unique=True, index=True)
+    description: Mapped[str] = mapped_column(Text, default="")
+
+
+class PilotSpaAssignment(Base):
+    __tablename__ = "pilot_spa_assignments"
+
+    pilot_id: Mapped[str] = mapped_column(String, ForeignKey("pilots.id"), primary_key=True)
+    spa_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("pilot_special_abilities.id"), primary_key=True
+    )
