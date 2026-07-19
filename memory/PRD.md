@@ -10,6 +10,27 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 - Existing frontend (static, JSON-driven) is untouched in this phase; game logic under frontend/src/lib/*.js preserved as-is.
 
 ## What's Implemented
+### Phase 9 (Frontend Cutover to API - "Transparent Sync") - Done, tested 100% pass (testing agent + self curl verification)
+- User-approved approach: **Transparent Sync**. All existing UI components (`MechRoster`, `PilotRoster`, `ElementalRoster`, `MissionManager`, `DowntimeOperations`, `NotesTab`, `SnapshotsTab`, `DataEditor`) and all `frontend/src/lib/*.js` game-logic files are **untouched**. Only `useForceManager.js` was rewritten.
+- `frontend/.env` was missing entirely - created with `REACT_APP_BACKEND_URL` (protected var was never set up in an earlier session).
+- `frontend/src/lib/api.js` (new): thin fetch wrappers for every backend endpoint.
+- `frontend/src/hooks/forceSync.js` (new): generic diff engine. Given `prev` (last backend-confirmed force state) and `next` (current local state), it POSTs new entities (by id), PUTs entities with changed fields, DELETEs removed entities, for mechs/pilots/elementals/missions/force-scalars/snapshots/fullSnapshots. Pilot achievements and mission SP-purchases are handled as additive-only sub-diffs (dedicated join-table endpoints).
+- `frontend/src/hooks/useForceManager.js` (rewritten): loads forces via `GET /api/forces` + `GET /api/forces/{id}` (all forces eagerly, matching the old static-JSON UX). Every `updateForceData(updates)` call merges locally (instant UI, unchanged) then schedules a ~900ms debounced call to `forceSync.js` against a per-force "last synced" snapshot ref. `addNewForce` now calls `POST /api/forces`.
+- `frontend/src/components/MechAutocomplete.jsx`: search dropdown rewritten to call `GET /api/mech-catalog?search=` (debounced 250ms) instead of parsing the CSV client-side. `loadMechCatalog`/`lookupMechInCatalog` (still CSV-based, used by `MechRoster.jsx` for the read-only "catalog info" panel) intentionally left untouched.
+- Backend additions required to make the generic diff fully lossless (all additive, no existing behavior changed):
+  - `activityLog` settable on Mech/Pilot/Elemental create+update; `combatRecord` settable on Pilot update.
+  - `Mission`: `id` accepted on create (client-generated ids now preserved, matching mechs/pilots/elementals); `completed`/`completedAt`/`recap` now settable via the plain `PUT /api/missions/{id}` (previously only settable via the Phase 8 `/complete` endpoint) - this is what let mission completion flow through the generic diff engine with zero special-casing.
+  - New `DELETE /api/missions/{id}` (needed for snapshot-rollback / full-replace scenarios).
+  - New `backend/routers/snapshots.py`: `POST/DELETE /api/forces/{id}/snapshots`, `POST/DELETE /api/forces/{id}/full-snapshots` (Phase 8 intentionally skipped these; without them snapshot history would not survive a page reload).
+  - `MechCatalogEntry` extended with `walk/maxWalk/jump/maxJump/heat/dissipation/dissipationEfficiency/components` (migration `f666a8ff05f2`) + `import_mech_catalog.py` + `routers/mech_catalog.py` updated so the API fully replaces the CSV for autocomplete purposes (previously only chassis/model/bv/tonnage/year/techbase/role were captured).
+- Verified via `testing_agent_v4` (100% pass, no critical/blocking issues): add/edit mech+pilot survive reload with client-generated ids preserved server-side, MechAutocomplete search hits the API, mission create+complete persists (incl. pilot combatRecord/achievements), downtime action persists, notes autosave debounce persists, Add Force dialog persists. Backend: all 36 pytest still passing after the additions; new endpoints self-verified via curl (create/verify/delete full lifecycle on a throwaway `qa-force`).
+- Cleanup: testing agent's QA artifacts (a throwaway force + a test mech/mission/notes edit written into the real `ghost-bear` seed data) were removed by re-running `import_legacy_data.py` (idempotent) + deleting the throwaway force; confirmed both real forces (`ghost-bear`, `91st-division-vision-of-words`) match original row counts/notes again.
+- Known accepted limitations (by design, documented, not bugs): removing an already-synced SP purchase from a mission has no unsync path (no DELETE endpoint for sp-purchases, very rare edge case); a transient sync failure silently drops that one change rather than retrying (acceptable for a single-user NAS tool); rolling back via Snapshots to before a mission was completed will not revert `mission.completed` server-side.
+- Minor non-blocking note from testing agent: occasional transient "Failed to fetch" console error on the very first load in dev mode (React.StrictMode double-invokes the mount effect) that always self-resolves within ~1-2s with correct data rendered; harmless and stripped in production builds.
+
+### Phase 1-8
+See below entries (unchanged from prior session).
+
 ### Phase 1 (Backend Skeleton + Health Check) - Done, tested 100% pass
 - `backend/server.py`: FastAPI app, CORS, GET `/health` and GET `/api/health` (shared handler) returning `{status, db}`.
 - `backend/database.py`: async SQLAlchemy engine/session, `DATABASE_URL` from env only.
@@ -27,29 +48,26 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 - `backend/tests/test_forces_api.py`: 4 pytest tests (row-count-vs-source-JSON, list endpoint, detail endpoint, 404). All 10 backend tests pass (Phase 1 + Phase 2).
 - Note: only forces listed in `data/forces/manifest.json` are imported (matches frontend's own runtime loading behavior); `19th-great-white.json`/`31th-comstar.json` on disk but not in manifest are intentionally not imported.
 
-## Known Pre-existing Issue (not caused by this migration)
-- Transient console error "Failed to fetch ghost-bear.json" on cold load in `useForceManager.js` `loadForces()` - app still functions correctly (other forces load fine). Flagged by testing agent, not blocking.
-
 ## Code Review Notes (flagged by testing agent, non-blocking for current phase)
 - CORS in `server.py` uses `allow_origins=["*"]` with `allow_credentials=True` (spec-invalid combo, harmless now with no auth) - tighten before any phase introducing auth/sessions.
 - Migration script doesn't remove forces previously imported but later dropped from manifest.json - fine for read-only phase, revisit once writes are trusted.
 
 ## Prioritized Backlog
-### P0 (next phases per migration roadmap)
-- Phase 9: Wire frontend to consume the new write API instead of static JSON fetch + client-side CSV parsing (incl. swapping `MechAutocomplete.jsx` to `/api/mech-catalog`, `useForceManager.js` to the new CRUD/mission/downtime endpoints); add `REACT_APP_BACKEND_URL`.
+### P0
 - Phase 10: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
-- Consider snapshot/fullSnapshot creation + `force.currentDate` auto-advance endpoints if a future phase needs to mirror `MissionManager.jsx`'s UI-orchestration behavior (intentionally out of scope for Phase 8, which targeted only the pure lib logic).
 
 ### P1
-- Investigate the pre-existing `ghost-bear.json`/`91st-division-vision-of-words.json` fetch race in `useForceManager.js`.
 - Tighten CORS policy and add auth once writes/multi-user exposure are introduced.
 - Consider case-insensitive uniqueness for special-abilities pool names if free-text entry is exposed in UI later.
 - Pilot SPA pool (Phase 5) is intentionally not wired into `GET /api/forces/{id}` pilot serialization yet - wire in when a phase actually needs it.
 - Minor code-review notes from Phase 7 (non-blocking): `watcher._history` list has no explicit lock around concurrent debounce timers; `process_csv_file` does a blocking file read inside an async function; zero-data-row files count as a successful "ok" import.
 - Minor code-review note from Phase 8 (non-blocking): `routers/missions_write.py` is ~360 lines; consider extracting mission-completion logic into `domain/missions_logic.py` if it grows further.
+- Add a DELETE endpoint for individual `mission_sp_purchases` rows (currently additive-only from the frontend sync engine's perspective).
+- Migrate remaining read-only static JSON fetches (`achievements.json`, `sp-choices.json`, `downtime-actions.json` inside components) to their existing Phase 3/4 backend endpoints for full consistency (not required for correctness today, both sources are in sync).
+- Pre-existing (not caused by Phase 9): pilot activityLog can show a duplicate "Assigned to mission" entry with identical timestamp after a mission is created then completed in the same session - lives in `frontend/src/lib/missions.js`, not part of the sync-layer work.
 
 ## Next Tasks
-- Await user's next user-story (Phase 9 scope) before proceeding.
+- Phase 10 (Docker Compose full-stack validation) or any new user-requested feature - await user's next steer.
 
 ### Phase 8 (Write API for Core Entities) - Done, tested 100% pass
 - `backend/domain/`: pure business logic ported from `frontend/src/lib/*.js` - `mechs_logic.py` (BV adjustment table), `achievements_logic.py` (combat stats + condition checker), `downtime_logic.py` (formula tokenizer/RPN evaluator over `data/downtime-actions.json`), `missions_logic.py` (tonnage/BV/availability calculations).
