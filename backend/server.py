@@ -13,6 +13,7 @@ from routers.special_abilities import router as special_abilities_router
 from routers.achievements import router as achievements_router
 from routers.sp_choices import router as sp_choices_router
 from routers.pilot_special_abilities import router as pilot_special_abilities_router
+from routers.mech_catalog import router as mech_catalog_router
 
 
 @asynccontextmanager
@@ -58,3 +59,4 @@ app.include_router(special_abilities_router)
 app.include_router(achievements_router)
 app.include_router(sp_choices_router)
 app.include_router(pilot_special_abilities_router)
+app.include_router(mech_catalog_router)

@@ -188,3 +188,18 @@ class PilotSpaAssignment(Base):
     spa_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("pilot_special_abilities.id"), primary_key=True
     )
+
+
+class MechCatalogEntry(Base):
+    __tablename__ = "mech_catalog"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    mul_id: Mapped[int] = mapped_column(Integer, unique=True, nullable=True, index=True)
+    chassis: Mapped[str] = mapped_column(String, index=True, default="")
+    model: Mapped[str] = mapped_column(String, default="")
+    bv: Mapped[int] = mapped_column(Integer, default=0)
+    tonnage: Mapped[int] = mapped_column(Integer, default=0)
+    year: Mapped[int] = mapped_column(Integer, nullable=True)
+    techbase: Mapped[str] = mapped_column(String, nullable=True)
+    role: Mapped[str] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String, default="")
