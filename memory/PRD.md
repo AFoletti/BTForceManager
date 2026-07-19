@@ -36,17 +36,25 @@ Enhance BTForceManager (https://github.com/AFoletti/BTForceManager) via incremen
 
 ## Prioritized Backlog
 ### P0 (next phases per migration roadmap)
-- Phase 4: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
-- Phase 5: Wire frontend (`useForceManager.js`) to consume the new API instead of static JSON fetch; add `REACT_APP_BACKEND_URL`.
-- Phase 6: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
+- Phase 5: Write API (CRUD) for forces/mechs/pilots/missions/downtime, reusing existing pure logic from `frontend/src/lib/*.js`.
+- Phase 6: Wire frontend (`useForceManager.js`) to consume the new API instead of static JSON fetch; add `REACT_APP_BACKEND_URL`.
+- Phase 7: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
 
 ### P1
-- Investigate the pre-existing `ghost-bear.json` fetch race in `useForceManager.js`.
-- Tighten CORS policy once auth/writes are introduced.
+- Investigate the pre-existing `ghost-bear.json`/`91st-division-vision-of-words.json` fetch race in `useForceManager.js`.
+- Tighten CORS policy and add auth once writes/multi-user exposure are introduced.
 - Consider case-insensitive uniqueness for special-abilities pool names if free-text entry is exposed in UI later.
 
 ## Next Tasks
-- Await user's next user-story (Phase 4 scope) before proceeding.
+- Await user's next user-story (Phase 5 scope) before proceeding.
+
+### Phase 4 (Reference Pools: Achievements & SP Purchases) - Done, tested 100% pass
+- `backend/models.py`: added `AchievementDefinition` (id, name, icon, description, condition), `PilotAchievement` (autoincrement PK, pilot_id FK, achievement_id FK, earned_at nullable), `SpChoice` (id, name, cost as Float to support fractional prices like 0.5), `MissionSpPurchase` (id, mission_id FK, choice_id FK nullable, cost_at_purchase/name_at_purchase snapshots). Migration `a28c833e7254`.
+- `backend/migrate_reference_data.py`: idempotent script - upserts global catalogs from `data/achievements.json` (16 defs) and `data/sp-choices.json` (25 choices), then get-or-create migrates each pilot's/mission's legacy JSON into `pilot_achievements`/`mission_sp_purchases` (6 links + 6 purchases from real data).
+- `backend/routers/achievements.py`: `GET /api/achievement-definitions`, `GET/POST /api/pilots/{id}/achievements` (409 on duplicate, 404 on unknown pilot/definition).
+- `backend/routers/sp_choices.py`: `GET /api/sp-choices`, `POST /api/missions/{id}/sp-purchases` (snapshots catalog name/cost at creation time - historical cost never changes even if catalog price is later edited).
+- `GET /api/forces/{id}` pilots[].achievements and missions[].spPurchases now sourced from the normalized tables instead of raw JSON blobs.
+- Verified core acceptance criteria: repeated purchases of the same choice create distinct line items (real example: ghost-bear M02 has 4 separate `air_hvstrike` entries); catalog price changes don't retroactively alter `cost_at_purchase`. All 17 backend tests pass (Phases 1-4).
 
 ### Phase 3 (Reference Pools: Special Abilities) - Done, tested 100% pass
 - `backend/models.py`: added `SpecialAbility` (id, name unique, description) and `ForceSpecialAbility` join table (composite PK force_id+ability_id). Migration `27b52250a900`.
