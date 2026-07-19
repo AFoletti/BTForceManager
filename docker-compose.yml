@@ -3,11 +3,27 @@ services:
     build: ./backend
     env_file:
       - ./backend/.env.docker
-    ports:
-      - "8000:8000"
     volumes:
-      - btforcemanager-data:/data
+      # Bind-mounted (not a named Docker volume) so the SQLite database file
+      # is a real file under this host path - browsable/backupable directly
+      # from DSM File Station, not hidden inside Docker's internal storage.
+      - ${DB_DATA_PATH:-./docker-data/db}:/data
+      # Dedicated "drop zone" for the Phase 7 watched-folder auto-import:
+      # copy/drag a mech catalog CSV into this host folder and it gets
+      # imported automatically within a few seconds. Separate from the DB
+      # folder above so it can be pointed at a more convenient/shared path.
+      - ${MECH_CATALOG_WATCH_HOST_DIR:-./docker-data/mech-catalog-drop}:/watch
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
     restart: unless-stopped
 
-volumes:
-  btforcemanager-data:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL:-}
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

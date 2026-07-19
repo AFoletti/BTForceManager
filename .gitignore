@@ -40,46 +40,8 @@ logs/
 !index.html
 !static/
 !.nojekyll
--e 
+
 # Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
-frontend/node_modules/.cache/default-development/1.pack
-frontend/node_modules/.cache/default-development/3.pack
--e 
-# Environment files
-*.env
-*.env.*
-frontend/node_modules/.cache/default-development/4.pack
--e 
-# Environment files
-*.env
-*.env.*
-frontend/node_modules/.cache/default-development/5.pack
-frontend/node_modules/.cache/default-development/6.pack
--e 
-# Environment files
-*.env
-*.env.*
--e 
--e 
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
 .env
 .env.*
 credentials.json
@@ -96,5 +58,6 @@ backend/data/
 *.sqlite3
 
 # Keep committed env templates
+!.env.example
 !backend/.env.example
 !backend/.env.docker.example
