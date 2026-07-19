@@ -3,7 +3,19 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
-from models import Force, Mech, Pilot, Elemental, Mission, Snapshot, FullSnapshot, SpecialAbility, ForceSpecialAbility
+from models import (
+    Force,
+    Mech,
+    Pilot,
+    Elemental,
+    Mission,
+    Snapshot,
+    FullSnapshot,
+    SpecialAbility,
+    ForceSpecialAbility,
+    PilotAchievement,
+    MissionSpPurchase,
+)
 from serializers import force_summary_to_dict, force_detail_to_dict
 
 router = APIRouter(prefix="/api")
@@ -59,6 +71,35 @@ async def get_force(force_id: str, session: AsyncSession = Depends(get_session))
         )
     ).scalars().all()
 
+    achievements_by_pilot = {p.id: [] for p in pilots}
+    if pilots:
+        pilot_achv_rows = (
+            await session.execute(
+                select(PilotAchievement).where(PilotAchievement.pilot_id.in_(achievements_by_pilot.keys()))
+            )
+        ).scalars().all()
+        for row in pilot_achv_rows:
+            achievements_by_pilot[row.pilot_id].append(row.achievement_id)
+
+    sp_purchases_by_mission = {m.id: [] for m in missions}
+    if missions:
+        sp_purchase_rows = (
+            await session.execute(
+                select(MissionSpPurchase).where(MissionSpPurchase.mission_id.in_(sp_purchases_by_mission.keys()))
+            )
+        ).scalars().all()
+        for row in sp_purchase_rows:
+            sp_purchases_by_mission[row.mission_id].append(row)
+
     return force_detail_to_dict(
-        force, mechs, pilots, elementals, missions, snapshots, full_snapshots, special_abilities
+        force,
+        mechs,
+        pilots,
+        elementals,
+        missions,
+        snapshots,
+        full_snapshots,
+        special_abilities,
+        achievements_by_pilot,
+        sp_purchases_by_mission,
     )

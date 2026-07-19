@@ -31,7 +31,7 @@ def elemental_to_dict(e):
     }
 
 
-def pilot_to_dict(p):
+def pilot_to_dict(p, achievement_ids=None):
     d = {
         "id": p.id,
         "name": p.name,
@@ -42,14 +42,23 @@ def pilot_to_dict(p):
         "history": p.history,
         "warchestCost": p.warchest_cost,
         "activityLog": p.activity_log or [],
-        "achievements": p.achievements or [],
+        "achievements": achievement_ids if achievement_ids is not None else (p.achievements or []),
     }
     if p.combat_record:
         d["combatRecord"] = p.combat_record
     return d
 
 
-def mission_to_dict(m):
+def sp_purchase_to_dict(sp):
+    return {
+        "id": sp.id,
+        "choiceId": sp.choice_id,
+        "name": sp.name_at_purchase,
+        "cost": sp.cost_at_purchase,
+    }
+
+
+def mission_to_dict(m, sp_purchases=None):
     d = {
         "id": m.id,
         "name": m.name,
@@ -66,8 +75,11 @@ def mission_to_dict(m):
     }
     if m.sp_budget is not None:
         d["spBudget"] = m.sp_budget
-    if m.sp_purchases:
-        d["spPurchases"] = m.sp_purchases
+    resolved_sp_purchases = sp_purchases if sp_purchases is not None else m.sp_purchases
+    if resolved_sp_purchases:
+        d["spPurchases"] = (
+            [sp_purchase_to_dict(sp) for sp in sp_purchases] if sp_purchases is not None else resolved_sp_purchases
+        )
     if m.total_tonnage is not None:
         d["totalTonnage"] = m.total_tonnage
     if m.op_for_units:
@@ -115,8 +127,19 @@ def force_summary_to_dict(force, mech_count, pilot_count, elemental_count, missi
 
 
 def force_detail_to_dict(
-    force, mechs, pilots, elementals, missions, snapshots, full_snapshots, special_abilities=None
+    force,
+    mechs,
+    pilots,
+    elementals,
+    missions,
+    snapshots,
+    full_snapshots,
+    special_abilities=None,
+    achievements_by_pilot=None,
+    sp_purchases_by_mission=None,
 ):
+    achievements_by_pilot = achievements_by_pilot or {}
+    sp_purchases_by_mission = sp_purchases_by_mission or {}
     return {
         "id": force.id,
         "name": force.name,
@@ -132,9 +155,9 @@ def force_detail_to_dict(
         "currentDate": force.current_date,
         "notes": force.notes,
         "mechs": [mech_to_dict(m) for m in mechs],
-        "pilots": [pilot_to_dict(p) for p in pilots],
+        "pilots": [pilot_to_dict(p, achievements_by_pilot.get(p.id)) for p in pilots],
         "elementals": [elemental_to_dict(e) for e in elementals],
-        "missions": [mission_to_dict(m) for m in missions],
+        "missions": [mission_to_dict(m, sp_purchases_by_mission.get(m.id)) for m in missions],
         "snapshots": [snapshot_to_dict(s) for s in snapshots],
         "fullSnapshots": [full_snapshot_to_dict(fs) for fs in full_snapshots],
     }

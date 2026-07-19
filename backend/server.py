@@ -10,6 +10,8 @@ from sqlalchemy import text
 from database import engine
 from routers.forces import router as forces_router
 from routers.special_abilities import router as special_abilities_router
+from routers.achievements import router as achievements_router
+from routers.sp_choices import router as sp_choices_router
 
 
 @asynccontextmanager
@@ -52,3 +54,5 @@ router.get("/health")(health_check)
 app.include_router(router)
 app.include_router(forces_router)
 app.include_router(special_abilities_router)
+app.include_router(achievements_router)
+app.include_router(sp_choices_router)
