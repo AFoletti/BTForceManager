@@ -1,0 +1,13 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env.docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - btforcemanager-data:/data
+    restart: unless-stopped
+
+volumes:
+  btforcemanager-data:

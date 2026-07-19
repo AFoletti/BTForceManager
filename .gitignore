@@ -86,3 +86,15 @@ credentials.json
 *.pem
 *.key
 .credentials
+
+# Backend (Python / SQLite)
+__pycache__/
+*.pyc
+backend/data/
+*.db
+*.db-journal
+*.sqlite3
+
+# Keep committed env templates
+!backend/.env.example
+!backend/.env.docker.example
