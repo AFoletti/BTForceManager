@@ -14,8 +14,10 @@ database:
   3. migrate_special_abilities - normalizes each legacy force's
      specialAbilities (read straight from data/forces/*.json) into the
      special_abilities pool + force_special_abilities join table.
+  4. migrate_downtime_actions - seeds the downtime_actions table from
+     data/downtime-actions.json (mechActions/elementalActions/pilotActions).
 
-All three are idempotent, so re-running this script is always safe - it
+All four are idempotent, so re-running this script is always safe - it
 never creates duplicate rows. import_legacy_data is the one exception:
 it deliberately wipes and reinserts each force's rows every run, so only
 re-run this after the initial cutover if you actually want to reset a
@@ -43,18 +45,22 @@ load_dotenv()
 import import_legacy_data
 import migrate_reference_data
 import migrate_special_abilities
+import migrate_downtime_actions
 from database import engine
 
 
 async def main():
-    print("=== Step 1/3: import_legacy_data ===")
+    print("=== Step 1/4: import_legacy_data ===")
     await import_legacy_data.main()
 
-    print("=== Step 2/3: migrate_reference_data ===")
+    print("=== Step 2/4: migrate_reference_data ===")
     await migrate_reference_data.main()
 
-    print("=== Step 3/3: migrate_special_abilities ===")
+    print("=== Step 3/4: migrate_special_abilities ===")
     await migrate_special_abilities.main()
+
+    print("=== Step 4/4: migrate_downtime_actions ===")
+    await migrate_downtime_actions.main()
 
     await engine.dispose()
     print("=== Cutover complete. ===")

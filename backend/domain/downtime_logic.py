@@ -1,32 +1,49 @@
 """Ported from frontend/src/lib/downtime.js - formula evaluator + action catalog.
 
-Formulas are not user input - they come only from data/downtime-actions.json,
-checked into version control, same trust boundary as the original JS.
+Formulas are not user input - they come only from the downtime_actions table
+(DB-seeded from data/downtime-actions.json by migrate_downtime_actions.py),
+same trust boundary as the original JS.
 """
-import json
 import math
 import re
-from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-DOWNTIME_ACTIONS_PATH = REPO_ROOT / "data" / "downtime-actions.json"
+from sqlalchemy import select
 
-_actions_cache = None
+from database import SessionLocal
+from models import DowntimeAction
 
-
-def load_downtime_actions():
-    global _actions_cache
-    if _actions_cache is None:
-        _actions_cache = json.loads(DOWNTIME_ACTIONS_PATH.read_text())
-    return _actions_cache
+_CATEGORIES = ("mechActions", "elementalActions", "pilotActions")
 
 
-def get_action(category, action_id):
-    actions = load_downtime_actions()
-    for action in actions.get(category, []):
-        if action["id"] == action_id:
-            return action
-    return None
+async def load_downtime_actions():
+    async with SessionLocal() as session:
+        result = await session.execute(select(DowntimeAction))
+        return result.scalars().all()
+
+
+def _action_to_dict(action):
+    return {
+        "id": action.id,
+        "name": action.name,
+        "description": action.description,
+        "formula": action.formula,
+        "makesUnavailable": "makesUnavailable" in (action.flags or []),
+    }
+
+
+async def get_downtime_actions_config():
+    actions = await load_downtime_actions()
+    config = {category: [] for category in _CATEGORIES}
+    for action in actions:
+        config.setdefault(action.category, []).append(_action_to_dict(action))
+    return config
+
+
+async def get_action(category, action_id):
+    actions = await load_downtime_actions()
+    lookup = {a.id: a for a in actions if a.category == category}
+    action = lookup.get(action_id)
+    return _action_to_dict(action) if action else None
 
 
 def _tokenize(expression):
