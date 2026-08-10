@@ -139,6 +139,12 @@ See below entries (unchanged from prior session).
 - Verified: all 41 backend pytest pass, live `GET /api/downtime-actions` via ingress returns the flat list, screenshotted Downtime tab end-to-end - unit-type/unit/action dropdowns populate correctly (e.g. selecting Mech shows "Repair Mech Armor", "Repair Mech Internal Structure (Repairing)", "Reconfigure Mech"), confirming the frontend grouping transform works against the new endpoint shape.
 - Per user instruction: no testing_agent call this session - verified via pytest + curl + screenshot only.
 
+### Issue 4 (Verify data parity between live DB and static JSON/CSV) - Verified, no discrepancies, no code changes needed
+- Ran a custom field-by-field parity script (`/tmp/verify_parity.py`, not committed) comparing every DB table against its source: forces (scalar fields + mechs/pilots/elementals/missions/snapshots/fullSnapshots + specialAbilities join-table) vs `data/forces/manifest.json` + `data/forces/*.json`; `mech_catalog` (3861 rows) vs `data/mek_catalog.csv`; `sp_choices` (25) vs `data/sp-choices.json`; `achievement_definitions` (16) vs `data/achievements.json`; `downtime_actions` (8) vs `data/downtime-actions.json`. 100% match, zero diffs.
+- Per mandatory verification policy, independently confirmed via `testing_agent` (live API checks against the running app, not just self-inspection): all 7 parity checks PASS (forces list matches manifest exactly, excludes the 2 non-manifest forces on disk; ghost-bear/91st-division field values match source; mech-catalog search results match CSV; sp-choices/achievements/downtime-actions counts+fields match source).
+- testing_agent added a permanent regression test `backend/tests/test_data_parity.py` (7 tests) - now part of the standard suite, all 48 backend pytest pass (41 pre-existing + 7 new).
+- Conclusion: the live database is in exact parity with the static seed files; no fix or data correction was required.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).
