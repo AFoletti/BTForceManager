@@ -42,7 +42,6 @@ def build_force(raw):
         wp_multiplier=raw.get("wpMultiplier", 5),
         current_date=raw.get("currentDate", ""),
         notes=raw.get("notes", ""),
-        special_abilities=raw.get("specialAbilities", []),
         other_actions_log=raw.get("otherActionsLog", []),
     )
 

@@ -25,29 +25,18 @@ async def test_migration_dedupes_shared_ability_across_two_forces():
     async with SessionLocal() as session:
         await _cleanup_test_forces(session)
 
-        session.add(
-            Force(
-                id=TEST_FORCE_A,
-                name="Test Force Alpha",
-                special_abilities=[{"title": SHARED_ABILITY_NAME, "description": "Clan Honor Dueling Protocols"}],
-            )
-        )
-        session.add(
-            Force(
-                id=TEST_FORCE_B,
-                name="Test Force Beta",
-                special_abilities=[{"title": SHARED_ABILITY_NAME, "description": "Clan Honor Dueling Protocols"}],
-            )
-        )
-        await session.commit()
+        forces_with_abilities = [
+            (TEST_FORCE_A, [{"title": SHARED_ABILITY_NAME, "description": "Clan Honor Dueling Protocols"}]),
+            (TEST_FORCE_B, [{"title": SHARED_ABILITY_NAME, "description": "Clan Honor Dueling Protocols"}]),
+        ]
 
-        pool_created, links_created = await migrate(session)
+        pool_created, links_created = await migrate(session, forces_with_abilities)
         await session.commit()
         assert pool_created == 1
         assert links_created == 2
 
         # Re-running is idempotent: no new rows created.
-        pool_created_again, links_created_again = await migrate(session)
+        pool_created_again, links_created_again = await migrate(session, forces_with_abilities)
         await session.commit()
         assert pool_created_again == 0
         assert links_created_again == 0

@@ -55,7 +55,6 @@ async def test_legacy_import_round_trip_is_lossless(monkeypatch):
             assert force.wp_multiplier == raw["wpMultiplier"]
             assert force.current_date == raw["currentDate"]
             assert force.notes == raw["notes"]
-            assert force.special_abilities == raw["specialAbilities"]
             assert force.other_actions_log == raw["otherActionsLog"]
 
             mechs = {

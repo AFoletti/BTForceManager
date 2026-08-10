@@ -1,6 +1,11 @@
-"""One-time migration: parse each Force's specialAbilities JSON (populated by
-Phase 2's import_legacy_data.py) into a deduped special_abilities pool and a
-force_special_abilities join table.
+"""One-time migration: parse each legacy force's specialAbilities JSON (from
+data/forces/*.json, the same source import_legacy_data.py seeds from) into a
+deduped special_abilities pool and a force_special_abilities join table.
+
+Force.special_abilities used to be an intermediate JSON column on the forces
+table, but the API only ever reads from the normalized pool/join tables, so
+that column was dead storage and has been removed - this script now reads
+straight from the legacy JSON files instead.
 
 Idempotent: uses get-or-create semantics for both the pool row (by name) and
 the join row (by force_id + ability_id), so re-running never creates
@@ -10,6 +15,8 @@ Usage:
     cd backend && python migrate_special_abilities.py
 """
 import asyncio
+import json
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -18,7 +25,22 @@ load_dotenv()
 from sqlalchemy import select
 
 from database import SessionLocal, engine
-from models import Force, SpecialAbility, ForceSpecialAbility
+from models import SpecialAbility, ForceSpecialAbility
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+FORCES_DIR = REPO_ROOT / "data" / "forces"
+MANIFEST_PATH = FORCES_DIR / "manifest.json"
+
+
+def load_forces_with_abilities():
+    """Read (force_id, specialAbilities list) pairs straight from the legacy
+    JSON files listed in the manifest."""
+    manifest = json.loads(MANIFEST_PATH.read_text())
+    pairs = []
+    for filename in manifest["forces"]:
+        raw = json.loads((FORCES_DIR / filename).read_text())
+        pairs.append((raw["id"], raw.get("specialAbilities", []) or []))
+    return pairs
 
 
 async def get_or_create_ability(session, name, description):
@@ -48,14 +70,18 @@ async def link_if_missing(session, force_id, ability_id):
     return True
 
 
-async def migrate(session):
-    """Run the dedupe + link migration against all forces currently in the DB."""
+async def migrate(session, forces_with_abilities=None):
+    """Run the dedupe + link migration. `forces_with_abilities` is a list of
+    (force_id, abilities) pairs; defaults to reading the legacy JSON files
+    (production/seed usage). Tests can pass synthetic pairs directly."""
+    if forces_with_abilities is None:
+        forces_with_abilities = load_forces_with_abilities()
+
     pool_created = 0
     links_created = 0
 
-    forces = (await session.execute(select(Force))).scalars().all()
-    for force in forces:
-        for entry in force.special_abilities or []:
+    for force_id, abilities in forces_with_abilities:
+        for entry in abilities or []:
             name = (entry.get("title") or "").strip()
             if not name:
                 continue
@@ -65,7 +91,7 @@ async def migrate(session):
             if was_created:
                 pool_created += 1
 
-            if await link_if_missing(session, force.id, ability.id):
+            if await link_if_missing(session, force_id, ability.id):
                 links_created += 1
 
     return pool_created, links_created

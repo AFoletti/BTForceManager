@@ -16,7 +16,6 @@ class Force(Base):
     wp_multiplier: Mapped[int] = mapped_column(Integer, default=5)
     current_date: Mapped[str] = mapped_column(String, default="")
     notes: Mapped[str] = mapped_column(Text, default="")
-    special_abilities: Mapped[list] = mapped_column(JSON, default=list)
     other_actions_log: Mapped[list] = mapped_column(JSON, default=list)
 
 
