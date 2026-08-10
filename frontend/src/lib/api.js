@@ -68,3 +68,4 @@ export const deleteFullSnapshot = (id) => request('DELETE', `/full-snapshots/${i
 // Mech catalog
 export const searchMechCatalog = (search) =>
   request('GET', `/mech-catalog?search=${encodeURIComponent(search)}`);
+export const getMechCatalogImportStatus = () => request('GET', '/mech-catalog/import-status');

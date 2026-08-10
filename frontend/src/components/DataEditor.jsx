@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
-import { Database, Save, RotateCcw, AlertCircle, Download } from 'lucide-react';
+import { Database, Save, RotateCcw, AlertCircle, Download, FolderSync, RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
 import { downloadJSON } from '../lib/utils';
+import { getMechCatalogImportStatus } from '../lib/api';
 
 export default function DataEditor({ force, onUpdate }) {
   const [forceJSON, setForceJSON] = useState(JSON.stringify(force, null, 2));
@@ -13,6 +14,27 @@ export default function DataEditor({ force, onUpdate }) {
     setForceJSON(JSON.stringify(force, null, 2));
   }, [force]);
   const [error, setError] = useState('');
+
+  const [watcherStatus, setWatcherStatus] = useState(null);
+  const [watcherError, setWatcherError] = useState('');
+  const [watcherLoading, setWatcherLoading] = useState(false);
+
+  const loadWatcherStatus = useCallback(async () => {
+    setWatcherLoading(true);
+    setWatcherError('');
+    try {
+      const status = await getMechCatalogImportStatus();
+      setWatcherStatus(status);
+    } catch (err) {
+      setWatcherError(err.message);
+    } finally {
+      setWatcherLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadWatcherStatus();
+  }, [loadWatcherStatus]);
 
   const handleSave = () => {
     setError('');
@@ -59,6 +81,93 @@ export default function DataEditor({ force, onUpdate }) {
               of the current force at any time.
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Mech Catalog Watcher Status */}
+      <div className="tactical-panel" data-testid="watcher-status-panel">
+        <div className="tactical-header">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center gap-2">
+              <FolderSync className="w-4 h-4" />
+              Mech Catalog Watcher
+            </h3>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={loadWatcherStatus}
+              disabled={watcherLoading}
+              data-testid="watcher-status-refresh-button"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${watcherLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
+        </div>
+        <div className="p-4 space-y-3 text-sm">
+          {watcherError && (
+            <div className="p-3 bg-destructive/10 border border-destructive rounded text-xs text-destructive" data-testid="watcher-status-error">
+              Failed to load watcher status: {watcherError}
+            </div>
+          )}
+          {watcherStatus && (
+            <>
+              <div className="flex flex-wrap items-center gap-4 text-xs" data-testid="watcher-status-summary">
+                <div className="flex items-center gap-1.5">
+                  {watcherStatus.enabled ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  ) : (
+                    <XCircle className="w-3.5 h-3.5 text-muted-foreground" />
+                  )}
+                  <span>{watcherStatus.enabled ? 'Enabled' : 'Disabled'}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {watcherStatus.running ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  ) : (
+                    <XCircle className="w-3.5 h-3.5 text-muted-foreground" />
+                  )}
+                  <span>{watcherStatus.running ? 'Running' : 'Stopped'}</span>
+                </div>
+                {watcherStatus.watchDir && (
+                  <div className="text-muted-foreground">
+                    Watching: <span className="font-mono">{watcherStatus.watchDir}</span>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <div className="text-xs font-medium mb-1.5 text-muted-foreground">Recent Imports</div>
+                {(!watcherStatus.recentImports || watcherStatus.recentImports.length === 0) ? (
+                  <div className="text-xs text-muted-foreground" data-testid="watcher-status-empty">
+                    No CSV drops processed yet.
+                  </div>
+                ) : (
+                  <ul className="space-y-1.5" data-testid="watcher-status-recent-imports">
+                    {watcherStatus.recentImports.slice(0, 5).map((entry, idx) => (
+                      <li
+                        key={`${entry.filename}-${entry.timestamp}-${idx}`}
+                        className="flex items-center gap-2 text-xs bg-muted/50 rounded px-2 py-1.5"
+                        data-testid={`watcher-status-import-row-${idx}`}
+                      >
+                        {entry.status === 'ok' ? (
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                        ) : (
+                          <XCircle className="w-3.5 h-3.5 text-destructive flex-shrink-0" />
+                        )}
+                        <span className="font-mono truncate">{entry.filename}</span>
+                        <span className="text-muted-foreground flex-shrink-0">
+                          {entry.status === 'ok'
+                            ? `${entry.created} created, ${entry.updated} updated, ${entry.skipped} skipped`
+                            : entry.reason}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
