@@ -10,7 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from database import engine
+from migration_harness import run_migrations
 import watcher
+from admin.router import router as admin_router
 from routers.forces import router as forces_router
 from routers.special_abilities import router as special_abilities_router
 from routers.achievements import router as achievements_router
@@ -29,6 +31,7 @@ from routers.snapshots import router as snapshots_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await asyncio.get_event_loop().run_in_executor(None, run_migrations)
     watcher.start_watcher(asyncio.get_event_loop())
     yield
     watcher.stop_watcher()
@@ -76,6 +79,7 @@ app.get("/health")(health_check)
 router = APIRouter(prefix="/api")
 router.get("/health")(health_check)
 app.include_router(router)
+app.include_router(admin_router)
 app.include_router(forces_router)
 app.include_router(special_abilities_router)
 app.include_router(achievements_router)

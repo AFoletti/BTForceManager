@@ -179,6 +179,16 @@ See below entries (unchanged from prior session).
 - Verified: all 40 backend pytest pass with zero JSON/CSV/import-script dependency (already achieved in Issue 6's rewrite, re-confirmed here), backend restarts cleanly with no seeding against the existing non-empty DB, live `/api/forces` unaffected.
 - Per user instruction: no testing_agent call this session - verified via pytest + curl only.
 
+### Issue #73 (Foundations: admin scaffolding, force state serialization, migration harness) - Done, tested 100% pass (testing agent, backend+frontend)
+- `backend/admin/router.py`: new `/api/admin` namespace, `GET /api/admin/health` -> `{"status":"ok","namespace":"admin"}`. Registered in `server.py`, kept separate from all "play" routers.
+- `backend/services/force_state.py`: new centralized `serialize_force(session, force_id)` (extracted from the old inline `routers/forces.py::get_force` body) and `deserialize_force(session, force_id, data)` (wipes+reinserts a force's mechs/pilots/elementals/missions/snapshots/fullSnapshots/special-ability links from export-shaped JSON - not yet wired to any endpoint, reserved for future snapshot restore issues).
+- `routers/forces.py`: `GET /api/forces/{id}` now calls `serialize_force`; new `GET /api/forces/{id}/export` calls the same service - verified byte-identical to the detail endpoint via curl.
+- `backend/migration_harness.py`: `run_migrations()` runs `alembic upgrade head` automatically in `server.py`'s FastAPI `lifespan` on every startup (no-op if already at head - verified via restart, DB stayed at `d6f3e50ef277`, zero schema changes, `/api/health`/`/api/forces` unaffected).
+- Frontend: `AdminView.jsx` (new) - non-functional placeholder modal ("Admin area – work in progress"), opened via a new amber `admin-entry-btn` in both the main header and the empty-state header. `useForceManager.js`'s `exportForce` is now async and calls `api.exportForce(forceId)` (new `GET /forces/{id}/export` wrapper in `api.js`); `App.js`'s `handleExport` updated to await it.
+- Bugfix (found by testing agent): `components/ui/dialog.jsx`'s `DialogContent` wasn't spreading extra props, so `data-testid="admin-view-modal"` never reached the DOM. Fixed by adding `...props` spread - also benefits `AddForceDialog` and any future dialog consumers.
+- `TECHNICAL_README.md` updated: new sections 1.3 (admin namespace), 1.4 (force state service), 1.5 (migration harness), repo layout tree updated.
+- Verified: all 40 backend pytest pass, no behavioral change to any existing play flow (Mechs/Elementals/Pilots/Missions/Downtime/Ledger/Notes/Snapshots/Data tabs, PDF export, Add Force), real campaign data (`ghost-bear`, `91st-division-vision-of-words`) untouched.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).

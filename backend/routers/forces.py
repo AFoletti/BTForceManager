@@ -3,20 +3,9 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
-from models import (
-    Force,
-    Mech,
-    Pilot,
-    Elemental,
-    Mission,
-    Snapshot,
-    FullSnapshot,
-    SpecialAbility,
-    ForceSpecialAbility,
-    PilotAchievement,
-    MissionSpPurchase,
-)
-from serializers import force_summary_to_dict, force_detail_to_dict
+from models import Force, Mech, Pilot, Elemental, Mission
+from serializers import force_summary_to_dict
+from services.force_state import serialize_force
 
 router = APIRouter(prefix="/api")
 
@@ -45,61 +34,18 @@ async def list_forces(session: AsyncSession = Depends(get_session)):
 
 @router.get("/forces/{force_id}")
 async def get_force(force_id: str, session: AsyncSession = Depends(get_session)):
-    force = await session.get(Force, force_id)
-    if not force:
+    force_data = await serialize_force(session, force_id)
+    if not force_data:
         raise HTTPException(status_code=404, detail="Force not found")
+    return force_data
 
-    mechs = (await session.execute(select(Mech).where(Mech.force_id == force_id))).scalars().all()
-    pilots = (await session.execute(select(Pilot).where(Pilot.force_id == force_id))).scalars().all()
-    elementals = (
-        await session.execute(select(Elemental).where(Elemental.force_id == force_id))
-    ).scalars().all()
-    missions = (
-        await session.execute(select(Mission).where(Mission.force_id == force_id))
-    ).scalars().all()
-    snapshots = (
-        await session.execute(select(Snapshot).where(Snapshot.force_id == force_id))
-    ).scalars().all()
-    full_snapshots = (
-        await session.execute(select(FullSnapshot).where(FullSnapshot.force_id == force_id))
-    ).scalars().all()
-    special_abilities = (
-        await session.execute(
-            select(SpecialAbility)
-            .join(ForceSpecialAbility, ForceSpecialAbility.ability_id == SpecialAbility.id)
-            .where(ForceSpecialAbility.force_id == force_id)
-        )
-    ).scalars().all()
 
-    achievements_by_pilot = {p.id: [] for p in pilots}
-    if pilots:
-        pilot_achv_rows = (
-            await session.execute(
-                select(PilotAchievement).where(PilotAchievement.pilot_id.in_(achievements_by_pilot.keys()))
-            )
-        ).scalars().all()
-        for row in pilot_achv_rows:
-            achievements_by_pilot[row.pilot_id].append(row.achievement_id)
-
-    sp_purchases_by_mission = {m.id: [] for m in missions}
-    if missions:
-        sp_purchase_rows = (
-            await session.execute(
-                select(MissionSpPurchase).where(MissionSpPurchase.mission_id.in_(sp_purchases_by_mission.keys()))
-            )
-        ).scalars().all()
-        for row in sp_purchase_rows:
-            sp_purchases_by_mission[row.mission_id].append(row)
-
-    return force_detail_to_dict(
-        force,
-        mechs,
-        pilots,
-        elementals,
-        missions,
-        snapshots,
-        full_snapshots,
-        special_abilities,
-        achievements_by_pilot,
-        sp_purchases_by_mission,
-    )
+@router.get("/forces/{force_id}/export")
+async def export_force(force_id: str, session: AsyncSession = Depends(get_session)):
+    """Canonical force export, backed by the same serialization service as
+    `GET /api/forces/{id}` - the single source of truth for Export today and
+    for force-level snapshot restore in later issues."""
+    force_data = await serialize_force(session, force_id)
+    if not force_data:
+        raise HTTPException(status_code=404, detail="Force not found")
+    return force_data

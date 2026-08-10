@@ -11,13 +11,28 @@ This document is aimed at developers who want to work on the source, extend the 
 The app is a **React frontend** + **FastAPI backend** + **SQLite database**:
 
 - `frontend/` – React 18 + Tailwind SPA. Calls the backend exclusively through `REACT_APP_BACKEND_URL` + `/api/*` routes (see `frontend/src/lib/api.js`).
-- `backend/` – FastAPI app (`server.py`), SQLAlchemy models (`models.py`), Alembic migrations (`alembic/`), and per-resource routers (`routers/`).
+- `backend/` – FastAPI app (`server.py`), SQLAlchemy models (`models.py`), Alembic migrations (`alembic/`), per-resource routers (`routers/`), an `admin/` namespace for global/operational tooling, and a `services/` layer for logic shared across routers (force state serialization).
 - `data/btforce.db` – the single, committed SQLite database. It ships prefilled with the full reference catalog (mech catalog, achievements, SP choices, downtime actions) and any campaign forces already created. There is no separate "example" vs "live" database - the file in the repo is the one the app runs against, and there are no JSON/CSV data files or import scripts left in the repo as a data source.
 - `backend/watcher.py` + `backend/import_mech_catalog.py` – the only remaining CSV-related code, and it's operational rather than a data source: drop a mech catalog CSV (e.g. exported from MekHQ/MUL) into the watched folder and it's imported automatically, or run `import_mech_catalog.py <path>` manually. See README.md's "Updating the Mech Catalog" section.
 
 ### 1.2 Deployment
 
 See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Docker host). In short: `docker compose up -d --build` builds and starts both containers, Alembic migrations run automatically against the bind-mounted `data/btforce.db`, and there is no seeding/import step at boot. The startup sequence (both in Docker and in local dev) is always exactly: run Alembic migrations, then start the server - never anything that inspects the DB and conditionally imports data. A cloned repo is assumed to already have a non-empty, ready-to-use `data/btforce.db`; there is no "first boot" concept. To reset data, replace the DB file manually (see DEPLOYMENT.md's "Resetting data" section) - there is no scripted reset.
+
+### 1.3 Admin namespace
+
+`backend/admin/router.py` exposes a separate `/api/admin/...` namespace (currently just `GET /api/admin/health`), kept independent of the "play" APIs used by Mission Manager, Downtime, and force operations. It's reserved for future global configuration and operational tooling; today it's scaffolding only, with a matching non-functional "Admin" entry point in the frontend header (`components/AdminView.jsx`) that renders a placeholder and offers no controls yet.
+
+### 1.4 Force state serialization/deserialization service
+
+`backend/services/force_state.py` is the single source of truth for turning a force (plus all of its mechs/pilots/elementals/missions/snapshots/special abilities) into the JSON contract described in section 7 below, and back:
+
+- `serialize_force(session, force_id)` – produces the export/detail JSON. Used by both `GET /api/forces/{id}` and the dedicated `GET /api/forces/{id}/export` endpoint (`routers/forces.py`), so Export and the regular detail view can never drift apart.
+- `deserialize_force(session, force_id, data)` – reconstructs/overwrites a force's full state in the database from that same JSON shape. Not wired to any endpoint yet; it exists so force-level snapshot restore (a later issue) can call it directly instead of duplicating serialization logic.
+
+### 1.5 Migration harness
+
+The project's migration mechanism is Alembic (`backend/alembic/`): every schema change is a versioned revision file under `alembic/versions/`, and the DB's current version is tracked in the `alembic_version` table inside `data/btforce.db`. `backend/migration_harness.py::run_migrations()` runs `alembic upgrade head` automatically every time the backend starts (called from `server.py`'s FastAPI `lifespan`, in addition to the Docker entrypoint already running it as a separate step) - a no-op on an up-to-date database, and safe to run repeatedly. To add a new migration later: `cd backend && alembic revision --autogenerate -m "..."`; it's picked up automatically on the next restart, no code changes needed here.
 
 ---
 
@@ -35,7 +50,10 @@ See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Doc
 │   ├── server.py              # FastAPI app entrypoint
 │   ├── models.py               # SQLAlchemy models
 │   ├── database.py             # Engine/session setup (reads DATABASE_URL)
+│   ├── migration_harness.py    # Run-on-start Alembic migration harness
 │   ├── alembic/                # Migrations
+│   ├── admin/                  # Admin namespace (/api/admin/...), scaffolding
+│   ├── services/                # Shared logic (force state serialization/deserialization)
 │   ├── routers/                # One module per resource (forces, mechs, downtime, ...)
 │   ├── domain/                  # Pure business logic (downtime formulas, achievements, ...)
 │   ├── watcher.py               # Watched-folder mech catalog auto-import

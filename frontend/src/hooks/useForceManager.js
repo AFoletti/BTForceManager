@@ -294,10 +294,10 @@ export function useForceManager() {
     return { forces };
   };
 
-  const exportForce = (forceId) => {
-    // Export single force
-    const force = forces.find((f) => f.id === forceId);
-    return force;
+  const exportForce = async (forceId) => {
+    // Export single force via the backend's centralized serialization
+    // service (GET /api/forces/{id}/export) rather than dumping local state.
+    return await api.exportForce(forceId);
   };
 
   return {

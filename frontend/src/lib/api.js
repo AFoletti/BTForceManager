@@ -30,9 +30,13 @@ async function request(method, path, body) {
 // Forces
 export const listForces = () => request('GET', '/forces');
 export const getForce = (id) => request('GET', `/forces/${id}`);
+export const exportForce = (id) => request('GET', `/forces/${id}/export`);
 export const createForce = (payload) => request('POST', '/forces', payload);
 export const updateForce = (id, payload) => request('PUT', `/forces/${id}`, payload);
 export const deleteForce = (id) => request('DELETE', `/forces/${id}`);
+
+// Admin
+export const getAdminHealth = () => request('GET', '/admin/health');
 
 // Mechs
 export const createMech = (forceId, payload) => request('POST', `/forces/${forceId}/mechs`, payload);

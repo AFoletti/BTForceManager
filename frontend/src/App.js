@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List, FileText, Calendar, Crosshair } from 'lucide-react';
+import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List, FileText, Calendar, Crosshair, ShieldAlert } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -12,6 +12,7 @@ import MissionManager from './components/MissionManager';
 import DowntimeOperations from './components/DowntimeOperations';
 import DataEditor from './components/DataEditor';
 import AddForceDialog from './components/AddForceDialog';
+import AdminView from './components/AdminView';
 import PDFExport from './components/PDFExport';
 import LedgerTab from './components/LedgerTab';
 import NotesTab from './components/NotesTab';
@@ -70,6 +71,7 @@ export default function App() {
 
 
   const [showAddForceDialog, setShowAddForceDialog] = useState(false);
+  const [showAdminView, setShowAdminView] = useState(false);
   const [editingDate, setEditingDate] = useState(false);
   const [tempDate, setTempDate] = useState('');
 
@@ -103,11 +105,16 @@ export default function App() {
 
   const forceBV = calculateForceBV();
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (!selectedForce) return;
-    const forceData = exportForce(selectedForceId);
-    const filename = `${selectedForce.id}.json`;
-    downloadJSON(forceData, filename);
+    try {
+      const forceData = await exportForce(selectedForceId);
+      const filename = `${selectedForce.id}.json`;
+      downloadJSON(forceData, filename);
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(`Export failed: ${err.message}`);
+    }
   };
 
   const handleAddForce = (newForce) => {
@@ -267,6 +274,18 @@ export default function App() {
                   data-testid="export-btn"
                 >
                   <Download className="w-4 h-4" />
+                </Button>
+
+                <div className="h-6 w-px bg-border/40 mx-1" />
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAdminView(true)}
+                  className="border-amber-500/40 text-amber-500 hover:bg-amber-500/10"
+                  data-testid="admin-entry-btn"
+                >
+                  <ShieldAlert className="w-4 h-4" />
                 </Button>
               </div>
             </div>
@@ -478,7 +497,7 @@ export default function App() {
         </Tabs>
       ) : (
         <div className="min-h-screen flex flex-col">
-          <header className="h-14 border-b border-border/40 px-6 flex items-center">
+          <header className="h-14 border-b border-border/40 px-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-primary/20 border border-primary/40 flex items-center justify-center">
                 <Crosshair className="w-5 h-5 text-primary" />
@@ -487,6 +506,15 @@ export default function App() {
                 BattleTech Forces Manager
               </h1>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowAdminView(true)}
+              className="border-amber-500/40 text-amber-500 hover:bg-amber-500/10"
+              data-testid="admin-entry-btn"
+            >
+              <ShieldAlert className="w-4 h-4" />
+            </Button>
           </header>
           <div className="flex-1 flex items-center justify-center">
             <div className="tactical-panel p-12 text-center">
@@ -508,6 +536,9 @@ export default function App() {
         onOpenChange={setShowAddForceDialog}
         onAdd={handleAddForce}
       />
+
+      {/* Admin Entry Point (scaffolding only) */}
+      <AdminView open={showAdminView} onOpenChange={setShowAdminView} />
     </div>
   );
 }
