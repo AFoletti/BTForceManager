@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Plus, Pencil, Trash2, Save, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import EmojiPicker from './EmojiPicker';
 import * as api from '../../lib/api';
 
 const emptyForm = { id: '', name: '', icon: '', description: '', condition: '' };
@@ -90,7 +91,10 @@ export default function AdminAchievementsPanel() {
         {!loading && definitions.map((definition) => (
           <div key={definition.id} className="flex items-center justify-between px-3 py-2" data-testid={`admin-achievement-row-${definition.id}`}>
             <div>
-              <div className="text-sm font-medium">{definition.name}</div>
+              <div className="text-sm font-medium">
+                {definition.icon && <span className="mr-1.5">{definition.icon}</span>}
+                {definition.name}
+              </div>
               <div className="text-xs text-muted-foreground font-mono">{definition.condition}</div>
             </div>
             <div className="flex items-center gap-2">
@@ -124,6 +128,17 @@ export default function AdminAchievementsPanel() {
             <div>
               <label className="block text-xs font-medium mb-1">Name *</label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} data-testid="admin-achievement-name-input" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">Icon</label>
+            <div className="flex items-center gap-2">
+              <EmojiPicker
+                value={form.icon}
+                onChange={(icon) => setForm({ ...form, icon })}
+                testIdPrefix="admin-achievement-icon-picker"
+              />
+              <span className="text-xs text-muted-foreground">Pick an emoji to represent this achievement</span>
             </div>
           </div>
           <div>
