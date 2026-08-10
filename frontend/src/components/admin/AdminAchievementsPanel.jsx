@@ -7,6 +7,22 @@ import * as api from '../../lib/api';
 
 const emptyForm = { id: '', name: '', icon: '', description: '', condition: '' };
 
+// Mirrors backend/domain/achievements_logic.py::compute_combat_stats - the
+// only variables `check_condition` can evaluate.
+const CONDITION_VARIABLES = [
+  { name: 'killCount', description: 'Total confirmed kills' },
+  { name: 'assists', description: 'Total kill assists' },
+  { name: 'missionsCompleted', description: 'Total missions completed' },
+  { name: 'missionsWithoutInjury', description: 'Consecutive missions completed without injury' },
+  { name: 'totalInjuriesHealed', description: "Total injuries healed over the pilot's career" },
+  { name: 'lightKills', description: 'Kills against light mechs (20-35t)' },
+  { name: 'mediumKills', description: 'Kills against medium mechs (40-55t)' },
+  { name: 'heavyKills', description: 'Kills against heavy mechs (60-75t)' },
+  { name: 'assaultKills', description: 'Kills against assault mechs (80-100t)' },
+  { name: 'totalTonnageDestroyed', description: 'Sum of tonnage across all kills' },
+  { name: 'maxTonnageKill', description: 'Heaviest single kill, by tonnage' },
+];
+
 export default function AdminAchievementsPanel() {
   const [definitions, setDefinitions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,6 +57,14 @@ export default function AdminAchievementsPanel() {
     setEditingId(definition.id);
     setForm({ ...definition });
     setShowForm(true);
+  };
+
+  const insertVariable = (name) => {
+    setForm((prev) => {
+      const current = (prev.condition || '').trim();
+      const next = current ? `${current} && ${name} >= 1` : `${name} >= 1`;
+      return { ...prev, condition: next };
+    });
   };
 
   const handleSave = async () => {
@@ -148,6 +172,26 @@ export default function AdminAchievementsPanel() {
           <div>
             <label className="block text-xs font-medium mb-1">Condition *</label>
             <Input value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value })} placeholder="killCount >= 1" data-testid="admin-achievement-condition-input" />
+            <p className="text-xs text-muted-foreground mt-1">
+              Combine checks with <code className="font-mono">&amp;&amp;</code>. Operators: <code className="font-mono">&gt;= &gt; &lt;= &lt; ===</code>. e.g. <code className="font-mono">killCount &gt;= 5 &amp;&amp; assaultKills &gt;= 1</code>
+            </p>
+            <div className="mt-2 border border-border/40 rounded p-2" data-testid="admin-achievement-variables-reference">
+              <p className="text-xs font-medium mb-1.5 text-muted-foreground">Available variables (click to insert):</p>
+              <div className="flex flex-wrap gap-1.5">
+                {CONDITION_VARIABLES.map((variable) => (
+                  <button
+                    key={variable.name}
+                    type="button"
+                    onClick={() => insertVariable(variable.name)}
+                    title={variable.description}
+                    className="text-xs font-mono px-2 py-1 rounded border border-border/60 bg-background hover:border-amber-500/50 hover:text-amber-500 transition-colors"
+                    data-testid={`admin-achievement-variable-btn-${variable.name}`}
+                  >
+                    {variable.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
