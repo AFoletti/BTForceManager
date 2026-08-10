@@ -1,0 +1,38 @@
+{
+  "summary": "Tested Phase 10 / Issue 1 frontend re-wiring: 4 components now consume config/reference data (downtime-actions, sp-choices, achievement-definitions) from backend API instead of static JSON files. All targeted flows verified end-to-end against live backend with hard-reload persistence checks. All 4 new pytest tests pass; all 8 UI scenarios pass. No functional regressions.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "DowntimeOperations.jsx", "issue": "Static caption text at bottom of Downtime tab still says 'Actions are loaded from data/downtime-actions.json' although the actions are now fetched from GET /api/downtime-actions. Cosmetic only, data flow is correct.", "selector": "text near 'AVAILABLE ACTIONS REFERENCE'", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_reference_config_endpoints.py",
+    "/app/test_reports/pytest/iteration_10.xml"
+  ],
+  "action_items": [
+    "Main agent: re-run /app/backend/import_legacy_data.py (+ migrate_reference_data.py, migrate_special_abilities.py) to restore the real ghost-bear force to pristine state - QA testing polluted it (warchest 1542 not 1564, extra activityLog entries on Puma (Adder) A and Puma (Adder) Prime, currentDate advanced to 3052-05-12). Result: 2 pre-existing tests test_forces_api.py::test_migration_row_counts_match_source_json and test_get_force_detail_endpoint_matches_source now fail on the polluted data. Cleanup is idempotent per your note.",
+    "Optional cosmetic: update DowntimeOperations.jsx caption text to remove 'data/downtime-actions.json' file-path label since it's now backend-sourced."
+  ],
+  "critical_code_review_comments": [
+    "api.js: New functions (applyMechDowntime/applyElementalDowntime/applyPilotDowntime, getDowntimeActionsConfig, listAchievementDefinitions, listSpChoices) follow existing request() pattern and REACT_APP_BACKEND_URL convention. Clean.",
+    "DowntimeOperations.jsx uses Promise.all for parallel initial fetch of downtime + achievements config - efficient. Loading state gated correctly.",
+    "'Other Action' path correctly bypasses POST /api/mechs/{id}/downtime and goes through direct PUT + force warchest update - confirmed via ghost-bear activity log entry 'Other: QA_TEST Custom Ammo' with delta -5 WP.",
+    "Backend GET /api/downtime-actions returns the same JSON structure that lib/downtime.js expects (mechActions/pilotActions/elementalActions with id/name/formula/description/makesUnavailable). No shape drift."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_reference_config_endpoints.py (new)"
+  ],
+  "success_rate": {"backend": "100% (4/4 new + 37/37 pre-existing on clean data)", "frontend": "100% (8/8 scenarios)"},
+  "test_credentials": "None - app has no auth",
+  "seed_data_creation": "Force 'test-config-endpoints-force' + mech 'mech-test-config-1' were created inside the new pytest module and cleaned up in the module teardown - no residue. UI tests DID pollute the 'ghost-bear' force: warchest 1564->1542, Puma (Adder) A now has 'Repair Mech Armor performed (7 WP)' activityLog entry, Puma (Adder) Prime now has 'Other: QA_TEST Custom Ammo' activityLog entry, currentDate advanced 3052-05-09 -> 3052-05-12. QA_TEST_MISSION_SP mission was created and deleted via DELETE /api/missions/{id} (204). Main agent should re-run import_legacy_data.py to restore.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend endpoints GET /api/downtime-actions, /api/sp-choices, /api/achievement-definitions are stable and return the same shapes the frontend used to read from data/*.json. Frontend flows fully wired: DowntimeOperations (mech/pilot/elemental via POST /api/{type}/{id}/downtime, plus 'Other Action' via direct PUT), MissionManager (SP dropdown + achievements defs), PilotRoster + PDFExport (achievement defs). Hard-reload persistence confirmed for all mutations. Achievement tooltip 'First Blood: First confirmed kill' rendered correctly on Deo/Martin (both have kills>=1). Bluefang Trinary PDF exported at 62KB. Two test_forces_api.py migration-comparison tests fail purely because of test data pollution in ghost-bear - clean up with backend/import_legacy_data.py.",
+  "rca_of_the_issue": "N/A - no bugs found. The only observable failures (2 pytest failures in test_forces_api.py) are attributable to intentional UI-driven mutations of the real seeded force during test execution; the code is behaving correctly (persisting mutations)."
+}

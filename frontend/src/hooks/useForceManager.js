@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import * as api from '../lib/api';
+import { syncForceToBackend } from './forceSync';
 
 // Normalize a raw force object loaded from JSON so components can rely on
 // certain fields always being present and correctly typed.
@@ -152,47 +154,34 @@ export function normalizeForce(raw) {
   return normalized;
 }
 
+const SYNC_DEBOUNCE_MS = 900;
+
 export function useForceManager() {
   const [forces, setForces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedForceId, setSelectedForceId] = useState(null);
 
-  // Load forces from individual JSON files
+  // Last backend-confirmed state per force id, used as the diff baseline.
+  const lastSyncedRef = useRef({});
+  // Latest locally-merged state per force id, read by the debounced sync.
+  const pendingForceRef = useRef({});
+  const syncTimersRef = useRef({});
+
+  // Load forces from the backend API
   useEffect(() => {
     const loadForces = async () => {
       try {
-        // First, get the manifest to know which files to load
-        const manifestResponse = await fetch('./data/forces/manifest.json');
-        if (!manifestResponse.ok) {
-          throw new Error(
-            'Failed to load forces manifest at data/forces/manifest.json. Check that the file exists and is correctly referenced.',
-          );
-        }
-        const manifest = await manifestResponse.json();
+        const summaries = await api.listForces();
 
-        if (!manifest || !Array.isArray(manifest.forces)) {
-          throw new Error('Invalid forces manifest: expected a "forces" array.');
-        }
-
-        // Load each force file
-        const failedFiles = [];
-
-        const forcePromises = manifest.forces.map(async (filename) => {
+        const failedIds = [];
+        const forcePromises = summaries.map(async (summary) => {
           try {
-            const response = await fetch(`./data/forces/${filename}`);
-            if (!response.ok) {
-              failedFiles.push(filename);
-              // eslint-disable-next-line no-console
-              console.error(`Failed to load force file: ${filename}`);
-              return null;
-            }
-            const data = await response.json();
-            return data;
-          } catch (fileError) {
-            failedFiles.push(filename);
+            return await api.getForce(summary.id);
+          } catch (fetchError) {
+            failedIds.push(summary.id);
             // eslint-disable-next-line no-console
-            console.error(`Error loading force file ${filename}:`, fileError);
+            console.error(`Failed to load force: ${summary.id}`, fetchError);
             return null;
           }
         });
@@ -200,25 +189,26 @@ export function useForceManager() {
         const loadedForces = await Promise.all(forcePromises);
         const validForces = loadedForces.filter((f) => f !== null).map(normalizeForce);
 
+        validForces.forEach((force) => {
+          lastSyncedRef.current[force.id] = JSON.parse(JSON.stringify(force));
+          pendingForceRef.current[force.id] = force;
+        });
+
         setForces(validForces);
 
-        // Select first force by default
         if (validForces.length > 0) {
           setSelectedForceId(validForces[0].id);
         }
 
-        if (failedFiles.length > 0) {
-          const loadedCount = validForces.length;
-          const totalCount = manifest.forces.length;
-          const failedList = failedFiles.join(', ');
+        if (failedIds.length > 0) {
           setError(
-            `Loaded ${loadedCount}/${totalCount} forces. Failed to load: ${failedList}. Check data/forces for missing or invalid JSON files.`,
+            `Loaded ${validForces.length}/${summaries.length} forces. Failed to load: ${failedIds.join(', ')}.`,
           );
         }
 
         setLoading(false);
       } catch (err) {
-        setError(err.message);
+        setError(`Failed to reach the BTForceManager API: ${err.message}`);
         setLoading(false);
       }
     };
@@ -231,20 +221,72 @@ export function useForceManager() {
   // Helper to get the current in-universe date for logging purposes
   const getCurrentInGameDate = () => selectedForce?.currentDate || null;
 
+  const scheduleSync = (forceId) => {
+    if (syncTimersRef.current[forceId]) {
+      clearTimeout(syncTimersRef.current[forceId]);
+    }
+    syncTimersRef.current[forceId] = setTimeout(async () => {
+      delete syncTimersRef.current[forceId];
+      const next = pendingForceRef.current[forceId];
+      const prev = lastSyncedRef.current[forceId];
+      if (!next || !prev) return;
+      try {
+        await syncForceToBackend(forceId, prev, next);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(`Background sync failed for force ${forceId}`, err);
+      } finally {
+        lastSyncedRef.current[forceId] = JSON.parse(JSON.stringify(next));
+      }
+    }, SYNC_DEBOUNCE_MS);
+  };
+
   const updateForceData = (updates) => {
     setForces((prev) =>
       prev.map((force) => {
         if (force.id !== selectedForceId) return force;
-        const merged = { ...force, ...updates };
-        return normalizeForce(merged);
+        const merged = normalizeForce({ ...force, ...updates });
+        pendingForceRef.current[force.id] = merged;
+        return merged;
       }),
     );
+    scheduleSync(selectedForceId);
   };
 
-  const addNewForce = (newForce) => {
-    const normalized = normalizeForce(newForce);
-    setForces((prev) => [...prev, normalized]);
-    setSelectedForceId(normalized.id);
+  const addNewForce = async (newForce) => {
+    try {
+      const created = await api.createForce({
+        id: newForce.id,
+        name: newForce.name,
+        description: newForce.description || '',
+        image: newForce.image || '',
+        startingWarchest: newForce.startingWarchest || 0,
+        currentWarchest: newForce.currentWarchest ?? newForce.startingWarchest ?? 0,
+        wpMultiplier: newForce.wpMultiplier || 5,
+      });
+
+      const normalized = normalizeForce({
+        ...newForce,
+        ...created,
+        mechs: [],
+        pilots: [],
+        elementals: [],
+        missions: [],
+        snapshots: [],
+        fullSnapshots: [],
+      });
+
+      lastSyncedRef.current[normalized.id] = JSON.parse(JSON.stringify(normalized));
+      pendingForceRef.current[normalized.id] = normalized;
+
+      setForces((prev) => [...prev, normalized]);
+      setSelectedForceId(normalized.id);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to create force on the backend', err);
+      // eslint-disable-next-line no-alert
+      alert(`Failed to create force: ${err.message}`);
+    }
   };
 
   const exportData = () => {

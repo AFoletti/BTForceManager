@@ -1,0 +1,22 @@
+{
+  "summary": "Phase 8 Write API tested. All 36 pytest tests pass (31 regression from Phases 1-7 + 5 new Phase 8 lifecycle/downtime tests). External URL smoke test confirmed force CRUD, mech CRUD, cascade delete (204 + subsequent 404), warchest defaulting to startingWarchest, and unknown-force-id -> 404 on mech create. Frontend loads correctly and displays untouched real campaign data (ghost-bear, 91st-division-vision-of-words). Real campaign data is pristine.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_write_api_lifecycle.py",
+    "/app/test_reports/pytest/iteration_8.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "missions_write.py is 361 lines - approaching the 700-line threshold but still manageable. Consider extracting the mission-completion logic (kills/achievements/reward computation, ~90 lines) into domain/missions_logic.py for cleaner separation if this file grows further.",
+    "Mission completion PUT endpoint intentionally does NOT alter currentWarchest (per problem statement, mirroring lib/missions.js). This is documented in the code — good.",
+    "Payload schema for mission create uses assignedMechs/assignedElementals (not assignedMechIds); this is consistent internally and covered by pytest. If frontend integration in later phase expects *Ids suffix, be aware."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "None (no auth on API)",
+  "seed_data_creation": "Created TEST_Phase8_Force via curl for external URL verification; cleaned up via DELETE cascade (verified 204 + subsequent 404). Real campaign data verified intact.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Phase 8 write API is fully working. Mission-completion payload schema uses {objectives:[{id,achieved,wpReward,...}], mechs:{id:{status}}, pilots:{id:{kills:[{mechModel,tonnage}], assists, injuries}}, elementals:{id:{status,suitsDamaged,suitsDestroyed}}}. All 36 backend pytest tests pass in 2.67s. Downtime formulas verified via pytest (repair-armor weight/wpMultiplier, heal-injury 30*injuries/wpMultiplier, train-gunnery 200/wpMultiplier, repair-elemental ceil((suitsDamaged*2.5)/wpMultiplier)). Idempotency guard (409) on double-complete confirmed by pytest."
+}
