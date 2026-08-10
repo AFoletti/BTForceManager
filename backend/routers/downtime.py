@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_session
 from models import Force, Mech, Elemental, Pilot, PilotAchievement
 from serializers import mech_to_dict, elemental_to_dict, pilot_to_dict
-from domain.downtime_logic import get_action, evaluate_downtime_cost
+from domain.downtime_logic import get_action, evaluate_downtime_cost, load_downtime_actions
 from domain.achievements_logic import record_injuries_healed
 
 router = APIRouter(prefix="/api")
@@ -17,6 +17,11 @@ router = APIRouter(prefix="/api")
 class DowntimeActionIn(BaseModel):
     actionId: str
     lastMissionName: Optional[str] = None
+
+
+@router.get("/downtime-actions")
+async def get_downtime_actions_config():
+    return load_downtime_actions()
 
 
 @router.post("/mechs/{mech_id}/downtime")

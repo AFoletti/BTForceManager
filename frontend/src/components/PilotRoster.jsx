@@ -9,6 +9,7 @@ import { findMechForPilot } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { computeCombatStats } from '../lib/achievements';
 import { formatNumber } from '../lib/utils';
+import * as api from '../lib/api';
 
 // Sort icon component (moved outside to avoid recreation on render)
 function SortIcon({ sortKey, sortConfig }) {
@@ -23,11 +24,10 @@ export default function PilotRoster({ force, onUpdate }) {
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   const [achievementDefinitions, setAchievementDefinitions] = useState([]);
 
-  // Load achievement definitions
+  // Load achievement definitions from the backend catalog
   useEffect(() => {
-    fetch('./data/achievements.json')
-      .then((res) => res.json())
-      .then((data) => setAchievementDefinitions(data.achievements || []))
+    api.listAchievementDefinitions()
+      .then((data) => setAchievementDefinitions(data || []))
       .catch(() => setAchievementDefinitions([]));
   }, []);
 

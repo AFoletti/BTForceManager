@@ -12,6 +12,7 @@ import { findPilotForMech, findMechForPilot, getMechAdjustedBV, getAdjustedBV } 
 import { buildLedgerEntries, summariseLedger } from '../lib/ledger';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { computeCombatStats } from '../lib/achievements';
+import * as api from '../lib/api';
 
 // Safe number formatter for PDF (uses apostrophe as thousands separator)
 const formatNumber = (num) => {
@@ -1309,11 +1310,10 @@ export default function PDFExport({ force }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [achievementDefs, setAchievementDefs] = useState([]);
 
-  // Load achievement definitions
+  // Load achievement definitions from the backend catalog
   useEffect(() => {
-    fetch('./data/achievements.json')
-      .then((res) => res.json())
-      .then((data) => setAchievementDefs(data.achievements || []))
+    api.listAchievementDefinitions()
+      .then((data) => setAchievementDefs(data || []))
       .catch(() => setAchievementDefs([]));
   }, []);
 

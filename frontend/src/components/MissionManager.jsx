@@ -25,6 +25,7 @@ import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
 import { checkAchievements, findNewAchievements, recordMissionCompletion, addKill, addAssists, createEmptyCombatRecord } from '../lib/achievements';
 import MechAutocomplete from './MechAutocomplete';
+import * as api from '../lib/api';
 
 const emptyMissionForm = {
   name: '',
@@ -61,11 +62,10 @@ export default function MissionManager({ force, onUpdate }) {
   const [formData, setFormData] = useState(emptyMissionForm);
   const [spChoices, setSpChoices] = useState([]);
 
-  // Load SP choices from JSON file
+  // Load SP choices from the backend catalog
   useEffect(() => {
-    fetch('./data/sp-choices.json')
-      .then((res) => res.json())
-      .then((data) => setSpChoices(data.spChoices || []))
+    api.listSpChoices()
+      .then((data) => setSpChoices(data || []))
       .catch(() => setSpChoices([]));
   }, []);
 
@@ -88,11 +88,10 @@ export default function MissionManager({ force, onUpdate }) {
   const [showAchievementsPopup, setShowAchievementsPopup] = useState(false);
   const [newAchievements, setNewAchievements] = useState([]);
 
-  // Load achievement definitions
+  // Load achievement definitions from the backend catalog
   useEffect(() => {
-    fetch('./data/achievements.json')
-      .then((res) => res.json())
-      .then((data) => setAchievementDefinitions(data.achievements || []))
+    api.listAchievementDefinitions()
+      .then((data) => setAchievementDefinitions(data || []))
       .catch(() => setAchievementDefinitions([]));
   }, []);
 

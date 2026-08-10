@@ -5,16 +5,11 @@ import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Textarea } from './ui/textarea';
 import { Wrench, AlertTriangle, Settings, Trophy } from 'lucide-react';
-import {
-  buildDowntimeContext,
-  evaluateDowntimeCost,
-  applyMechDowntimeAction,
-  applyElementalDowntimeAction,
-  applyPilotDowntimeAction,
-} from '../lib/downtime';
+import { buildDowntimeContext, evaluateDowntimeCost } from '../lib/downtime';
 import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
 import { UNIT_STATUS } from '../lib/constants';
 import { checkAchievements, findNewAchievements } from '../lib/achievements';
+import * as api from '../lib/api';
 
 // Planned downtime action kept in a cycle backlog until validation.
 // Actions are applied in sequence to a working copy of the force when
@@ -44,15 +39,12 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [newAchievements, setNewAchievements] = useState([]);
 
   useEffect(() => {
-    Promise.all([
-      fetch('./data/downtime-actions.json').then((r) => r.json()),
-      fetch('./data/achievements.json').then((r) => r.json()),
-    ])
+    Promise.all([api.getDowntimeActionsConfig(), api.listAchievementDefinitions()])
       .then(([downtimeData, achievementsData]) => {
         setMechActions(downtimeData.mechActions || []);
         setElementalActions(downtimeData.elementalActions || []);
         setPilotActions(downtimeData.pilotActions || []);
-        setAchievementDefinitions(achievementsData.achievements || []);
+        setAchievementDefinitions(achievementsData || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -153,68 +145,103 @@ export default function DowntimeOperations({ force, onUpdate }) {
     setPlannedActions([]);
   };
 
-  const executeDowntimeCycle = () => {
+  const executeDowntimeCycle = async () => {
     if (plannedActions.length === 0) return;
     if (!canAffordCycle) return;
 
-    // Apply all planned actions sequentially to a working copy of the force.
+    // Apply all planned actions sequentially against the backend, persisting
+    // cost/activity-log/status changes immediately instead of only locally.
     let workingForce = { ...force };
+    let appliedCount = 0;
 
-    plannedActions.forEach((plan) => {
-      const timestamp = workingForce.currentDate;
-      const lastMission = workingForce.missions?.[workingForce.missions.length - 1];
+    try {
+      for (const plan of plannedActions) {
+        const lastMission = workingForce.missions?.[workingForce.missions.length - 1];
+        const lastMissionName = lastMission?.name || null;
 
-      if (plan.unitType === 'mech') {
-        const result = applyMechDowntimeAction(workingForce, {
-          mechId: plan.unitId,
-          action: {
-            id: plan.actionId,
-            name: plan.actionName,
-            makesUnavailable: plan.makesUnavailable,
-          },
-          cost: plan.cost,
-          timestamp,
-          lastMissionName: lastMission?.name || null,
-        });
-        workingForce = {
-          ...workingForce,
-          mechs: result.mechs,
-          currentWarchest: result.currentWarchest,
-        };
-      } else if (plan.unitType === 'elemental') {
-        const result = applyElementalDowntimeAction(workingForce, {
-          elementalId: plan.unitId,
-          actionId: plan.actionId,
-          action: {
-            name: plan.actionName,
-          },
-          cost: plan.cost,
-          timestamp,
-          lastMissionName: lastMission?.name || null,
-        });
-        workingForce = {
-          ...workingForce,
-          elementals: result.elementals,
-          currentWarchest: result.currentWarchest,
-        };
-      } else if (plan.unitType === 'pilot') {
-        const result = applyPilotDowntimeAction(workingForce, {
-          pilotId: plan.unitId,
-          actionId: plan.actionId,
-          action: {
-            name: plan.actionName,
-          },
-          cost: plan.cost,
-          timestamp,
-          lastMissionName: lastMission?.name || null,
-        });
-        workingForce = {
-          ...workingForce,
-          pilots: result.pilots,
-          currentWarchest: result.currentWarchest,
-        };
+        if (plan.actionId === 'other') {
+          // "Other" actions have no backend catalog entry - persist the
+          // activity log entry and warchest cost directly via the generic
+          // entity/force update endpoints.
+          const timestamp = workingForce.currentDate;
+          const activityLogEntry = {
+            timestamp,
+            action: plan.actionName,
+            mission: lastMissionName,
+            cost: plan.cost,
+          };
+
+          if (plan.unitType === 'mech') {
+            const mech = workingForce.mechs.find((m) => m.id === plan.unitId);
+            const activityLog = [...(mech.activityLog || []), activityLogEntry];
+            const updated = await api.updateMech(plan.unitId, { activityLog });
+            workingForce = {
+              ...workingForce,
+              mechs: workingForce.mechs.map((m) => (m.id === plan.unitId ? updated : m)),
+            };
+          } else if (plan.unitType === 'elemental') {
+            const elemental = workingForce.elementals.find((e) => e.id === plan.unitId);
+            const activityLog = [...(elemental.activityLog || []), activityLogEntry];
+            const updated = await api.updateElemental(plan.unitId, { activityLog });
+            workingForce = {
+              ...workingForce,
+              elementals: workingForce.elementals.map((e) => (e.id === plan.unitId ? updated : e)),
+            };
+          } else {
+            const pilot = workingForce.pilots.find((p) => p.id === plan.unitId);
+            const activityLog = [...(pilot.activityLog || []), activityLogEntry];
+            const updated = await api.updatePilot(plan.unitId, { activityLog });
+            workingForce = {
+              ...workingForce,
+              pilots: workingForce.pilots.map((p) => (p.id === plan.unitId ? { ...p, ...updated } : p)),
+            };
+          }
+
+          const nextWarchest = workingForce.currentWarchest - plan.cost;
+          await api.updateForce(force.id, { currentWarchest: nextWarchest });
+          workingForce = { ...workingForce, currentWarchest: nextWarchest };
+        } else if (plan.unitType === 'mech') {
+          const result = await api.applyMechDowntime(plan.unitId, {
+            actionId: plan.actionId,
+            lastMissionName,
+          });
+          workingForce = {
+            ...workingForce,
+            mechs: workingForce.mechs.map((m) => (m.id === plan.unitId ? result.mech : m)),
+            currentWarchest: result.currentWarchest,
+          };
+        } else if (plan.unitType === 'elemental') {
+          const result = await api.applyElementalDowntime(plan.unitId, {
+            actionId: plan.actionId,
+            lastMissionName,
+          });
+          workingForce = {
+            ...workingForce,
+            elementals: workingForce.elementals.map((e) => (e.id === plan.unitId ? result.elemental : e)),
+            currentWarchest: result.currentWarchest,
+          };
+        } else if (plan.unitType === 'pilot') {
+          const result = await api.applyPilotDowntime(plan.unitId, {
+            actionId: plan.actionId,
+            lastMissionName,
+          });
+          workingForce = {
+            ...workingForce,
+            pilots: workingForce.pilots.map((p) => (p.id === plan.unitId ? { ...p, ...result.pilot } : p)),
+            currentWarchest: result.currentWarchest,
+          };
+        }
+
+        appliedCount += 1;
       }
-    });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Downtime action failed, stopping cycle', err);
+      // eslint-disable-next-line no-alert
+      alert(
+        `A downtime action failed to save: ${err.message}. Actions already applied were kept; the rest remain queued for retry.`,
+      );
+    }
 
     // Check achievements for all pilots after downtime cycle
     const allNewAchievements = [];
@@ -319,8 +346,8 @@ export default function DowntimeOperations({ force, onUpdate }) {
       fullSnapshots: nextFullSnapshots,
     });
 
-    setPlannedActions([]);
-    
+    setPlannedActions((prev) => prev.slice(appliedCount));
+
     // Show achievements popup if any new achievements were earned
     if (allNewAchievements.length > 0) {
       setNewAchievements(allNewAchievements);
@@ -759,10 +786,11 @@ export default function DowntimeOperations({ force, onUpdate }) {
         </div>
         <div className="p-4 space-y-3 text-sm">
           <div className="text-muted-foreground mb-2">
-            Actions are loaded from{' '}
+            Actions are loaded from the backend{' '}
             <code className="bg-muted px-1.5 py-0.5 rounded text-xs">
-              data/downtime-actions.json
-            </code>
+              /api/downtime-actions
+            </code>{' '}
+            catalog.
           </div>
 
           <div>
@@ -832,7 +860,8 @@ export default function DowntimeOperations({ force, onUpdate }) {
                   Edit{' '}
                   <code className="bg-muted px-1 py-0.5 rounded">
                     data/downtime-actions.json
-                  </code>
+                  </code>{' '}
+                  (backend config source)
                 </li>
                 <li>
                   Formulas use:{' '}

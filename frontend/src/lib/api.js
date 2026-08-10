@@ -69,3 +69,23 @@ export const deleteFullSnapshot = (id) => request('DELETE', `/full-snapshots/${i
 export const searchMechCatalog = (search) =>
   request('GET', `/mech-catalog?search=${encodeURIComponent(search)}`);
 export const getMechCatalogImportStatus = () => request('GET', '/mech-catalog/import-status');
+
+// Downtime
+export const getDowntimeActionsConfig = () => request('GET', '/downtime-actions');
+export const applyMechDowntime = (mechId, payload) => request('POST', `/mechs/${mechId}/downtime`, payload);
+export const applyElementalDowntime = (elementalId, payload) =>
+  request('POST', `/elementals/${elementalId}/downtime`, payload);
+export const applyPilotDowntime = (pilotId, payload) => request('POST', `/pilots/${pilotId}/downtime`, payload);
+
+// Achievements
+export const listAchievementDefinitions = () => request('GET', '/achievement-definitions');
+export const getPilotAchievements = (pilotId) => request('GET', `/pilots/${pilotId}/achievements`);
+
+// Special abilities
+export const listSpecialAbilities = () => request('GET', '/special-abilities');
+export const getForceSpecialAbilities = (forceId) => request('GET', `/forces/${forceId}/special-abilities`);
+export const setForceSpecialAbilities = (forceId, abilityIds) =>
+  request('PUT', `/forces/${forceId}/special-abilities`, { abilityIds });
+
+// SP choices
+export const listSpChoices = () => request('GET', '/sp-choices');

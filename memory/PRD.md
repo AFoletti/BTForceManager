@@ -59,6 +59,16 @@ See below entries (unchanged from prior session).
 - CORS in `server.py` uses `allow_origins=["*"]` with `allow_credentials=True` (spec-invalid combo, harmless now with no auth) - tighten before any phase introducing auth/sessions.
 - Migration script doesn't remove forces previously imported but later dropped from manifest.json - fine for read-only phase, revisit once writes are trusted.
 
+### Issue 1 (Rewire frontend to backend API instead of static JSON) - Done, tested 100% pass (testing agent, 4 new + 37 pre-existing pytest, 8/8 UI scenarios)
+- `frontend/src/lib/api.js`: added `applyMechDowntime/applyElementalDowntime/applyPilotDowntime`, `getDowntimeActionsConfig`, `listAchievementDefinitions`, `getPilotAchievements`, `listSpecialAbilities`, `getForceSpecialAbilities`, `setForceSpecialAbilities`, `listSpChoices`.
+- `backend/routers/downtime.py`: new `GET /api/downtime-actions` (returns `load_downtime_actions()` from `domain/downtime_logic.py` - same JSON file, now API-served).
+- `frontend/src/components/DowntimeOperations.jsx`: `executeDowntimeCycle` is now async - calls `POST /api/{mechs,elementals,pilots}/{id}/downtime` sequentially per planned action, using the server-returned entity + `currentWarchest` to update local state (no more pure client-side cost/state calculation for catalog actions). "Other" custom actions (no backend catalog entry) persist via direct `PUT` on the entity + `PUT /api/forces/{id}` for the warchest delta. On a mid-cycle failure, already-applied actions are kept and only the remaining queue stays pending for retry (`setPlannedActions(prev => prev.slice(appliedCount))`).
+- `frontend/src/components/MissionManager.jsx`, `PilotRoster.jsx`, `PDFExport.jsx`: SP choices and achievement definitions now loaded via `api.listSpChoices()` / `api.listAchievementDefinitions()` instead of `fetch('./data/...')`.
+- `useForceManager.js` was already backend-wired from a prior phase (confirmed via regression, no changes needed).
+- Verified: `grep -r "fetch('./data" frontend/src` returns zero results. Hard-reload persistence confirmed for mech/pilot/elemental downtime actions, "Other Action", and SP purchases.
+- Cleanup: testing agent's QA mutations to the real `ghost-bear` force (warchest, activity logs, currentDate) were removed by re-running `import_legacy_data.py` + `migrate_reference_data.py` + `migrate_special_abilities.py` (idempotent); all 41 backend pytest pass on clean data.
+- Minor fix: updated stale UI caption in `DowntimeOperations.jsx` that referenced the old static JSON path directly.
+
 ## Prioritized Backlog
 ### P0
 - Phase 10: Docker Compose full stack (frontend + backend) validated on actual Synology NAS.
