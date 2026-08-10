@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Minus, Users, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Minus, Users, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { formatNumber } from '../lib/utils';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
@@ -161,6 +161,14 @@ export default function ElementalRoster({ force, onUpdate }) {
     setSortConfig({ key, direction });
   };
 
+  const handleDelete = (elemental, e) => {
+    e.stopPropagation();
+    // eslint-disable-next-line no-alert
+    if (!window.confirm(`Remove "${elemental.name}" from the roster? This cannot be undone.`)) return;
+    const updatedElementals = (force.elementals || []).filter((el) => el.id !== elemental.id);
+    onUpdate({ elementals: updatedElementals });
+  };
+
   const filteredElementals = (force.elementals || []).filter((elemental) => {
     const searchStr = filterText.toLowerCase();
     return (
@@ -230,7 +238,7 @@ export default function ElementalRoster({ force, onUpdate }) {
               <span className="text-xs text-muted-foreground">
                 {force.elementals?.length || 0} Points
               </span>
-              <Button size="sm" onClick={() => openDialog()}>
+              <Button size="sm" onClick={() => openDialog()} data-testid="add-elemental-button">
                 <Plus className="w-4 h-4" />
                 Add Elemental
               </Button>
@@ -264,14 +272,15 @@ export default function ElementalRoster({ force, onUpdate }) {
                 <div className="flex items-center justify-end">BV <SortIcon column="bv" /></div>
               </th>
               <th>Recent Activity</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {!sortedElementals || sortedElementals.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center py-8 text-muted-foreground">
+                <td colSpan="10" className="text-center py-8 text-muted-foreground">
                   {force.elementals?.length === 0 
-                    ? "No elementals in roster. Add elementals via Data Editor." 
+                    ? "No elementals in roster. Click \"Add Elemental\" to get started." 
                     : "No elementals match your filter."}
                 </td>
               </tr>
@@ -376,6 +385,17 @@ export default function ElementalRoster({ force, onUpdate }) {
                     ) : (
                       <span className="text-muted-foreground/50">No activity</span>
                     )}
+                  </td>
+                  <td className="text-center">
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={(e) => handleDelete(elemental, e)}
+                      data-testid={`delete-elemental-btn-${elemental.id}`}
+                      title="Remove from roster"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </td>
                 </tr>
               ))

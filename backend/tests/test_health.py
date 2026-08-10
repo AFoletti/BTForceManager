@@ -7,7 +7,7 @@ import pytest
 from dotenv import load_dotenv
 load_dotenv()
 
-PREVIEW_URL = os.environ.get("preview_endpoint", "https://btforce-sandbox.preview.emergentagent.com").rstrip("/")
+PREVIEW_URL = os.environ.get("preview_endpoint", "https://force-manager-dev.preview.emergentagent.com").rstrip("/")
 INTERNAL_URL = "http://localhost:8001"
 # Derived from DATABASE_URL (sqlite+aiosqlite:////abs/path.db) rather than
 # hardcoded - Issue 5 moved the live DB to the repo's data/btforce.db.

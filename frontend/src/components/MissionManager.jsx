@@ -56,11 +56,13 @@ const calculateOpForTotalBV = (opForUnits) => {
   return opForUnits.reduce((sum, unit) => sum + getOpForAdjustedBV(unit), 0);
 };
 
-export default function MissionManager({ force, onUpdate }) {
+export default function MissionManager({ force, onUpdate, flushForceSync }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
   const [formData, setFormData] = useState(emptyMissionForm);
   const [spChoices, setSpChoices] = useState([]);
+  const [createWaypointOnComplete, setCreateWaypointOnComplete] = useState(false);
+  const [creatingWaypoint, setCreatingWaypoint] = useState(false);
 
   // Load SP choices from the backend catalog
   useEffect(() => {
@@ -409,6 +411,7 @@ export default function MissionManager({ force, onUpdate }) {
     setMissionBeingCompleted(mission);
     setCompletionObjectives(objectives);
     setCompletionRecap(mission.recap || '');
+    setCreateWaypointOnComplete(false);
     setShowCompleteDialog(true);
   };
 
@@ -479,9 +482,11 @@ export default function MissionManager({ force, onUpdate }) {
     }));
   };
 
-  const confirmCompleteMission = () => {
+  const confirmCompleteMission = async () => {
     if (!missionBeingCompleted) return;
     const timestamp = force.currentDate;
+    const missionName = missionBeingCompleted.name || 'mission';
+    const shouldCreateWaypoint = createWaypointOnComplete;
 
     const updatedObjectives = completionObjectives.map((obj) => ({
       ...obj,
@@ -639,7 +644,23 @@ export default function MissionManager({ force, onUpdate }) {
 
     setShowCompleteDialog(false);
     setMissionBeingCompleted(null);
-    
+
+    if (shouldCreateWaypoint) {
+      setCreatingWaypoint(true);
+      try {
+        await flushForceSync(force.id);
+        await api.createForceStateSnapshot(force.id, {
+          label: `After ${missionName}`,
+          waypointType: 'MISSION_END',
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-alert
+        alert(`Mission completed, but the waypoint snapshot failed: ${err.message}`);
+      } finally {
+        setCreatingWaypoint(false);
+      }
+    }
+
     // Show achievements popup if any new achievements were earned
     if (allNewAchievements.length > 0) {
       setNewAchievements(allNewAchievements);
@@ -1749,11 +1770,23 @@ export default function MissionManager({ force, onUpdate }) {
                 <span>Current Warchest: {formatNumber(force.currentWarchest)} WP</span>
               </div>
 
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={createWaypointOnComplete}
+                  onChange={(e) => setCreateWaypointOnComplete(e.target.checked)}
+                  data-testid="mission-complete-waypoint-checkbox"
+                />
+                Create waypoint snapshot after this mission (full backup of this force, optional)
+              </label>
+
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setShowCompleteDialog(false)}>
                   Cancel
                 </Button>
-                <Button onClick={confirmCompleteMission}>Confirm Completion</Button>
+                <Button onClick={confirmCompleteMission} disabled={creatingWaypoint} data-testid="confirm-complete-mission-btn">
+                  {creatingWaypoint ? 'Saving Waypoint...' : 'Confirm Completion'}
+                </Button>
               </div>
             </div>
           )}

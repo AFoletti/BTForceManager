@@ -11,13 +11,59 @@ This document is aimed at developers who want to work on the source, extend the 
 The app is a **React frontend** + **FastAPI backend** + **SQLite database**:
 
 - `frontend/` – React 18 + Tailwind SPA. Calls the backend exclusively through `REACT_APP_BACKEND_URL` + `/api/*` routes (see `frontend/src/lib/api.js`).
-- `backend/` – FastAPI app (`server.py`), SQLAlchemy models (`models.py`), Alembic migrations (`alembic/`), and per-resource routers (`routers/`).
+- `backend/` – FastAPI app (`server.py`), SQLAlchemy models (`models.py`), Alembic migrations (`alembic/`), per-resource routers (`routers/`), an `admin/` namespace for global/operational tooling, and a `services/` layer for logic shared across routers (force state serialization).
 - `data/btforce.db` – the single, committed SQLite database. It ships prefilled with the full reference catalog (mech catalog, achievements, SP choices, downtime actions) and any campaign forces already created. There is no separate "example" vs "live" database - the file in the repo is the one the app runs against, and there are no JSON/CSV data files or import scripts left in the repo as a data source.
 - `backend/watcher.py` + `backend/import_mech_catalog.py` – the only remaining CSV-related code, and it's operational rather than a data source: drop a mech catalog CSV (e.g. exported from MekHQ/MUL) into the watched folder and it's imported automatically, or run `import_mech_catalog.py <path>` manually. See README.md's "Updating the Mech Catalog" section.
 
 ### 1.2 Deployment
 
 See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Docker host). In short: `docker compose up -d --build` builds and starts both containers, Alembic migrations run automatically against the bind-mounted `data/btforce.db`, and there is no seeding/import step at boot. The startup sequence (both in Docker and in local dev) is always exactly: run Alembic migrations, then start the server - never anything that inspects the DB and conditionally imports data. A cloned repo is assumed to already have a non-empty, ready-to-use `data/btforce.db`; there is no "first boot" concept. To reset data, replace the DB file manually (see DEPLOYMENT.md's "Resetting data" section) - there is no scripted reset.
+
+### 1.3 Admin namespace
+
+`backend/admin/` exposes a separate `/api/admin/...` namespace, kept independent of the "play" APIs used by Mission Manager, Downtime, and force operations. It's the only place with write access to global/app-scoped configuration:
+
+- `admin/router.py` - `GET /api/admin/health`.
+- `admin/sp_choices.py` - full CRUD for the global SP purchase catalog (`SpChoice`). The play-facing `GET /api/sp-choices` stays read-only.
+- `admin/downtime_actions.py` - full CRUD for the global downtime action catalog (`DowntimeAction`). The play-facing `GET /api/downtime-actions` stays read-only.
+- `admin/achievements.py` - full CRUD for global achievement definitions (`AchievementDefinition`). The play-facing `GET /api/achievement-definitions` stays read-only. Deleting a definition also removes any `PilotAchievement` rows referencing it.
+- `admin/mech_catalog.py` - `POST /api/admin/mech-catalog/import`, accepting a MekBay CSV upload and running it through the same `import_catalog()` upsert-by-MUL-ID logic used by the manual script and the watched-folder mechanism (`watcher.py`). This is the primary in-app path; the watched folder remains available for Docker/ops workflows (see DEPLOYMENT.md).
+
+Force CRUD itself (`POST/PUT/DELETE /api/forces`) is **not** duplicated under `/api/admin` - the Admin UI's Forces section reuses the existing play-facing endpoints directly. Admin vs. play is a pure frontend/UI distinction (`components/AdminView.jsx` and its `components/admin/*` panels), reachable only via the header's Admin entry point - there are no accounts or roles.
+
+Two Force fields exist specifically for Admin-configured Warchest setup: `startingDate` (campaign start date, default `"3025-01-01"`) and the pre-existing `wpMultiplier` (the Warchest-to-Support-Point conversion rate used by the Downtime tab, default now `10`). Both are set via the same `POST`/`PUT /api/forces` payload the Admin Forces panel uses.
+
+### 1.4 Force state serialization/deserialization service
+
+`backend/services/force_state.py` is the single source of truth for turning a force (plus all of its mechs/pilots/elementals/missions/snapshots/special abilities) into the JSON contract described in section 7 below, and back:
+
+- `serialize_force(session, force_id)` – produces the export/detail JSON. Used by `GET /api/forces/{id}`, `GET /api/forces/{id}/export`, and `POST /api/forces/{id}/state-snapshots` (`routers/forces.py`, `routers/force_snapshots.py`), so Export, the regular detail view, and snapshot creation can never drift apart.
+- `deserialize_force(session, force_id, data)` – reconstructs/overwrites a force's full state in the database from that same JSON shape. Not wired to any endpoint yet; it exists so force-level snapshot restore (a later issue) can call it directly instead of duplicating serialization logic.
+
+### 1.4.1 Full-state force snapshots (backup, not restore yet)
+
+`force_snapshots` (`models.py::ForceSnapshot`, `routers/force_snapshots.py`) stores complete, restorable backups of a force - each row is one `serialize_force()` payload plus `label`/`waypointType`/`createdAt` metadata. This is a **separate feature** from the pre-existing lightweight point-in-time `Snapshot`/`FullSnapshot` models that back the Snapshots tab (untouched by this work) - those track warchest/unit-count stats over time, not a restorable full state.
+
+Endpoints (note: the issue that requested this suggested `/api/forces/{id}/snapshots` as the path, but that's already taken by the pre-existing lightweight Snapshot creation endpoint above, so this uses `state-snapshots` instead to avoid breaking it):
+
+- `POST /api/forces/{id}/state-snapshots` - `{label, waypointType}` body; serializes current force state via `serialize_force` and stores it.
+- `GET /api/forces/{id}/state-snapshots` - metadata only (`id`, `label`, `waypointType`, `createdAt`), most recent first.
+- `GET /api/forces/{id}/state-snapshots/{snapshot_id}` - metadata plus the full `snapshotJson` payload.
+
+App-level catalogs (mech catalog, SP purchases, downtime actions, achievement definitions) are never copied into a snapshot - `serialize_force` only ever emits force-scoped data (by-value fields and light references like achievement/ability ids), so nothing catalog-wide needs restoring. Restore itself (applying a snapshot back onto a force) is out of scope here and will reuse `deserialize_force` in a later issue. Deleting a force cascades to `force_snapshots` rows (`routers/forces_write.py::delete_force`), same as the other per-force tables.
+
+### 1.5 Migration harness
+
+The project's migration mechanism is Alembic (`backend/alembic/`): every schema change is a versioned revision file under `alembic/versions/`, and the DB's current version is tracked in the `alembic_version` table inside `data/btforce.db`. `backend/migration_harness.py::run_migrations()` runs `alembic upgrade head` automatically every time the backend starts (called from `server.py`'s FastAPI `lifespan`, in addition to the Docker entrypoint already running it as a separate step) - a no-op on an up-to-date database, and safe to run repeatedly. To add a new migration later: `cd backend && alembic revision --autogenerate -m "..."`; it's picked up automatically on the next restart, no code changes needed here.
+
+### 1.6 Force roster CRUD and deletion behavior
+
+Mechs, elementals, and pilots each have full create/edit/delete endpoints (`routers/mechs.py`, `elementals.py`, `pilots.py`) and matching UI in `MechRoster.jsx`/`ElementalRoster.jsx`/`PilotRoster.jsx` (click a row to edit any field, including catalog-sourced ones like name/BV/weight; a trash-icon button per row deletes, gated by a confirmation prompt). The frontend never calls these endpoints directly - `hooks/forceSync.js` diffs the in-memory force against the last-synced state and issues the create/update/delete calls itself, so removing an entity from the local array is enough to trigger its deletion.
+
+Documented deletion behavior (no soft-delete, no blocking - all three are hard deletes with an explicit, narrow cascade):
+
+- **Mech / Elemental**: deleting one just deletes that row. Nothing else references a mech/elemental by id at the DB level; a since-deleted unit's id lingering in a past mission's `assignedMechs`/`assignedElementals` list is expected and handled gracefully by the frontend (`lib/missions.js::getAssignedMechs/getAssignedElementals` filter out ids no longer in the roster) - mission history keeps `totalTonnage`/BV numbers already computed at completion time, it doesn't crash or refetch a deleted unit.
+- **Pilot**: deleting a pilot removes it and cascades to `PilotAchievement` and `PilotSpaAssignment` link rows (`routers/pilots.py::delete_pilot`). The pilot's own `combatRecord` (kills, assists, mission history) is embedded JSON on the pilot row itself, so it's deleted with the pilot - by design, since it belongs to that pilot and nothing else reads it. Global catalogs (`achievement_definitions`, `pilot_special_abilities`) are never touched by a pilot delete. Any mech the pilot was flying is **unassigned, not deleted** - `pilot_id` is cleared to `""` server-side, and the frontend mirrors the same unassignment locally for immediate UI consistency.
 
 ---
 
@@ -35,7 +81,10 @@ See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Doc
 │   ├── server.py              # FastAPI app entrypoint
 │   ├── models.py               # SQLAlchemy models
 │   ├── database.py             # Engine/session setup (reads DATABASE_URL)
+│   ├── migration_harness.py    # Run-on-start Alembic migration harness
 │   ├── alembic/                # Migrations
+│   ├── admin/                  # Admin namespace (/api/admin/...), scaffolding
+│   ├── services/                # Shared logic (force state serialization/deserialization)
 │   ├── routers/                # One module per resource (forces, mechs, downtime, ...)
 │   ├── domain/                  # Pure business logic (downtime formulas, achievements, ...)
 │   ├── watcher.py               # Watched-folder mech catalog auto-import
@@ -182,7 +231,7 @@ For weight-class achievements, mechs are classified as:
 - `src/App.js`
   - Header with force selector, export actions and PDF button.
   - Force banner showing current Warchest, counts, special abilities, and optional image.
-  - Tabbed content for Mechs, Elementals, Pilots, Missions, Downtime, Notes, Data Editor.
+  - Tabbed content for Mechs, Elementals, Pilots, Missions, Downtime, Notes, Snapshots.
 
 - `src/hooks/useForceManager.js`
   - Fetches forces from `GET /api/forces` and `GET /api/forces/{id}`.
@@ -237,7 +286,8 @@ For weight-class achievements, mechs are classified as:
 - `components/ElementalRoster.jsx` – Elemental points management.
 - `components/MissionManager.jsx` – Mission CRUD, SP purchases, kill tracking, achievement popup.
 - `components/DowntimeOperations.jsx` – Downtime actions with formula costs.
-- `components/DataEditor.jsx` – JSON editor for force data.
+- `components/AdminView.jsx` – Tabbed Admin modal (Forces, Mech Catalog, SP Purchases, Downtime, Achievements), reachable only via the header's Admin entry point.
+- `components/admin/*` – Admin panels: `AdminForcesPanel.jsx`, `AdminMechCatalogPanel.jsx` (CSV import + watched-folder status), `AdminSpChoicesPanel.jsx`, `AdminDowntimeActionsPanel.jsx`, `AdminAchievementsPanel.jsx`, `EmojiPicker.jsx`.
 - `components/PDFExport.jsx` – PDF generation with combat records.
 - `components/NotesTab.jsx` – Campaign notes editor.
 - `components/ui/*` – Reusable UI components.

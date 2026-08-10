@@ -13,8 +13,9 @@ class Force(Base):
     image: Mapped[str] = mapped_column(String, default="")
     starting_warchest: Mapped[int] = mapped_column(Integer, default=0)
     current_warchest: Mapped[int] = mapped_column(Integer, default=0)
-    wp_multiplier: Mapped[int] = mapped_column(Integer, default=5)
+    wp_multiplier: Mapped[int] = mapped_column(Integer, default=10)
     current_date: Mapped[str] = mapped_column(String, default="")
+    starting_date: Mapped[str] = mapped_column(String, default="3025-01-01")
     notes: Mapped[str] = mapped_column(Text, default="")
     other_actions_log: Mapped[list] = mapped_column(JSON, default=list)
 
@@ -116,6 +117,23 @@ class FullSnapshot(Base):
     snapshot_id: Mapped[str] = mapped_column(String, default="")
     force_data: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[str] = mapped_column(String, default="")
+
+
+class ForceSnapshot(Base):
+    """Full-state, restorable backup of a force (roster, missions, pilot
+    records, Warchest, per-force config) - distinct from the lightweight
+    point-in-time stat log in `Snapshot`/`FullSnapshot` above, which back the
+    existing Snapshots tab and are untouched by this table. `snapshot_json`
+    uses the exact same shape as `GET /api/forces/{id}/export`."""
+
+    __tablename__ = "force_snapshots"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    force_id: Mapped[str] = mapped_column(String, ForeignKey("forces.id"), index=True)
+    created_at: Mapped[str] = mapped_column(String, default="")
+    label: Mapped[str] = mapped_column(String, default="")
+    waypoint_type: Mapped[str] = mapped_column(String, default="")
+    snapshot_json: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
 class SpecialAbility(Base):

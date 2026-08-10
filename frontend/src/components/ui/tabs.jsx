@@ -31,7 +31,7 @@ export function TabsList({ className, children }) {
   );
 }
 
-export function TabsTrigger({ value, className, children }) {
+export function TabsTrigger({ value, className, children, ...props }) {
   const { activeTab, setActiveTab } = React.useContext(TabsContext);
   const isActive = activeTab === value;
   
@@ -43,6 +43,7 @@ export function TabsTrigger({ value, className, children }) {
         className
       )}
       onClick={() => setActiveTab(value)}
+      {...props}
     >
       {children}
     </button>

@@ -87,7 +87,8 @@ Forces are created, edited, and deleted directly from the app (the **+ New Force
 
 From inside the app you can also:
 
-- Use the **Data Editor** tab to tweak the currently loaded force as JSON.
+- Use the **Admin** panel to manage global configuration (SP purchases, downtime actions, achievement definitions, mech catalog CSV import) and force-level Warchest setup (starting date, WP conversion rate, special abilities).
+- Use the **Mechs / Elementals / Pilots** tabs to add, edit, and delete any unit in the roster directly.
 - Use **Export** to download the force as `<force-id>.json` for backup/sharing purposes (this is just an export format, not something the app reads back in as a data source).
 
 ### Downtime actions
@@ -120,5 +121,5 @@ The mech catalog provides autocomplete data for adding mechs and logging kills. 
 To add or refresh mechs later, without touching the repo:
 
 1. Visit [MekBay](https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true) and export as CSV.
-2. Drop the CSV file into the watched folder (`MECH_CATALOG_WATCH_HOST_DIR` in Docker deployments - see DEPLOYMENT.md). The backend picks it up automatically within a few seconds, upserts the rows by MUL ID, and archives the processed file.
+2. Upload the CSV directly from the app's **Admin > Mech Catalog** panel (primary path - no filesystem access needed), or drop it into the watched folder (`MECH_CATALOG_WATCH_HOST_DIR` in Docker deployments - see DEPLOYMENT.md), which the backend picks up automatically within a few seconds. Both paths upsert rows by MUL ID and are shown in the Admin panel's watcher status.
 3. Alternatively, run the bundled operational tool directly: `python backend/import_mech_catalog.py /path/to/mechs.csv`.

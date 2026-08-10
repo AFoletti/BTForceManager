@@ -15,6 +15,7 @@ from models import (
     Mission,
     Snapshot,
     FullSnapshot,
+    ForceSnapshot,
     ForceSpecialAbility,
     PilotAchievement,
     PilotSpaAssignment,
@@ -31,8 +32,9 @@ class ForceCreateIn(BaseModel):
     image: str = ""
     startingWarchest: int = 0
     currentWarchest: Optional[int] = None
-    wpMultiplier: int = 5
+    wpMultiplier: int = 10
     currentDate: str = ""
+    startingDate: str = "3025-01-01"
     notes: str = ""
 
 
@@ -44,6 +46,7 @@ class ForceUpdateIn(BaseModel):
     currentWarchest: Optional[int] = None
     wpMultiplier: Optional[int] = None
     currentDate: Optional[str] = None
+    startingDate: Optional[str] = None
     notes: Optional[str] = None
 
 
@@ -55,6 +58,7 @@ _FIELD_MAP = {
     "currentWarchest": "current_warchest",
     "wpMultiplier": "wp_multiplier",
     "currentDate": "current_date",
+    "startingDate": "starting_date",
     "notes": "notes",
 }
 
@@ -69,6 +73,7 @@ def force_core_dict(force):
         "currentWarchest": force.current_warchest,
         "wpMultiplier": force.wp_multiplier,
         "currentDate": force.current_date,
+        "startingDate": force.starting_date,
         "notes": force.notes,
     }
 
@@ -98,6 +103,7 @@ async def create_force(payload: ForceCreateIn, session: AsyncSession = Depends(g
         ),
         wp_multiplier=payload.wpMultiplier,
         current_date=payload.currentDate,
+        starting_date=payload.startingDate,
         notes=payload.notes,
     )
     session.add(force)
@@ -140,6 +146,7 @@ async def delete_force(force_id: str, session: AsyncSession = Depends(get_sessio
     await session.execute(delete(Elemental).where(Elemental.force_id == force_id))
     await session.execute(delete(Snapshot).where(Snapshot.force_id == force_id))
     await session.execute(delete(FullSnapshot).where(FullSnapshot.force_id == force_id))
+    await session.execute(delete(ForceSnapshot).where(ForceSnapshot.force_id == force_id))
     await session.delete(force)
     await session.commit()
     return Response(status_code=204)

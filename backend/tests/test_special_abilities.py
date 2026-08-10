@@ -98,7 +98,7 @@ async def test_special_abilities_pool_crud_and_force_linking():
         force_detail_resp = await client.get("/api/forces/ghost-bear")
         assert force_detail_resp.status_code == 200
         special_abilities = force_detail_resp.json()["specialAbilities"]
-        assert special_abilities == [{"id": ability_id, "title": "Blood Fury", "description": "+1 Initiative when outnumbered"}]
+        assert special_abilities == [{"id": ability_id, "title": "Blood Fury", "description": "+1 Initiative when outnumbered", "unknown": False}]
 
         unlink_resp = await client.put("/api/forces/ghost-bear/special-abilities", json={"abilityIds": []})
         assert unlink_resp.status_code == 200

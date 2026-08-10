@@ -16,13 +16,14 @@ export function Dialog({ open, onOpenChange, children }) {
   );
 }
 
-export function DialogContent({ className, children, onClose }) {
+export function DialogContent({ className, children, onClose, ...props }) {
   return (
     <div
       className={cn(
         'relative w-full max-w-2xl max-h-[90vh] overflow-auto rounded-lg border border-border bg-card p-6 shadow-lg',
         className
       )}
+      {...props}
     >
       {onClose && (
         <button

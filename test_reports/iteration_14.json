@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only testing of new Waypoint Delete feature on WaypointsPanel.jsx (Snapshots tab). All core delete scenarios verified via Playwright: delete column with trash icon, confirm-dialog accept/cancel paths, deleting PRE_RESTORE (pre-restore backup) waypoints, cross-force isolation (via correct dropdown-based navigation), and empty-state reappearance. Light regression check on Create/View/Restore also passed. Backend already curl-verified by main agent per request scope.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "No action items for the delete feature itself - all scenarios passed.",
+    "Minor/unrelated observation: the app does not support deep-linking to a specific force via URL path (e.g. navigating directly to /forces/91st-division-vision-of-words via page.goto does NOT switch the active force - it silently keeps showing the last-selected force from the top-right dropdown/local state). This is pre-existing app architecture (not caused by this feature) but could confuse users who bookmark/share force URLs or reload mid-session on a force other than the default. Not blocking, just flagging for awareness."
+  ],
+  "critical_code_review_comments": [
+    "WaypointsPanel.jsx handleDelete correctly stops propagation, uses window.confirm with the waypoint label, and reloads list via load() after delete - matches existing delete pattern in other rosters as requested.",
+    "No special-casing for PRE_RESTORE type waypoints, confirmed deletable as explicitly requested by user.",
+    "Delete button correctly disabled/absent when no rows exist (empty state renders properly)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (out of scope per request)", "frontend": "100%"},
+  "test_credentials": "N/A - no auth required",
+  "seed_data_creation": "Created and fully cleaned up TEST_-prefixed waypoints on both 'ghost-bear' and '91st-division-vision-of-words' during testing. Both forces confirmed back to 0 waypoints (empty state) at end of test.",
+  "retest_needed": false,
+  "main_agent_can_self_test": false,
+  "context_for_next_testing_agent": "Waypoint delete feature fully verified and passing. Key learning for any future test involving multiple forces: this app does NOT support direct URL navigation to switch forces (page.goto to /forces/{id} keeps showing the previously active force) - always use the top-right <select> dropdown (select_option by label, e.g. 'Bluefang Trinary' / '91st Division Vision of Words') to switch forces in Playwright tests, otherwise you'll get false-positive 'cross-force contamination' results (confirmed this was a test artifact, not an app bug, after redoing the isolation test properly via the dropdown).",
+  "rca_of_false_positive_investigated": "Initially observed what looked like a critical cross-force data leak: after page.goto navigating between force URLs and deleting rows, a waypoint belonging to the other force appeared to be deleted. Root cause: the app ignores the URL path segment for force selection entirely (SPA state, not route-driven) - page.goto to a different force URL doesn't change the active force, it keeps rendering the last force selected via the dropdown/default. Re-ran the same isolation test using the actual dropdown (select_option) to switch forces and cross-force isolation held perfectly (0% contamination). No code fix needed for the delete feature."
+}

@@ -28,5 +28,5 @@
   "seed_data_creation": "None - alembic baseline is intentionally empty per Phase 1 scope.",
   "retest_needed": false,
   "should_main_agent_self_test": true,
-  "context_for_next_testing_agent": "Phase 1 backend is just a health check + empty alembic baseline. When Phase 2 introduces real endpoints (forces/mechs/pilots), add tests under /app/backend/tests/. External URL for ingress: https://btforce-sandbox.preview.emergentagent.com (only /api/* is proxied to backend:8001 externally; internally use http://localhost:8001 for the bare /health route). SQLite DB path: /app/backend/data/btforcemanager.db. Frontend has no REACT_APP_BACKEND_URL configured yet."
+  "context_for_next_testing_agent": "Phase 1 backend is just a health check + empty alembic baseline. When Phase 2 introduces real endpoints (forces/mechs/pilots), add tests under /app/backend/tests/. External URL for ingress: https://force-manager-dev.preview.emergentagent.com (only /api/* is proxied to backend:8001 externally; internally use http://localhost:8001 for the bare /health route). SQLite DB path: /app/backend/data/btforcemanager.db. Frontend has no REACT_APP_BACKEND_URL configured yet."
 }

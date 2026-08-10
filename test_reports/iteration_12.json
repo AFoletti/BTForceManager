@@ -1,0 +1,43 @@
+{
+  "summary": "Verified GitHub Issue #73 scaffolding (admin router, force state serialization, migration harness, frontend AdminView + refactored Export). Backend: all 40 pytest pass, GET /api/admin/health returns {status:ok,namespace:admin}, /api/forces/{id}/export is byte-identical to /api/forces/{id} (both 93634B) and returns 404 for unknown ids. Migration harness runs cleanly on restart (no schema changes, still at head d6f3e50ef277), and /api/health, /api/forces, /api/admin/health all 200 post-restart. Existing campaign data (ghost-bear=Bluefang Trinary 18M/18P, 91st-division 24M/24P) untouched. Frontend: admin-entry-btn visible in header, opens modal with admin-view-placeholder ('Admin area – work in progress') and no functional controls; closes via X button and via backdrop click. Export button downloads <force-id>.json (verified ghost-bear.json) sourced from /api/forces/{id}/export; content is JSON-equivalent to backend response (frontend re-serializes with indentation, so byte size differs 176111 vs 93634 but content identical). All 9 tabs (Mechs/Elementals/Pilots/Missions/Downtime/Ledger/Notes/Snapshots/Data) still switch. Export PDF button, Force selector, and + Add Force button all present.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "components/ui/dialog.jsx (DialogContent)",
+        "issue": "DialogContent was destructuring only {className, children, onClose} and dropping all other props including data-testid. As a result data-testid='admin-view-modal' set in AdminView.jsx never reached the DOM (though the modal rendered visually). Fixed in this session by adding ...props spread on the outer div so extra HTML attributes (data-testid, aria-*, etc.) are forwarded.",
+        "selector": "[data-testid='admin-view-modal']",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/ (existing pytest suite, 40 passed)",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Review the small fix in /app/frontend/src/components/ui/dialog.jsx (added ...props spread on DialogContent's outer div) - it is safe and required so that data-testid='admin-view-modal' is present in the DOM per the acceptance criteria. This also benefits any other future consumers of DialogContent that want to pass data-testid / aria attributes.",
+    "OPTIONAL/informational only: the exported <force-id>.json downloaded by the browser is content-equivalent to /api/forces/{id}/export but NOT byte-identical because downloadJSON() re-serializes with indentation (176KB vs 94KB). The two backend endpoints /api/forces/{id} and /api/forces/{id}/export ARE byte-identical, matching the acceptance criteria wording. No action needed unless byte-identical downloaded-file behavior is desired.",
+    "OPTIONAL: I could not exercise the empty-state header admin-entry-btn variant without deleting all real forces (explicitly not allowed). Code inspection shows the same component is rendered in the empty-state header branch of App.js, but this specific rendering path was not exercised at runtime."
+  ],
+  "critical_code_review_comments": [
+    "components/ui/dialog.jsx: DialogContent should spread rest props (fixed). This is a general shadcn-style bug that would silently drop any custom HTML attributes on the dialog content wrapper.",
+    "AdminView.jsx / DialogContent: minor - the shadcn DialogContent from this repo does not accept an `onClose` prop pattern by convention (real shadcn dialogs use Radix's own close primitive); works fine for scaffolding but consider standardizing on Radix Dialog.Close for future admin sub-panels.",
+    "handleExport in App.js: swallows only api errors; falls back to alert(). Consider a toast/inline error surface for consistency with the rest of the app."
+  ],
+  "updated_files": [
+    "/app/frontend/src/components/ui/dialog.jsx (added ...props spread on DialogContent outer div to forward data-testid and other attributes)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "N/A - single-user tool, no auth (confirmed via /app/memory/test_credentials.md)",
+  "seed_data_creation": "None. Did not mutate any real forces (ghost-bear, 91st-division). No new test forces created.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Issue #73 scaffolding verified end-to-end. Only one fix was applied (dialog.jsx DialogContent now forwards ...props so data-testid gets to the DOM); if main agent prefers to route the data-testid differently (e.g., on a wrapper inside AdminView.jsx instead of DialogContent), they can revert dialog.jsx and adjust AdminView.jsx. Existing data untouched. Backend restart is safe.",
+  "rca of the issue": "Root cause of the data-testid=admin-view-modal absence: /app/frontend/src/components/ui/dialog.jsx DialogContent function signature was `({ className, children, onClose })` which explicitly ignores any extra props (including data-testid) passed by callers. React then attaches only the destructured props to the underlying div. Fix: change signature to `({ className, children, onClose, ...props })` and spread `{...props}` on the outer div. Reproduction: open the admin modal, run `document.querySelector('[data-testid=\"admin-view-modal\"]')` in devtools -> null before fix, an element after fix. `admin-view-placeholder` was always present because that testid is set on a plain <div>, not on DialogContent."
+}

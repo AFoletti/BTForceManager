@@ -10,7 +10,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from database import engine
+from migration_harness import run_migrations
 import watcher
+from admin.router import router as admin_router
+from admin.sp_choices import router as admin_sp_choices_router
+from admin.downtime_actions import router as admin_downtime_actions_router
+from admin.achievements import router as admin_achievements_router
+from admin.mech_catalog import router as admin_mech_catalog_router
 from routers.forces import router as forces_router
 from routers.special_abilities import router as special_abilities_router
 from routers.achievements import router as achievements_router
@@ -25,10 +31,12 @@ from routers.missions_write import router as missions_write_router
 from routers.downtime import router as downtime_router
 from routers.downtime_actions import router as downtime_actions_router
 from routers.snapshots import router as snapshots_router
+from routers.force_snapshots import router as force_snapshots_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await asyncio.get_event_loop().run_in_executor(None, run_migrations)
     watcher.start_watcher(asyncio.get_event_loop())
     yield
     watcher.stop_watcher()
@@ -76,6 +84,11 @@ app.get("/health")(health_check)
 router = APIRouter(prefix="/api")
 router.get("/health")(health_check)
 app.include_router(router)
+app.include_router(admin_router)
+app.include_router(admin_sp_choices_router)
+app.include_router(admin_downtime_actions_router)
+app.include_router(admin_achievements_router)
+app.include_router(admin_mech_catalog_router)
 app.include_router(forces_router)
 app.include_router(special_abilities_router)
 app.include_router(achievements_router)
@@ -90,3 +103,4 @@ app.include_router(missions_write_router)
 app.include_router(downtime_router)
 app.include_router(downtime_actions_router)
 app.include_router(snapshots_router)
+app.include_router(force_snapshots_router)
