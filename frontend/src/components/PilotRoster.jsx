@@ -32,7 +32,11 @@ export default function PilotRoster({ force, onUpdate }) {
   }, []);
 
   const getAchievementById = (achievementId) => {
-    return achievementDefinitions.find((a) => a.id === achievementId) || { name: achievementId, icon: '🏆', description: '' };
+    const found = achievementDefinitions.find((a) => a.id === achievementId);
+    if (found) return { ...found, unknown: false };
+    // The achievement definition was edited/removed from the catalog since
+    // this pilot earned it - surface it clearly rather than hiding it.
+    return { id: achievementId, name: 'Unknown Achievement', icon: '⚠️', description: `Definition "${achievementId}" no longer exists in the catalog.`, unknown: true };
   };
 
   const [formData, setFormData] = useState({
@@ -373,9 +377,9 @@ export default function PilotRoster({ force, onUpdate }) {
                               {achievements.map((achId) => {
                                 const ach = getAchievementById(achId);
                                 return (
-                                  <div key={achId} className="py-0.5 flex items-center gap-2">
+                                  <div key={achId} className="py-0.5 flex items-center gap-2" data-testid={`pilot-achievement-badge-${pilot.id}-${achId}`}>
                                     <span>{ach.icon}</span>
-                                    <span className="font-medium">{ach.name}</span>
+                                    <span className={`font-medium ${ach.unknown ? 'text-amber-500' : ''}`}>{ach.name}</span>
                                   </div>
                                 );
                               })}
@@ -589,9 +593,9 @@ export default function PilotRoster({ force, onUpdate }) {
                           {editingPilot.achievements.map((achId) => {
                             const ach = getAchievementById(achId);
                             return (
-                              <tr key={achId} className="border-t border-border/50">
+                              <tr key={achId} className="border-t border-border/50" data-testid={`pilot-edit-achievement-row-${achId}`}>
                                 <td className="px-2 py-1 text-center text-base">{ach.icon}</td>
-                                <td className="px-2 py-1 font-medium">{ach.name}</td>
+                                <td className={`px-2 py-1 font-medium ${ach.unknown ? 'text-amber-500' : ''}`}>{ach.name}</td>
                                 <td className="px-2 py-1 text-muted-foreground">{ach.description}</td>
                               </tr>
                             );

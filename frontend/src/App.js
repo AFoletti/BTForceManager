@@ -477,7 +477,12 @@ export default function App() {
             </TabsContent>
 
             <TabsContent value="snapshots" className="mt-0">
-              <SnapshotsTab force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} />
+              <SnapshotsTab
+                force={selectedForce}
+                onUpdate={updateForceData}
+                flushForceSync={flushForceSync}
+                onRestored={refreshForces}
+              />
             </TabsContent>
           </main>
 

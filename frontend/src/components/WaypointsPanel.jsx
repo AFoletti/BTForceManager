@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Plus, Eye } from 'lucide-react';
+import { MapPin, Plus, Eye, RotateCcw, AlertTriangle } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
@@ -12,7 +12,7 @@ const WAYPOINT_TYPE_SUGGESTIONS = ['MANUAL', 'MISSION_END', 'DOWNTIME_END'];
 // Snapshots table above, which tracks lightweight stats over time and
 // supports session rollback. Waypoints are read-only here; restore is a
 // later feature.
-export default function WaypointsPanel({ force, flushForceSync }) {
+export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
   const [waypoints, setWaypoints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -21,6 +21,9 @@ export default function WaypointsPanel({ force, flushForceSync }) {
   const [waypointType, setWaypointType] = useState('');
   const [creating, setCreating] = useState(false);
   const [viewingWaypoint, setViewingWaypoint] = useState(null);
+  const [restoringWaypoint, setRestoringWaypoint] = useState(null);
+  const [backupBeforeRestore, setBackupBeforeRestore] = useState(true);
+  const [restoring, setRestoring] = useState(false);
 
   const load = async () => {
     if (!force?.id) return;
@@ -71,6 +74,25 @@ export default function WaypointsPanel({ force, flushForceSync }) {
     }
   };
 
+  const handleRestore = async () => {
+    if (!restoringWaypoint) return;
+    setRestoring(true);
+    try {
+      await flushForceSync(force.id);
+      const result = await api.restoreForceStateSnapshot(force.id, restoringWaypoint.id, {
+        createBackupBeforeRestore: backupBeforeRestore,
+      });
+      setRestoringWaypoint(null);
+      await load();
+      if (onRestored) onRestored(result.restoredForce);
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(`Restore failed - this force was left unchanged: ${err.message}`);
+    } finally {
+      setRestoring(false);
+    }
+  };
+
   return (
     <div className="tactical-panel" data-testid="waypoints-panel">
       <div className="tactical-header flex items-center justify-between">
@@ -84,7 +106,7 @@ export default function WaypointsPanel({ force, flushForceSync }) {
       </div>
       <p className="px-4 pt-2 text-xs text-muted-foreground">
         Waypoints are full backups of this force only - other forces and app-wide settings (catalog, SP
-        purchases, downtime actions, achievements) are never affected. Restore isn't available yet.
+        purchases, downtime actions, achievements) are never affected.
       </p>
 
       {error && <p className="px-4 pt-2 text-xs text-destructive">{error}</p>}
@@ -102,6 +124,7 @@ export default function WaypointsPanel({ force, flushForceSync }) {
                 <th className="text-left">Label</th>
                 <th className="text-left">Type</th>
                 <th className="text-center">Details</th>
+                <th className="text-center">Restore</th>
               </tr>
             </thead>
             <tbody>
@@ -119,6 +142,21 @@ export default function WaypointsPanel({ force, flushForceSync }) {
                       data-testid={`view-waypoint-btn-${wp.id}`}
                     >
                       <Eye className="h-4 w-4" />
+                    </Button>
+                  </td>
+                  <td className="text-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 w-7 p-0"
+                      onClick={() => {
+                        setRestoringWaypoint(wp);
+                        setBackupBeforeRestore(true);
+                      }}
+                      data-testid={`restore-waypoint-btn-${wp.id}`}
+                      title="Restore this force to this waypoint"
+                    >
+                      <RotateCcw className="h-4 w-4" />
                     </Button>
                   </td>
                 </tr>
@@ -184,8 +222,66 @@ export default function WaypointsPanel({ force, flushForceSync }) {
                 <p>Warchest at time of backup: {viewingWaypoint.snapshotJson.currentWarchest}</p>
               </div>
               <p className="text-xs text-muted-foreground">
-                This is metadata only - the full backup isn't editable here, and restoring it isn't available yet.
+                This is metadata only - the full backup isn't editable here. Use the Restore button on the
+                waypoints table to roll this force back to this exact point.
               </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Restore Waypoint Confirmation Dialog */}
+      <Dialog open={!!restoringWaypoint} onOpenChange={() => !restoring && setRestoringWaypoint(null)}>
+        <DialogContent
+          onClose={() => !restoring && setRestoringWaypoint(null)}
+          data-testid="restore-waypoint-dialog"
+        >
+          <DialogHeader>
+            <DialogTitle>Restore Waypoint</DialogTitle>
+          </DialogHeader>
+          {restoringWaypoint && (
+            <div className="space-y-4">
+              <div className="p-3 bg-muted rounded-md text-sm">
+                <p><strong>Label:</strong> {restoringWaypoint.label}</p>
+                <p><strong>Created:</strong> {restoringWaypoint.createdAt}</p>
+                <p><strong>Type:</strong> {restoringWaypoint.waypointType || '-'}</p>
+              </div>
+              <p className="text-sm text-amber-500">
+                <AlertTriangle className="inline h-4 w-4 mr-1" />
+                This will overwrite <strong>{force.name}</strong>'s current mechs, elementals, pilots, missions
+                and snapshots with the data from this waypoint. Other forces and app-wide settings (catalog, SP
+                purchases, downtime actions, achievements) are never affected. This action cannot be undone
+                unless you keep a backup.
+              </p>
+              <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={backupBeforeRestore}
+                  onChange={(e) => setBackupBeforeRestore(e.target.checked)}
+                  data-testid="restore-backup-checkbox"
+                  className="h-4 w-4"
+                />
+                Create a backup of the current state before restoring
+              </label>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setRestoringWaypoint(null)}
+                  disabled={restoring}
+                  data-testid="cancel-restore-waypoint-btn"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleRestore}
+                  disabled={restoring}
+                  data-testid="confirm-restore-waypoint-btn"
+                >
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  {restoring ? 'Restoring...' : 'Restore'}
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>

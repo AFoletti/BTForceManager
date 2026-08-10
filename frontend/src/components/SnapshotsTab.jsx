@@ -25,7 +25,7 @@ const STATUS_LABELS = {
   [UNIT_STATUS.DESTROYED]: 'DEST',
 };
 
-export default function SnapshotsTab({ force, onUpdate, flushForceSync }) {
+export default function SnapshotsTab({ force, onUpdate, flushForceSync, onRestored }) {
   const [confirmRollback, setConfirmRollback] = useState(null);
   const snapshots = force?.snapshots || [];
   const fullSnapshots = force?.fullSnapshots || [];
@@ -46,7 +46,7 @@ export default function SnapshotsTab({ force, onUpdate, flushForceSync }) {
 
   return (
     <div className="space-y-6">
-      <WaypointsPanel force={force} flushForceSync={flushForceSync} />
+      <WaypointsPanel force={force} flushForceSync={flushForceSync} onRestored={onRestored} />
       <div className="tactical-panel" data-testid="snapshots-panel">
       <div className="tactical-header flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wider">Campaign Snapshots</h3>

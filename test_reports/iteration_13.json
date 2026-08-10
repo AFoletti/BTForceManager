@@ -1,0 +1,27 @@
+{
+  "summary": "Frontend-only E2E test of the Waypoint Restore UI (Issue 7/7). Verified full flow: SNAPSHOTS tab renders Waypoints panel above Campaign Snapshots panel with 2 pre-existing waypoints ('Curl Test WP', 'Pre-restore backup'). Create Waypoint dialog works (pre-filled label/type, new row appears). View Waypoint dialog shows correct Type/Created/Mechs/Elementals/Pilots/Missions/Warchest and updated copy referencing the Restore button (old 'not available yet' text is gone). Restore confirmation dialog shows Label/Created/Type, warning text, and backup checkbox CHECKED by default. Cancel closes dialog without side effects. Confirming restore WITH backup checked: dialog closes, no error alert, and a new 'Pre-restore backup (before ...)' row with type PRE_RESTORE appears at top of waypoints table - proving auto-backup works and onRestored/refreshForces wiring reloads app state correctly. Confirming restore WITHOUT backup checkbox unchecked: verified no new PRE_RESTORE row was added (row count stayed the same). Verified force isolation: switching to '91st Division Vision of Words' shows unaffected warchest (2'000) and its own waypoints/snapshots section, unaffected by restores done on Bluefang Trinary. Regression check: Campaign Snapshots panel's rollback buttons (2 rollback-btn elements) still render correctly on Bluefang Trinary after all waypoint operations, confirming no breakage.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "WaypointsPanel.jsx code is clean: restore dialog state (restoringWaypoint, backupBeforeRestore default true, restoring) correctly gated via Dialog open/onOpenChange with disabled-while-restoring guard on the close handler.",
+    "api.js restoreForceStateSnapshot correctly wired to POST /forces/{forceId}/state-snapshots/{snapshotId}/restore with payload passthrough.",
+    "App.js -> SnapshotsTab -> WaypointsPanel onRestored={refreshForces} prop chain confirmed correct via grep; avoids the diff-sync updateForceData path as intended.",
+    "No issues found in this session's frontend wiring changes."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (not tested this session, per request)", "frontend": "100%"},
+  "seed_data_creation": "One extra MANUAL waypoint ('Waypoint - May 9, 3052, 12:00 AM') and two PRE_RESTORE backup waypoints were created on the 'ghost-bear' force during testing (expected side effects of the Create/Restore flows being tested). These are harmless additional rows in the waypoints table, not cleaned up, but do not affect app correctness.",
+  "retest_needed": false,
+  "main_agent_can_self_test": false,
+  "context_for_next_testing_agent": "Restore UI (Issue 7/7) fully verified end-to-end via browser: create waypoint, view details, restore with/without backup checkbox, cancel flow, force isolation, and regression check on Campaign Snapshots rollback - all passed with no errors or alerts. This closes out the full waypoint/snapshot feature set. No outstanding issues.",
+  "rca of the issue": "N/A - no bugs found in this pass."
+}

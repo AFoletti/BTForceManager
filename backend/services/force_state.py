@@ -50,12 +50,35 @@ async def serialize_force(session, force_id):
         await session.execute(select(FullSnapshot).where(FullSnapshot.force_id == force_id))
     ).scalars().all()
     special_abilities = (
-        await session.execute(
-            select(SpecialAbility)
-            .join(ForceSpecialAbility, ForceSpecialAbility.ability_id == SpecialAbility.id)
-            .where(ForceSpecialAbility.force_id == force_id)
-        )
+        await session.execute(select(ForceSpecialAbility).where(ForceSpecialAbility.force_id == force_id))
     ).scalars().all()
+    ability_ids = [row.ability_id for row in special_abilities]
+    abilities_by_id = {}
+    if ability_ids:
+        ability_rows = (
+            await session.execute(select(SpecialAbility).where(SpecialAbility.id.in_(ability_ids)))
+        ).scalars().all()
+        abilities_by_id = {a.id: a for a in ability_rows}
+
+    # Resilient against a globally-edited/removed SpecialAbility (e.g. after
+    # a restore references an ability that no longer exists) - surfaced as
+    # an explicit "unknown" entry instead of silently disappearing.
+    special_abilities_dicts = []
+    for row in special_abilities:
+        ability = abilities_by_id.get(row.ability_id)
+        if ability:
+            special_abilities_dicts.append(
+                {"id": ability.id, "title": ability.name, "description": ability.description, "unknown": False}
+            )
+        else:
+            special_abilities_dicts.append(
+                {
+                    "id": row.ability_id,
+                    "title": "Unknown Special Ability",
+                    "description": "This ability no longer exists in the catalog.",
+                    "unknown": True,
+                }
+            )
 
     achievements_by_pilot = {p.id: [] for p in pilots}
     if pilots:
@@ -85,7 +108,7 @@ async def serialize_force(session, force_id):
         missions,
         snapshots,
         full_snapshots,
-        special_abilities,
+        special_abilities_dicts,
         achievements_by_pilot,
         sp_purchases_by_mission,
     )

@@ -149,9 +149,7 @@ def force_detail_to_dict(
         "startingWarchest": force.starting_warchest,
         "currentWarchest": force.current_warchest,
         "wpMultiplier": force.wp_multiplier,
-        "specialAbilities": [
-            {"id": a.id, "title": a.name, "description": a.description} for a in (special_abilities or [])
-        ],
+        "specialAbilities": special_abilities or [],
         "otherActionsLog": force.other_actions_log or [],
         "currentDate": force.current_date,
         "startingDate": force.starting_date,

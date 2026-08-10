@@ -177,3 +177,5 @@ export const getForceStateSnapshot = (forceId, snapshotId) =>
   request('GET', `/forces/${forceId}/state-snapshots/${snapshotId}`);
 export const createForceStateSnapshot = (forceId, payload) =>
   request('POST', `/forces/${forceId}/state-snapshots`, payload);
+export const restoreForceStateSnapshot = (forceId, snapshotId, payload) =>
+  request('POST', `/forces/${forceId}/state-snapshots/${snapshotId}/restore`, payload);
