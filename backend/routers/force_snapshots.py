@@ -105,6 +105,16 @@ async def create_force_snapshot(
     return snapshot_detail_to_dict(snapshot)
 
 
+@router.delete("/forces/{force_id}/state-snapshots/{snapshot_id}", status_code=204)
+async def delete_force_snapshot(force_id: str, snapshot_id: int, session: AsyncSession = Depends(get_session)):
+    snap = await session.get(ForceSnapshot, snapshot_id)
+    if not snap or snap.force_id != force_id:
+        raise HTTPException(status_code=404, detail="Snapshot not found")
+
+    await session.delete(snap)
+    await session.commit()
+
+
 @router.post("/forces/{force_id}/state-snapshots/{snapshot_id}/restore")
 async def restore_force_snapshot(
     force_id: str,

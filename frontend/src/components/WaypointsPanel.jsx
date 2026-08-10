@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Plus, Eye, RotateCcw, AlertTriangle } from 'lucide-react';
+import { MapPin, Plus, Eye, RotateCcw, AlertTriangle, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
@@ -74,6 +74,19 @@ export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
     }
   };
 
+  const handleDelete = async (waypoint, e) => {
+    e.stopPropagation();
+    // eslint-disable-next-line no-alert
+    if (!window.confirm(`Delete waypoint "${waypoint.label}"? This cannot be undone.`)) return;
+    try {
+      await api.deleteForceStateSnapshot(force.id, waypoint.id);
+      await load();
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(`Failed to delete waypoint: ${err.message}`);
+    }
+  };
+
   const handleRestore = async () => {
     if (!restoringWaypoint) return;
     setRestoring(true);
@@ -125,6 +138,7 @@ export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
                 <th className="text-left">Type</th>
                 <th className="text-center">Details</th>
                 <th className="text-center">Restore</th>
+                <th className="text-center">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -157,6 +171,18 @@ export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
                       title="Restore this force to this waypoint"
                     >
                       <RotateCcw className="h-4 w-4" />
+                    </Button>
+                  </td>
+                  <td className="text-center">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="h-7 w-7 p-0"
+                      onClick={(e) => handleDelete(wp, e)}
+                      data-testid={`delete-waypoint-btn-${wp.id}`}
+                      title="Delete this waypoint"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </td>
                 </tr>

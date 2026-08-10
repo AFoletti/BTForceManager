@@ -234,6 +234,12 @@ See below entries (unchanged from prior session).
 - Verified via `testing_agent_v4` (frontend E2E, 100% pass, zero bugs found): Create Waypoint dialog, View Waypoint dialog (updated copy confirmed), Restore dialog (label/created/type, warning text, checkbox checked by default), Cancel flow (no side effects), Restore-with-backup (new PRE_RESTORE row appears, no error alert, app state matches restored snapshot), Restore-without-backup (no new row added), force isolation (restoring one force never touches the other), and regression check on the pre-existing Campaign Snapshots rollback feature (still works, untouched).
 - This closes out the full 7-issue Snapshot/Waypoint feature set requested by the user across this project.
 
+### Waypoint Cleanup (Delete individual waypoints) - Done, tested 100% pass (testing_agent_v4, frontend E2E)
+- Backend: new `DELETE /api/forces/{force_id}/state-snapshots/{snapshot_id}` in `routers/force_snapshots.py` - simple hard delete (leaf table, no cascade needed), 204 on success, 404 if the snapshot doesn't exist or belongs to a different force (force-scoping enforced, same pattern as the restore endpoint).
+- Frontend: `api.js` gained `deleteForceStateSnapshot(forceId, snapshotId)`. `WaypointsPanel.jsx` gained a new "Delete" table column with a red trash-icon button per row + `handleDelete()` (window.confirm guard naming the waypoint's label, then calls the DELETE endpoint and reloads the list) - matches the exact same delete UX pattern already used in `MechRoster.jsx`/`PilotRoster.jsx`/`ElementalRoster.jsx`. Per explicit user confirmation, `PRE_RESTORE`-type (auto-generated pre-restore backup) waypoints are NOT specially protected - deletable like any other waypoint.
+- Verified via curl (backend): delete success (204), delete of non-existent id (404), delete with mismatched force_id in URL (404, confirms force-scoping).
+- Verified via `testing_agent_v4` (frontend E2E, 100% pass, zero bugs): delete button renders, confirm-accept deletes the row, confirm-cancel keeps the row, deleting a PRE_RESTORE backup succeeds, empty-state message reappears after deleting all waypoints, cross-force isolation holds (confirmed via the force-selector dropdown, not URL navigation - this app is a pure SPA and does not route on URL path for force selection), and regression check on Create/View/Restore all still pass.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).

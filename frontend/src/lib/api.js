@@ -179,3 +179,5 @@ export const createForceStateSnapshot = (forceId, payload) =>
   request('POST', `/forces/${forceId}/state-snapshots`, payload);
 export const restoreForceStateSnapshot = (forceId, snapshotId, payload) =>
   request('POST', `/forces/${forceId}/state-snapshots/${snapshotId}/restore`, payload);
+export const deleteForceStateSnapshot = (forceId, snapshotId) =>
+  request('DELETE', `/forces/${forceId}/state-snapshots/${snapshotId}`);
