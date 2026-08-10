@@ -15,7 +15,7 @@ import * as api from '../lib/api';
 // Actions are applied in sequence to a working copy of the force when
 // the user confirms the downtime cycle.
 
-export default function DowntimeOperations({ force, onUpdate }) {
+export default function DowntimeOperations({ force, onUpdate, flushForceSync }) {
   const [selectedUnitType, setSelectedUnitType] = useState('mech');
   const [selectedUnitId, setSelectedUnitId] = useState('');
   const [selectedAction, setSelectedAction] = useState('');
@@ -23,6 +23,8 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [otherActionData, setOtherActionData] = useState({ description: '', cost: 0 });
   const [wpMultiplier, setWpMultiplier] = useState(force.wpMultiplier || 5);
   const [editingMultiplier, setEditingMultiplier] = useState(false);
+  const [createWaypointOnExecute, setCreateWaypointOnExecute] = useState(false);
+  const [creatingWaypoint, setCreatingWaypoint] = useState(false);
 
   // Load downtime actions from /api/downtime-actions
   const [mechActions, setMechActions] = useState([]);
@@ -347,6 +349,22 @@ export default function DowntimeOperations({ force, onUpdate }) {
     });
 
     setPlannedActions((prev) => prev.slice(appliedCount));
+
+    if (createWaypointOnExecute) {
+      setCreatingWaypoint(true);
+      try {
+        await flushForceSync(force.id);
+        await api.createForceStateSnapshot(force.id, {
+          label: `After downtime cycle (${nextDate})`,
+          waypointType: 'DOWNTIME_END',
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-alert
+        alert(`Downtime cycle applied, but the waypoint snapshot failed: ${err.message}`);
+      } finally {
+        setCreatingWaypoint(false);
+      }
+    }
 
     // Show achievements popup if any new achievements were earned
     if (allNewAchievements.length > 0) {
@@ -689,6 +707,15 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     Clear Cycle
                   </Button>
                   <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={createWaypointOnExecute}
+                        onChange={(e) => setCreateWaypointOnExecute(e.target.checked)}
+                        data-testid="downtime-waypoint-checkbox"
+                      />
+                      Create waypoint snapshot at end of this cycle
+                    </label>
                     {!canAffordCycle && plannedActions.length > 0 && (
                       <div className="text-xs text-destructive flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
@@ -698,10 +725,10 @@ export default function DowntimeOperations({ force, onUpdate }) {
                     <Button
                       size="sm"
                       onClick={executeDowntimeCycle}
-                      disabled={plannedActions.length === 0 || !canAffordCycle}
+                      disabled={plannedActions.length === 0 || !canAffordCycle || creatingWaypoint}
                       data-testid="execute-downtime-cycle-button"
                     >
-                      Execute Downtime Cycle
+                      {creatingWaypoint ? 'Saving Waypoint...' : 'Execute Downtime Cycle'}
                     </Button>
                   </div>
                 </div>

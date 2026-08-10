@@ -31,6 +31,7 @@ export default function App() {
     addNewForce,
     exportForce,
     refreshForces,
+    flushForceSync,
     loading,
     error,
   } = useForceManager();
@@ -460,11 +461,11 @@ export default function App() {
             </TabsContent>
 
             <TabsContent value="missions" className="mt-0">
-              <MissionManager force={selectedForce} onUpdate={updateForceData} />
+              <MissionManager force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} />
             </TabsContent>
 
             <TabsContent value="downtime" className="mt-0">
-              <DowntimeOperations force={selectedForce} onUpdate={updateForceData} />
+              <DowntimeOperations force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} />
             </TabsContent>
 
             <TabsContent value="ledger" className="mt-0">
@@ -476,7 +477,7 @@ export default function App() {
             </TabsContent>
 
             <TabsContent value="snapshots" className="mt-0">
-              <SnapshotsTab force={selectedForce} onUpdate={updateForceData} />
+              <SnapshotsTab force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} />
             </TabsContent>
           </main>
 

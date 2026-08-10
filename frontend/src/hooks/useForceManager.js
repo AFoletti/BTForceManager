@@ -259,6 +259,25 @@ export function useForceManager() {
     scheduleSync(selectedForceId);
   };
 
+  // Immediately pushes any pending debounced sync for a force to the
+  // backend and waits for it to complete. Used before creating a
+  // full-state snapshot (waypoint), so the snapshot reflects the latest
+  // local edits instead of racing the debounce timer.
+  const flushForceSync = async (forceId) => {
+    if (syncTimersRef.current[forceId]) {
+      clearTimeout(syncTimersRef.current[forceId]);
+      delete syncTimersRef.current[forceId];
+    }
+    const next = pendingForceRef.current[forceId];
+    const prev = lastSyncedRef.current[forceId];
+    if (!next || !prev) return;
+    try {
+      await syncForceToBackend(forceId, prev, next);
+    } finally {
+      lastSyncedRef.current[forceId] = JSON.parse(JSON.stringify(next));
+    }
+  };
+
   const addNewForce = async (newForce) => {
     try {
       const created = await api.createForce({
@@ -316,6 +335,7 @@ export function useForceManager() {
     exportData,
     exportForce,
     refreshForces,
+    flushForceSync,
     getCurrentInGameDate,
     loading,
     error,

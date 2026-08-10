@@ -168,3 +168,12 @@ export const setForceSpecialAbilities = (forceId, abilityIds) =>
 
 // SP choices
 export const listSpChoices = () => request('GET', '/sp-choices');
+
+// Force-level state snapshots ("waypoints") - full restorable backups,
+// distinct from the lightweight point-in-time Snapshot/FullSnapshot pair
+// above. See backend/routers/force_snapshots.py.
+export const listForceStateSnapshots = (forceId) => request('GET', `/forces/${forceId}/state-snapshots`);
+export const getForceStateSnapshot = (forceId, snapshotId) =>
+  request('GET', `/forces/${forceId}/state-snapshots/${snapshotId}`);
+export const createForceStateSnapshot = (forceId, payload) =>
+  request('POST', `/forces/${forceId}/state-snapshots`, payload);

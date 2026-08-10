@@ -5,6 +5,7 @@ import { hasFullSnapshot, rollbackToSnapshot, MAX_FULL_SNAPSHOTS } from '../lib/
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { RotateCcw, AlertTriangle } from 'lucide-react';
+import WaypointsPanel from './WaypointsPanel';
 
 const STATUS_ORDER = [
   UNIT_STATUS.OPERATIONAL,
@@ -24,7 +25,7 @@ const STATUS_LABELS = {
   [UNIT_STATUS.DESTROYED]: 'DEST',
 };
 
-export default function SnapshotsTab({ force, onUpdate }) {
+export default function SnapshotsTab({ force, onUpdate, flushForceSync }) {
   const [confirmRollback, setConfirmRollback] = useState(null);
   const snapshots = force?.snapshots || [];
   const fullSnapshots = force?.fullSnapshots || [];
@@ -44,7 +45,9 @@ export default function SnapshotsTab({ force, onUpdate }) {
     : null;
 
   return (
-    <div className="tactical-panel" data-testid="snapshots-panel">
+    <div className="space-y-6">
+      <WaypointsPanel force={force} flushForceSync={flushForceSync} />
+      <div className="tactical-panel" data-testid="snapshots-panel">
       <div className="tactical-header flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wider">Campaign Snapshots</h3>
         <p className="text-xs text-muted-foreground">
@@ -225,6 +228,7 @@ export default function SnapshotsTab({ force, onUpdate }) {
           </div>
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   );
 }
