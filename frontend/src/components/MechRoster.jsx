@@ -351,7 +351,7 @@ export default function MechRoster({ force, onUpdate }) {
               <tr>
                 <td colSpan="7" className="text-center py-8 text-muted-foreground">
                   {force.mechs.length === 0 
-                    ? "No mechs in roster. Add mechs via Data Editor." 
+                    ? "No mechs in roster. Click \"Add Mech\" to get started." 
                     : "No mechs match your filter."}
                 </td>
               </tr>

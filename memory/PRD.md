@@ -204,6 +204,13 @@ See below entries (unchanged from prior session).
 - Adjusted BV recalculation on pilot skill change already worked (`lib/mechs.js::getMechAdjustedBV`, computed live from the shared `force` state) - no changes needed, verified still correct.
 - Verified via pytest (40/40) and curl: full add->edit->delete lifecycle for one mech, one elemental, one pilot; pilot-with-kills-and-achievement delete cascade (mech unassigned, achievement/kill records removed with the pilot, global achievement catalog untouched). Frontend compiled cleanly.
 
+### Issue #4 (Remove legacy Data Editor tab) - Verified via pytest+curl+clean recompile
+- Deleted `components/DataEditor.jsx` and its tab/route/import from `App.js`. No backend endpoints existed solely for its JSON read/write path (it reused the same granular force/mech/pilot/elemental CRUD endpoints already used everywhere else), so nothing to deprecate there.
+- Moved its one genuinely distinct feature - the watched-folder mech catalog watcher status display - into `components/admin/AdminMechCatalogPanel.jsx` (natural new home next to the CSV upload), rather than deleting it outright.
+- Updated empty-roster hint text ("Add mechs via Data Editor" -> "Click 'Add Mech' to get started") in Mech/Elemental/Pilot rosters, and `AddForceDialog.jsx`'s helper copy.
+- Updated `README.md` and `TECHNICAL_README.md` to remove all Data Editor references and point to Admin CRUD + roster CRUD instead.
+- Verified: `grep -ri "dataeditor\|data editor"` across the whole repo returns zero matches; fresh frontend restart shows "Compiled successfully" with no warnings; Export (`GET /api/forces/{id}/export`) still returns a valid full JSON; Admin health and forces-list endpoints unaffected; 40/40 backend pytest passing.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).

@@ -219,7 +219,7 @@ For weight-class achievements, mechs are classified as:
 - `src/App.js`
   - Header with force selector, export actions and PDF button.
   - Force banner showing current Warchest, counts, special abilities, and optional image.
-  - Tabbed content for Mechs, Elementals, Pilots, Missions, Downtime, Notes, Data Editor.
+  - Tabbed content for Mechs, Elementals, Pilots, Missions, Downtime, Notes, Snapshots.
 
 - `src/hooks/useForceManager.js`
   - Fetches forces from `GET /api/forces` and `GET /api/forces/{id}`.
@@ -274,7 +274,8 @@ For weight-class achievements, mechs are classified as:
 - `components/ElementalRoster.jsx` – Elemental points management.
 - `components/MissionManager.jsx` – Mission CRUD, SP purchases, kill tracking, achievement popup.
 - `components/DowntimeOperations.jsx` – Downtime actions with formula costs.
-- `components/DataEditor.jsx` – JSON editor for force data.
+- `components/AdminView.jsx` – Tabbed Admin modal (Forces, Mech Catalog, SP Purchases, Downtime, Achievements), reachable only via the header's Admin entry point.
+- `components/admin/*` – Admin panels: `AdminForcesPanel.jsx`, `AdminMechCatalogPanel.jsx` (CSV import + watched-folder status), `AdminSpChoicesPanel.jsx`, `AdminDowntimeActionsPanel.jsx`, `AdminAchievementsPanel.jsx`, `EmojiPicker.jsx`.
 - `components/PDFExport.jsx` – PDF generation with combat records.
 - `components/NotesTab.jsx` – Campaign notes editor.
 - `components/ui/*` – Reusable UI components.

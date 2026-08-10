@@ -10,7 +10,6 @@ import ElementalRoster from './components/ElementalRoster';
 import PilotRoster from './components/PilotRoster';
 import MissionManager from './components/MissionManager';
 import DowntimeOperations from './components/DowntimeOperations';
-import DataEditor from './components/DataEditor';
 import AddForceDialog from './components/AddForceDialog';
 import AdminView from './components/AdminView';
 import PDFExport from './components/PDFExport';
@@ -442,10 +441,6 @@ export default function App() {
                   <Database className="w-4 h-4" />
                   <span className="font-heading uppercase tracking-wider">Snapshots</span>
                 </TabsTrigger>
-                <TabsTrigger value="data" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/40 border border-transparent px-4">
-                  <Database className="w-4 h-4" />
-                  <span className="font-heading uppercase tracking-wider">Data</span>
-                </TabsTrigger>
               </TabsList>
             </div>
           </header>
@@ -482,10 +477,6 @@ export default function App() {
 
             <TabsContent value="snapshots" className="mt-0">
               <SnapshotsTab force={selectedForce} onUpdate={updateForceData} />
-            </TabsContent>
-
-            <TabsContent value="data" className="mt-0">
-              <DataEditor force={selectedForce} onUpdate={updateForceData} />
             </TabsContent>
           </main>
 

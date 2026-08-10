@@ -280,7 +280,7 @@ export default function ElementalRoster({ force, onUpdate }) {
               <tr>
                 <td colSpan="10" className="text-center py-8 text-muted-foreground">
                   {force.elementals?.length === 0 
-                    ? "No elementals in roster. Add elementals via Data Editor." 
+                    ? "No elementals in roster. Click \"Add Elemental\" to get started." 
                     : "No elementals match your filter."}
                 </td>
               </tr>

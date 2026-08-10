@@ -305,7 +305,7 @@ export default function PilotRoster({ force, onUpdate }) {
               <tr>
                 <td colSpan="8" className="text-center py-8 text-muted-foreground">
                   {force.pilots.length === 0 
-                    ? "No pilots in roster. Add pilots via Data Editor." 
+                    ? "No pilots in roster. Click \"Add Pilot\" to get started." 
                     : "No pilots match your filter."}
                 </td>
               </tr>

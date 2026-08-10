@@ -118,7 +118,7 @@ export default function AddForceDialog({ open, onOpenChange, onAdd }) {
           <div className="bg-muted/30 p-3 rounded text-sm">
             <p className="text-muted-foreground">
               This will create an empty force ready to be populated with mechs, elementals, and pilots.
-              You can add units using the Data Editor tab after creation.
+              Use the Mechs, Elementals, and Pilots tabs to add units after creation.
             </p>
           </div>
 
