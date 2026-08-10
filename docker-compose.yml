@@ -3,6 +3,9 @@ services:
     build: ./backend
     env_file:
       - ./backend/.env.docker
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
     volumes:
       # Bind-mounted (not a named Docker volume) so the SQLite database file
       # is a real file under this host path - browsable/backupable directly
