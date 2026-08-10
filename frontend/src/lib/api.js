@@ -38,6 +38,73 @@ export const deleteForce = (id) => request('DELETE', `/forces/${id}`);
 // Admin
 export const getAdminHealth = () => request('GET', '/admin/health');
 
+// Admin: SP choices (global catalog CRUD)
+export const adminListSpChoices = () => request('GET', '/admin/sp-choices');
+export const adminCreateSpChoice = (payload) => request('POST', '/admin/sp-choices', payload);
+export const adminUpdateSpChoice = (id, payload) => request('PUT', `/admin/sp-choices/${id}`, payload);
+export const adminDeleteSpChoice = (id) => request('DELETE', `/admin/sp-choices/${id}`);
+
+// Admin: downtime actions (global catalog CRUD)
+export const adminListDowntimeActions = () => request('GET', '/admin/downtime-actions');
+export const adminCreateDowntimeAction = (payload) => request('POST', '/admin/downtime-actions', payload);
+export const adminUpdateDowntimeAction = (id, payload) => request('PUT', `/admin/downtime-actions/${id}`, payload);
+export const adminDeleteDowntimeAction = (id) => request('DELETE', `/admin/downtime-actions/${id}`);
+
+// Admin: achievement definitions (global catalog CRUD)
+export const adminListAchievementDefinitions = () => request('GET', '/admin/achievement-definitions');
+export const adminCreateAchievementDefinition = (payload) =>
+  request('POST', '/admin/achievement-definitions', payload);
+export const adminUpdateAchievementDefinition = (id, payload) =>
+  request('PUT', `/admin/achievement-definitions/${id}`, payload);
+export const adminDeleteAchievementDefinition = (id) => request('DELETE', `/admin/achievement-definitions/${id}`);
+
+// Admin: mech catalog CSV import (multipart, bypasses the generic JSON helper)
+export const adminImportMechCatalog = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await fetch(`${API_BASE}/admin/mech-catalog/import`, { method: 'POST', body: formData });
+  if (!response.ok) {
+    let detail = '';
+    try {
+      detail = (await response.json()).detail;
+    } catch {
+      detail = response.statusText;
+    }
+    throw new Error(`Mech catalog import failed (${response.status}): ${detail}`);
+  }
+  return response.json();
+};
+
+// Admin: force special abilities as free text ("Title: Description" per line).
+// Upserts by name into the existing pool, then links the resulting ids to
+// the force - a pure UI-layer orchestration on top of existing endpoints,
+// no backend changes needed for the admin/play distinction.
+export const adminSetForceSpecialAbilitiesFromText = async (forceId, freeText) => {
+  const lines = (freeText || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const existing = await listSpecialAbilities();
+  const byName = new Map(existing.map((a) => [a.name.toLowerCase(), a]));
+  const abilityIds = [];
+
+  for (const line of lines) {
+    const separatorIndex = line.indexOf(':');
+    const title = (separatorIndex >= 0 ? line.slice(0, separatorIndex) : line).trim();
+    const description = separatorIndex >= 0 ? line.slice(separatorIndex + 1).trim() : '';
+    const key = title.toLowerCase();
+    let ability = byName.get(key);
+    if (!ability) {
+      ability = await request('POST', '/special-abilities', { name: title, description });
+      byName.set(key, ability);
+    }
+    abilityIds.push(ability.id);
+  }
+
+  return setForceSpecialAbilities(forceId, abilityIds);
+};
+
 // Mechs
 export const createMech = (forceId, payload) => request('POST', `/forces/${forceId}/mechs`, payload);
 export const updateMech = (id, payload) => request('PUT', `/mechs/${id}`, payload);

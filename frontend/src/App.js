@@ -31,6 +31,7 @@ export default function App() {
     updateForceData,
     addNewForce,
     exportForce,
+    refreshForces,
     loading,
     error,
   } = useForceManager();
@@ -537,8 +538,8 @@ export default function App() {
         onAdd={handleAddForce}
       />
 
-      {/* Admin Entry Point (scaffolding only) */}
-      <AdminView open={showAdminView} onOpenChange={setShowAdminView} />
+      {/* Admin Entry Point */}
+      <AdminView open={showAdminView} onOpenChange={setShowAdminView} forces={forces} onRefreshForces={refreshForces} />
     </div>
   );
 }

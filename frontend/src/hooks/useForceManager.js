@@ -168,52 +168,58 @@ export function useForceManager() {
   const pendingForceRef = useRef({});
   const syncTimersRef = useRef({});
 
-  // Load forces from the backend API
-  useEffect(() => {
-    const loadForces = async () => {
-      try {
-        const summaries = await api.listForces();
+  // Load (or reload) all forces from the backend API. Exposed as
+  // `refreshForces` so the Admin interface can re-sync the roster/mission
+  // flows after creating/editing/deleting a force there.
+  const refreshForces = async () => {
+    try {
+      const summaries = await api.listForces();
 
-        const failedIds = [];
-        const forcePromises = summaries.map(async (summary) => {
-          try {
-            return await api.getForce(summary.id);
-          } catch (fetchError) {
-            failedIds.push(summary.id);
-            // eslint-disable-next-line no-console
-            console.error(`Failed to load force: ${summary.id}`, fetchError);
-            return null;
-          }
-        });
-
-        const loadedForces = await Promise.all(forcePromises);
-        const validForces = loadedForces.filter((f) => f !== null).map(normalizeForce);
-
-        validForces.forEach((force) => {
-          lastSyncedRef.current[force.id] = JSON.parse(JSON.stringify(force));
-          pendingForceRef.current[force.id] = force;
-        });
-
-        setForces(validForces);
-
-        if (validForces.length > 0) {
-          setSelectedForceId(validForces[0].id);
+      const failedIds = [];
+      const forcePromises = summaries.map(async (summary) => {
+        try {
+          return await api.getForce(summary.id);
+        } catch (fetchError) {
+          failedIds.push(summary.id);
+          // eslint-disable-next-line no-console
+          console.error(`Failed to load force: ${summary.id}`, fetchError);
+          return null;
         }
+      });
 
-        if (failedIds.length > 0) {
-          setError(
-            `Loaded ${validForces.length}/${summaries.length} forces. Failed to load: ${failedIds.join(', ')}.`,
-          );
-        }
+      const loadedForces = await Promise.all(forcePromises);
+      const validForces = loadedForces.filter((f) => f !== null).map(normalizeForce);
 
-        setLoading(false);
-      } catch (err) {
-        setError(`Failed to reach the BTForceManager API: ${err.message}`);
-        setLoading(false);
+      validForces.forEach((force) => {
+        lastSyncedRef.current[force.id] = JSON.parse(JSON.stringify(force));
+        pendingForceRef.current[force.id] = force;
+      });
+
+      setForces(validForces);
+
+      setSelectedForceId((current) => {
+        if (current && validForces.some((f) => f.id === current)) return current;
+        return validForces.length > 0 ? validForces[0].id : null;
+      });
+
+      if (failedIds.length > 0) {
+        setError(
+          `Loaded ${validForces.length}/${summaries.length} forces. Failed to load: ${failedIds.join(', ')}.`,
+        );
+      } else {
+        setError(null);
       }
-    };
 
-    loadForces();
+      setLoading(false);
+    } catch (err) {
+      setError(`Failed to reach the BTForceManager API: ${err.message}`);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshForces();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const selectedForce = forces.find((f) => f.id === selectedForceId);
@@ -309,6 +315,7 @@ export function useForceManager() {
     addNewForce,
     exportData,
     exportForce,
+    refreshForces,
     getCurrentInGameDate,
     loading,
     error,

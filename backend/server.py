@@ -13,6 +13,10 @@ from database import engine
 from migration_harness import run_migrations
 import watcher
 from admin.router import router as admin_router
+from admin.sp_choices import router as admin_sp_choices_router
+from admin.downtime_actions import router as admin_downtime_actions_router
+from admin.achievements import router as admin_achievements_router
+from admin.mech_catalog import router as admin_mech_catalog_router
 from routers.forces import router as forces_router
 from routers.special_abilities import router as special_abilities_router
 from routers.achievements import router as achievements_router
@@ -80,6 +84,10 @@ router = APIRouter(prefix="/api")
 router.get("/health")(health_check)
 app.include_router(router)
 app.include_router(admin_router)
+app.include_router(admin_sp_choices_router)
+app.include_router(admin_downtime_actions_router)
+app.include_router(admin_achievements_router)
+app.include_router(admin_mech_catalog_router)
 app.include_router(forces_router)
 app.include_router(special_abilities_router)
 app.include_router(achievements_router)

@@ -13,8 +13,9 @@ class Force(Base):
     image: Mapped[str] = mapped_column(String, default="")
     starting_warchest: Mapped[int] = mapped_column(Integer, default=0)
     current_warchest: Mapped[int] = mapped_column(Integer, default=0)
-    wp_multiplier: Mapped[int] = mapped_column(Integer, default=5)
+    wp_multiplier: Mapped[int] = mapped_column(Integer, default=10)
     current_date: Mapped[str] = mapped_column(String, default="")
+    starting_date: Mapped[str] = mapped_column(String, default="3025-01-01")
     notes: Mapped[str] = mapped_column(Text, default="")
     other_actions_log: Mapped[list] = mapped_column(JSON, default=list)
 

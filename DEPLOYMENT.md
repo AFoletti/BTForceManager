@@ -41,6 +41,8 @@ mkdir -p ./docker-data/mech-catalog-drop
 
 The database itself needs no separate folder - `data/btforce.db` is committed in the repo and is bind-mounted directly (`./data:/data`) as the live database. There is no example/live DB distinction: the file you cloned is the one the app runs against.
 
+The watched folder is an ops-workflow alternative for updating the mech catalog outside the app (e.g. scripted/scheduled drops). The primary, in-app path is the Admin interface's Mech Catalog Import panel (upload a MekBay CSV directly, no filesystem access needed) - both paths call the same upsert-by-MUL-ID logic.
+
 ## 4. Build and start the stack
 
 ```bash

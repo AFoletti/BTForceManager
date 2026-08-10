@@ -21,7 +21,17 @@ See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Doc
 
 ### 1.3 Admin namespace
 
-`backend/admin/router.py` exposes a separate `/api/admin/...` namespace (currently just `GET /api/admin/health`), kept independent of the "play" APIs used by Mission Manager, Downtime, and force operations. It's reserved for future global configuration and operational tooling; today it's scaffolding only, with a matching non-functional "Admin" entry point in the frontend header (`components/AdminView.jsx`) that renders a placeholder and offers no controls yet.
+`backend/admin/` exposes a separate `/api/admin/...` namespace, kept independent of the "play" APIs used by Mission Manager, Downtime, and force operations. It's the only place with write access to global/app-scoped configuration:
+
+- `admin/router.py` - `GET /api/admin/health`.
+- `admin/sp_choices.py` - full CRUD for the global SP purchase catalog (`SpChoice`). The play-facing `GET /api/sp-choices` stays read-only.
+- `admin/downtime_actions.py` - full CRUD for the global downtime action catalog (`DowntimeAction`). The play-facing `GET /api/downtime-actions` stays read-only.
+- `admin/achievements.py` - full CRUD for global achievement definitions (`AchievementDefinition`). The play-facing `GET /api/achievement-definitions` stays read-only. Deleting a definition also removes any `PilotAchievement` rows referencing it.
+- `admin/mech_catalog.py` - `POST /api/admin/mech-catalog/import`, accepting a MekBay CSV upload and running it through the same `import_catalog()` upsert-by-MUL-ID logic used by the manual script and the watched-folder mechanism (`watcher.py`). This is the primary in-app path; the watched folder remains available for Docker/ops workflows (see DEPLOYMENT.md).
+
+Force CRUD itself (`POST/PUT/DELETE /api/forces`) is **not** duplicated under `/api/admin` - the Admin UI's Forces section reuses the existing play-facing endpoints directly. Admin vs. play is a pure frontend/UI distinction (`components/AdminView.jsx` and its `components/admin/*` panels), reachable only via the header's Admin entry point - there are no accounts or roles.
+
+Two Force fields exist specifically for Admin-configured Warchest setup: `startingDate` (campaign start date, default `"3025-01-01"`) and the pre-existing `wpMultiplier` (the Warchest-to-Support-Point conversion rate used by the Downtime tab, default now `10`). Both are set via the same `POST`/`PUT /api/forces` payload the Admin Forces panel uses.
 
 ### 1.4 Force state serialization/deserialization service
 

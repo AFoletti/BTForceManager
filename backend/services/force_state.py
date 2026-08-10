@@ -112,6 +112,7 @@ async def deserialize_force(session, force_id, data):
     force.current_warchest = data.get("currentWarchest", force.current_warchest)
     force.wp_multiplier = data.get("wpMultiplier", force.wp_multiplier)
     force.current_date = data.get("currentDate", force.current_date)
+    force.starting_date = data.get("startingDate", force.starting_date)
     force.notes = data.get("notes", force.notes)
     force.other_actions_log = data.get("otherActionsLog", force.other_actions_log)
 
