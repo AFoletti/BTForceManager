@@ -15,6 +15,6 @@
   "seed_data_creation": "None - all curl-based tests created their own row (TESTAbility_XYZ) and cleaned it up; pytest suite also self-cleans. Final DB state verified: 0 rows in special_abilities and force_special_abilities.",
   "retest_needed": false,
   "main_agent_can_self_test": true,
-  "context_for_next_testing_agent": "Phase 3 fully green. External preview base URL: https://btforce-dev-env.preview.emergentagent.com. Swagger at /api/docs. When Phase 4+ adds more mutation endpoints, remember DB is SQLite at /app/backend/data/btforcemanager.db and can be inspected via sqlite3 python module (sqlite3 CLI is NOT installed in the sandbox).",
+  "context_for_next_testing_agent": "Phase 3 fully green. External preview base URL: https://btforce-sandbox.preview.emergentagent.com. Swagger at /api/docs. When Phase 4+ adds more mutation endpoints, remember DB is SQLite at /app/backend/data/btforcemanager.db and can be inspected via sqlite3 python module (sqlite3 CLI is NOT installed in the sandbox).",
   "rca of the issue": "No issues found."
 }

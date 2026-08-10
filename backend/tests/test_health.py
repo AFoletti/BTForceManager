@@ -4,7 +4,7 @@ import sqlite3
 import requests
 import pytest
 
-PREVIEW_URL = os.environ.get("preview_endpoint", "https://btforce-dev-env.preview.emergentagent.com").rstrip("/")
+PREVIEW_URL = os.environ.get("preview_endpoint", "https://btforce-sandbox.preview.emergentagent.com").rstrip("/")
 INTERNAL_URL = "http://localhost:8001"
 DB_PATH = "/app/backend/data/btforcemanager.db"
 

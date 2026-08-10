@@ -112,6 +112,11 @@ See below entries (unchanged from prior session).
 - Added Alembic migration `ca1a9468a197` (`drop force special abilities json column`), applies cleanly (`f666a8ff05f2 -> ca1a9468a197`).
 - Updated `tests/test_special_abilities.py` and `tests/test_legacy_import_round_trip.py` (both directly referenced the column) to match. Verified: `forces` table no longer has the column (schema-inspected), API's `specialAbilities` field still correctly served from the join table, full first-boot seed simulation still populates everything correctly, all 41 backend pytest pass, live sandbox app healthy with no data loss.
 
+### Session Setup Note (2026-07)
+- Repo already present at `/app`, on `main` (commit `92218f1`), matches `origin/main` exactly - no fresh clone needed.
+- Found sandbox DB (`backend/data/btforcemanager.db`) was empty (0 tables) on session start, causing `/api/forces` 500s and 23 failed / 6 error pytest. Fixed by running `alembic upgrade head` then `python3 seed_if_empty.py` (idempotent, matches entrypoint.sh's own boot sequence). Re-verified: all 41 backend pytest pass, `/api/forces` returns real data (ghost-bear, 91st-division-vision-of-words), frontend screenshot confirms full UI render.
+- Per explicit user instruction for this session: no `testing_agent` calls during development - verification via pytest/curl/screenshots only.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).
