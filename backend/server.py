@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 import asyncio
+import os
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -41,9 +42,18 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
 )
 
+# Only needed if the frontend is deployed on a different origin than the
+# backend (see frontend/Dockerfile's REACT_APP_BACKEND_URL comment). Default
+# same-origin deployment via nginx's /api/ proxy needs no CORS at all.
+_cors_origins = [
+    origin.strip()
+    for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
