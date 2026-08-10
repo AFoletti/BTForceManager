@@ -1,0 +1,124 @@
+{
+  "id": "test-fixture-force",
+  "name": "Sample Test Lance",
+  "description": "Anonymized fixture force for import round-trip testing",
+  "image": "",
+  "startingWarchest": 1000,
+  "currentWarchest": 850,
+  "wpMultiplier": 5,
+  "currentDate": "3025-01-01",
+  "notes": "Fixture notes",
+  "specialAbilities": [
+    { "title": "Zellbrigen", "description": "Clan Honor Dueling Protocols" }
+  ],
+  "otherActionsLog": [
+    { "timestamp": "3025-01-01", "action": "Force created", "cost": 0 }
+  ],
+  "mechs": [
+    {
+      "id": "mech-fixture-1",
+      "name": "Fixture Atlas",
+      "status": "Operational",
+      "pilotId": "pilot-fixture-1",
+      "bv": 3000,
+      "weight": 100,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        { "timestamp": "3025-01-01", "action": "Purchased mech for 0 WP", "mission": null, "cost": 0 }
+      ]
+    },
+    {
+      "id": "mech-fixture-2",
+      "name": "Fixture Locust",
+      "status": "Damaged",
+      "pilotId": "",
+      "bv": 500,
+      "weight": 20,
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": []
+    }
+  ],
+  "elementals": [
+    {
+      "id": "elemental-fixture-1",
+      "name": "Fixture Point Alpha",
+      "commander": "Fixture Commander",
+      "gunnery": 3,
+      "antimech": 3,
+      "suitsDestroyed": 0,
+      "suitsDamaged": 1,
+      "bv": 400,
+      "status": "Operational",
+      "image": "",
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": []
+    }
+  ],
+  "pilots": [
+    {
+      "id": "pilot-fixture-1",
+      "name": "Fixture Pilot",
+      "gunnery": 2,
+      "piloting": 3,
+      "injuries": 1,
+      "dezgra": false,
+      "history": "",
+      "warchestCost": 0,
+      "activityLog": [
+        { "timestamp": "3025-01-01", "action": "Assigned to mission: Fixture Raid", "mission": "Fixture Raid", "cost": 0 }
+      ],
+      "combatRecord": { "kills": [], "assists": 0, "missionsCompleted": 1, "tonnageDestroyed": 0 },
+      "achievements": []
+    }
+  ],
+  "missions": [
+    {
+      "id": "mission-fixture-1",
+      "name": "Fixture Raid",
+      "cost": 150,
+      "description": "Fixture mission description",
+      "objectives": [
+        { "id": "obj-1", "title": "Destroy depot", "description": "", "wpReward": 50, "achieved": true }
+      ],
+      "recap": "Fixture recap text",
+      "completed": true,
+      "assignedMechs": ["mech-fixture-1"],
+      "assignedElementals": ["elemental-fixture-1"],
+      "createdAt": "3025-01-01",
+      "inGameDate": "3025-01-01",
+      "completedAt": "3025-01-02",
+      "spBudget": 10,
+      "spPurchases": [
+        { "id": "sp-fixture-1", "choiceId": "air_hvstrike", "name": "Air Strike (Heavy)", "cost": 3 }
+      ],
+      "totalTonnage": 100,
+      "opForUnits": []
+    }
+  ],
+  "snapshots": [
+    {
+      "id": "snapshot-fixture-1",
+      "type": "pre-mission",
+      "label": "Prior to Fixture Raid",
+      "createdAt": "3025-01-01",
+      "currentWarchest": 1000,
+      "startingWarchest": 1000,
+      "netWarchestChange": 0,
+      "missionsCompleted": 0,
+      "units": {}
+    }
+  ],
+  "fullSnapshots": [
+    {
+      "id": "full-snapshot-fixture-1",
+      "snapshotId": "snapshot-fixture-1",
+      "forceData": { "id": "test-fixture-force", "name": "Sample Test Lance" },
+      "createdAt": "3025-01-01"
+    }
+  ]
+}
