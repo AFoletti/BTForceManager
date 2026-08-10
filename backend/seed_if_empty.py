@@ -1,20 +1,14 @@
-"""First-boot data seed, run automatically by entrypoint.sh after migrations.
+"""Diagnostic-only check, not run automatically by entrypoint.sh.
 
-Runs the one-time cutover (migrate_all.py) plus the mech catalog import
-only when the `forces` table is completely empty (i.e. a brand new SQLite
-file, first container start). On every later restart the database already
-has forces, so this is a no-op and live campaign progress is never
-overwritten by the static seed JSON files - only import_legacy_data (inside
-migrate_all.py) is destructive (it wipes+reinserts forces by id), the rest
-are already safe/idempotent upserts, but there is no reason to run any of
-them again once the DB is seeded.
+data/btforce.db is the committed, prefilled live database - there is no
+JSON/CSV seeding step in this architecture. This script just logs whether
+the Force table happens to be empty (which would indicate something is
+wrong with the mounted/committed DB file, not a "first boot" state to fix).
 
 Usage:
     cd backend && python seed_if_empty.py
 """
 import asyncio
-import subprocess
-import sys
 
 from dotenv import load_dotenv
 
@@ -25,11 +19,6 @@ from sqlalchemy import select, func
 from database import SessionLocal
 from models import Force
 
-SEED_SCRIPTS = [
-    "migrate_all.py",
-    "import_mech_catalog.py",
-]
-
 
 async def has_existing_data():
     async with SessionLocal() as session:
@@ -37,19 +26,16 @@ async def has_existing_data():
         return result.scalar_one() > 0
 
 
-def run_script(name):
-    subprocess.run([sys.executable, name], check=True)
-
-
 def main():
     if asyncio.run(has_existing_data()):
-        print("seed_if_empty: existing forces found, skipping first-boot seed.")
-        return
+        print("seed_if_empty: forces table has data, as expected.")
+    else:
+        print("seed_if_empty: WARNING - forces table is empty. data/btforce.db "
+              "should already be prefilled; check the DATABASE_URL/volume mount.")
 
-    print("seed_if_empty: empty database detected, running first-boot seed...")
-    for script in SEED_SCRIPTS:
-        run_script(script)
-    print("seed_if_empty: first-boot seed complete.")
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":

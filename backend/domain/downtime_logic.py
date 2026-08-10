@@ -1,8 +1,8 @@
 """Ported from frontend/src/lib/downtime.js - formula evaluator + action catalog.
 
-Formulas are not user input - they come only from the downtime_actions table
-(DB-seeded from data/downtime-actions.json by migrate_downtime_actions.py),
-same trust boundary as the original JS.
+Formulas are not user input - they come only from the downtime_actions
+table, which lives directly in the committed data/btforce.db, same trust
+boundary as the original JS.
 """
 import math
 import re

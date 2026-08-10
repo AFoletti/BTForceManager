@@ -1,60 +1,63 @@
 import csv
+import tempfile
 from pathlib import Path
 
 import pytest
 from httpx import AsyncClient, ASGITransport
-from sqlalchemy import select, func
+from sqlalchemy import select, func, delete
 
 from server import app
 from database import SessionLocal
 from models import MechCatalogEntry
 from import_mech_catalog import import_catalog
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-CSV_PATH = REPO_ROOT / "data" / "mek_catalog.csv"
+SYNTHETIC_ROWS = [
+    {"chassis": "Test Catalog Mech", "model": "TCM-1", "mul_id": "900001", "BV": "1000", "tonnage": "50"},
+    {"chassis": "Test Catalog Mech", "model": "TCM-2", "mul_id": "900002", "BV": "1200", "tonnage": "55"},
+    {"chassis": "Test Catalog No Mul", "model": "", "mul_id": "", "BV": "800", "tonnage": "35"},
+]
 
 
-def count_unique_csv_entries():
-    with open(CSV_PATH, encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f)
-        keys = set()
-        for row in reader:
-            chassis = (row.get("chassis") or "").strip()
-            if not chassis:
-                continue
-            model = (row.get("model") or "").strip()
-            mul_id = (row.get("mul_id") or "").strip()
-            key = ("mul", mul_id) if mul_id else ("cm", chassis, model)
-            keys.add(key)
-        return len(keys)
+def _write_synthetic_csv(tmp_path):
+    csv_path = tmp_path / "synthetic_mechs.csv"
+    with open(csv_path, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["chassis", "model", "mul_id", "BV", "tonnage"])
+        writer.writeheader()
+        writer.writerows(SYNTHETIC_ROWS)
+    return csv_path
+
+
+async def _cleanup_synthetic(session):
+    await session.execute(delete(MechCatalogEntry).where(MechCatalogEntry.mul_id.in_([900001, 900002])))
+    await session.execute(delete(MechCatalogEntry).where(MechCatalogEntry.chassis == "Test Catalog No Mul"))
+    await session.commit()
 
 
 @pytest.mark.asyncio
-async def test_reimport_is_idempotent_and_row_count_matches_unique_csv_entries():
-    expected_unique = count_unique_csv_entries()
+async def test_reimport_is_idempotent_for_a_dropped_csv(tmp_path):
+    csv_path = _write_synthetic_csv(tmp_path)
 
     async with SessionLocal() as session:
+        await _cleanup_synthetic(session)
+
         async with session.begin():
-            await import_catalog(session)
+            created1, updated1 = await import_catalog(session, csv_path)
+        assert created1 == len(SYNTHETIC_ROWS)
+        assert updated1 == 0
 
-    async with SessionLocal() as session:
-        count_after_first = (
-            await session.execute(select(func.count()).select_from(MechCatalogEntry))
-        ).scalar_one()
-
-    async with SessionLocal() as session:
         async with session.begin():
-            created2, _updated2 = await import_catalog(session)
+            created2, updated2 = await import_catalog(session, csv_path)
+        assert created2 == 0, "second import must not create any new rows"
+        assert updated2 == len(SYNTHETIC_ROWS)
 
-    async with SessionLocal() as session:
-        count_after_second = (
-            await session.execute(select(func.count()).select_from(MechCatalogEntry))
+        rows = (
+            await session.execute(
+                select(func.count()).select_from(MechCatalogEntry).where(MechCatalogEntry.mul_id.in_([900001, 900002]))
+            )
         ).scalar_one()
+        assert rows == 2
 
-    assert count_after_first == expected_unique
-    assert count_after_second == expected_unique
-    assert created2 == 0, "second import must not create any new rows"
-    assert count_after_first == count_after_second
+        await _cleanup_synthetic(session)
 
 
 @pytest.mark.asyncio

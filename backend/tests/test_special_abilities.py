@@ -5,7 +5,6 @@ from sqlalchemy import select, delete
 from server import app
 from database import SessionLocal
 from models import Force, SpecialAbility, ForceSpecialAbility
-from migrate_special_abilities import migrate
 
 TEST_FORCE_A = "test-force-alpha"
 TEST_FORCE_B = "test-force-beta"
@@ -21,26 +20,32 @@ async def _cleanup_test_forces(session):
 
 
 @pytest.mark.asyncio
-async def test_migration_dedupes_shared_ability_across_two_forces():
+async def test_shared_ability_dedupes_across_two_forces_via_api():
     async with SessionLocal() as session:
         await _cleanup_test_forces(session)
-
-        forces_with_abilities = [
-            (TEST_FORCE_A, [{"title": SHARED_ABILITY_NAME, "description": "Clan Honor Dueling Protocols"}]),
-            (TEST_FORCE_B, [{"title": SHARED_ABILITY_NAME, "description": "Clan Honor Dueling Protocols"}]),
-        ]
-
-        pool_created, links_created = await migrate(session, forces_with_abilities)
+        session.add(Force(id=TEST_FORCE_A, name="Test Force Alpha"))
+        session.add(Force(id=TEST_FORCE_B, name="Test Force Beta"))
         await session.commit()
-        assert pool_created == 1
-        assert links_created == 2
 
-        # Re-running is idempotent: no new rows created.
-        pool_created_again, links_created_again = await migrate(session, forces_with_abilities)
-        await session.commit()
-        assert pool_created_again == 0
-        assert links_created_again == 0
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        create_resp = await client.post(
+            "/api/special-abilities",
+            json={"name": SHARED_ABILITY_NAME, "description": "Clan Honor Dueling Protocols"},
+        )
+        assert create_resp.status_code == 201
+        ability_id = create_resp.json()["id"]
 
+        # Linking the *same* pool ability to two different forces must not
+        # create a second pool row - only the join table grows.
+        for force_id in (TEST_FORCE_A, TEST_FORCE_B):
+            link_resp = await client.put(
+                f"/api/forces/{force_id}/special-abilities", json={"abilityIds": [ability_id]}
+            )
+            assert link_resp.status_code == 200
+            assert len(link_resp.json()) == 1
+
+    async with SessionLocal() as session:
         pool_rows = (
             await session.execute(select(SpecialAbility).where(SpecialAbility.name == SHARED_ABILITY_NAME))
         ).scalars().all()
@@ -48,7 +53,7 @@ async def test_migration_dedupes_shared_ability_across_two_forces():
 
         join_rows = (
             await session.execute(
-                select(ForceSpecialAbility).where(ForceSpecialAbility.ability_id == pool_rows[0].id)
+                select(ForceSpecialAbility).where(ForceSpecialAbility.ability_id == ability_id)
             )
         ).scalars().all()
         assert len(join_rows) == 2

@@ -47,15 +47,7 @@ The database itself needs no separate folder - `data/btforce.db` is committed in
 docker compose up -d --build
 ```
 
-This builds the backend (runs Alembic migrations automatically on start, then runs the one-time cutover - `backend/migrate_all.py`, plus the mech catalog import - **only if the database is empty**, later restarts never overwrite live progress) and the frontend (nginx serving the built React app, proxying `/api/*` to the backend).
-
-If you ever need to re-run the cutover manually (e.g. debugging a fresh volume outside of first boot), exec into the backend container and run:
-
-```bash
-docker compose exec backend python migrate_all.py
-```
-
-This is the single entrypoint for the legacy JSON -> SQLite cutover - it runs `import_legacy_data`, `migrate_reference_data`, and `migrate_special_abilities` in the only valid order. Those three no longer support being run directly.
+This builds the backend (runs Alembic migrations automatically on start against the bind-mounted `data/btforce.db`, then starts the API server - no seeding/import step) and the frontend (nginx serving the built React app, proxying `/api/*` to the backend).
 
 ## 5. Verify it's running
 

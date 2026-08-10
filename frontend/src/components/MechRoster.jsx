@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -10,7 +10,8 @@ import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
-import MechAutocomplete, { loadMechCatalog, lookupMechInCatalog } from './MechAutocomplete';
+import MechAutocomplete from './MechAutocomplete';
+import { searchMechCatalog } from '../lib/api';
 
 /**
  * Parse components string into categorized equipment arrays
@@ -102,8 +103,7 @@ export default function MechRoster({ force, onUpdate }) {
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   
-  // Catalog for lookups and catalog info display
-  const [catalog, setCatalog] = useState([]);
+  // Catalog info display (looked up on demand from the backend catalog API)
   const [catalogInfo, setCatalogInfo] = useState(null);
   
   const [formData, setFormData] = useState({
@@ -116,11 +116,6 @@ export default function MechRoster({ force, onUpdate }) {
     history: '',
     warchestCost: 0,
   });
-
-  // Load catalog on mount
-  useEffect(() => {
-    loadMechCatalog().then(setCatalog);
-  }, []);
 
   // Helper to extract catalog info from a mech entry
   const extractCatalogInfo = useCallback((mechEntry) => {
@@ -137,7 +132,7 @@ export default function MechRoster({ force, onUpdate }) {
     };
   }, []);
 
-  const openDialog = (mech = null) => {
+  const openDialog = async (mech = null) => {
     if (mech) {
       setEditingMech(mech);
       setFormData({
@@ -150,8 +145,9 @@ export default function MechRoster({ force, onUpdate }) {
         history: mech.history || '',
         warchestCost: mech.warchestCost || 0,
       });
-      // Look up catalog info for existing mech
-      const found = lookupMechInCatalog(catalog, mech.name);
+      // Look up catalog info for existing mech via the backend catalog API
+      const results = await searchMechCatalog(mech.name).catch(() => []);
+      const found = results.find((m) => m.name.toLowerCase() === mech.name.toLowerCase().trim()) || null;
       setCatalogInfo(extractCatalogInfo(found));
     } else {
       setEditingMech(null);

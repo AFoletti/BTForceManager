@@ -50,7 +50,7 @@ describe('evaluateDowntimeCost', () => {
   it('evaluates expressions with context variables', () => {
     const ctx = { weight: 40, wpMultiplier: 5, suitsDamaged: 2, suitsDestroyed: 3 };
 
-    // Mirrors data/downtime-actions.json formulas
+    // Mirrors the downtime_actions table's formulas
     expect(evaluateDowntimeCost('weight/wpMultiplier', ctx)).toBe(8); // 40/5 = 8
     expect(evaluateDowntimeCost('(weight*2)/wpMultiplier', ctx)).toBe(16); // 80/5 = 16
     expect(evaluateDowntimeCost('(weight/4)/wpMultiplier', ctx)).toBe(2); // 10/5 = 2
