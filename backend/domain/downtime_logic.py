@@ -12,8 +12,6 @@ from sqlalchemy import select
 from database import SessionLocal
 from models import DowntimeAction
 
-_CATEGORIES = ("mechActions", "elementalActions", "pilotActions")
-
 
 async def load_downtime_actions():
     async with SessionLocal() as session:
@@ -29,14 +27,6 @@ def _action_to_dict(action):
         "formula": action.formula,
         "makesUnavailable": "makesUnavailable" in (action.flags or []),
     }
-
-
-async def get_downtime_actions_config():
-    actions = await load_downtime_actions()
-    config = {category: [] for category in _CATEGORIES}
-    for action in actions:
-        config.setdefault(action.category, []).append(_action_to_dict(action))
-    return config
 
 
 async def get_action(category, action_id):

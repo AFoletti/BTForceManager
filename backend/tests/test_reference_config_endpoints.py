@@ -28,12 +28,14 @@ def test_downtime_actions_config(s):
     r = s.get(f"{API}/downtime-actions")
     assert r.status_code == 200
     data = r.json()
-    assert "mechActions" in data and "pilotActions" in data and "elementalActions" in data
-    ids = [a["id"] for a in data["mechActions"]]
+    assert isinstance(data, list) and len(data) > 0
+    ids = [a["id"] for a in data]
     assert "repair-armor" in ids
+    categories = {a["category"] for a in data}
+    assert {"mechActions", "elementalActions", "pilotActions"} <= categories
     # shape check
-    a0 = data["mechActions"][0]
-    for f in ("id", "name", "formula", "description"):
+    a0 = data[0]
+    for f in ("id", "name", "description", "category", "formula", "flags"):
         assert f in a0
 
 

@@ -130,6 +130,15 @@ See below entries (unchanged from prior session).
 - Verified: all 41 backend pytest pass (including pre-existing `test_downtime_actions_config` shape check), live `GET /api/downtime-actions` via ingress returns byte-identical shape/values to the old JSON, live `POST /api/mechs/{id}/downtime` end-to-end smoke test (repair-armor on a temp test mech under `ghost-bear`, cost correctly computed as 10 WP = weight 50 / wpMultiplier 5, status flipped Damaged->Operational, warchest deducted) then cleaned up (mech deleted, `ghost-bear.currentWarchest` restored to 1'564).
 - Per user instruction: no testing_agent call this session - verified via pytest + curl only.
 
+### Issue 3 (Expose GET /api/downtime-actions via dedicated router, switch frontend to it) - Done, verified
+- New `backend/routers/downtime_actions.py`: `GET /api/downtime-actions` returns a flat list of `downtime_actions` rows (`id, name, description, category, formula, flags`) as specified. Registered in `server.py`.
+- Removed the old grouped-shape `GET /downtime-actions` handler from `routers/downtime.py` (would have route-collided with the new dedicated router on the same path) and the now-dead `get_downtime_actions_config()` helper from `domain/downtime_logic.py` (the 3 write endpoints' `get_action()` lookup was untouched, still DB-backed from Issue 2).
+- `frontend/src/lib/api.js`: `getDowntimeActionsConfig()` now fetches the flat list and groups it client-side into `{mechActions, elementalActions, pilotActions}` by `category`, deriving the `makesUnavailable` boolean from `flags` - preserves `DowntimeOperations.jsx`'s existing prop contract with zero logic changes needed there.
+- Updated stale JSON-referencing captions/comments: `DowntimeOperations.jsx`'s "Load downtime actions from JSON" comment and "To modify actions" reference block (now points at the `downtime_actions` table / `/api/downtime-actions`, not the JSON file); `frontend/src/lib/downtime.js`'s two JSDoc comments (formula trust-boundary note + "supported action ids" note) updated to reference `/api/downtime-actions` instead of `data/downtime-actions.json`.
+- Updated `tests/test_reference_config_endpoints.py::test_downtime_actions_config` for the new flat-list contract (list of dicts with id/name/description/category/formula/flags, category values cover all 3 groups).
+- Verified: all 41 backend pytest pass, live `GET /api/downtime-actions` via ingress returns the flat list, screenshotted Downtime tab end-to-end - unit-type/unit/action dropdowns populate correctly (e.g. selecting Mech shows "Repair Mech Armor", "Repair Mech Internal Structure (Repairing)", "Reconfigure Mech"), confirming the frontend grouping transform works against the new endpoint shape.
+- Per user instruction: no testing_agent call this session - verified via pytest + curl + screenshot only.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).
