@@ -1,9 +1,17 @@
 # Build stage
 FROM node:20-alpine AS build
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY frontend/package.json frontend/yarn.lock ./
 RUN yarn install --frozen-lockfile
-COPY . .
+COPY frontend/ .
+
+# public/data is a symlink to the repo-root data/ folder for local dev
+# convenience; it points outside this Dockerfile's own directory and would
+# be a dangling symlink once copied in isolation, so replace it with a real
+# copy of the same folder (available because the build context is the repo
+# root - see docker-compose.yml).
+RUN rm -rf /app/public/data
+COPY data/ /app/public/data/
 
 # Left empty on purpose: the nginx stage below proxies /api/* to the backend
 # container, so the bundle should call relative "/api/..." paths and work
@@ -17,5 +25,5 @@ RUN yarn build
 # Serve stage
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

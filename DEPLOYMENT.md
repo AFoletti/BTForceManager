@@ -46,7 +46,7 @@ mkdir -p ./docker-data/mech-catalog-drop
 docker compose up -d --build
 ```
 
-This builds the backend (runs Alembic migrations automatically on start) and the frontend (nginx serving the built React app, proxying `/api/*` to the backend).
+This builds the backend (runs Alembic migrations automatically on start, then seeds the initial campaign/reference data from the `data/` folder **only if the database is empty** - later restarts never overwrite live progress) and the frontend (nginx serving the built React app, proxying `/api/*` to the backend).
 
 ## 5. Verify it's running
 
