@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from './ui/input';
-import { Search } from 'lucide-react';
-import { searchMechCatalog } from '../lib/api';
+import { Search, X } from 'lucide-react';
+import { searchMechCatalog, getMechCatalogImportStatus } from '../lib/api';
 
 /**
  * Parse a CSV line handling quoted fields (which may contain commas).
@@ -137,6 +137,17 @@ export function lookupMechInCatalog(catalog, mechName) {
   return catalog.find(m => m.name.toLowerCase() === nameLower) || null;
 }
 
+// Watcher timestamps look like "20260810T062812123456" (from
+// datetime.strftime("%Y%m%dT%H%M%S%f")) - format into a readable local time.
+function formatWatcherTimestamp(ts) {
+  if (!ts || ts.length < 15) return ts || '';
+  const iso = `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}T${ts.slice(9, 11)}:${ts.slice(11, 13)}:${ts.slice(13, 15)}Z`;
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? ts : date.toLocaleString();
+}
+
+const IMPORT_STATUS_POLL_INTERVAL_MS = 8000;
+
 /**
  * MechAutocomplete - A searchable dropdown for selecting mechs from the catalog
  * 
@@ -154,6 +165,31 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
   const listRef = useRef(null);
   const debounceRef = useRef(null);
   const requestIdRef = useRef(0);
+  const [importStatus, setImportStatus] = useState(null);
+  const [dismissedImportKey, setDismissedImportKey] = useState(null);
+
+  // Poll the watched-folder mech catalog import status while this component
+  // is mounted, so dropping a CSV into the NAS watch folder is visible in
+  // the UI without a page reload. Local to this component (no global state).
+  useEffect(() => {
+    let active = true;
+    const poll = () => {
+      getMechCatalogImportStatus()
+        .then((data) => {
+          if (active) setImportStatus(data);
+        })
+        .catch(() => {
+          // Silently ignore - the badge just stays hidden/stale until the
+          // next successful poll.
+        });
+    };
+    poll();
+    const interval = setInterval(poll, IMPORT_STATUS_POLL_INTERVAL_MS);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   // Debounced search against the backend mech catalog API
   useEffect(() => {
@@ -277,6 +313,10 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
 
   const showDropdown = isOpen && filteredMechs.length > 0;
 
+  const latestImport = importStatus?.recentImports?.[0] || null;
+  const latestImportKey = latestImport ? `${latestImport.timestamp}-${latestImport.filename}` : 'idle';
+  const showImportBadge = Boolean(importStatus?.enabled) && dismissedImportKey !== latestImportKey;
+
   return (
     <div ref={wrapperRef} className="relative">
       <div className="relative">
@@ -291,6 +331,42 @@ export default function MechAutocomplete({ value, onChange, onSelect, placeholde
           autoComplete="off"
         />
       </div>
+
+      {showImportBadge && (
+        <div
+          data-testid="mech-catalog-import-status"
+          className={`mt-1 flex items-center justify-between gap-2 rounded-md border px-2 py-1 text-xs ${
+            latestImport?.status === 'error'
+              ? 'border-destructive/40 bg-destructive/10 text-destructive'
+              : 'border-border bg-muted/50 text-muted-foreground'
+          }`}
+        >
+          {latestImport ? (
+            latestImport.status === 'error' ? (
+              <span data-testid="mech-catalog-import-status-error">
+                Catalog import failed ({formatWatcherTimestamp(latestImport.timestamp)}): {latestImport.reason}
+              </span>
+            ) : (
+              <span data-testid="mech-catalog-import-status-success">
+                Last catalog import {formatWatcherTimestamp(latestImport.timestamp)} - {latestImport.created} new,{' '}
+                {latestImport.updated} updated
+                {latestImport.skipped ? `, ${latestImport.skipped} skipped` : ''}
+              </span>
+            )
+          ) : (
+            <span data-testid="mech-catalog-import-status-idle">Watching for catalog CSV drops...</span>
+          )}
+          <button
+            type="button"
+            data-testid="mech-catalog-import-status-dismiss"
+            onClick={() => setDismissedImportKey(latestImportKey)}
+            className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+            aria-label="Dismiss import status"
+          >
+            <X className="w-3 h-3" />
+          </button>
+        </div>
+      )}
 
       {showDropdown && (
         <div 
