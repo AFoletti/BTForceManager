@@ -1,14 +1,21 @@
-"""One-time bulk-load of data/mek_catalog.csv into the mech_catalog table.
+"""Operational tool for bulk-importing a mech catalog CSV (e.g. exported
+from MekHQ or the Master Unit List) into the mech_catalog table.
+
+The initial catalog already lives in the committed data/btforce.db - this
+script is for importing *future* updates: point it at any CSV file (it is
+not tied to a specific repo-shipped file). The watched-folder mechanism
+(watcher.py) covers automatic drops; this script is for manual/ad-hoc runs.
 
 Idempotent re-import: entries with a mul_id are matched/updated by mul_id;
 entries without a mul_id (some catalog rows have none) are matched/updated
 by (chassis, model) instead, so re-running never creates duplicate rows.
 
 Usage:
-    cd backend && python import_mech_catalog.py
+    cd backend && python import_mech_catalog.py /path/to/mechs.csv
 """
 import asyncio
 import csv
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,9 +27,6 @@ from sqlalchemy import select
 
 from database import SessionLocal, engine
 from models import MechCatalogEntry
-
-REPO_ROOT = Path(__file__).resolve().parent.parent
-CSV_PATH = REPO_ROOT / "data" / "mek_catalog.csv"
 
 
 def parse_int(value):
@@ -37,7 +41,7 @@ def parse_int(value):
         return None
 
 
-async def import_catalog(session):
+async def import_catalog(session, csv_path):
     created, updated = 0, 0
     now = datetime.now(timezone.utc).isoformat()
 
@@ -47,7 +51,7 @@ async def import_catalog(session):
         (row.chassis, row.model): row for row in existing_rows if row.mul_id is None
     }
 
-    with open(CSV_PATH, encoding="utf-8-sig", newline="") as f:
+    with open(csv_path, encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
             chassis = (row.get("chassis") or "").strip()
@@ -119,13 +123,16 @@ async def import_catalog(session):
     return created, updated
 
 
-async def main():
+async def main(csv_path):
     async with SessionLocal() as session:
         async with session.begin():
-            created, updated = await import_catalog(session)
+            created, updated = await import_catalog(session, csv_path)
     await engine.dispose()
     print(f"Mech catalog import done. Created {created}, updated {updated}.")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    if len(sys.argv) < 2:
+        print("Usage: python import_mech_catalog.py <path-to-csv>")
+        sys.exit(1)
+    asyncio.run(main(Path(sys.argv[1])))

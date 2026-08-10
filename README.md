@@ -1,8 +1,8 @@
 # BattleTech Forces Manager
 
-BattleTech Forces Manager is a static, single-page web app for running Classic BattleTech campaigns with the Warchest system. It lets you manage forces made of mechs, elementals and pilots, track missions and downtime operations, and keep your Warchest and roster state in one place.
+BattleTech Forces Manager is a web app for running Classic BattleTech campaigns with the Warchest system. It lets you manage forces made of mechs, elementals and pilots, track missions and downtime operations, and keep your Warchest and roster state in one place.
 
-The app runs entirely in the browser, backed only by JSON files in the `data/` folder. You can switch between multiple forces, assign pilots to mechs, mark injuries and damage, log missions with costs and rewards, and apply configurable downtime actions that adjust Warchest and unit state over time.
+The app is a React frontend backed by a FastAPI + SQLite backend. All campaign data (forces, mechs, pilots, achievements, SP choices, downtime actions, the mech catalog) lives in a single committed database file, `data/btforce.db` - there are no JSON/CSV files to edit for day-to-day use.
 
 ---
 
@@ -32,7 +32,7 @@ Adjusted BV is shown in the Mech Roster, Mission Manager, and PDF Export. The st
 
 ## Adding Mechs
 
-When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV) sourced from [MekBay](https://next.mekbay.com) and stored in `data/mek_catalog.csv`. Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
+When adding a new mech, you can search the **mech catalog** by typing at least 2 characters. The catalog contains mech data (name, tonnage, BV, movement, heat, components) sourced from [MekBay](https://next.mekbay.com) and stored in the backend's `mech_catalog` table. Selecting a mech from the dropdown auto-fills the name, weight, and base BV fields.
 
 You can also type a custom mech name if it's not in the catalog.
 
@@ -55,11 +55,9 @@ During mission completion, you can log kills for each deployed pilot using the m
 
 ### Achievements
 
-Pilots automatically earn achievements based on their combat records
+Pilots automatically earn achievements based on their combat records. Achievements are displayed as badges in the Pilot Roster and detailed in the pilot edit dialog. New achievements trigger a popup after mission completion.
 
-Achievements are displayed as emoji badges in the Pilot Roster and detailed in the pilot edit dialog. New achievements trigger a popup after mission completion.
-
-See `data/achievements.json` to customize achievements.
+Achievement definitions are stored in the backend's `achievement_definitions` table (served via `GET /api/achievement-definitions`).
 
 ---
 
@@ -71,22 +69,13 @@ Missions can include a Support Point budget for purchasing tactical support:
 2. Select items from the dropdown (items exceeding remaining budget are disabled)
 3. SP purchases are stored with the mission and appear in PDF exports
 
-SP choices are defined in `data/sp-choices.json`. See TECHNICAL_README.md for customization.
+SP choices are stored in the backend's `sp_choices` table (served via `GET /api/sp-choices`). See TECHNICAL_README.md for the data model.
 
 ---
 
 ## Special Abilities
 
-Forces can have special abilities displayed in the force banner. Add a `specialAbilities` array to your force JSON:
-
-```json
-{
-  "specialAbilities": [
-    { "title": "Zellbrigen", "description": "Clan Honor Dueling Protocols" },
-    { "title": "Blood Fury", "description": "+1 Initiative when outnumbered" }
-  ]
-}
-```
+Forces can have special abilities displayed in the force banner, managed via the `special_abilities` pool and linked per-force through the app itself (no manual file editing required).
 
 ---
 
@@ -94,28 +83,16 @@ Forces can have special abilities displayed in the force banner. Add a `specialA
 
 ### Adding or editing forces
 
-Forces are defined as JSON files under `data/forces/` and listed in `data/forces/manifest.json`.
-
-1. **Create or edit a force JSON** in `data/forces/` (e.g. `my-force.json`).
-2. **Add it to the manifest** by appending its filename to `data/forces/manifest.json`:
-   ```json
-   {
-     "forces": [
-       "19th-great-white.json",
-       "my-force.json"
-     ]
-   }
-   ```
-3. Commit and push. The force will appear in the app's force selector.
+Forces are created, edited, and deleted directly from the app (the **+ New Force** button and the per-force edit/delete actions), backed by the `POST/PUT/DELETE /api/forces` endpoints. There's no manifest file to hand-edit.
 
 From inside the app you can also:
 
 - Use the **Data Editor** tab to tweak the currently loaded force as JSON.
-- Use **Export** to download the force as `<force-id>.json` and then copy that file into `data/forces/` under version control.
+- Use **Export** to download the force as `<force-id>.json` for backup/sharing purposes (this is just an export format, not something the app reads back in as a data source).
 
-### Configuring downtime actions
+### Downtime actions
 
-Downtime operations (repairs, purchases, training, etc.) are defined in `data/downtime-actions.json` and are loaded at runtime by the **Downtime** tab.
+Downtime operations (repairs, purchases, training, etc.) are stored in the backend's `downtime_actions` table and served via `GET /api/downtime-actions` at runtime by the **Downtime** tab.
 
 - `mechActions` control actions available for mechs (often using mech weight and a WP multiplier).
 - `elementalActions` control actions for elemental points (often using suits destroyed/damaged and the same multiplier).
@@ -132,22 +109,16 @@ Each action has:
 
 > Formulas are **not** executed with `eval`. They go through a small, safe arithmetic parser that only understands numbers, `+`, `-`, `*`, `/` and parentheses. Anything outside of that will be ignored and treated as `0`.
 
-To change downtime behaviour or add a new action:
-
-1. Edit `data/downtime-actions.json` with new or adjusted actions.
-2. Make sure each action has a unique `id`. Some IDs are treated specially by the app (e.g. `repair-elemental`, `purchase-elemental`, `train-gunnery`, `train-piloting`, `heal-injury`) to reset damage or change pilot skills.
-3. Commit and push. The next page load will use the updated rules.
-
 For deeper technical details (code structure, build & deploy, data contracts, etc.), see **TECHNICAL_README.md** in this repository.
 
 ---
 
 ## Updating the Mech Catalog
 
-The mech catalog (`data/mek_catalog.csv`) provides autocomplete data for adding mechs and logging kills. It is sourced from [MekBay](https://next.mekbay.com) and contains all necessary mech information: chassis, model, BV, tonnage, year, techbase, role, and MUL ID.
+The mech catalog provides autocomplete data for adding mechs and logging kills. It is sourced from [MekBay](https://next.mekbay.com) and contains all necessary mech information: chassis, model, BV, tonnage, year, techbase, role, and MUL ID. The initial catalog already ships inside `data/btforce.db` - no setup needed.
 
-To refresh the mech list:
+To add or refresh mechs later, without touching the repo:
 
-1. Visit [MekBay](https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true).
-2. Export as CSV and save to `data/mek_catalog.csv`.
-3. Commit and push. The app reads the CSV directly at runtime.
+1. Visit [MekBay](https://next.mekbay.com/?filters=type:Mek%7Csubtype:BattleMek,BattleMek%2520Omni%7CweightClass:Medium,Heavy,Assault,Light&expanded=true) and export as CSV.
+2. Drop the CSV file into the watched folder (`MECH_CATALOG_WATCH_HOST_DIR` in Docker deployments - see DEPLOYMENT.md). The backend picks it up automatically within a few seconds, upserts the rows by MUL ID, and archives the processed file.
+3. Alternatively, run the bundled operational tool directly: `python backend/import_mech_catalog.py /path/to/mechs.csv`.

@@ -24,7 +24,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
   const [wpMultiplier, setWpMultiplier] = useState(force.wpMultiplier || 5);
   const [editingMultiplier, setEditingMultiplier] = useState(false);
 
-  // Load downtime actions from JSON
+  // Load downtime actions from /api/downtime-actions
   const [mechActions, setMechActions] = useState([]);
   const [elementalActions, setElementalActions] = useState([]);
   const [pilotActions, setPilotActions] = useState([]);
@@ -857,11 +857,9 @@ export default function DowntimeOperations({ force, onUpdate }) {
               </p>
               <ol className="list-decimal list-inside ml-2 space-y-0.5">
                 <li>
-                  Edit{' '}
-                  <code className="bg-muted px-1 py-0.5 rounded">
-                    data/downtime-actions.json
-                  </code>{' '}
-                  (backend config source)
+                  Actions are served from the backend's{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">downtime_actions</code> table via{' '}
+                  <code className="bg-muted px-1 py-0.5 rounded">/api/downtime-actions</code>
                 </li>
                 <li>
                   Formulas use:{' '}
@@ -870,7 +868,7 @@ export default function DowntimeOperations({ force, onUpdate }) {
                   <code className="bg-muted px-1 py-0.5 rounded">suitsDamaged</code>,{' '}
                   <code className="bg-muted px-1 py-0.5 rounded">suitsDestroyed</code>
                 </li>
-                <li>Commit and push to GitHub</li>
+                <li>Update the table and the app reflects the change on next load</li>
               </ol>
             </div>
           </div>

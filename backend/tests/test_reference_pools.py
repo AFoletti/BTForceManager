@@ -1,6 +1,6 @@
 import pytest
 from httpx import AsyncClient, ASGITransport
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, func
 
 from server import app
 from database import SessionLocal
@@ -12,12 +12,6 @@ from models import (
     PilotAchievement,
     SpChoice,
     MissionSpPurchase,
-)
-from migrate_reference_data import (
-    seed_achievement_definitions,
-    seed_sp_choices,
-    migrate_pilot_achievements,
-    migrate_mission_sp_purchases,
 )
 
 TEST_FORCE_ID = "test-force-refdata"
@@ -37,25 +31,17 @@ async def _cleanup(session):
 
 
 @pytest.mark.asyncio
-async def test_catalog_seed_is_idempotent_and_covers_real_json_files():
+async def test_reference_pools_are_prefilled_in_committed_db():
     async with SessionLocal() as session:
-        created1, updated1 = await seed_achievement_definitions(session)
-        sp_created1, sp_updated1 = await seed_sp_choices(session)
-        await session.commit()
+        achievements_count = (
+            await session.execute(select(func.count()).select_from(AchievementDefinition))
+        ).scalar_one()
+        sp_choices_count = (await session.execute(select(func.count()).select_from(SpChoice))).scalar_one()
 
-        created2, updated2 = await seed_achievement_definitions(session)
-        sp_created2, sp_updated2 = await seed_sp_choices(session)
-        await session.commit()
-
-        # Second run should create nothing new (upsert-by-id, idempotent).
-        assert created2 == 0
-        assert sp_created2 == 0
-
-        all_definitions = (await session.execute(select(AchievementDefinition))).scalars().all()
-        assert len(all_definitions) == 16  # matches data/achievements.json
-
-        all_choices = (await session.execute(select(SpChoice))).scalars().all()
-        assert len(all_choices) == 25  # matches data/sp-choices.json
+        # data/btforce.db is the single canonical source now (Issue 6) - no
+        # JSON files or seed scripts exist, just fixed regression counts.
+        assert achievements_count == 16
+        assert sp_choices_count == 25
 
 
 @pytest.mark.asyncio
@@ -70,25 +56,30 @@ async def test_repeated_sp_purchase_of_same_choice_creates_two_separate_line_ite
                 id=TEST_MISSION_ID,
                 force_id=TEST_FORCE_ID,
                 name="Test Mission",
-                sp_purchases=[
-                    {"id": "sp-line-1", "choiceId": TEST_CHOICE_ID, "name": "Test Strike", "cost": 10},
-                    {"id": "sp-line-2", "choiceId": TEST_CHOICE_ID, "name": "Test Strike", "cost": 10},
-                ],
             )
         )
         await session.commit()
 
-        created = await migrate_mission_sp_purchases(session)
-        await session.commit()
-        assert created == 2
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        first_resp = await client.post(
+            f"/api/missions/{TEST_MISSION_ID}/sp-purchases", json={"choiceId": TEST_CHOICE_ID}
+        )
+        assert first_resp.status_code == 201
+        second_resp = await client.post(
+            f"/api/missions/{TEST_MISSION_ID}/sp-purchases", json={"choiceId": TEST_CHOICE_ID}
+        )
+        assert second_resp.status_code == 201
+        assert first_resp.json()["id"] != second_resp.json()["id"]
 
+    async with SessionLocal() as session:
         rows = (
             await session.execute(
                 select(MissionSpPurchase).where(MissionSpPurchase.mission_id == TEST_MISSION_ID)
             )
         ).scalars().all()
         assert len(rows) == 2
-        assert {r.id for r in rows} == {"sp-line-1", "sp-line-2"}
+        assert {r.id for r in rows} == {first_resp.json()["id"], second_resp.json()["id"]}
         assert all(r.choice_id == TEST_CHOICE_ID for r in rows)
 
         await _cleanup(session)

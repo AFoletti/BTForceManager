@@ -4,9 +4,14 @@ import sqlite3
 import requests
 import pytest
 
-PREVIEW_URL = os.environ.get("preview_endpoint", "https://btforce-dev-env.preview.emergentagent.com").rstrip("/")
+from dotenv import load_dotenv
+load_dotenv()
+
+PREVIEW_URL = os.environ.get("preview_endpoint", "https://btforce-sandbox.preview.emergentagent.com").rstrip("/")
 INTERNAL_URL = "http://localhost:8001"
-DB_PATH = "/app/backend/data/btforcemanager.db"
+# Derived from DATABASE_URL (sqlite+aiosqlite:////abs/path.db) rather than
+# hardcoded - Issue 5 moved the live DB to the repo's data/btforce.db.
+DB_PATH = os.environ.get("DATABASE_URL", "").split("sqlite+aiosqlite:///")[-1] or "/app/data/btforce.db"
 
 
 class TestHealthEndpoints:

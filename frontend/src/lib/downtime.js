@@ -212,8 +212,8 @@ function evalRpn(rpn, context) {
  * `weight`, `suitsDamaged`, `suitsDestroyed`, `wpMultiplier` and
  * numbers/operators (+, -, *, /, parentheses).
  *
- * IMPORTANT: Formulas are **not** user input. They come only from
- * `data/downtime-actions.json` checked into version control.
+ * IMPORTANT: Formulas are **not** user input. They come only from the
+ * backend's `/api/downtime-actions` catalog (DB-backed `downtime_actions` table).
  *
  * @param {string} formula
  * @param {Object} context
@@ -356,7 +356,7 @@ export function applyElementalDowntimeAction(
 /**
  * Apply a pilot downtime action to a force.
  *
- * Supported action ids (by convention, see data/downtime-actions.json):
+ * Supported action ids (by convention, see /api/downtime-actions):
  * - train-gunnery: reduce gunnery by 1 (to a minimum of 0)
  * - train-piloting: reduce piloting by 1 (to a minimum of 0)
  * - heal-injury: heal one injury (reducing injuries by 1, minimum 0)

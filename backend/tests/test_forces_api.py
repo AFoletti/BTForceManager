@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 import pytest
 from httpx import AsyncClient, ASGITransport
 
@@ -9,22 +6,29 @@ from database import SessionLocal
 from models import Force, Mech, Pilot, Elemental, Mission, Snapshot, FullSnapshot
 from sqlalchemy import select, func
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-FORCES_DIR = REPO_ROOT / "data" / "forces"
-MANIFEST_PATH = FORCES_DIR / "manifest.json"
-
-
-def source_forces():
-    manifest = json.loads(MANIFEST_PATH.read_text())
-    return [json.loads((FORCES_DIR / f).read_text()) for f in manifest["forces"]]
+# Expected counts/fields for the two forces baked into the committed
+# data/btforce.db - no JSON source files exist anymore (Issue 6), so this
+# is a fixed regression check against the DB's own known state.
+EXPECTED_FORCES = {
+    "ghost-bear": {
+        "name": "Bluefang Trinary",
+        "currentWarchest": 1564,
+        "mechs": 18, "pilots": 18, "elementals": 3, "missions": 2,
+        "snapshots": 6, "fullSnapshots": 3,
+    },
+    "91st-division-vision-of-words": {
+        "name": "91st Division Vision of Words",
+        "currentWarchest": 2000,
+        "mechs": 24, "pilots": 24, "elementals": 0, "missions": 0,
+        "snapshots": 0, "fullSnapshots": 0,
+    },
+}
 
 
 @pytest.mark.asyncio
-async def test_migration_row_counts_match_source_json():
+async def test_committed_forces_row_counts_match_known_state():
     async with SessionLocal() as session:
-        for raw in source_forces():
-            force_id = raw["id"]
-
+        for force_id, expected in EXPECTED_FORCES.items():
             for model, key in (
                 (Mech, "mechs"),
                 (Pilot, "pilots"),
@@ -37,15 +41,14 @@ async def test_migration_row_counts_match_source_json():
                     select(func.count()).select_from(model).where(model.force_id == force_id)
                 )
                 db_count = result.scalar_one()
-                assert db_count == len(raw.get(key, [])), (
-                    f"{key} count mismatch for force {force_id}: "
-                    f"db={db_count} json={len(raw.get(key, []))}"
+                assert db_count == expected[key], (
+                    f"{key} count mismatch for force {force_id}: db={db_count} expected={expected[key]}"
                 )
 
             force = await session.get(Force, force_id)
             assert force is not None
-            assert force.name == raw.get("name", "")
-            assert force.current_warchest == raw.get("currentWarchest", 0)
+            assert force.name == expected["name"]
+            assert force.current_warchest == expected["currentWarchest"]
 
 
 @pytest.mark.asyncio
@@ -60,8 +63,8 @@ async def test_list_forces_endpoint():
 
 
 @pytest.mark.asyncio
-async def test_get_force_detail_endpoint_matches_source():
-    raw = next(f for f in source_forces() if f["id"] == "ghost-bear")
+async def test_get_force_detail_endpoint_matches_known_state():
+    expected = EXPECTED_FORCES["ghost-bear"]
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -69,17 +72,13 @@ async def test_get_force_detail_endpoint_matches_source():
     assert response.status_code == 200
     data = response.json()
 
-    assert data["name"] == raw["name"]
-    assert data["currentWarchest"] == raw["currentWarchest"]
-    assert len(data["mechs"]) == len(raw["mechs"])
-    assert len(data["pilots"]) == len(raw["pilots"])
-    assert len(data["missions"]) == len(raw["missions"])
-    assert len(data["snapshots"]) == len(raw["snapshots"])
-    assert len(data["fullSnapshots"]) == len(raw["fullSnapshots"])
-
-    source_mech_ids = {m["id"] for m in raw["mechs"]}
-    returned_mech_ids = {m["id"] for m in data["mechs"]}
-    assert source_mech_ids == returned_mech_ids
+    assert data["name"] == expected["name"]
+    assert data["currentWarchest"] == expected["currentWarchest"]
+    assert len(data["mechs"]) == expected["mechs"]
+    assert len(data["pilots"]) == expected["pilots"]
+    assert len(data["missions"]) == expected["missions"]
+    assert len(data["snapshots"]) == expected["snapshots"]
+    assert len(data["fullSnapshots"]) == expected["fullSnapshots"]
 
 
 @pytest.mark.asyncio

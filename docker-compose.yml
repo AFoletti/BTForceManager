@@ -1,12 +1,6 @@
 services:
   backend:
     build:
-      # Build context is the repo root (not ./backend) so the Dockerfile can
-      # also COPY the sibling top-level data/ folder (downtime-actions.json,
-      # achievements.json, sp-choices.json, mek_catalog.csv, forces/*.json) -
-      # domain/downtime_logic.py and the import_*.py seed scripts resolve
-      # that folder relative to their own file location and need it present
-      # inside the image at the same relative depth as in this repo.
       context: .
       dockerfile: backend/Dockerfile
     env_file:
@@ -15,10 +9,11 @@ services:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
     volumes:
-      # Bind-mounted (not a named Docker volume) so the SQLite database file
-      # is a real file under this host path - browsable/backupable directly
-      # from DSM File Station, not hidden inside Docker's internal storage.
-      - ${DB_DATA_PATH:-./docker-data/db}:/data
+      # Bind-mount the repo's own data/ folder (which includes the
+      # committed, pre-populated data/btforce.db) directly - the container
+      # sees the live DB at /data/btforce.db with no separate host-only
+      # "example vs live" DB location.
+      - ./data:/data
       # Dedicated "drop zone" for the Phase 7 watched-folder auto-import:
       # copy/drag a mech catalog CSV into this host folder and it gets
       # imported automatically within a few seconds. Separate from the DB
@@ -30,10 +25,11 @@ services:
 
   frontend:
     build:
-      # Same reasoning as the backend: build context is the repo root so the
-      # Dockerfile can copy the top-level data/ folder in place of the
-      # public/data symlink (which points outside a ./frontend-only context
-      # and would otherwise be a dangling symlink in the built image).
+      # Build context is the repo root so this compose file's own volume
+      # mount for the backend (./data) and this Dockerfile can both resolve
+      # relative to the same root; the frontend image itself no longer
+      # copies anything from data/ (Issue 6 - no JSON/CSV data files ship
+      # with the frontend, catalog lookups go through the backend API).
       context: .
       dockerfile: frontend/Dockerfile
       args:

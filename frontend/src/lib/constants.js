@@ -26,7 +26,7 @@ export function getStatusBadgeVariant(status) {
   return STATUS_TO_BADGE_VARIANT[status] || 'outline';
 }
 
-// Downtime action identifiers as used in data/downtime-actions.json.
+// Downtime action identifiers as used in the downtime_actions table (served via /api/downtime-actions).
 export const DOWNTIME_ACTION_IDS = {
   REPAIR_ARMOR: 'repair-armor',
   REPAIR_STRUCTURE: 'repair-structure',

@@ -71,7 +71,15 @@ export const searchMechCatalog = (search) =>
 export const getMechCatalogImportStatus = () => request('GET', '/mech-catalog/import-status');
 
 // Downtime
-export const getDowntimeActionsConfig = () => request('GET', '/downtime-actions');
+export const getDowntimeActionsConfig = async () => {
+  const actions = await request('GET', '/downtime-actions');
+  const grouped = { mechActions: [], elementalActions: [], pilotActions: [] };
+  for (const action of actions) {
+    const entry = { ...action, makesUnavailable: (action.flags || []).includes('makesUnavailable') };
+    (grouped[action.category] ||= []).push(entry);
+  }
+  return grouped;
+};
 export const applyMechDowntime = (mechId, payload) => request('POST', `/mechs/${mechId}/downtime`, payload);
 export const applyElementalDowntime = (elementalId, payload) =>
   request('POST', `/elementals/${elementalId}/downtime`, payload);

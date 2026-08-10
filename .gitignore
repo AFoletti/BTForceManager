@@ -62,3 +62,7 @@ backend/data/
 !backend/.env.example
 !backend/.env.docker.example
 *.env
+
+# The live, committed SQLite database (Issue 5: DB itself is now the
+# checked-in source of truth, no example/live distinction).
+!data/btforce.db

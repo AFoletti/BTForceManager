@@ -2,39 +2,22 @@
 
 This document is aimed at developers who want to work on the source, extend the app, or adjust its internal behaviour.
 
-The root of the repo (`/app`) contains the deployable static app (what GitHub Pages serves). The `frontend/` folder contains the original React + Tailwind source used to build `static/js/main.js` and `static/css/main.css`.
-
 ---
 
 ## 1. Architecture Overview
 
-### 1.1 Runtime (static app)
+### 1.1 Runtime
 
-The live app is a pure static site:
+The app is a **React frontend** + **FastAPI backend** + **SQLite database**:
 
-- `index.html` – entry point, always references `./static/js/main.js` and `./static/css/main.css`.
-- `static/js/main.js` – compiled React bundle.
-- `static/css/main.css` – compiled Tailwind-based styles.
-- `data/` – JSON data used at runtime:
-  - `data/forces/manifest.json` – list of force JSON files.
-  - `data/forces/*.json` – individual force definitions.
-  - `data/downtime-actions.json` – definitions for downtime/repair actions.
-  - `data/sp-choices.json` – Support Point purchase options for missions.
-  - `data/achievements.json` – pilot achievement definitions.
-  - `data/mek_catalog.csv` – mech database for autocomplete (from MekBay).
-- `.nojekyll` – ensures GitHub Pages serves `/static` as-is.
+- `frontend/` – React 18 + Tailwind SPA. Calls the backend exclusively through `REACT_APP_BACKEND_URL` + `/api/*` routes (see `frontend/src/lib/api.js`).
+- `backend/` – FastAPI app (`server.py`), SQLAlchemy models (`models.py`), Alembic migrations (`alembic/`), and per-resource routers (`routers/`).
+- `data/btforce.db` – the single, committed SQLite database. It ships prefilled with the full reference catalog (mech catalog, achievements, SP choices, downtime actions) and any campaign forces already created. There is no separate "example" vs "live" database - the file in the repo is the one the app runs against, and there are no JSON/CSV data files or import scripts left in the repo as a data source.
+- `backend/watcher.py` + `backend/import_mech_catalog.py` – the only remaining CSV-related code, and it's operational rather than a data source: drop a mech catalog CSV (e.g. exported from MekHQ/MUL) into the watched folder and it's imported automatically, or run `import_mech_catalog.py <path>` manually. See README.md's "Updating the Mech Catalog" section.
 
-There is **no backend** and no database. All state is in memory and/or JSON.
+### 1.2 Deployment
 
-### 1.2 Source (React app)
-
-The React source is under `frontend/`:
-
-- `frontend/src/` – components, hooks, and utilities.
-- `frontend/public/` – assets used at build time (mirrors `data/` for dev server).
-- `frontend/package.json` – dependencies & scripts (CRA, Tailwind, etc.).
-
-You only need this folder if you want to change the app behaviour or styling and rebuild the static bundles.
+See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Docker host). In short: `docker compose up -d --build` builds and starts both containers, Alembic migrations run automatically against the bind-mounted `data/btforce.db`, and there is no seeding/import step at boot. The startup sequence (both in Docker and in local dev) is always exactly: run Alembic migrations, then start the server - never anything that inspects the DB and conditionally imports data. A cloned repo is assumed to already have a non-empty, ready-to-use `data/btforce.db`; there is no "first boot" concept. To reset data, replace the DB file manually (see DEPLOYMENT.md's "Resetting data" section) - there is no scripted reset.
 
 ---
 
@@ -42,30 +25,26 @@ You only need this folder if you want to change the app behaviour or styling and
 
 ```text
 /app
-├── .nojekyll                 # Enable static asset serving on GitHub Pages
 ├── README.md                 # User-facing overview
 ├── TECHNICAL_README.md       # This file – developer documentation
-├── index.html                # SPA entry point, loads static/js/main.js
-├── package.json              # Optional helper for local static serving
+├── DEPLOYMENT.md             # Docker Compose deployment runbook
+├── docker-compose.yml
 ├── data/
-│   ├── downtime-actions.json # Downtime/repair definitions
-│   ├── sp-choices.json       # Support Point purchase options
-│   ├── achievements.json     # Pilot achievement definitions
-│   ├── mek_catalog.csv       # Mech database for autocomplete (from MekBay)
-│   └── forces/
-│       ├── manifest.json     # List of force JSON files
-│       └── *.json            # Individual forces
-├── static/
-│   ├── css/
-│   │   └── main.css          # Compiled Tailwind CSS
-│   └── js/
-│       └── main.js           # Compiled React bundle
-└── frontend/                 # Source app (React + Tailwind)
+│   └── btforce.db             # The single committed, live SQLite database
+├── backend/
+│   ├── server.py              # FastAPI app entrypoint
+│   ├── models.py               # SQLAlchemy models
+│   ├── database.py             # Engine/session setup (reads DATABASE_URL)
+│   ├── alembic/                # Migrations
+│   ├── routers/                # One module per resource (forces, mechs, downtime, ...)
+│   ├── domain/                  # Pure business logic (downtime formulas, achievements, ...)
+│   ├── watcher.py               # Watched-folder mech catalog auto-import
+│   ├── import_mech_catalog.py   # Manual/operational mech catalog CSV importer
+│   └── tests/                   # pytest suite
+└── frontend/                  # React + Tailwind source
     ├── package.json
     ├── tailwind.config.js
     ├── postcss.config.js
-    ├── public/
-    │   └── data/             # Dev server copy of data files
     └── src/
         ├── App.js
         ├── index.js
@@ -79,21 +58,18 @@ You only need this folder if you want to change the app behaviour or styling and
 
 ## 3. Running & Building
 
-### 3.1 Using the static app locally
-
-You can open `index.html` directly in a browser, or serve the root with a tiny HTTP server:
+### 3.1 Backend
 
 ```bash
-cd /app
-python3 -m http.server 8080
-# then open http://localhost:8080/
+cd backend
+pip install -r requirements.txt
+alembic upgrade head
+uvicorn server:app --host 0.0.0.0 --port 8001
 ```
 
-The app fetches JSON from `./data/...`, so relative paths must remain intact.
+`DATABASE_URL` (in `backend/.env`) must point at the SQLite file, e.g. `sqlite+aiosqlite:////app/data/btforce.db`.
 
-### 3.2 Running the React dev server
-
-For development:
+### 3.2 Frontend dev server
 
 ```bash
 cd frontend
@@ -102,59 +78,24 @@ yarn start
 # http://localhost:3000/
 ```
 
-The dev server will serve the React app using the same data folder structure.
+`REACT_APP_BACKEND_URL` (in `frontend/.env`) must point at the running backend.
 
-**Important:** When adding or modifying data files (like `sp-choices.json` or `achievements.json`), copy them to both:
-- `/app/data/` (for production)
-- `/app/frontend/public/data/` (for dev server)
-
-### 3.3 Rebuilding the production bundle
-
-After editing React source:
+### 3.3 Production build
 
 ```bash
 cd frontend
 yarn build
-
-# From /app/frontend
-cp build/static/js/main*.js ../static/js/main.js
-cp build/static/css/main*.css ../static/css/main.css
 ```
 
-> Do **not** copy `build/index.html`. The root `index.html` is hand-crafted to always load `./static/js/main.js` and `./static/css/main.css`.
-
-After copying, `index.html` + `static/` are in sync with source.
+For containerized deployment, see `DEPLOYMENT.md` - the backend and frontend Dockerfiles handle building/serving automatically via `docker compose up -d --build`.
 
 ---
 
-## 4. Customizing SP Purchases
+## 4. Support Points (SP) Data Model
 
-Support Point (SP) purchases allow players to buy tactical support during mission setup.
+Support Point (SP) purchases allow players to buy tactical support during mission setup. They're stored in the `sp_choices` table (see `models.py::SpChoice`) and served via `GET /api/sp-choices`.
 
-### 4.1 File location
-
-`data/sp-choices.json`
-
-### 4.2 Structure
-
-```json
-{
-  "spChoices": [
-    {
-      "id": "artillery-strike",
-      "name": "Artillery Strike",
-      "cost": 50
-    },
-    {
-      "id": "air-support",
-      "name": "Air Support",
-      "cost": 75
-    }
-  ]
-}
-```
-
-### 4.3 Fields
+### 4.1 Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -162,65 +103,31 @@ Support Point (SP) purchases allow players to buy tactical support during missio
 | `name` | string | Display name shown in dropdown |
 | `cost` | number | SP cost for this purchase |
 
-### 4.4 Adding new SP choices
-
-1. Edit `data/sp-choices.json`
-2. Add a new entry with unique `id`, `name`, and `cost`
-3. Copy to `frontend/public/data/sp-choices.json` (for dev server)
-4. Commit and push – changes take effect on next page load
-
-### 4.5 How it works in the app
+### 4.2 How it works in the app
 
 - Mission dialog shows SP Budget field
 - When budget > 0, a dropdown appears with available choices
 - Items with cost > remaining budget are disabled
-- Selected items are stored in `mission.spPurchases[]`
+- Selected items create a `MissionSpPurchase` row (`POST /api/missions/{id}/sp-purchases`), snapshotting the catalog's name/cost at purchase time so later price changes don't retroactively alter history
 - Purchases appear in mission cards and PDF export
 
 ---
 
-## 5. Customizing Achievements
+## 5. Achievements Data Model
 
-Achievements are automatically awarded to pilots based on their combat records.
+Achievements are automatically awarded to pilots based on their combat records. Definitions live in the `achievement_definitions` table (see `models.py::AchievementDefinition`), served via `GET /api/achievement-definitions`.
 
-### 5.1 File location
-
-`data/achievements.json`
-
-### 5.2 Structure
-
-```json
-{
-  "achievements": [
-    {
-      "id": "first-blood",
-      "name": "First Blood",
-      "icon": "🎯",
-      "description": "First confirmed kill",
-      "condition": "killCount >= 1"
-    },
-    {
-      "id": "ace",
-      "name": "Ace",
-      "icon": "⭐",
-      "description": "5 confirmed kills",
-      "condition": "killCount >= 5"
-    }
-  ]
-}
-```
-
-### 5.3 Fields
+### 5.1 Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `id` | string | Unique identifier (stored in pilot data) |
+| `id` | string | Unique identifier (stored per-pilot via `PilotAchievement`) |
 | `name` | string | Display name |
-| `icon` | string | Emoji icon (shown in web UI only, not PDF) |
+| `icon` | string | Icon (shown in web UI only, not PDF) |
 | `description` | string | Achievement description |
 | `condition` | string | Condition expression (see below) |
 
-### 5.4 Condition expressions
+### 5.2 Condition expressions
 
 Conditions are evaluated against computed combat stats. Available variables:
 
@@ -245,14 +152,7 @@ Compound conditions use `&&`:
 "condition": "missionsCompleted >= 5 && totalInjuriesTaken === 0"
 ```
 
-### 5.5 Adding new achievements
-
-1. Edit `data/achievements.json`
-2. Add entry with unique `id`, `name`, `icon`, `description`, and `condition`
-3. Copy to `frontend/public/data/achievements.json` (for dev server)
-4. Commit and push
-
-### 5.6 Weight class boundaries
+### 5.3 Weight class boundaries
 
 For weight-class achievements, mechs are classified as:
 
@@ -263,15 +163,15 @@ For weight-class achievements, mechs are classified as:
 | Heavy | 60-75 tons |
 | Assault | 80-100 tons |
 
-### 5.7 How achievements work
+### 5.4 How achievements work
 
 1. During mission completion, kills/assists are logged per pilot
-2. `lib/achievements.js` computes stats from `pilot.combatRecord`
+2. `lib/achievements.js` (frontend) / `domain/achievements_logic.py` (backend) compute stats from `pilot.combatRecord`
 3. Each achievement condition is evaluated against stats
 4. New achievements trigger a popup dialog
-5. Achievements stored in `pilot.achievements[]` array
-6. Displayed as emoji badges in Pilot Roster (hover for details)
-7. PDF export shows achievement names (no emoji – PDF limitation)
+5. Earned achievements are stored as `PilotAchievement` rows (normalized, not embedded JSON)
+6. Displayed as badges in Pilot Roster (hover for details)
+7. PDF export shows achievement names only
 
 ---
 
@@ -285,7 +185,7 @@ For weight-class achievements, mechs are classified as:
   - Tabbed content for Mechs, Elementals, Pilots, Missions, Downtime, Notes, Data Editor.
 
 - `src/hooks/useForceManager.js`
-  - Loads `data/forces/manifest.json` and each listed force JSON.
+  - Fetches forces from `GET /api/forces` and `GET /api/forces/{id}`.
   - Manages `forces`, `selectedForceId`, `selectedForce`.
   - Exposes `updateForceData`, `addNewForce`, `exportForce`, loading/error state.
 
@@ -348,14 +248,16 @@ For weight-class achievements, mechs are classified as:
 
 ### 7.1 Forces
 
-A typical force JSON under `data/forces/*.json` contains:
+`GET /api/forces/{id}` returns:
 
 - `id`, `name`, `description`, optional `image`.
 - `startingWarchest`, `currentWarchest`, optional `wpMultiplier`.
 - `currentDate` – in-universe campaign date (YYYY-MM-DD format).
-- `specialAbilities[]` – optional array of `{ title, description }`.
+- `specialAbilities[]` – optional array of `{ id, title, description }`.
 - Arrays: `mechs[]`, `pilots[]`, `elementals[]`, `missions[]`.
 - `snapshots[]`, `fullSnapshots[]` – campaign state history.
+
+This same shape is what `Force`/`Mech`/`Pilot`/... in `models.py` serialize to via `serializers.py`.
 
 ### 7.2 Pilot combat record
 
@@ -396,11 +298,11 @@ Pilots may have a `combatRecord` object:
 
 ### 7.4 Downtime actions
 
-`data/downtime-actions.json` structure remains unchanged. See README.md for details.
+Stored in the `downtime_actions` table, served flat via `GET /api/downtime-actions` (each row has `id`, `name`, `description`, `category`, `formula`, `flags`). See README.md for the formula/action semantics.
 
 ### 7.5 Mech catalog
 
-The mech catalog (`data/mek_catalog.csv`) provides autocomplete for adding mechs and logging kills. Sourced from [MekBay](https://next.mekbay.com).
+The mech catalog (`mech_catalog` table, served via `GET /api/mech-catalog?search=...`) provides autocomplete for adding mechs and logging kills. Sourced from [MekBay](https://next.mekbay.com); update it via the watched-folder auto-import or `backend/import_mech_catalog.py` (see README.md's "Updating the Mech Catalog").
 
 > **Copyright Notice:** This app contains MegaMek data (copyright 2025 The MegaMek Team), licensed under CC BY-NC-SA 4.0.
 
@@ -420,20 +322,18 @@ The mech catalog (`data/mek_catalog.csv`) provides autocomplete for adding mechs
 
 ## 9. Tech Stack Summary
 
-- **Runtime:** Static HTML + JS + CSS.
-- **Framework:** React 18 (bundled).
-- **Styling:** Tailwind CSS.
-- **Icons:** `lucide-react`.
-- **PDFs:** `@react-pdf/renderer`.
-- **State & data:** Local React state + JSON files.
+- **Frontend:** React 18, Tailwind CSS, `lucide-react` icons, `@react-pdf/renderer` for PDFs.
+- **Backend:** FastAPI, SQLAlchemy (async) + Alembic migrations, `watchdog` for the catalog watcher.
+- **Database:** SQLite, single committed file at `data/btforce.db`.
+- **State:** Frontend React state, hydrated from/persisted to the backend API; no client-side JSON persistence.
 
 ---
 
 ## 10. Testing
 
-Core game logic is covered by unit tests in `frontend/src/lib/*.test.js`.
+Frontend game logic is covered by unit tests in `frontend/src/lib/*.test.js`; backend logic/endpoints are covered by `backend/tests/*.py` (pytest).
 
-### Running tests
+### Running frontend tests
 
 ```bash
 cd frontend
@@ -442,7 +342,14 @@ yarn test              # interactive watch mode
 yarn test --watch=false  # single run (CI)
 ```
 
-### Test files
+### Running backend tests
+
+```bash
+cd backend
+python3 -m pytest -q
+```
+
+### Frontend test files
 
 - `downtime.test.js` – downtime expression parser
 - `missions.test.js` – mission lifecycle, BV calculation
@@ -454,13 +361,7 @@ yarn test --watch=false  # single run (CI)
 
 ## 11. Development Workflow
 
-1. Edit React code under `frontend/src`.
-2. Run `yarn start` while iterating on UI/logic.
-3. When ready:
-   - `yarn build` inside `frontend/`.
-   - Copy `build/static/js/main*.js` to `static/js/main.js`.
-   - Copy `build/static/css/main*.css` to `static/css/main.css`.
-4. Optionally serve `/app` with `python3 -m http.server` and sanity-check.
-5. Commit `frontend/src/**`, `static/js/main.js`, `static/css/main.css`, plus any `data/` changes.
-
-This keeps GitHub Pages deployment simple while letting you evolve the app with a normal React workflow.
+1. Edit React code under `frontend/src` and/or backend code under `backend/`.
+2. Run `yarn start` (frontend) and `uvicorn server:app --reload` (backend, or rely on the supervisor-managed hot reload in the dev sandbox) while iterating.
+3. Run `yarn test --watch=false` and `python3 -m pytest -q` before committing.
+4. For deployment, see `DEPLOYMENT.md` (Docker Compose) - there is no manual bundle-copy step; `docker compose up -d --build` handles both containers.

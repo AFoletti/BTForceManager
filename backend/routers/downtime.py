@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_session
 from models import Force, Mech, Elemental, Pilot, PilotAchievement
 from serializers import mech_to_dict, elemental_to_dict, pilot_to_dict
-from domain.downtime_logic import get_action, evaluate_downtime_cost, load_downtime_actions
+from domain.downtime_logic import get_action, evaluate_downtime_cost
 from domain.achievements_logic import record_injuries_healed
 
 router = APIRouter(prefix="/api")
@@ -17,11 +17,6 @@ router = APIRouter(prefix="/api")
 class DowntimeActionIn(BaseModel):
     actionId: str
     lastMissionName: Optional[str] = None
-
-
-@router.get("/downtime-actions")
-async def get_downtime_actions_config():
-    return load_downtime_actions()
 
 
 @router.post("/mechs/{mech_id}/downtime")
@@ -33,7 +28,7 @@ async def apply_mech_downtime(
         raise HTTPException(status_code=404, detail="Mech not found")
     force = await session.get(Force, mech.force_id)
 
-    action = get_action("mechActions", payload.actionId)
+    action = await get_action("mechActions", payload.actionId)
     if not action:
         raise HTTPException(status_code=404, detail="Unknown mech downtime action")
 
@@ -67,7 +62,7 @@ async def apply_elemental_downtime(
         raise HTTPException(status_code=404, detail="Elemental not found")
     force = await session.get(Force, elemental.force_id)
 
-    action = get_action("elementalActions", payload.actionId)
+    action = await get_action("elementalActions", payload.actionId)
     if not action:
         raise HTTPException(status_code=404, detail="Unknown elemental downtime action")
 
@@ -109,7 +104,7 @@ async def apply_pilot_downtime(
         raise HTTPException(status_code=404, detail="Pilot not found")
     force = await session.get(Force, pilot.force_id)
 
-    action = get_action("pilotActions", payload.actionId)
+    action = await get_action("pilotActions", payload.actionId)
     if not action:
         raise HTTPException(status_code=404, detail="Unknown pilot downtime action")
 

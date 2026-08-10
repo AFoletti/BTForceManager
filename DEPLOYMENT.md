@@ -31,14 +31,15 @@ Edit `.env` and set at least:
 
 Edit `backend/.env.docker` and set `CORS_ALLOWED_ORIGINS` only if the frontend will be served from a different origin than the backend (default same-origin nginx proxy setup needs no change here).
 
-## 3. Create the host folders for persistent data
+## 3. Create the host folder for the mech catalog drop zone
 
-These paths must match `DB_DATA_PATH` and `MECH_CATALOG_WATCH_HOST_DIR` in your `.env` (defaults shown below):
+This path must match `MECH_CATALOG_WATCH_HOST_DIR` in your `.env` (default shown below):
 
 ```bash
-mkdir -p ./docker-data/db
 mkdir -p ./docker-data/mech-catalog-drop
 ```
+
+The database itself needs no separate folder - `data/btforce.db` is committed in the repo and is bind-mounted directly (`./data:/data`) as the live database. There is no example/live DB distinction: the file you cloned is the one the app runs against.
 
 ## 4. Build and start the stack
 
@@ -46,15 +47,7 @@ mkdir -p ./docker-data/mech-catalog-drop
 docker compose up -d --build
 ```
 
-This builds the backend (runs Alembic migrations automatically on start, then runs the one-time cutover - `backend/migrate_all.py`, plus the mech catalog import - **only if the database is empty**, later restarts never overwrite live progress) and the frontend (nginx serving the built React app, proxying `/api/*` to the backend).
-
-If you ever need to re-run the cutover manually (e.g. debugging a fresh volume outside of first boot), exec into the backend container and run:
-
-```bash
-docker compose exec backend python migrate_all.py
-```
-
-This is the single entrypoint for the legacy JSON -> SQLite cutover - it runs `import_legacy_data`, `migrate_reference_data`, and `migrate_special_abilities` in the only valid order. Those three no longer support being run directly.
+This builds the backend (runs Alembic migrations automatically on start against the bind-mounted `data/btforce.db`, then starts the API server - no seeding/import step) and the frontend (nginx serving the built React app, proxying `/api/*` to the backend).
 
 ## 5. Verify it's running
 
@@ -81,18 +74,22 @@ git pull
 docker compose up -d --build
 ```
 
-The `/data` bind mount (`DB_DATA_PATH` on the host) is untouched by a rebuild - your SQLite database and its history survive as long as you don't delete that host folder.
+The `./data` bind mount is untouched by a rebuild - your SQLite database and its history survive as long as you don't delete or reset that folder. Since `data/btforce.db` is committed, `git pull` will only update it if a newer version was pushed upstream; your local in-place edits (via the running app) are not auto-committed by git.
 
 ## Backup
 
 Schedule a periodic backup via Synology's **Task Scheduler** (Control Panel > Task Scheduler > Create > Scheduled Task > User-defined script), running a command like:
 
 ```bash
-sqlite3 <DB_DATA_PATH>/btforce.db ".backup <DB_DATA_PATH>/btforce-backup.db"
+sqlite3 ./data/btforce.db ".backup ./data/btforce-backup.db"
 ```
 
-Replace `<DB_DATA_PATH>` with the exact host path you set for `DB_DATA_PATH` in your `.env` (e.g. `/volume1/docker/BTForceManager/docker-data/db`). Point the backup destination at a different share/folder if you want off-volume copies.
+Adjust the path if your repo clone lives somewhere other than the current working directory. Point the backup destination at a different share/folder if you want off-volume copies.
 
 ## Database persistence
 
-The SQLite file must live under `/data` inside the container to persist across restarts; do not point `DATABASE_URL` elsewhere.
+The SQLite file must live under `/data` inside the container (bind-mounted from the repo's own `./data` folder) to persist across restarts; do not point `DATABASE_URL` elsewhere.
+
+## Resetting data
+
+There is no "reset" command and no JSON/CSV re-import path - the container only ever runs migrations and starts the server, it never seeds or overwrites data. To reset a deployment to a blank slate, stop the stack and manually replace `data/btforce.db` (e.g. restore an empty/template DB file, or delete it and copy in another instance's file) before starting the stack again. Alembic will still run its migrations against whatever file is there on next boot.

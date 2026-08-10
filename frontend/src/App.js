@@ -161,7 +161,7 @@ export default function App() {
           </h2>
           <p className="text-muted-foreground mb-4 font-mono text-sm">{error}</p>
           <p className="text-xs text-muted-foreground font-mono">
-            Verify: <code className="bg-muted px-2 py-1">data/forces/manifest.json</code>
+            Verify: backend reachable at <code className="bg-muted px-2 py-1">/api/forces</code>
           </p>
         </div>
       </div>
@@ -495,7 +495,7 @@ export default function App() {
                 No forces available
               </p>
               <p className="text-xs text-muted-foreground mt-2 font-mono">
-                Check data/forces/ directory
+                Create one via "+ New Force"
               </p>
             </div>
           </div>
