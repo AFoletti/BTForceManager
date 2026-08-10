@@ -17,7 +17,7 @@ The app is a **React frontend** + **FastAPI backend** + **SQLite database**:
 
 ### 1.2 Deployment
 
-See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Docker host). In short: `docker compose up -d --build` builds and starts both containers, Alembic migrations run automatically against the bind-mounted `data/btforce.db`, and there is no seeding/import step at boot.
+See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Docker host). In short: `docker compose up -d --build` builds and starts both containers, Alembic migrations run automatically against the bind-mounted `data/btforce.db`, and there is no seeding/import step at boot. The startup sequence (both in Docker and in local dev) is always exactly: run Alembic migrations, then start the server - never anything that inspects the DB and conditionally imports data. A cloned repo is assumed to already have a non-empty, ready-to-use `data/btforce.db`; there is no "first boot" concept. To reset data, replace the DB file manually (see DEPLOYMENT.md's "Resetting data" section) - there is no scripted reset.
 
 ---
 
@@ -40,7 +40,6 @@ See `DEPLOYMENT.md` for the full Docker Compose runbook (Synology NAS or any Doc
 │   ├── domain/                  # Pure business logic (downtime formulas, achievements, ...)
 │   ├── watcher.py               # Watched-folder mech catalog auto-import
 │   ├── import_mech_catalog.py   # Manual/operational mech catalog CSV importer
-│   ├── seed_if_empty.py         # Diagnostic-only check (not run at boot)
 │   └── tests/                   # pytest suite
 └── frontend/                  # React + Tailwind source
     ├── package.json

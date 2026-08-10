@@ -171,6 +171,14 @@ See below entries (unchanged from prior session).
 - Verified: all 40 backend pytest pass (48 - 8 removed = 40), backend/frontend both hot-reloaded cleanly with no import errors, live screenshots confirm the mech roster, edit dialog, and catalog-info lookup all work correctly against the DB-only architecture.
 - Per user instruction: no testing_agent call this session - verified via pytest + curl + screenshots only.
 
+### Issue 7 (Simplify startup and tests for a cloned repo with a non-empty DB) - Done, verified
+- Confirmed `entrypoint.sh` already matched the required sequence from Issue 6 (`alembic upgrade head && uvicorn server:app` only, no seeding step).
+- Deleted `backend/seed_if_empty.py` entirely (it had been reduced to a diagnostic-only, unused check in Issue 6; per this issue's explicit goal of "no code path that attempts to seed if empty," even a no-op script with that name/concept was removed rather than kept around).
+- Updated `TECHNICAL_README.md`: removed the `seed_if_empty.py` line from the repo layout tree; added explicit language to Section 1.2 stating the startup sequence is always exactly migrations-then-server, a cloned repo is assumed to already have a non-empty `data/btforce.db`, and there's no "first boot" concept.
+- Added a "Resetting data" section to `DEPLOYMENT.md` stating resets are a manual DB-file-replacement operation, not a scripted import.
+- Verified: all 40 backend pytest pass with zero JSON/CSV/import-script dependency (already achieved in Issue 6's rewrite, re-confirmed here), backend restarts cleanly with no seeding against the existing non-empty DB, live `/api/forces` unaffected.
+- Per user instruction: no testing_agent call this session - verified via pytest + curl only.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).

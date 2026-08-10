@@ -89,3 +89,7 @@ Adjust the path if your repo clone lives somewhere other than the current workin
 ## Database persistence
 
 The SQLite file must live under `/data` inside the container (bind-mounted from the repo's own `./data` folder) to persist across restarts; do not point `DATABASE_URL` elsewhere.
+
+## Resetting data
+
+There is no "reset" command and no JSON/CSV re-import path - the container only ever runs migrations and starts the server, it never seeds or overwrites data. To reset a deployment to a blank slate, stop the stack and manually replace `data/btforce.db` (e.g. restore an empty/template DB file, or delete it and copy in another instance's file) before starting the stack again. Alembic will still run its migrations against whatever file is there on next boot.
