@@ -5,10 +5,11 @@ Safe to re-run: for each force being imported, existing rows for that force are
 deleted before re-inserting, so the script always leaves the DB in sync with the
 current contents of the JSON files.
 
-Usage:
-    cd backend && python import_legacy_data.py
+This is now an importable-only helper - run `python migrate_all.py` instead
+of this script directly (it calls this module's functions as one step of
+the full one-time cutover).
 """
-import asyncio
+import sys
 import json
 from pathlib import Path
 
@@ -18,7 +19,7 @@ load_dotenv()
 
 from sqlalchemy import delete
 
-from database import SessionLocal, engine
+from database import SessionLocal
 from models import Base, Force, Mech, Pilot, Elemental, Mission, Snapshot, FullSnapshot
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -198,9 +199,10 @@ async def main():
             for filename in filenames:
                 force_id, counts = await import_force(session, filename)
                 print(f"Imported {filename} -> force '{force_id}': {counts}")
-    await engine.dispose()
     print(f"Done. Imported {len(filenames)} force(s) from manifest.")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("import_legacy_data.py is now an importable-only helper.")
+    print("Run the full one-time cutover instead: python migrate_all.py")
+    sys.exit(1)

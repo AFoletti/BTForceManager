@@ -11,10 +11,10 @@ Idempotent: uses get-or-create semantics for both the pool row (by name) and
 the join row (by force_id + ability_id), so re-running never creates
 duplicates and never touches rows created independently via the API.
 
-Usage:
-    cd backend && python migrate_special_abilities.py
+This is now an importable-only helper - run `python migrate_all.py` instead
+of this script directly.
 """
-import asyncio
+import sys
 import json
 from pathlib import Path
 
@@ -24,7 +24,7 @@ load_dotenv()
 
 from sqlalchemy import select
 
-from database import SessionLocal, engine
+from database import SessionLocal
 from models import SpecialAbility, ForceSpecialAbility
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -101,9 +101,10 @@ async def main():
     async with SessionLocal() as session:
         async with session.begin():
             pool_created, links_created = await migrate(session)
-    await engine.dispose()
     print(f"Done. Created {pool_created} new pool row(s), {links_created} new link row(s).")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("migrate_special_abilities.py is now an importable-only helper.")
+    print("Run the full one-time cutover instead: python migrate_all.py")
+    sys.exit(1)

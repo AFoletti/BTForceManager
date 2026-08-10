@@ -1,12 +1,13 @@
 """First-boot data seed, run automatically by entrypoint.sh after migrations.
 
-Runs the legacy import/reference-data scripts only when the `forces` table
-is completely empty (i.e. a brand new SQLite file, first container start).
-On every later restart the database already has forces, so this is a no-op
-and live campaign progress is never overwritten by the static seed JSON
-files - only import_legacy_data.py itself is destructive (it wipes+reinserts
-forces by id), the others are already safe/idempotent upserts, but there is
-no reason to run any of them again once the DB is seeded.
+Runs the one-time cutover (migrate_all.py) plus the mech catalog import
+only when the `forces` table is completely empty (i.e. a brand new SQLite
+file, first container start). On every later restart the database already
+has forces, so this is a no-op and live campaign progress is never
+overwritten by the static seed JSON files - only import_legacy_data (inside
+migrate_all.py) is destructive (it wipes+reinserts forces by id), the rest
+are already safe/idempotent upserts, but there is no reason to run any of
+them again once the DB is seeded.
 
 Usage:
     cd backend && python seed_if_empty.py
@@ -25,10 +26,8 @@ from database import SessionLocal
 from models import Force
 
 SEED_SCRIPTS = [
-    "import_legacy_data.py",
+    "migrate_all.py",
     "import_mech_catalog.py",
-    "migrate_reference_data.py",
-    "migrate_special_abilities.py",
 ]
 
 

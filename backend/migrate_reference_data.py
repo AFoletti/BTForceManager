@@ -13,10 +13,10 @@ Idempotent: catalogs are upserted by id; pilot_achievements/mission_sp_purchases
 use get-or-create (by pilot+achievement, or by purchase id) so re-running never
 duplicates rows.
 
-Usage:
-    cd backend && python migrate_reference_data.py
+This is now an importable-only helper - run `python migrate_all.py` instead
+of this script directly.
 """
-import asyncio
+import sys
 import json
 from pathlib import Path
 
@@ -26,7 +26,7 @@ load_dotenv()
 
 from sqlalchemy import select
 
-from database import SessionLocal, engine
+from database import SessionLocal
 from models import (
     Pilot,
     Mission,
@@ -138,7 +138,6 @@ async def main():
             sp_created, sp_updated = await seed_sp_choices(session)
             pilot_links_created = await migrate_pilot_achievements(session)
             sp_purchases_created = await migrate_mission_sp_purchases(session)
-    await engine.dispose()
     print(f"Achievement definitions: {ach_created} created, {ach_updated} updated.")
     print(f"SP choices: {sp_created} created, {sp_updated} updated.")
     print(f"Pilot achievement links created: {pilot_links_created}")
@@ -146,4 +145,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("migrate_reference_data.py is now an importable-only helper.")
+    print("Run the full one-time cutover instead: python migrate_all.py")
+    sys.exit(1)
