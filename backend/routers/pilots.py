@@ -3,11 +3,11 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
-from models import Force, Pilot, PilotAchievement, PilotSpaAssignment
+from models import Force, Mech, Pilot, PilotAchievement, PilotSpaAssignment
 from serializers import pilot_to_dict
 
 router = APIRouter(prefix="/api")
@@ -97,8 +97,16 @@ async def delete_pilot(pilot_id: str, session: AsyncSession = Depends(get_sessio
     if not pilot:
         raise HTTPException(status_code=404, detail="Pilot not found")
 
+    # Documented cascade behavior for deleting a pilot:
+    # - PilotAchievement / PilotSpaAssignment link rows are removed (the
+    #   pilot's own combat record, including kills, is embedded JSON on the
+    #   pilot itself and is simply deleted with it - no other row references
+    #   it, so kill-board/achievement *catalogs* are never touched).
+    # - Any mech piloted by this pilot is unassigned (pilot_id cleared), not
+    #   deleted - the mech survives without a pilot.
     await session.execute(delete(PilotAchievement).where(PilotAchievement.pilot_id == pilot_id))
     await session.execute(delete(PilotSpaAssignment).where(PilotSpaAssignment.pilot_id == pilot_id))
+    await session.execute(update(Mech).where(Mech.pilot_id == pilot_id).values(pilot_id=""))
     await session.delete(pilot)
     await session.commit()
     return Response(status_code=204)

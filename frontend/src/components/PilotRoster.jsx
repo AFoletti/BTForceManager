@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, Minus, User, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Minus, User, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { findMechForPilot } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
@@ -177,6 +177,23 @@ export default function PilotRoster({ force, onUpdate }) {
       direction = 'desc';
     }
     setSortConfig({ key, direction });
+  };
+
+  const handleDelete = (pilot, e) => {
+    e.stopPropagation();
+    // eslint-disable-next-line no-alert
+    if (
+      !window.confirm(
+        `Remove pilot "${getPilotDisplayName(pilot)}" from the roster? Their combat record and achievements will be lost. This cannot be undone.`,
+      )
+    )
+      return;
+    const updatedPilots = force.pilots.filter((p) => p.id !== pilot.id);
+    // Mirrors the backend cascade: unassign (don't delete) any mech this pilot flew.
+    const updatedMechs = force.mechs.map((mech) =>
+      mech.pilotId === pilot.id ? { ...mech, pilotId: '' } : mech,
+    );
+    onUpdate({ pilots: updatedPilots, mechs: updatedMechs });
   };
 
   const filteredPilots = force.pilots.filter((pilot) => {
@@ -391,6 +408,15 @@ export default function PilotRoster({ force, onUpdate }) {
                           disabled={pilot.injuries === 6}
                         >
                           <Plus className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={(e) => handleDelete(pilot, e)}
+                          data-testid={`delete-pilot-btn-${pilot.id}`}
+                          title="Remove from roster"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
                     </td>

@@ -44,6 +44,15 @@ Two Force fields exist specifically for Admin-configured Warchest setup: `starti
 
 The project's migration mechanism is Alembic (`backend/alembic/`): every schema change is a versioned revision file under `alembic/versions/`, and the DB's current version is tracked in the `alembic_version` table inside `data/btforce.db`. `backend/migration_harness.py::run_migrations()` runs `alembic upgrade head` automatically every time the backend starts (called from `server.py`'s FastAPI `lifespan`, in addition to the Docker entrypoint already running it as a separate step) - a no-op on an up-to-date database, and safe to run repeatedly. To add a new migration later: `cd backend && alembic revision --autogenerate -m "..."`; it's picked up automatically on the next restart, no code changes needed here.
 
+### 1.6 Force roster CRUD and deletion behavior
+
+Mechs, elementals, and pilots each have full create/edit/delete endpoints (`routers/mechs.py`, `elementals.py`, `pilots.py`) and matching UI in `MechRoster.jsx`/`ElementalRoster.jsx`/`PilotRoster.jsx` (click a row to edit any field, including catalog-sourced ones like name/BV/weight; a trash-icon button per row deletes, gated by a confirmation prompt). The frontend never calls these endpoints directly - `hooks/forceSync.js` diffs the in-memory force against the last-synced state and issues the create/update/delete calls itself, so removing an entity from the local array is enough to trigger its deletion.
+
+Documented deletion behavior (no soft-delete, no blocking - all three are hard deletes with an explicit, narrow cascade):
+
+- **Mech / Elemental**: deleting one just deletes that row. Nothing else references a mech/elemental by id at the DB level; a since-deleted unit's id lingering in a past mission's `assignedMechs`/`assignedElementals` list is expected and handled gracefully by the frontend (`lib/missions.js::getAssignedMechs/getAssignedElementals` filter out ids no longer in the roster) - mission history keeps `totalTonnage`/BV numbers already computed at completion time, it doesn't crash or refetch a deleted unit.
+- **Pilot**: deleting a pilot removes it and cascades to `PilotAchievement` and `PilotSpaAssignment` link rows (`routers/pilots.py::delete_pilot`). The pilot's own `combatRecord` (kills, assists, mission history) is embedded JSON on the pilot row itself, so it's deleted with the pilot - by design, since it belongs to that pilot and nothing else reads it. Global catalogs (`achievement_definitions`, `pilot_special_abilities`) are never touched by a pilot delete. Any mech the pilot was flying is **unassigned, not deleted** - `pilot_id` is cleared to `""` server-side, and the frontend mirrors the same unassignment locally for immediate UI consistency.
+
 ---
 
 ## 2. Repository Layout

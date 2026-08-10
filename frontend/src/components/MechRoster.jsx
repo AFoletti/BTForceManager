@@ -5,7 +5,7 @@ import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Badge } from './ui/badge';
-import { Shield, Plus, ArrowUp, ArrowDown, Move, Flame, Crosshair } from 'lucide-react';
+import { Shield, Plus, ArrowUp, ArrowDown, Move, Flame, Crosshair, Trash2 } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
@@ -235,6 +235,14 @@ export default function MechRoster({ force, onUpdate }) {
     setSortConfig({ key, direction });
   };
 
+  const handleDelete = (mech, e) => {
+    e.stopPropagation();
+    // eslint-disable-next-line no-alert
+    if (!window.confirm(`Remove "${mech.name}" from the roster? This cannot be undone.`)) return;
+    const updatedMechs = force.mechs.filter((m) => m.id !== mech.id);
+    onUpdate({ mechs: updatedMechs });
+  };
+
   const filteredMechs = force.mechs.filter((mech) => {
     const pilot = findPilotForMech(force, mech);
     const searchStr = filterText.toLowerCase();
@@ -306,7 +314,7 @@ export default function MechRoster({ force, onUpdate }) {
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">{force.mechs.length} Units</span>
-              <Button size="sm" onClick={() => setShowDialog(true)}>
+              <Button size="sm" onClick={() => setShowDialog(true)} data-testid="add-mech-button">
                 <Plus className="w-4 h-4" />
                 Add Mech
               </Button>
@@ -335,12 +343,13 @@ export default function MechRoster({ force, onUpdate }) {
                 <div className="flex items-center justify-end">Weight <SortIcon column="weight" /></div>
               </th>
               <th>Recent Activity</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {sortedMechs.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-8 text-muted-foreground">
+                <td colSpan="7" className="text-center py-8 text-muted-foreground">
                   {force.mechs.length === 0 
                     ? "No mechs in roster. Add mechs via Data Editor." 
                     : "No mechs match your filter."}
@@ -388,6 +397,17 @@ export default function MechRoster({ force, onUpdate }) {
                       ) : (
                         <span className="text-muted-foreground/50">No activity</span>
                       )}
+                    </td>
+                    <td className="text-center">
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={(e) => handleDelete(mech, e)}
+                        data-testid={`delete-mech-btn-${mech.id}`}
+                        title="Remove from roster"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </td>
                   </tr>
                 );
