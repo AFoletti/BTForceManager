@@ -189,6 +189,17 @@ class PilotSpaAssignment(Base):
     )
 
 
+class DowntimeAction(Base):
+    __tablename__ = "downtime_actions"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    name: Mapped[str] = mapped_column(String, default="")
+    description: Mapped[str] = mapped_column(Text, default="")
+    category: Mapped[str] = mapped_column(String, default="")
+    formula: Mapped[str] = mapped_column(Text, default="")
+    flags: Mapped[list] = mapped_column(JSON, default=list)
+
+
 class MechCatalogEntry(Base):
     __tablename__ = "mech_catalog"
 
