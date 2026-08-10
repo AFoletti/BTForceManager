@@ -211,6 +211,13 @@ See below entries (unchanged from prior session).
 - Updated `README.md` and `TECHNICAL_README.md` to remove all Data Editor references and point to Admin CRUD + roster CRUD instead.
 - Verified: `grep -ri "dataeditor\|data editor"` across the whole repo returns zero matches; fresh frontend restart shows "Compiled successfully" with no warnings; Export (`GET /api/forces/{id}/export`) still returns a valid full JSON; Admin health and forces-list endpoints unaffected; 40/40 backend pytest passing.
 
+### Issue #5 (Force snapshot data model and backend API) - Verified via pytest+curl
+- New `force_snapshots` table (`models.py::ForceSnapshot`, migration `064bfc3cf7c5`, purely additive/safe on existing data): `id` (autoincrement PK), `force_id` (FK), `created_at`, `label`, `waypoint_type`, `snapshot_json` (full `serialize_force()` payload, same shape as Export). Distinct from the pre-existing lightweight `Snapshot`/`FullSnapshot` models (Snapshots tab), which are untouched.
+- New `routers/force_snapshots.py`: `POST/GET /api/forces/{id}/state-snapshots` (create, list most-recent-first) and `GET /api/forces/{id}/state-snapshots/{snapshot_id}` (metadata + full payload). Named `state-snapshots` (not `snapshots`) because that path is already taken by the pre-existing lightweight Snapshot creation endpoint - documented explicitly in TECHNICAL_README to avoid confusion.
+- Bugfix found while testing: `routers/forces_write.py::delete_force` wasn't cleaning up `force_snapshots` rows, leaving orphans on force delete - fixed to cascade-delete them alongside the other per-force tables.
+- Restore is explicitly out of scope for this issue (will reuse `deserialize_force` from Issue #1, already in place and unused, in a later issue).
+- Verified via pytest (40/40) and curl: create/list/get cycle, correct most-recent-first ordering, snapshot JSON matches export shape exactly (roster/missions/pilots/warchest/startingDate/wpMultiplier all present), creating snapshots doesn't disturb missions/downtime, legacy lightweight Snapshot endpoint still works unchanged, force-delete cascade now cleans up state-snapshots (confirmed no orphans). No frontend changes in scope for this issue.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).

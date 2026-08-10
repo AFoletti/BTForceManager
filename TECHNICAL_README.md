@@ -37,8 +37,20 @@ Two Force fields exist specifically for Admin-configured Warchest setup: `starti
 
 `backend/services/force_state.py` is the single source of truth for turning a force (plus all of its mechs/pilots/elementals/missions/snapshots/special abilities) into the JSON contract described in section 7 below, and back:
 
-- `serialize_force(session, force_id)` – produces the export/detail JSON. Used by both `GET /api/forces/{id}` and the dedicated `GET /api/forces/{id}/export` endpoint (`routers/forces.py`), so Export and the regular detail view can never drift apart.
+- `serialize_force(session, force_id)` – produces the export/detail JSON. Used by `GET /api/forces/{id}`, `GET /api/forces/{id}/export`, and `POST /api/forces/{id}/state-snapshots` (`routers/forces.py`, `routers/force_snapshots.py`), so Export, the regular detail view, and snapshot creation can never drift apart.
 - `deserialize_force(session, force_id, data)` – reconstructs/overwrites a force's full state in the database from that same JSON shape. Not wired to any endpoint yet; it exists so force-level snapshot restore (a later issue) can call it directly instead of duplicating serialization logic.
+
+### 1.4.1 Full-state force snapshots (backup, not restore yet)
+
+`force_snapshots` (`models.py::ForceSnapshot`, `routers/force_snapshots.py`) stores complete, restorable backups of a force - each row is one `serialize_force()` payload plus `label`/`waypointType`/`createdAt` metadata. This is a **separate feature** from the pre-existing lightweight point-in-time `Snapshot`/`FullSnapshot` models that back the Snapshots tab (untouched by this work) - those track warchest/unit-count stats over time, not a restorable full state.
+
+Endpoints (note: the issue that requested this suggested `/api/forces/{id}/snapshots` as the path, but that's already taken by the pre-existing lightweight Snapshot creation endpoint above, so this uses `state-snapshots` instead to avoid breaking it):
+
+- `POST /api/forces/{id}/state-snapshots` - `{label, waypointType}` body; serializes current force state via `serialize_force` and stores it.
+- `GET /api/forces/{id}/state-snapshots` - metadata only (`id`, `label`, `waypointType`, `createdAt`), most recent first.
+- `GET /api/forces/{id}/state-snapshots/{snapshot_id}` - metadata plus the full `snapshotJson` payload.
+
+App-level catalogs (mech catalog, SP purchases, downtime actions, achievement definitions) are never copied into a snapshot - `serialize_force` only ever emits force-scoped data (by-value fields and light references like achievement/ability ids), so nothing catalog-wide needs restoring. Restore itself (applying a snapshot back onto a force) is out of scope here and will reuse `deserialize_force` in a later issue. Deleting a force cascades to `force_snapshots` rows (`routers/forces_write.py::delete_force`), same as the other per-force tables.
 
 ### 1.5 Migration harness
 
