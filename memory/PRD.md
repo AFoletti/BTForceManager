@@ -145,6 +145,19 @@ See below entries (unchanged from prior session).
 - testing_agent added a permanent regression test `backend/tests/test_data_parity.py` (7 tests) - now part of the standard suite, all 48 backend pytest pass (41 pre-existing + 7 new).
 - Conclusion: the live database is in exact parity with the static seed files; no fix or data correction was required.
 
+### Issue 5 (Move the "live" DB into data/ and point runtime at it) - Done, verified
+- Per user clarification: kept JSON/CSV seed files in `data/` for now (not deleted), kept `seed_if_empty.py` as a safety net (not removed), and switched the sandbox itself to the new committed DB path (not just the Docker deployment target).
+- Moved the sandbox's live SQLite file from `backend/data/btforcemanager.db` (gitignored, ephemeral) to `data/btforce.db` (repo's existing top-level data folder, alongside the JSON/CSV files) - same DB, same rows, just relocated.
+- `backend/.env` (sandbox): `DATABASE_URL` now points at `sqlite+aiosqlite:////app/data/btforce.db`.
+- `backend/.env.docker.example`: already had `DATABASE_URL=sqlite+aiosqlite:////data/btforce.db` - confirmed correct, no change needed.
+- `docker-compose.yml`: backend volume changed from `${DB_DATA_PATH:-./docker-data/db}:/data` to `./data:/data` - container now sees the committed `data/btforce.db` directly, no separate host-only DB folder.
+- `.gitignore`: added `!data/btforce.db` exception (the blanket `*.db` rule would otherwise hide it) so the live DB is trackable in Git.
+- `.env.example` (root): removed the now-unused `DB_DATA_PATH` variable/docs.
+- `DEPLOYMENT.md`: updated steps 3/5/backup/persistence sections to drop `DB_DATA_PATH`/`docker-data/db` references, describe the `./data:/data` bind mount and `data/btforce.db` backup path instead.
+- No "copy example DB into /data at runtime" logic existed in this repo's `entrypoint.sh`/`Dockerfile` to remove - the boot sequence was always migrations + conditional JSON-seed-if-empty (kept as-is per user's instruction).
+- `backend/tests/test_health.py`: `DB_PATH` was hardcoded to the old path - now derived from `DATABASE_URL` env (with `load_dotenv()` added) so it tracks wherever the DB actually lives.
+- Verified: backend restarted cleanly after `.env` change, `/api/health` + `/api/forces` unaffected (same 2 forces, same data), re-ran the Issue 4 parity script - still 100% pass, all 48 backend pytest pass, live screenshot confirms identical UI/data (Bluefang Trinary, 1'564 WP, 18 units) reading from the relocated file.
+
 ## Prioritized Backlog
 ### P0
 - Actual `docker compose up -d --build` run on a real Docker host/NAS to confirm the image builds (not runnable in this sandbox - no Docker daemon).
