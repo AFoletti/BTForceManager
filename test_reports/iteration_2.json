@@ -18,5 +18,5 @@
   "seed_data_creation": "Ran /app/backend/import_legacy_data.py twice; both runs produced identical row counts: ghost-bear (18/18/3/2/5/3), 91st-division-vision-of-words (24/24/0/0/0/0).",
   "retest_needed": false,
   "main_agent_can_self_test": true,
-  "context_for_next_testing_agent": "Phase 2 read-only forces API is stable. Data is loaded in /app/backend/data/btforcemanager.db for 2 forces per manifest. Frontend is not yet wired to /api/forces - still reads static JSON. Known transient console error on cold load ('Failed to fetch ghost-bear.json') is pre-existing frontend race and non-blocking. External preview URL: https://force-manager-dev.preview.emergentagent.com"
+  "context_for_next_testing_agent": "Phase 2 read-only forces API is stable. Data is loaded in /app/backend/data/btforcemanager.db for 2 forces per manifest. Frontend is not yet wired to /api/forces - still reads static JSON. Known transient console error on cold load ('Failed to fetch ghost-bear.json') is pre-existing frontend race and non-blocking. External preview URL: https://bugfix-btforce.preview.emergentagent.com"
 }
