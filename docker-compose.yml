@@ -22,6 +22,19 @@ services:
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     restart: unless-stopped
+    # The repo ships data/renameme.btforce.db (not data/btforce.db) so that
+    # pulling a new version from GitHub never overwrites a NAS's live
+    # database via the bind mount above. On first run against a fresh
+    # ./data folder, seed btforce.db from that template before handing off
+    # to the image's normal entrypoint (PUID/PGID fixup + migrations + serve).
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ ! -f /data/btforce.db ]; then
+          echo "data/btforce.db not found - creating a fresh one from renameme.btforce.db"
+          cp /data/renameme.btforce.db /data/btforce.db
+        fi
+        exec /entrypoint.sh
 
   frontend:
     build:
