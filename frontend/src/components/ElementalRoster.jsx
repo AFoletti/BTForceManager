@@ -8,12 +8,15 @@ import { Plus, Minus, Users, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { formatNumber } from '../lib/utils';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
+import { uploadElementalImage, deleteElementalImage } from '../lib/api';
+import ImageUploadField from './ui/image-upload-field';
 
-export default function ElementalRoster({ force, onUpdate }) {
+export default function ElementalRoster({ force, onUpdate, flushForceSync, refreshForces }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingElemental, setEditingElemental] = useState(null);
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  const [savingImage, setSavingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -24,7 +27,9 @@ export default function ElementalRoster({ force, onUpdate }) {
     suitsDamaged: 0,
     bv: 0,
     status: UNIT_STATUS.OPERATIONAL,
-    image: '',
+    currentImageUrl: '',
+    imageFile: null,
+    removeImage: false,
     history: '',
     warchestCost: 0,
   });
@@ -41,7 +46,9 @@ export default function ElementalRoster({ force, onUpdate }) {
         suitsDamaged: elemental.suitsDamaged,
         bv: elemental.bv,
         status: elemental.status || UNIT_STATUS.OPERATIONAL,
-        image: elemental.image || '',
+        currentImageUrl: elemental.image || '',
+        imageFile: null,
+        removeImage: false,
         history: elemental.history || '',
         warchestCost: elemental.warchestCost || 0,
       });
@@ -56,7 +63,9 @@ export default function ElementalRoster({ force, onUpdate }) {
         suitsDamaged: 0,
         bv: 0,
         status: UNIT_STATUS.OPERATIONAL,
-        image: '',
+        currentImageUrl: '',
+        imageFile: null,
+        removeImage: false,
         history: '',
         warchestCost: 0,
       });
@@ -64,15 +73,18 @@ export default function ElementalRoster({ force, onUpdate }) {
     setShowDialog(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.name || !formData.bv) {
       // eslint-disable-next-line no-alert
       alert('Name and BV are required');
       return;
     }
 
+    let elementalId;
+
     if (editingElemental) {
       // Update existing elemental
+      elementalId = editingElemental.id;
       const updatedElementals = (force.elementals || []).map((e) =>
         e.id === editingElemental.id
           ? {
@@ -85,7 +97,6 @@ export default function ElementalRoster({ force, onUpdate }) {
               suitsDamaged: parseInt(formData.suitsDamaged, 10) || 0,
               bv: parseInt(formData.bv, 10) || 0,
               status: formData.status,
-              image: formData.image,
               history: formData.history,
               warchestCost: parseInt(formData.warchestCost, 10) || 0,
             }
@@ -100,8 +111,9 @@ export default function ElementalRoster({ force, onUpdate }) {
       // Add new elemental
       const warchestCost = parseInt(formData.warchestCost, 10) || 0;
       const timestamp = force.currentDate;
+      elementalId = `elemental-${Date.now()}`;
       const newElemental = {
-        id: `elemental-${Date.now()}`,
+        id: elementalId,
         name: formData.name,
         commander: formData.commander,
         gunnery: parseInt(formData.gunnery, 10) || 3,
@@ -110,7 +122,6 @@ export default function ElementalRoster({ force, onUpdate }) {
         suitsDamaged: 0,
         bv: parseInt(formData.bv, 10) || 0,
         status: formData.status,
-        image: formData.image,
         history: formData.history,
         warchestCost,
         activityLog: [
@@ -126,6 +137,27 @@ export default function ElementalRoster({ force, onUpdate }) {
       const updatedElementals = [...(force.elementals || []), newElemental];
       const currentWarchest = force.currentWarchest - warchestCost;
       onUpdate({ elementals: updatedElementals, currentWarchest });
+    }
+
+    if (formData.imageFile || formData.removeImage) {
+      setSavingImage(true);
+      try {
+        // The elemental row must exist server-side before its image can be
+        // uploaded - flush the just-scheduled debounced sync now instead of
+        // waiting for it.
+        await flushForceSync(force.id);
+        if (formData.imageFile) {
+          await uploadElementalImage(elementalId, formData.imageFile);
+        } else {
+          await deleteElementalImage(elementalId);
+        }
+        await refreshForces();
+      } catch (err) {
+        // eslint-disable-next-line no-alert
+        alert(`Failed to save elemental image: ${err.message}`);
+      } finally {
+        setSavingImage(false);
+      }
     }
 
     setShowDialog(false);
@@ -503,11 +535,13 @@ export default function ElementalRoster({ force, onUpdate }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Image URL (optional)</label>
-                <Input
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
+                <ImageUploadField
+                  label="Image"
+                  currentImageUrl={formData.removeImage ? null : formData.currentImageUrl}
+                  file={formData.imageFile}
+                  onFileChange={(selected) => setFormData({ ...formData, imageFile: selected, removeImage: false })}
+                  onRemove={() => setFormData({ ...formData, imageFile: null, removeImage: true })}
+                  testId="elemental-image"
                 />
               </div>
             </div>
@@ -526,8 +560,8 @@ export default function ElementalRoster({ force, onUpdate }) {
               <Button variant="outline" onClick={() => setShowDialog(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleSave} disabled={!formData.name || !formData.bv}>
-                {editingElemental ? 'Update Elemental Point' : 'Add Elemental Point'}
+              <Button onClick={handleSave} disabled={!formData.name || !formData.bv || savingImage}>
+                {savingImage ? 'Saving Image...' : editingElemental ? 'Update Elemental Point' : 'Add Elemental Point'}
               </Button>
             </div>
           </div>

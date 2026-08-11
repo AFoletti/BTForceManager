@@ -32,6 +32,7 @@ from routers.downtime import router as downtime_router
 from routers.downtime_actions import router as downtime_actions_router
 from routers.snapshots import router as snapshots_router
 from routers.force_snapshots import router as force_snapshots_router
+from routers.images import router as images_router
 
 
 @asynccontextmanager
@@ -104,3 +105,4 @@ app.include_router(downtime_router)
 app.include_router(downtime_actions_router)
 app.include_router(snapshots_router)
 app.include_router(force_snapshots_router)
+app.include_router(images_router)

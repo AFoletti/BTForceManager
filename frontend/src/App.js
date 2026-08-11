@@ -430,11 +430,11 @@ export default function App() {
           {/* === MAIN CONTENT === */}
           <main className="flex-1 p-6 max-w-[1920px] mx-auto w-full">
             <TabsContent value="mechs" className="mt-0">
-              <MechRoster force={selectedForce} onUpdate={updateForceData} />
+              <MechRoster force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} refreshForces={refreshForces} />
             </TabsContent>
 
             <TabsContent value="elementals" className="mt-0">
-              <ElementalRoster force={selectedForce} onUpdate={updateForceData} />
+              <ElementalRoster force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} refreshForces={refreshForces} />
             </TabsContent>
 
             <TabsContent value="pilots" className="mt-0">

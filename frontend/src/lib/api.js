@@ -27,6 +27,26 @@ async function request(method, path, body) {
   return response.json();
 }
 
+// Image uploads (bytes stored in DB): shared multipart helper, mirrors
+// adminImportMechCatalog's pattern below.
+async function uploadImage(path, file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await fetch(`${API_BASE}${path}`, { method: 'POST', body: formData });
+  if (!response.ok) {
+    let detail = '';
+    try {
+      detail = (await response.json()).detail;
+    } catch {
+      detail = response.statusText;
+    }
+    const error = new Error(`POST ${path} failed (${response.status}): ${detail}`);
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
+}
+
 // Forces
 export const listForces = () => request('GET', '/forces');
 export const getForce = (id) => request('GET', `/forces/${id}`);
@@ -34,6 +54,8 @@ export const exportForce = (id) => request('GET', `/forces/${id}/export`);
 export const createForce = (payload) => request('POST', '/forces', payload);
 export const updateForce = (id, payload) => request('PUT', `/forces/${id}`, payload);
 export const deleteForce = (id) => request('DELETE', `/forces/${id}`);
+export const uploadForceImage = (id, file) => uploadImage(`/forces/${id}/image`, file);
+export const deleteForceImage = (id) => request('DELETE', `/forces/${id}/image`);
 
 // Admin
 export const getAdminHealth = () => request('GET', '/admin/health');
@@ -109,6 +131,8 @@ export const adminSetForceSpecialAbilitiesFromText = async (forceId, freeText) =
 export const createMech = (forceId, payload) => request('POST', `/forces/${forceId}/mechs`, payload);
 export const updateMech = (id, payload) => request('PUT', `/mechs/${id}`, payload);
 export const deleteMech = (id) => request('DELETE', `/mechs/${id}`);
+export const uploadMechImage = (id, file) => uploadImage(`/mechs/${id}/image`, file);
+export const deleteMechImage = (id) => request('DELETE', `/mechs/${id}/image`);
 
 // Pilots
 export const createPilot = (forceId, payload) => request('POST', `/forces/${forceId}/pilots`, payload);
@@ -121,6 +145,8 @@ export const addPilotAchievement = (pilotId, achievementId, earnedAt) =>
 export const createElemental = (forceId, payload) => request('POST', `/forces/${forceId}/elementals`, payload);
 export const updateElemental = (id, payload) => request('PUT', `/elementals/${id}`, payload);
 export const deleteElemental = (id) => request('DELETE', `/elementals/${id}`);
+export const uploadElementalImage = (id, file) => uploadImage(`/elementals/${id}/image`, file);
+export const deleteElementalImage = (id) => request('DELETE', `/elementals/${id}/image`);
 
 // Missions
 export const createMission = (forceId, payload) => request('POST', `/forces/${forceId}/missions`, payload);

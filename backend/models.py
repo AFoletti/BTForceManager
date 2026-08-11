@@ -1,4 +1,6 @@
-from sqlalchemy import String, Integer, Boolean, Float, Text, JSON, ForeignKey
+from typing import Optional
+
+from sqlalchemy import String, Integer, Boolean, Float, Text, JSON, LargeBinary, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
@@ -11,6 +13,8 @@ class Force(Base):
     name: Mapped[str] = mapped_column(String, default="")
     description: Mapped[str] = mapped_column(Text, default="")
     image: Mapped[str] = mapped_column(String, default="")
+    image_data: Mapped[Optional[bytes]] = mapped_column(LargeBinary, nullable=True)
+    image_mime_type: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     starting_warchest: Mapped[int] = mapped_column(Integer, default=0)
     current_warchest: Mapped[int] = mapped_column(Integer, default=0)
     wp_multiplier: Mapped[int] = mapped_column(Integer, default=10)
@@ -31,6 +35,8 @@ class Mech(Base):
     bv: Mapped[int] = mapped_column(Integer, default=0)
     weight: Mapped[int] = mapped_column(Integer, default=0)
     image: Mapped[str] = mapped_column(String, default="")
+    image_data: Mapped[Optional[bytes]] = mapped_column(LargeBinary, nullable=True)
+    image_mime_type: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     history: Mapped[str] = mapped_column(Text, default="")
     warchest_cost: Mapped[int] = mapped_column(Integer, default=0)
     activity_log: Mapped[list] = mapped_column(JSON, default=list)
@@ -50,6 +56,8 @@ class Elemental(Base):
     bv: Mapped[int] = mapped_column(Integer, default=0)
     status: Mapped[str] = mapped_column(String, default="Operational")
     image: Mapped[str] = mapped_column(String, default="")
+    image_data: Mapped[Optional[bytes]] = mapped_column(LargeBinary, nullable=True)
+    image_mime_type: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     history: Mapped[str] = mapped_column(Text, default="")
     warchest_cost: Mapped[int] = mapped_column(Integer, default=0)
     activity_log: Mapped[list] = mapped_column(JSON, default=list)

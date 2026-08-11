@@ -5,11 +5,11 @@
 // the client already computed into the SQLite-backed API.
 import * as api from '../lib/api';
 
-const MECH_FIELDS = ['name', 'status', 'pilotId', 'bv', 'weight', 'image', 'history', 'warchestCost', 'activityLog'];
+const MECH_FIELDS = ['name', 'status', 'pilotId', 'bv', 'weight', 'history', 'warchestCost', 'activityLog'];
 const PILOT_FIELDS = ['name', 'gunnery', 'piloting', 'injuries', 'dezgra', 'history', 'warchestCost', 'activityLog', 'combatRecord'];
-const ELEMENTAL_FIELDS = ['name', 'commander', 'gunnery', 'antimech', 'suitsDestroyed', 'suitsDamaged', 'bv', 'status', 'image', 'history', 'warchestCost', 'activityLog'];
+const ELEMENTAL_FIELDS = ['name', 'commander', 'gunnery', 'antimech', 'suitsDestroyed', 'suitsDamaged', 'bv', 'status', 'history', 'warchestCost', 'activityLog'];
 const MISSION_FIELDS = ['name', 'cost', 'description', 'objectives', 'assignedMechs', 'assignedElementals', 'spBudget', 'opForUnits', 'completed', 'completedAt', 'recap'];
-const FORCE_FIELDS = ['name', 'description', 'image', 'startingWarchest', 'currentWarchest', 'wpMultiplier', 'currentDate', 'notes'];
+const FORCE_FIELDS = ['name', 'description', 'startingWarchest', 'currentWarchest', 'wpMultiplier', 'currentDate', 'notes'];
 
 const pick = (obj, fields) => {
   const out = {};

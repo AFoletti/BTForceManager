@@ -1,3 +1,12 @@
+def resolve_image(kind, entity):
+    """Return the URL the frontend should use for an entity's image: the
+    dedicated binary-image endpoint if bytes are stored in the DB, falling
+    back to the legacy `image` URL column for older/unmigrated data."""
+    if getattr(entity, "image_data", None):
+        return f"/api/{kind}/{entity.id}/image"
+    return entity.image or ""
+
+
 def mech_to_dict(m):
     return {
         "id": m.id,
@@ -6,7 +15,7 @@ def mech_to_dict(m):
         "pilotId": m.pilot_id,
         "bv": m.bv,
         "weight": m.weight,
-        "image": m.image,
+        "image": resolve_image("mechs", m),
         "history": m.history,
         "warchestCost": m.warchest_cost,
         "activityLog": m.activity_log or [],
@@ -24,7 +33,7 @@ def elemental_to_dict(e):
         "suitsDamaged": e.suits_damaged,
         "bv": e.bv,
         "status": e.status,
-        "image": e.image,
+        "image": resolve_image("elementals", e),
         "history": e.history,
         "warchestCost": e.warchest_cost,
         "activityLog": e.activity_log or [],
@@ -115,7 +124,7 @@ def force_summary_to_dict(force, mech_count, pilot_count, elemental_count, missi
         "id": force.id,
         "name": force.name,
         "description": force.description,
-        "image": force.image,
+        "image": resolve_image("forces", force),
         "startingWarchest": force.starting_warchest,
         "currentWarchest": force.current_warchest,
         "currentDate": force.current_date,
@@ -145,7 +154,7 @@ def force_detail_to_dict(
         "id": force.id,
         "name": force.name,
         "description": force.description,
-        "image": force.image,
+        "image": resolve_image("forces", force),
         "startingWarchest": force.starting_warchest,
         "currentWarchest": force.current_warchest,
         "wpMultiplier": force.wp_multiplier,

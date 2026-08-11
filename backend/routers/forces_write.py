@@ -21,6 +21,7 @@ from models import (
     PilotSpaAssignment,
     MissionSpPurchase,
 )
+from serializers import resolve_image
 
 router = APIRouter(prefix="/api")
 
@@ -68,7 +69,7 @@ def force_core_dict(force):
         "id": force.id,
         "name": force.name,
         "description": force.description,
-        "image": force.image,
+        "image": resolve_image("forces", force),
         "startingWarchest": force.starting_warchest,
         "currentWarchest": force.current_warchest,
         "wpMultiplier": force.wp_multiplier,
