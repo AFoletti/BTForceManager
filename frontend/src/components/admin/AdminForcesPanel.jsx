@@ -8,6 +8,7 @@ import * as api from '../../lib/api';
 const emptyForm = {
   name: '',
   description: '',
+  image: '',
   startingWarchest: 1000,
   wpMultiplier: 10,
   startingDate: '3025-01-01',
@@ -37,6 +38,7 @@ export default function AdminForcesPanel({ forces, onRefresh }) {
     setForm({
       name: force.name || '',
       description: force.description || '',
+      image: force.image || '',
       startingWarchest: force.startingWarchest || 0,
       wpMultiplier: force.wpMultiplier || 10,
       startingDate: force.startingDate || '3025-01-01',
@@ -59,6 +61,7 @@ export default function AdminForcesPanel({ forces, onRefresh }) {
         await api.updateForce(editingId, {
           name: form.name,
           description: form.description,
+          image: form.image,
           startingWarchest: Number(form.startingWarchest) || 0,
           wpMultiplier: Number(form.wpMultiplier) || 10,
           startingDate: form.startingDate,
@@ -67,6 +70,7 @@ export default function AdminForcesPanel({ forces, onRefresh }) {
         const created = await api.createForce({
           name: form.name,
           description: form.description,
+          image: form.image,
           startingWarchest: Number(form.startingWarchest) || 0,
           wpMultiplier: Number(form.wpMultiplier) || 10,
           startingDate: form.startingDate,
@@ -155,6 +159,16 @@ export default function AdminForcesPanel({ forces, onRefresh }) {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               data-testid="admin-force-description-input"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium mb-1">Image URL</label>
+            <Input
+              value={form.image}
+              onChange={(e) => setForm({ ...form, image: e.target.value })}
+              placeholder="https://example.com/image.jpg"
+              data-testid="admin-force-image-input"
             />
           </div>
 
