@@ -20,15 +20,22 @@ links) and never touches the mech catalog, global SP/downtime/achievement
 catalogs, or any other force. It's also transactional at the force level -
 `deserialize_force` performs its deletes+inserts and a single commit; if
 anything raises before that commit, the whole operation (including the
-optional pre-restore backup below) is rolled back and the force is left
-exactly as it was.
+newer-snapshot cleanup below) is rolled back and the force is left exactly
+as it was.
+
+Retention/merge rules (matching the old JSON-era Snapshot/FullSnapshot
+mechanic): at most MAX_SNAPSHOTS_PER_FORCE snapshots are kept per force,
+oldest dropped first. Two consecutive `post-downtime` snapshots not
+separated by a mission collapse into one (the newer create replaces the
+older one instead of appending). Restoring to a snapshot deletes every
+snapshot newer than it, since they no longer represent a valid future.
 """
 from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
@@ -37,14 +44,12 @@ from services.force_state import serialize_force, deserialize_force
 
 router = APIRouter(prefix="/api", tags=["force-snapshots"])
 
+MAX_SNAPSHOTS_PER_FORCE = 3
+
 
 class ForceSnapshotCreateIn(BaseModel):
     label: str
     waypointType: Optional[str] = ""
-
-
-class RestoreOptionsIn(BaseModel):
-    createBackupBeforeRestore: bool = True
 
 
 def snapshot_summary_to_dict(snap):
@@ -94,14 +99,44 @@ async def create_force_snapshot(
     if force_data is None:
         raise HTTPException(status_code=404, detail="Force not found")
 
+    snapshot_type = payload.waypointType or ""
+
+    # Two downtime cycles not separated by a mission collapse into one
+    # snapshot instead of piling up.
+    if snapshot_type == "post-downtime":
+        last = (
+            await session.execute(
+                select(ForceSnapshot)
+                .where(ForceSnapshot.force_id == force_id)
+                .order_by(ForceSnapshot.id.desc())
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        if last and last.waypoint_type == "post-downtime":
+            await session.delete(last)
+
     snapshot = ForceSnapshot(
         force_id=force_id,
         created_at=datetime.now(timezone.utc).isoformat(),
         label=payload.label,
-        waypoint_type=payload.waypointType or "",
+        waypoint_type=snapshot_type,
         snapshot_json=force_data,
     )
     session.add(snapshot)
+    await session.flush()
+
+    # Only the MAX_SNAPSHOTS_PER_FORCE most recent snapshots are kept per force.
+    stale_ids = (
+        await session.execute(
+            select(ForceSnapshot.id)
+            .where(ForceSnapshot.force_id == force_id)
+            .order_by(ForceSnapshot.id.desc())
+            .offset(MAX_SNAPSHOTS_PER_FORCE)
+        )
+    ).scalars().all()
+    if stale_ids:
+        await session.execute(delete(ForceSnapshot).where(ForceSnapshot.id.in_(stale_ids)))
+
     await session.commit()
     await session.refresh(snapshot)
     return snapshot_detail_to_dict(snapshot)
@@ -121,7 +156,6 @@ async def delete_force_snapshot(force_id: str, snapshot_id: int, session: AsyncS
 async def restore_force_snapshot(
     force_id: str,
     snapshot_id: int,
-    payload: RestoreOptionsIn = RestoreOptionsIn(),
     session: AsyncSession = Depends(get_session),
 ):
     snapshot = await session.get(ForceSnapshot, snapshot_id)
@@ -132,23 +166,14 @@ async def restore_force_snapshot(
     if not force:
         raise HTTPException(status_code=404, detail="Force not found")
 
-    pre_restore_snapshot_id = None
     try:
-        if payload.createBackupBeforeRestore:
-            pre_restore_data = await serialize_force(session, force_id, embed_images=True)
-            pre_restore = ForceSnapshot(
-                force_id=force_id,
-                created_at=datetime.now(timezone.utc).isoformat(),
-                label=f"Pre-restore backup (before '{snapshot.label}')",
-                waypoint_type="PRE_RESTORE",
-                snapshot_json=pre_restore_data,
-            )
-            session.add(pre_restore)
-            await session.flush()
-            pre_restore_snapshot_id = pre_restore.id
-
+        # Rolling back rewinds history: anything created after this snapshot
+        # no longer represents a valid future, so it's discarded.
+        await session.execute(
+            delete(ForceSnapshot).where(ForceSnapshot.force_id == force_id, ForceSnapshot.id > snapshot_id)
+        )
         # deserialize_force wipes+reinserts this force's children and commits
-        # once at the end - the pre-restore backup above rides along in the
+        # once at the end - the snapshot cleanup above rides along in the
         # same uncommitted transaction, so both apply together or (on any
         # error) neither does.
         restored_force = await deserialize_force(session, force_id, snapshot.snapshot_json)
@@ -156,4 +181,4 @@ async def restore_force_snapshot(
         await session.rollback()
         raise HTTPException(status_code=500, detail=f"Restore failed, force left unchanged: {exc}")
 
-    return {"restoredForce": restored_force, "preRestoreSnapshotId": pre_restore_snapshot_id}
+    return {"restoredForce": restored_force}

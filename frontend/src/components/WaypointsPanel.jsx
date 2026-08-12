@@ -22,7 +22,6 @@ export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
   const [creating, setCreating] = useState(false);
   const [viewingWaypoint, setViewingWaypoint] = useState(null);
   const [restoringWaypoint, setRestoringWaypoint] = useState(null);
-  const [backupBeforeRestore, setBackupBeforeRestore] = useState(true);
   const [restoring, setRestoring] = useState(false);
 
   const load = async () => {
@@ -92,9 +91,7 @@ export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
     setRestoring(true);
     try {
       await flushForceSync(force.id);
-      const result = await api.restoreForceStateSnapshot(force.id, restoringWaypoint.id, {
-        createBackupBeforeRestore: backupBeforeRestore,
-      });
+      const result = await api.restoreForceStateSnapshot(force.id, restoringWaypoint.id);
       setRestoringWaypoint(null);
       await load();
       if (onRestored) onRestored(result.restoredForce);
@@ -165,7 +162,6 @@ export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
                       className="h-7 w-7 p-0"
                       onClick={() => {
                         setRestoringWaypoint(wp);
-                        setBackupBeforeRestore(true);
                       }}
                       data-testid={`restore-waypoint-btn-${wp.id}`}
                       title="Restore this force to this waypoint"
@@ -276,19 +272,8 @@ export default function WaypointsPanel({ force, flushForceSync, onRestored }) {
                 <AlertTriangle className="inline h-4 w-4 mr-1" />
                 This will overwrite <strong>{force.name}</strong>'s current mechs, elementals, pilots, missions
                 and snapshots with the data from this waypoint. Other forces and app-wide settings (catalog, SP
-                purchases, downtime actions, achievements) are never affected. This action cannot be undone
-                unless you keep a backup.
+                purchases, downtime actions, achievements) are never affected. This action cannot be undone.
               </p>
-              <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={backupBeforeRestore}
-                  onChange={(e) => setBackupBeforeRestore(e.target.checked)}
-                  data-testid="restore-backup-checkbox"
-                  className="h-4 w-4"
-                />
-                Create a backup of the current state before restoring
-              </label>
               <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
