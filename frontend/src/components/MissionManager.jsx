@@ -22,7 +22,7 @@ import {
 import { findPilotForMech, getMechAdjustedBV, getAdjustedBV } from '../lib/mechs';
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
-import { createSnapshot, advanceDateString, createFullSnapshot, addFullSnapshot } from '../lib/snapshots';
+import { advanceDateString } from '../lib/snapshots';
 import { checkAchievements, findNewAchievements, recordMissionCompletion, addKill, addAssists, createEmptyCombatRecord } from '../lib/achievements';
 import MechAutocomplete from './MechAutocomplete';
 import * as api from '../lib/api';
@@ -61,8 +61,6 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
   const [editingMission, setEditingMission] = useState(null);
   const [formData, setFormData] = useState(emptyMissionForm);
   const [spChoices, setSpChoices] = useState([]);
-  const [createWaypointOnComplete, setCreateWaypointOnComplete] = useState(false);
-  const [creatingWaypoint, setCreatingWaypoint] = useState(false);
 
   // Load SP choices from the backend catalog
   useEffect(() => {
@@ -267,7 +265,7 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
     }));
   };
 
-  const saveMission = () => {
+  const saveMission = async () => {
     const timestamp = force.currentDate;
 
     const cleanObjectives = (formData.objectives || []).map((obj) => ({
@@ -299,46 +297,25 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
     }
 
     const result = applyMissionCreation(force, payload, timestamp);
-
-    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
-    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
     const nextDate = advanceDateString(force.currentDate);
-
-    const nextForce = {
-      ...force,
-      mechs: result.mechs,
-      pilots: result.pilots,
-      elementals: result.elementals,
-      missions: result.missions,
-      currentWarchest: result.currentWarchest,
-      currentDate: nextDate,
-    };
-
-    const snapshotLabel = `Prior to mission: ${payload.name || 'Unnamed mission'}`;
-    const snapshot = createSnapshot(nextForce, {
-      type: 'pre-mission',
-      label: snapshotLabel,
-    });
-
-    // Build the complete force state including the new snapshot
-    const nextSnapshots = [...existingSnapshots, snapshot];
-    const forceForFullSnapshot = {
-      ...nextForce,
-      snapshots: nextSnapshots,
-    };
-
-    // Create full snapshot that includes the normal snapshot
-    const fullSnapshot = createFullSnapshot(forceForFullSnapshot, snapshot.id);
-    const nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
 
     onUpdate({
       ...result,
       currentDate: nextDate,
-      snapshots: nextSnapshots,
-      fullSnapshots: nextFullSnapshots,
     });
 
     setShowDialog(false);
+
+    try {
+      await flushForceSync(force.id);
+      await api.createForceStateSnapshot(force.id, {
+        label: `Prior to mission: ${payload.name || 'Unnamed mission'}`,
+        waypointType: 'pre-mission',
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(`Mission created, but the automatic snapshot failed: ${err.message}`);
+    }
   };
 
   const openCompleteDialog = (mission) => {
@@ -411,7 +388,6 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
     setMissionBeingCompleted(mission);
     setCompletionObjectives(objectives);
     setCompletionRecap(mission.recap || '');
-    setCreateWaypointOnComplete(false);
     setShowCompleteDialog(true);
   };
 
@@ -486,7 +462,6 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
     if (!missionBeingCompleted) return;
     const timestamp = force.currentDate;
     const missionName = missionBeingCompleted.name || 'mission';
-    const shouldCreateWaypoint = createWaypointOnComplete;
 
     const updatedObjectives = completionObjectives.map((obj) => ({
       ...obj,
@@ -603,34 +578,7 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
       timestamp,
     );
 
-    const existingSnapshots = Array.isArray(force.snapshots) ? force.snapshots : [];
-    const existingFullSnapshots = Array.isArray(force.fullSnapshots) ? force.fullSnapshots : [];
     const nextDate = advanceDateString(force.currentDate);
-
-    // Build the next force state (post-mission) to generate a snapshot.
-    const nextForce = {
-      ...forceAfterBattle,
-      missions: result.missions,
-      currentWarchest: result.currentWarchest,
-      currentDate: nextDate,
-    };
-
-    const snapshotLabel = `After ${missionBeingCompleted.name || 'mission'}`;
-    const snapshot = createSnapshot(nextForce, {
-      type: 'post-mission',
-      label: snapshotLabel,
-    });
-
-    // Build the complete force state including the new snapshot
-    const nextSnapshots = [...existingSnapshots, snapshot];
-    const forceForFullSnapshot = {
-      ...nextForce,
-      snapshots: nextSnapshots,
-    };
-
-    // Create full snapshot that includes the normal snapshot
-    const fullSnapshot = createFullSnapshot(forceForFullSnapshot, snapshot.id);
-    const nextFullSnapshots = addFullSnapshot(existingFullSnapshots, fullSnapshot);
 
     onUpdate({
       ...result,
@@ -638,27 +586,20 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
       elementals: updatedElementals,
       pilots: updatedPilots,
       currentDate: nextDate,
-      snapshots: nextSnapshots,
-      fullSnapshots: nextFullSnapshots,
     });
 
     setShowCompleteDialog(false);
     setMissionBeingCompleted(null);
 
-    if (shouldCreateWaypoint) {
-      setCreatingWaypoint(true);
-      try {
-        await flushForceSync(force.id);
-        await api.createForceStateSnapshot(force.id, {
-          label: `After ${missionName}`,
-          waypointType: 'MISSION_END',
-        });
-      } catch (err) {
-        // eslint-disable-next-line no-alert
-        alert(`Mission completed, but the waypoint snapshot failed: ${err.message}`);
-      } finally {
-        setCreatingWaypoint(false);
-      }
+    try {
+      await flushForceSync(force.id);
+      await api.createForceStateSnapshot(force.id, {
+        label: `After ${missionName}`,
+        waypointType: 'post-mission',
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(`Mission completed, but the automatic snapshot failed: ${err.message}`);
     }
 
     // Show achievements popup if any new achievements were earned
@@ -1770,22 +1711,12 @@ export default function MissionManager({ force, onUpdate, flushForceSync }) {
                 <span>Current Warchest: {formatNumber(force.currentWarchest)} WP</span>
               </div>
 
-              <label className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={createWaypointOnComplete}
-                  onChange={(e) => setCreateWaypointOnComplete(e.target.checked)}
-                  data-testid="mission-complete-waypoint-checkbox"
-                />
-                Create waypoint snapshot after this mission (full backup of this force, optional)
-              </label>
-
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setShowCompleteDialog(false)}>
                   Cancel
                 </Button>
-                <Button onClick={confirmCompleteMission} disabled={creatingWaypoint} data-testid="confirm-complete-mission-btn">
-                  {creatingWaypoint ? 'Saving Waypoint...' : 'Confirm Completion'}
+                <Button onClick={confirmCompleteMission} data-testid="confirm-complete-mission-btn">
+                  Confirm Completion
                 </Button>
               </div>
             </div>
