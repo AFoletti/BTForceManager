@@ -1,0 +1,23 @@
+{
+  "summary": "Consolidated 'Campaign Snapshots' (force state-snapshots) feature end-to-end verified. Backend: 11 pytest cases (all passing) covering CRUD, retention cap, post-downtime merge, mission-separator, restore-without-body, image round-trip through snapshot->delete->restore, 404 handling, and confirmation that removed endpoints /snapshots and /full-snapshots are gone. Frontend: Playwright verified Snapshots tab renders with all 8 required columns, correct row count, rollback button hidden ('-') on the single most recent row and shown on the other two, rollback confirm dialog contains no 'create backup before restore' option, rollback of an older snapshot deletes newer rows as expected, and no 'Waypoint' text or 'Create Snapshot/Waypoint' buttons exist anywhere in DOM. Wire-up in MissionManager.jsx / DowntimeOperations.jsx / SnapshotsTab.jsx all call the correct api.createForceStateSnapshot / restoreForceStateSnapshot (no payload) endpoints.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_force_state_snapshots.py",
+    "/app/test_reports/pytest/state_snapshots.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "backend/routers/force_snapshots.py is clean, transactional (rollback on restore failure preserves force), correctly enforces MAX_SNAPSHOTS_PER_FORCE=3 and post-downtime merge inside the same session flush.",
+    "Frontend SnapshotsTab reverses server-sent newest-first list to oldest-first for rendering; canRollback = !isLastSnapshot correctly disables rollback on the single most recent row (matches spec).",
+    "restoreForceStateSnapshot in api.js takes no payload (correct, matches backend which ignores body). Backend endpoint tolerantly accepts extra body content too (verified) so legacy clients would not error.",
+    "No manual 'Create Snapshot' / 'Create Waypoint' UI paths remain; WaypointsPanel.jsx is fully removed; grep across frontend for /waypoint/ only finds three internal request bodies (waypointType: 'pre-mission' | 'post-mission' | 'post-downtime') which are the correct auto-created types."
+  ],
+  "updated_files": ["/app/backend/tests/test_force_state_snapshots.py"],
+  "success_rate": {"backend": "100% (11/11)", "frontend": "100% (all checked flows)"},
+  "test_credentials": "N/A - app is unauthenticated",
+  "seed_data_creation": "Created a TEST_UI_Force with one mech and 3 state-snapshots via API for UI verification, then deleted it. Backend pytest fixture also creates/deletes its own TEST_snap_* force per module run. Final /api/forces state confirmed empty.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Reusable regression test lives at /app/backend/tests/test_force_state_snapshots.py - run with REACT_APP_BACKEND_URL exported (auto-picked from frontend/.env) using: pytest backend/tests/test_force_state_snapshots.py -v. It self-provisions and cleans up a TEST_snap_* force. Snapshots tab UI has these useful data-testids: snapshots-panel, snapshots-table, snapshot-row, rollback-btn-{id}, confirm-rollback-btn, snapshots-empty-state. Backend endpoints removed on purpose: /api/forces/{id}/snapshots and /api/forces/{id}/full-snapshots (do NOT reintroduce)."
+}
