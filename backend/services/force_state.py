@@ -23,13 +23,28 @@ from models import (
     PilotAchievement,
     MissionSpPurchase,
 )
-from serializers import force_detail_to_dict
+from serializers import force_detail_to_dict, decode_image_data_uri
 
 
-async def serialize_force(session, force_id):
+def _resolve_image_fields_for_restore(image_value):
+    """Given a snapshot's `image` field (a base64 `data:` URI produced by
+    `resolve_image(embed=True)`, or a legacy plain URL string), return the
+    `(image, image_data, image_mime_type)` triple ready to assign to a
+    Force/Mech/Elemental so the restored entity's image matches the
+    snapshot exactly (including "had no image")."""
+    img_bytes, img_mime = decode_image_data_uri(image_value)
+    if img_bytes is not None:
+        return "", img_bytes, img_mime
+    return image_value or "", None, None
+
+
+async def serialize_force(session, force_id, embed_images=False):
     """Serialize a force and all of its children into the export/detail JSON shape.
 
-    Returns None if the force does not exist.
+    Returns None if the force does not exist. When `embed_images=True` (used
+    for snapshots), mech/elemental/force images are inlined as base64 data
+    URIs instead of live endpoint URLs, so the snapshot stays correct even if
+    the image is later replaced, removed, or the entity itself is deleted.
     """
     force = await session.get(Force, force_id)
     if not force:
@@ -111,6 +126,7 @@ async def serialize_force(session, force_id):
         special_abilities_dicts,
         achievements_by_pilot,
         sp_purchases_by_mission,
+        embed_images=embed_images,
     )
 
 
@@ -130,7 +146,9 @@ async def deserialize_force(session, force_id, data):
 
     force.name = data.get("name", force.name)
     force.description = data.get("description", force.description)
-    force.image = data.get("image", force.image)
+    force.image, force.image_data, force.image_mime_type = _resolve_image_fields_for_restore(
+        data.get("image", force.image)
+    )
     force.starting_warchest = data.get("startingWarchest", force.starting_warchest)
     force.current_warchest = data.get("currentWarchest", force.current_warchest)
     force.wp_multiplier = data.get("wpMultiplier", force.wp_multiplier)
@@ -156,6 +174,7 @@ async def deserialize_force(session, force_id, data):
     await session.execute(delete(FullSnapshot).where(FullSnapshot.force_id == force_id))
 
     for m in data.get("mechs", []) or []:
+        m_image, m_image_data, m_image_mime = _resolve_image_fields_for_restore(m.get("image", ""))
         session.add(
             Mech(
                 id=m["id"],
@@ -165,7 +184,9 @@ async def deserialize_force(session, force_id, data):
                 pilot_id=m.get("pilotId", ""),
                 bv=m.get("bv", 0),
                 weight=m.get("weight", 0),
-                image=m.get("image", ""),
+                image=m_image,
+                image_data=m_image_data,
+                image_mime_type=m_image_mime,
                 history=m.get("history", ""),
                 warchest_cost=m.get("warchestCost", 0),
                 activity_log=m.get("activityLog", []) or [],
@@ -173,6 +194,7 @@ async def deserialize_force(session, force_id, data):
         )
 
     for e in data.get("elementals", []) or []:
+        e_image, e_image_data, e_image_mime = _resolve_image_fields_for_restore(e.get("image", ""))
         session.add(
             Elemental(
                 id=e["id"],
@@ -185,7 +207,9 @@ async def deserialize_force(session, force_id, data):
                 suits_damaged=e.get("suitsDamaged", 0),
                 bv=e.get("bv", 0),
                 status=e.get("status", "Operational"),
-                image=e.get("image", ""),
+                image=e_image,
+                image_data=e_image_data,
+                image_mime_type=e_image_mime,
                 history=e.get("history", ""),
                 warchest_cost=e.get("warchestCost", 0),
                 activity_log=e.get("activityLog", []) or [],

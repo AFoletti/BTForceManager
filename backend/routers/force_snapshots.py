@@ -87,8 +87,10 @@ async def get_force_snapshot(force_id: str, snapshot_id: int, session: AsyncSess
 async def create_force_snapshot(
     force_id: str, payload: ForceSnapshotCreateIn, session: AsyncSession = Depends(get_session)
 ):
-    # Reuses the exact same serialization path as Export, so the two never drift apart.
-    force_data = await serialize_force(session, force_id)
+    # Reuses the exact same serialization path as Export, so the two never drift
+    # apart, except images are embedded as base64 data (not live URLs) so this
+    # snapshot stays correct even if the image is later replaced/removed.
+    force_data = await serialize_force(session, force_id, embed_images=True)
     if force_data is None:
         raise HTTPException(status_code=404, detail="Force not found")
 
@@ -133,7 +135,7 @@ async def restore_force_snapshot(
     pre_restore_snapshot_id = None
     try:
         if payload.createBackupBeforeRestore:
-            pre_restore_data = await serialize_force(session, force_id)
+            pre_restore_data = await serialize_force(session, force_id, embed_images=True)
             pre_restore = ForceSnapshot(
                 force_id=force_id,
                 created_at=datetime.now(timezone.utc).isoformat(),
