@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { formatNumber } from '../lib/utils';
 import { UNIT_STATUS } from '../lib/constants';
-import { hasFullSnapshot, rollbackToSnapshot, MAX_FULL_SNAPSHOTS } from '../lib/snapshots';
+import * as api from '../lib/api';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { RotateCcw, AlertTriangle } from 'lucide-react';
-import WaypointsPanel from './WaypointsPanel';
 
 const STATUS_ORDER = [
   UNIT_STATUS.OPERATIONAL,
@@ -25,29 +24,57 @@ const STATUS_LABELS = {
   [UNIT_STATUS.DESTROYED]: 'DEST',
 };
 
-export default function SnapshotsTab({ force, onUpdate, flushForceSync, onRestored }) {
+export default function SnapshotsTab({ force, flushForceSync, onRestored }) {
+  const [snapshots, setSnapshots] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [confirmRollback, setConfirmRollback] = useState(null);
-  const snapshots = force?.snapshots || [];
-  const fullSnapshots = force?.fullSnapshots || [];
+  const [rollingBack, setRollingBack] = useState(false);
+
+  const load = useCallback(async () => {
+    if (!force?.id) return;
+    setLoading(true);
+    try {
+      const rows = await api.listForceStateSnapshots(force.id);
+      // Backend returns newest-first; the table (and "is this the most
+      // recent one" check below) expects oldest-first, as the old
+      // client-side snapshot array did.
+      setSnapshots([...rows].reverse());
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to load snapshots', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [force?.id]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   if (!force) return null;
 
-  const handleRollback = (snapshotId) => {
-    const restoredForce = rollbackToSnapshot(force, snapshotId);
-    if (restoredForce) {
-      onUpdate(restoredForce);
+  const handleRollback = async (snapshotId) => {
+    setRollingBack(true);
+    try {
+      await flushForceSync(force.id);
+      const result = await api.restoreForceStateSnapshot(force.id, snapshotId);
       setConfirmRollback(null);
+      await load();
+      if (onRestored) onRestored(result.restoredForce);
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(`Rollback failed - this force was left unchanged: ${err.message}`);
+    } finally {
+      setRollingBack(false);
     }
   };
 
-  const snapshotToRollback = confirmRollback 
-    ? snapshots.find(s => s.id === confirmRollback) 
+  const snapshotToRollback = confirmRollback
+    ? snapshots.find((s) => s.id === confirmRollback)
     : null;
 
   return (
-    <div className="space-y-6">
-      <WaypointsPanel force={force} flushForceSync={flushForceSync} onRestored={onRestored} />
-      <div className="tactical-panel" data-testid="snapshots-panel">
+    <div className="tactical-panel" data-testid="snapshots-panel">
       <div className="tactical-header flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wider">Campaign Snapshots</h3>
         <p className="text-xs text-muted-foreground">
@@ -56,7 +83,9 @@ export default function SnapshotsTab({ force, onUpdate, flushForceSync, onRestor
         </p>
       </div>
 
-      {snapshots.length === 0 ? (
+      {loading ? (
+        <div className="p-6 text-sm text-muted-foreground text-center">Loading snapshots...</div>
+      ) : snapshots.length === 0 ? (
         <div
           className="p-6 text-sm text-muted-foreground text-center"
           data-testid="snapshots-empty-state"
@@ -81,7 +110,7 @@ export default function SnapshotsTab({ force, onUpdate, flushForceSync, onRestor
             <tbody>
               {snapshots.map((snap, index) => {
                 const isLastSnapshot = index === snapshots.length - 1;
-                const canRollback = !isLastSnapshot && hasFullSnapshot(snap.id, fullSnapshots);
+                const canRollback = !isLastSnapshot;
                 return (
                 <tr key={snap.id} data-testid="snapshot-row">
                   <td className="font-mono text-xs">{snap.createdAt}</td>
@@ -213,22 +242,22 @@ export default function SnapshotsTab({ force, onUpdate, flushForceSync, onRestor
               This action cannot be undone.
             </p>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setConfirmRollback(null)}>
+              <Button variant="outline" onClick={() => setConfirmRollback(null)} disabled={rollingBack}>
                 Cancel
               </Button>
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 onClick={() => handleRollback(confirmRollback)}
+                disabled={rollingBack}
                 data-testid="confirm-rollback-btn"
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
-                Rollback
+                {rollingBack ? 'Rolling Back...' : 'Rollback'}
               </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
-    </div>
     </div>
   );
 }

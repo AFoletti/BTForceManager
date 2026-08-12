@@ -46,19 +46,41 @@ router = APIRouter(prefix="/api", tags=["force-snapshots"])
 
 MAX_SNAPSHOTS_PER_FORCE = 3
 
+_STATUS_ORDER = ["Operational", "Damaged", "Disabled", "Repairing", "Unavailable", "Destroyed"]
+
 
 class ForceSnapshotCreateIn(BaseModel):
     label: str
     waypointType: Optional[str] = ""
 
 
+def _build_status_counts(units):
+    counts = {status: 0 for status in _STATUS_ORDER}
+    for unit in units or []:
+        status = unit.get("status") or "Operational"
+        if status in counts:
+            counts[status] += 1
+    return counts
+
+
 def snapshot_summary_to_dict(snap):
+    data = snap.snapshot_json or {}
+    current_warchest = data.get("currentWarchest", 0)
+    starting_warchest = data.get("startingWarchest", 0)
+    missions_completed = sum(1 for m in (data.get("missions") or []) if m.get("completed"))
     return {
         "id": snap.id,
         "forceId": snap.force_id,
         "label": snap.label,
-        "waypointType": snap.waypoint_type,
+        "type": snap.waypoint_type,
         "createdAt": snap.created_at,
+        "currentWarchest": current_warchest,
+        "netWarchestChange": current_warchest - starting_warchest,
+        "missionsCompleted": missions_completed,
+        "units": {
+            "mechs": {"byStatus": _build_status_counts(data.get("mechs"))},
+            "elementals": {"byStatus": _build_status_counts(data.get("elementals"))},
+        },
     }
 
 
