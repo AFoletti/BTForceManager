@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Wrench, Download, Database, Users, Plus, User, Target, List, FileText, Calendar, Crosshair, ShieldAlert } from 'lucide-react';
+import { Shield, Wrench, Download, Database, Users, User, Target, List, FileText, Calendar, Crosshair, ShieldAlert } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { Select } from './components/ui/select';
 import { Button } from './components/ui/button';
@@ -10,7 +10,6 @@ import ElementalRoster from './components/ElementalRoster';
 import PilotRoster from './components/PilotRoster';
 import MissionManager from './components/MissionManager';
 import DowntimeOperations from './components/DowntimeOperations';
-import AddForceDialog from './components/AddForceDialog';
 import AdminView from './components/AdminView';
 import PDFExport from './components/PDFExport';
 import LedgerTab from './components/LedgerTab';
@@ -28,7 +27,6 @@ export default function App() {
     selectedForce,
     setSelectedForceId,
     updateForceData,
-    addNewForce,
     exportForce,
     refreshForces,
     flushForceSync,
@@ -71,7 +69,6 @@ export default function App() {
   };
 
 
-  const [showAddForceDialog, setShowAddForceDialog] = useState(false);
   const [showAdminView, setShowAdminView] = useState(false);
   const [editingDate, setEditingDate] = useState(false);
   const [tempDate, setTempDate] = useState('');
@@ -116,12 +113,6 @@ export default function App() {
       // eslint-disable-next-line no-alert
       alert(`Export failed: ${err.message}`);
     }
-  };
-
-  const handleAddForce = (newForce) => {
-    addNewForce(newForce);
-    // eslint-disable-next-line no-alert
-    alert(`Force "${newForce.name}" created and saved to the server.`);
   };
 
   const handleEditDate = () => {
@@ -254,16 +245,6 @@ export default function App() {
                     </option>
                   ))}
                 </Select>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowAddForceDialog(true)}
-                  className="border-primary/40 text-primary hover:bg-primary/10"
-                  data-testid="add-force-btn"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
 
                 <PDFExport force={selectedForce} />
 
@@ -449,11 +430,11 @@ export default function App() {
           {/* === MAIN CONTENT === */}
           <main className="flex-1 p-6 max-w-[1920px] mx-auto w-full">
             <TabsContent value="mechs" className="mt-0">
-              <MechRoster force={selectedForce} onUpdate={updateForceData} />
+              <MechRoster force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} refreshForces={refreshForces} />
             </TabsContent>
 
             <TabsContent value="elementals" className="mt-0">
-              <ElementalRoster force={selectedForce} onUpdate={updateForceData} />
+              <ElementalRoster force={selectedForce} onUpdate={updateForceData} flushForceSync={flushForceSync} refreshForces={refreshForces} />
             </TabsContent>
 
             <TabsContent value="pilots" className="mt-0">
@@ -479,7 +460,6 @@ export default function App() {
             <TabsContent value="snapshots" className="mt-0">
               <SnapshotsTab
                 force={selectedForce}
-                onUpdate={updateForceData}
                 flushForceSync={flushForceSync}
                 onRestored={refreshForces}
               />
@@ -521,19 +501,12 @@ export default function App() {
                 No forces available
               </p>
               <p className="text-xs text-muted-foreground mt-2 font-mono">
-                Create one via "+ New Force"
+                Create one via the Admin panel
               </p>
             </div>
           </div>
         </div>
       )}
-
-      {/* Add Force Dialog */}
-      <AddForceDialog
-        open={showAddForceDialog}
-        onOpenChange={setShowAddForceDialog}
-        onAdd={handleAddForce}
-      />
 
       {/* Admin Entry Point */}
       <AdminView open={showAdminView} onOpenChange={setShowAdminView} forces={forces} onRefreshForces={refreshForces} />

@@ -5,11 +5,11 @@
 // the client already computed into the SQLite-backed API.
 import * as api from '../lib/api';
 
-const MECH_FIELDS = ['name', 'status', 'pilotId', 'bv', 'weight', 'image', 'history', 'warchestCost', 'activityLog'];
+const MECH_FIELDS = ['name', 'status', 'pilotId', 'bv', 'weight', 'history', 'warchestCost', 'activityLog'];
 const PILOT_FIELDS = ['name', 'gunnery', 'piloting', 'injuries', 'dezgra', 'history', 'warchestCost', 'activityLog', 'combatRecord'];
-const ELEMENTAL_FIELDS = ['name', 'commander', 'gunnery', 'antimech', 'suitsDestroyed', 'suitsDamaged', 'bv', 'status', 'image', 'history', 'warchestCost', 'activityLog'];
+const ELEMENTAL_FIELDS = ['name', 'commander', 'gunnery', 'antimech', 'suitsDestroyed', 'suitsDamaged', 'bv', 'status', 'history', 'warchestCost', 'activityLog'];
 const MISSION_FIELDS = ['name', 'cost', 'description', 'objectives', 'assignedMechs', 'assignedElementals', 'spBudget', 'opForUnits', 'completed', 'completedAt', 'recap'];
-const FORCE_FIELDS = ['name', 'description', 'image', 'startingWarchest', 'currentWarchest', 'wpMultiplier', 'currentDate', 'notes'];
+const FORCE_FIELDS = ['name', 'description', 'startingWarchest', 'currentWarchest', 'wpMultiplier', 'currentDate', 'notes'];
 
 const pick = (obj, fields) => {
   const out = {};
@@ -163,19 +163,6 @@ async function syncForceScalars(forceId, prev, next) {
   }
 }
 
-async function syncSnapshots(forceId, prev, next) {
-  await syncEntityArray(prev.snapshots, next.snapshots, [], {
-    create: (s) => api.createSnapshot(forceId, s),
-    update: () => Promise.resolve(),
-    remove: (id) => api.deleteSnapshot(id),
-  });
-  await syncEntityArray(prev.fullSnapshots, next.fullSnapshots, [], {
-    create: (fs) => api.createFullSnapshot(forceId, fs),
-    update: () => Promise.resolve(),
-    remove: (id) => api.deleteFullSnapshot(id),
-  });
-}
-
 /**
  * Diff `next` against `prev` (the last backend-confirmed state) for the
  * given force and persist every difference via the API. Best-effort: a
@@ -193,5 +180,4 @@ export async function syncForceToBackend(forceId, prev, next) {
   await syncPilots(forceId, prev, next);
   await syncElementals(forceId, prev, next);
   await syncForceScalars(forceId, prev, next);
-  await syncSnapshots(forceId, prev, next);
 }

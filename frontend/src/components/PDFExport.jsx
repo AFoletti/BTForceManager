@@ -525,7 +525,7 @@ const getStatusBadgeStyle = (status) => {
   return style || styles.unitBadge;
 };
 
-const ForcePDF = ({ force, achievementDefs = [] }) => {
+const ForcePDF = ({ force, achievementDefs = [], snapshots = [] }) => {
   // Helper to sort activity logs by timestamp (YYYY-MM-DD), oldest first
   const sortActivityLog = (log = []) => {
     return [...log].sort((a, b) => {
@@ -562,7 +562,6 @@ const ForcePDF = ({ force, achievementDefs = [] }) => {
   const elementals = force.elementals || [];
   const missions = force.missions || [];
   const currentDateLabel = force.currentDate;
-  const snapshots = force.snapshots || [];
 
   // Build ledger via shared helper
   const ledgerEntries = buildLedgerEntries(force);
@@ -1325,7 +1324,11 @@ export default function PDFExport({ force }) {
       const safeName = force.name ? force.name.replace(/\s+/g, '_') : 'force';
       const fileName = `${safeName}_Force_Report.pdf`;
 
-      const blob = await pdf(<ForcePDF force={force} achievementDefs={achievementDefs} />).toBlob();
+      const snapshots = await api.listForceStateSnapshots(force.id).catch(() => []);
+
+      const blob = await pdf(
+        <ForcePDF force={force} achievementDefs={achievementDefs} snapshots={[...snapshots].reverse()} />,
+      ).toBlob();
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');

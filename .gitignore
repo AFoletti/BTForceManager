@@ -63,6 +63,9 @@ backend/data/
 !backend/.env.docker.example
 *.env
 
-# The live, committed SQLite database (Issue 5: DB itself is now the
-# checked-in source of truth, no example/live distinction).
-!data/btforce.db
+# The example/template database is committed so a fresh clone (and Docker's
+# first-run seeding in docker-compose.yml) always has demo data to boot with.
+# The live, in-use database (data/btforce.db) must NEVER be committed -
+# pulling/cloning the repo must not be able to overwrite a real deployment's
+# live campaign data.
+!data/renameme.btforce.db

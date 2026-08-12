@@ -3,11 +3,15 @@ import { Plus, Pencil, Trash2, Save, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
+import ImageUploadField from '../ui/image-upload-field';
 import * as api from '../../lib/api';
 
 const emptyForm = {
   name: '',
   description: '',
+  currentImageUrl: '',
+  imageFile: null,
+  removeImage: false,
   startingWarchest: 1000,
   wpMultiplier: 10,
   startingDate: '3025-01-01',
@@ -37,6 +41,9 @@ export default function AdminForcesPanel({ forces, onRefresh }) {
     setForm({
       name: force.name || '',
       description: force.description || '',
+      currentImageUrl: force.image || '',
+      imageFile: null,
+      removeImage: false,
       startingWarchest: force.startingWarchest || 0,
       wpMultiplier: force.wpMultiplier || 10,
       startingDate: force.startingDate || '3025-01-01',
@@ -72,6 +79,11 @@ export default function AdminForcesPanel({ forces, onRefresh }) {
           startingDate: form.startingDate,
         });
         forceId = created.id;
+      }
+      if (form.imageFile) {
+        await api.uploadForceImage(forceId, form.imageFile);
+      } else if (form.removeImage) {
+        await api.deleteForceImage(forceId);
       }
       await api.adminSetForceSpecialAbilitiesFromText(forceId, form.specialAbilitiesText);
       await onRefresh();
@@ -155,6 +167,17 @@ export default function AdminForcesPanel({ forces, onRefresh }) {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               data-testid="admin-force-description-input"
+            />
+          </div>
+
+          <div>
+            <ImageUploadField
+              label="Image"
+              currentImageUrl={form.removeImage ? null : form.currentImageUrl}
+              file={form.imageFile}
+              onFileChange={(selected) => setForm({ ...form, imageFile: selected, removeImage: false })}
+              onRemove={() => setForm({ ...form, imageFile: null, removeImage: true })}
+              testId="admin-force-image"
             />
           </div>
 

@@ -11,7 +11,8 @@ import { findPilotForMech, getAvailablePilotsForMech, getMechAdjustedBV } from '
 import { getPilotDisplayName } from '../lib/pilots';
 import { getStatusBadgeVariant, UNIT_STATUS } from '../lib/constants';
 import MechAutocomplete from './MechAutocomplete';
-import { searchMechCatalog } from '../lib/api';
+import { searchMechCatalog, uploadMechImage, deleteMechImage } from '../lib/api';
+import ImageUploadField from './ui/image-upload-field';
 
 /**
  * Parse components string into categorized equipment arrays
@@ -97,11 +98,12 @@ function getEquipmentColor(name) {
   return 'border-yellow-600 bg-yellow-600/10';
 }
 
-export default function MechRoster({ force, onUpdate }) {
+export default function MechRoster({ force, onUpdate, flushForceSync, refreshForces }) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingMech, setEditingMech] = useState(null);
   const [filterText, setFilterText] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  const [savingImage, setSavingImage] = useState(false);
   
   // Catalog info display (looked up on demand from the backend catalog API)
   const [catalogInfo, setCatalogInfo] = useState(null);
@@ -112,7 +114,9 @@ export default function MechRoster({ force, onUpdate }) {
     pilotId: '',
     bv: 0,
     weight: 0,
-    image: '',
+    currentImageUrl: '',
+    imageFile: null,
+    removeImage: false,
     history: '',
     warchestCost: 0,
   });
@@ -141,7 +145,9 @@ export default function MechRoster({ force, onUpdate }) {
         pilotId: mech.pilotId || '',
         bv: mech.bv,
         weight: mech.weight,
-        image: mech.image || '',
+        currentImageUrl: mech.image || '',
+        imageFile: null,
+        removeImage: false,
         history: mech.history || '',
         warchestCost: mech.warchestCost || 0,
       });
@@ -157,7 +163,9 @@ export default function MechRoster({ force, onUpdate }) {
         pilotId: '',
         bv: 0,
         weight: 0,
-        image: '',
+        currentImageUrl: '',
+        imageFile: null,
+        removeImage: false,
         history: '',
         warchestCost: 0,
       });
@@ -166,15 +174,18 @@ export default function MechRoster({ force, onUpdate }) {
     setShowDialog(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.name || !formData.bv || !formData.weight) {
       // eslint-disable-next-line no-alert
       alert('Name, BV, and Weight are required');
       return;
     }
 
+    let mechId;
+
     if (editingMech) {
       // Update existing mech
+      mechId = editingMech.id;
       const updatedMechs = force.mechs.map((mech) =>
         mech.id === editingMech.id
           ? {
@@ -184,7 +195,6 @@ export default function MechRoster({ force, onUpdate }) {
               pilotId: formData.pilotId,
               bv: parseInt(formData.bv, 10) || 0,
               weight: parseInt(formData.weight, 10) || 0,
-              image: formData.image,
               history: formData.history,
               warchestCost: parseInt(formData.warchestCost, 10) || 0,
             }
@@ -199,14 +209,14 @@ export default function MechRoster({ force, onUpdate }) {
       // Add new mech
       const warchestCost = parseInt(formData.warchestCost, 10) || 0;
       const timestamp = force.currentDate;
+      mechId = `mech-${Date.now()}`;
       const newMech = {
-        id: `mech-${Date.now()}`,
+        id: mechId,
         name: formData.name,
         status: formData.status,
         pilotId: formData.pilotId,
         bv: parseInt(formData.bv, 10) || 0,
         weight: parseInt(formData.weight, 10) || 0,
-        image: formData.image,
         history: formData.history,
         warchestCost,
         activityLog: [
@@ -222,6 +232,27 @@ export default function MechRoster({ force, onUpdate }) {
       const updatedMechs = [...force.mechs, newMech];
       const currentWarchest = force.currentWarchest - warchestCost;
       onUpdate({ mechs: updatedMechs, currentWarchest });
+    }
+
+    if (formData.imageFile || formData.removeImage) {
+      setSavingImage(true);
+      try {
+        // The mech row must exist server-side before its image can be
+        // uploaded - flush the just-scheduled debounced sync now instead of
+        // waiting for it.
+        await flushForceSync(force.id);
+        if (formData.imageFile) {
+          await uploadMechImage(mechId, formData.imageFile);
+        } else {
+          await deleteMechImage(mechId);
+        }
+        await refreshForces();
+      } catch (err) {
+        // eslint-disable-next-line no-alert
+        alert(`Failed to save mech image: ${err.message}`);
+      } finally {
+        setSavingImage(false);
+      }
     }
 
     setShowDialog(false);
@@ -609,11 +640,13 @@ export default function MechRoster({ force, onUpdate }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Image URL (optional)</label>
-              <Input
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                placeholder="https://example.com/mech-image.jpg"
+              <ImageUploadField
+                label="Image"
+                currentImageUrl={formData.removeImage ? null : formData.currentImageUrl}
+                file={formData.imageFile}
+                onFileChange={(selected) => setFormData({ ...formData, imageFile: selected, removeImage: false })}
+                onRemove={() => setFormData({ ...formData, imageFile: null, removeImage: true })}
+                testId="mech-image"
               />
             </div>
 
@@ -633,9 +666,9 @@ export default function MechRoster({ force, onUpdate }) {
               </Button>
               <Button
                 onClick={handleSave}
-                disabled={!formData.name || !formData.bv || !formData.weight}
+                disabled={!formData.name || !formData.bv || !formData.weight || savingImage}
               >
-                {editingMech ? 'Update Mech' : 'Add Mech'}
+                {savingImage ? 'Saving Image...' : editingMech ? 'Update Mech' : 'Add Mech'}
               </Button>
             </div>
           </div>
