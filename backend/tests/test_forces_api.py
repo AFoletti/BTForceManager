@@ -3,7 +3,7 @@ from httpx import AsyncClient, ASGITransport
 
 from server import app
 from database import SessionLocal
-from models import Force, Mech, Pilot, Elemental, Mission, Snapshot, FullSnapshot
+from models import Force, Mech, Pilot, Elemental, Mission
 from sqlalchemy import select, func
 
 # Expected counts/fields for the two forces baked into the committed
@@ -14,13 +14,11 @@ EXPECTED_FORCES = {
         "name": "Bluefang Trinary",
         "currentWarchest": 1564,
         "mechs": 18, "pilots": 18, "elementals": 3, "missions": 2,
-        "snapshots": 6, "fullSnapshots": 3,
     },
     "91st-division-vision-of-words": {
         "name": "91st Division Vision of Words",
         "currentWarchest": 2000,
         "mechs": 24, "pilots": 24, "elementals": 0, "missions": 0,
-        "snapshots": 0, "fullSnapshots": 0,
     },
 }
 
@@ -34,8 +32,6 @@ async def test_committed_forces_row_counts_match_known_state():
                 (Pilot, "pilots"),
                 (Elemental, "elementals"),
                 (Mission, "missions"),
-                (Snapshot, "snapshots"),
-                (FullSnapshot, "fullSnapshots"),
             ):
                 result = await session.execute(
                     select(func.count()).select_from(model).where(model.force_id == force_id)
@@ -77,8 +73,6 @@ async def test_get_force_detail_endpoint_matches_known_state():
     assert len(data["mechs"]) == expected["mechs"]
     assert len(data["pilots"]) == expected["pilots"]
     assert len(data["missions"]) == expected["missions"]
-    assert len(data["snapshots"]) == expected["snapshots"]
-    assert len(data["fullSnapshots"]) == expected["fullSnapshots"]
 
 
 @pytest.mark.asyncio

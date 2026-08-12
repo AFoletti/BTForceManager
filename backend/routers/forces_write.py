@@ -13,8 +13,6 @@ from models import (
     Pilot,
     Elemental,
     Mission,
-    Snapshot,
-    FullSnapshot,
     ForceSnapshot,
     ForceSpecialAbility,
     PilotAchievement,
@@ -145,8 +143,6 @@ async def delete_force(force_id: str, session: AsyncSession = Depends(get_sessio
     await session.execute(delete(Mech).where(Mech.force_id == force_id))
     await session.execute(delete(Pilot).where(Pilot.force_id == force_id))
     await session.execute(delete(Elemental).where(Elemental.force_id == force_id))
-    await session.execute(delete(Snapshot).where(Snapshot.force_id == force_id))
-    await session.execute(delete(FullSnapshot).where(FullSnapshot.force_id == force_id))
     await session.execute(delete(ForceSnapshot).where(ForceSnapshot.force_id == force_id))
     await session.delete(force)
     await session.commit()

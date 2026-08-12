@@ -102,37 +102,15 @@ class Mission(Base):
     op_for_units: Mapped[list] = mapped_column(JSON, default=list)
 
 
-class Snapshot(Base):
-    __tablename__ = "snapshots"
-
-    id: Mapped[str] = mapped_column(String, primary_key=True)
-    force_id: Mapped[str] = mapped_column(String, ForeignKey("forces.id"), index=True)
-    type: Mapped[str] = mapped_column(String, default="")
-    label: Mapped[str] = mapped_column(String, default="")
-    created_at: Mapped[str] = mapped_column(String, default="")
-    current_warchest: Mapped[int] = mapped_column(Integer, default=0)
-    starting_warchest: Mapped[int] = mapped_column(Integer, default=0)
-    net_warchest_change: Mapped[int] = mapped_column(Integer, default=0)
-    missions_completed: Mapped[int] = mapped_column(Integer, default=0)
-    units: Mapped[dict] = mapped_column(JSON, default=dict)
-
-
-class FullSnapshot(Base):
-    __tablename__ = "full_snapshots"
-
-    id: Mapped[str] = mapped_column(String, primary_key=True)
-    force_id: Mapped[str] = mapped_column(String, ForeignKey("forces.id"), index=True)
-    snapshot_id: Mapped[str] = mapped_column(String, default="")
-    force_data: Mapped[dict] = mapped_column(JSON, default=dict)
-    created_at: Mapped[str] = mapped_column(String, default="")
-
-
 class ForceSnapshot(Base):
-    """Full-state, restorable backup of a force (roster, missions, pilot
-    records, Warchest, per-force config) - distinct from the lightweight
-    point-in-time stat log in `Snapshot`/`FullSnapshot` above, which back the
-    existing Snapshots tab and are untouched by this table. `snapshot_json`
-    uses the exact same shape as `GET /api/forces/{id}/export`."""
+    """Full-state, restorable point-in-time backup of a force (roster,
+    missions, pilot records, Warchest, per-force config, images). Backs the
+    Campaign Snapshots tab; automatically created on mission create/complete
+    and downtime cycles (never manually) - see routers/force_snapshots.py
+    for the retention/merge rules. `snapshot_json` uses the same shape as
+    `GET /api/forces/{id}/export`, except images are embedded as base64 data
+    instead of live URLs so a snapshot stays correct even if the image is
+    later replaced/removed."""
 
     __tablename__ = "force_snapshots"
 

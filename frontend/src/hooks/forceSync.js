@@ -163,19 +163,6 @@ async function syncForceScalars(forceId, prev, next) {
   }
 }
 
-async function syncSnapshots(forceId, prev, next) {
-  await syncEntityArray(prev.snapshots, next.snapshots, [], {
-    create: (s) => api.createSnapshot(forceId, s),
-    update: () => Promise.resolve(),
-    remove: (id) => api.deleteSnapshot(id),
-  });
-  await syncEntityArray(prev.fullSnapshots, next.fullSnapshots, [], {
-    create: (fs) => api.createFullSnapshot(forceId, fs),
-    update: () => Promise.resolve(),
-    remove: (id) => api.deleteFullSnapshot(id),
-  });
-}
-
 /**
  * Diff `next` against `prev` (the last backend-confirmed state) for the
  * given force and persist every difference via the API. Best-effort: a
@@ -193,5 +180,4 @@ export async function syncForceToBackend(forceId, prev, next) {
   await syncPilots(forceId, prev, next);
   await syncElementals(forceId, prev, next);
   await syncForceScalars(forceId, prev, next);
-  await syncSnapshots(forceId, prev, next);
 }

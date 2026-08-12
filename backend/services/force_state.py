@@ -16,8 +16,6 @@ from models import (
     Pilot,
     Elemental,
     Mission,
-    Snapshot,
-    FullSnapshot,
     SpecialAbility,
     ForceSpecialAbility,
     PilotAchievement,
@@ -57,12 +55,6 @@ async def serialize_force(session, force_id, embed_images=False):
     ).scalars().all()
     missions = (
         await session.execute(select(Mission).where(Mission.force_id == force_id))
-    ).scalars().all()
-    snapshots = (
-        await session.execute(select(Snapshot).where(Snapshot.force_id == force_id))
-    ).scalars().all()
-    full_snapshots = (
-        await session.execute(select(FullSnapshot).where(FullSnapshot.force_id == force_id))
     ).scalars().all()
     special_abilities = (
         await session.execute(select(ForceSpecialAbility).where(ForceSpecialAbility.force_id == force_id))
@@ -121,8 +113,6 @@ async def serialize_force(session, force_id, embed_images=False):
         pilots,
         elementals,
         missions,
-        snapshots,
-        full_snapshots,
         special_abilities_dicts,
         achievements_by_pilot,
         sp_purchases_by_mission,
@@ -134,11 +124,12 @@ async def deserialize_force(session, force_id, data):
     """Reconstruct/overwrite a force's full state from JSON in the shape
     produced by `serialize_force`.
 
-    Existing mechs/pilots/elementals/missions/snapshots/fullSnapshots/
-    special-ability links for this force are wiped and replaced with the
-    contents of `data`. The force itself must already exist. Not yet wired
-    to any endpoint - reserved for force-level snapshot restore (issues
-    S1-S3) to call directly.
+    Existing mechs/pilots/elementals/missions/special-ability links for this
+    force are wiped and replaced with the contents of `data`. The force
+    itself must already exist. Used by force-snapshot restore
+    (routers/force_snapshots.py); this function itself never touches the
+    force_snapshots table - callers that need snapshot-list side effects
+    (e.g. deleting newer snapshots on rollback) handle that themselves.
     """
     force = await session.get(Force, force_id)
     if not force:
@@ -170,8 +161,6 @@ async def deserialize_force(session, force_id, data):
     await session.execute(delete(Mech).where(Mech.force_id == force_id))
     await session.execute(delete(Pilot).where(Pilot.force_id == force_id))
     await session.execute(delete(Elemental).where(Elemental.force_id == force_id))
-    await session.execute(delete(Snapshot).where(Snapshot.force_id == force_id))
-    await session.execute(delete(FullSnapshot).where(FullSnapshot.force_id == force_id))
 
     for m in data.get("mechs", []) or []:
         m_image, m_image_data, m_image_mime = _resolve_image_fields_for_restore(m.get("image", ""))
@@ -268,33 +257,6 @@ async def deserialize_force(session, force_id, data):
                     name_at_purchase=sp.get("name", ""),
                 )
             )
-
-    for s in data.get("snapshots", []) or []:
-        session.add(
-            Snapshot(
-                id=s["id"],
-                force_id=force_id,
-                type=s.get("type", ""),
-                label=s.get("label", ""),
-                created_at=s.get("createdAt", ""),
-                current_warchest=s.get("currentWarchest", 0),
-                starting_warchest=s.get("startingWarchest", 0),
-                net_warchest_change=s.get("netWarchestChange", 0),
-                missions_completed=s.get("missionsCompleted", 0),
-                units=s.get("units", {}) or {},
-            )
-        )
-
-    for fs in data.get("fullSnapshots", []) or []:
-        session.add(
-            FullSnapshot(
-                id=fs["id"],
-                force_id=force_id,
-                snapshot_id=fs.get("snapshotId", ""),
-                force_data=fs.get("forceData", {}) or {},
-                created_at=fs.get("createdAt", ""),
-            )
-        )
 
     for a in data.get("specialAbilities", []) or []:
         if a.get("id") is not None:

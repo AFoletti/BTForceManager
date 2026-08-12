@@ -141,16 +141,6 @@ export function normalizeForce(raw) {
   normalized.notes =
     typeof normalized.notes === 'string' ? normalized.notes : '';
 
-  // Snapshots (optional, for campaign history). If not present, default to []
-  normalized.snapshots = Array.isArray(normalized.snapshots)
-    ? normalized.snapshots
-    : [];
-
-  // Full snapshots for rollback (max 3 kept). If not present, default to []
-  normalized.fullSnapshots = Array.isArray(normalized.fullSnapshots)
-    ? normalized.fullSnapshots
-    : [];
-
   return normalized;
 }
 
@@ -297,8 +287,6 @@ export function useForceManager() {
         pilots: [],
         elementals: [],
         missions: [],
-        snapshots: [],
-        fullSnapshots: [],
       });
 
       lastSyncedRef.current[normalized.id] = JSON.parse(JSON.stringify(normalized));

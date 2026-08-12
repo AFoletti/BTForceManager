@@ -121,29 +121,6 @@ def mission_to_dict(m, sp_purchases=None):
     return d
 
 
-def snapshot_to_dict(s):
-    return {
-        "id": s.id,
-        "type": s.type,
-        "label": s.label,
-        "createdAt": s.created_at,
-        "currentWarchest": s.current_warchest,
-        "startingWarchest": s.starting_warchest,
-        "netWarchestChange": s.net_warchest_change,
-        "missionsCompleted": s.missions_completed,
-        "units": s.units or {},
-    }
-
-
-def full_snapshot_to_dict(fs):
-    return {
-        "id": fs.id,
-        "snapshotId": fs.snapshot_id,
-        "forceData": fs.force_data,
-        "createdAt": fs.created_at,
-    }
-
-
 def force_summary_to_dict(force, mech_count, pilot_count, elemental_count, mission_count):
     return {
         "id": force.id,
@@ -167,8 +144,6 @@ def force_detail_to_dict(
     pilots,
     elementals,
     missions,
-    snapshots,
-    full_snapshots,
     special_abilities=None,
     achievements_by_pilot=None,
     sp_purchases_by_mission=None,
@@ -193,6 +168,4 @@ def force_detail_to_dict(
         "pilots": [pilot_to_dict(p, achievements_by_pilot.get(p.id)) for p in pilots],
         "elementals": [elemental_to_dict(e, embed_images=embed_images) for e in elementals],
         "missions": [mission_to_dict(m, sp_purchases_by_mission.get(m.id)) for m in missions],
-        "snapshots": [snapshot_to_dict(s) for s in snapshots],
-        "fullSnapshots": [full_snapshot_to_dict(fs) for fs in full_snapshots],
     }

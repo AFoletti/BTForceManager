@@ -156,12 +156,6 @@ export const addSpPurchase = (missionId, purchase) =>
   request('POST', `/missions/${missionId}/sp-purchases`, purchase);
 export const deleteSpPurchase = (id) => request('DELETE', `/sp-purchases/${id}`);
 
-// Snapshots
-export const createSnapshot = (forceId, payload) => request('POST', `/forces/${forceId}/snapshots`, payload);
-export const deleteSnapshot = (id) => request('DELETE', `/snapshots/${id}`);
-export const createFullSnapshot = (forceId, payload) => request('POST', `/forces/${forceId}/full-snapshots`, payload);
-export const deleteFullSnapshot = (id) => request('DELETE', `/full-snapshots/${id}`);
-
 // Mech catalog
 export const searchMechCatalog = (search) =>
   request('GET', `/mech-catalog?search=${encodeURIComponent(search)}`);
@@ -195,15 +189,15 @@ export const setForceSpecialAbilities = (forceId, abilityIds) =>
 // SP choices
 export const listSpChoices = () => request('GET', '/sp-choices');
 
-// Force-level state snapshots ("waypoints") - full restorable backups,
-// distinct from the lightweight point-in-time Snapshot/FullSnapshot pair
-// above. See backend/routers/force_snapshots.py.
+// Force-level state snapshots ("Campaign Snapshots" tab) - full restorable
+// backups, automatically created on mission create/complete and downtime
+// cycles. See backend/routers/force_snapshots.py.
 export const listForceStateSnapshots = (forceId) => request('GET', `/forces/${forceId}/state-snapshots`);
 export const getForceStateSnapshot = (forceId, snapshotId) =>
   request('GET', `/forces/${forceId}/state-snapshots/${snapshotId}`);
 export const createForceStateSnapshot = (forceId, payload) =>
   request('POST', `/forces/${forceId}/state-snapshots`, payload);
-export const restoreForceStateSnapshot = (forceId, snapshotId, payload) =>
-  request('POST', `/forces/${forceId}/state-snapshots/${snapshotId}/restore`, payload);
+export const restoreForceStateSnapshot = (forceId, snapshotId) =>
+  request('POST', `/forces/${forceId}/state-snapshots/${snapshotId}/restore`);
 export const deleteForceStateSnapshot = (forceId, snapshotId) =>
   request('DELETE', `/forces/${forceId}/state-snapshots/${snapshotId}`);
