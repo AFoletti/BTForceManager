@@ -143,9 +143,9 @@ cp backend/.env.docker.example backend/.env.docker
 Edit `.env` (e.g. `vi .env`) with NAS-specific values:
 
 ```ini
-REACT_APP_BACKEND_URL=http://<nas-ip>:8000
-PUID=1026
-PGID=100
+REACT_APP_BACKEND_URL=<leave empty to avoid cors issues>
+PUID=10xx
+PGID=10x
 MECH_CATALOG_WATCH_HOST_DIR=./docker-data/mech-catalog-drop
 BACKEND_PORT=8000
 FRONTEND_PORT=3000
