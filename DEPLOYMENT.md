@@ -119,7 +119,7 @@ This section documents the concrete steps for running BTForceManager on a Synolo
    ```bash
    ssh <user>@<nas-ip>
    id <username>
-   # uid=1026(afoletti) gid=100(users) ...
+   # uid=xxxx(afoletti) gid=xxx(users) ...
    ```
 
    Use these values for `PUID`/`PGID` in step C below.
